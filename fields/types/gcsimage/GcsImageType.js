@@ -71,24 +71,25 @@ gcsimage.prototype.addToSchema = function() {
         // fields
         bucket: this._path.append('.bucket'),
         filename: this._path.append('.filename'),
+        filetype: this._path.append('.filetype'),
         originalname: this._path.append('.originalname'),
         path: this._path.append('.path'),
         size: this._path.append('.size'),
-        filetype: this._path.append('.filetype'),
         url: this._path.append('.url'),
+
         // virtuals
+        action: this._path.append('_action')
         exists: this._path.append('.exists'),
         upload: this._path.append('_upload'),
-        action: this._path.append('_action')
     };
 
     var schemaPaths = this._path.addTo({}, {
         bucket: String,
         filename: String,
+        filetype: String,
         originalname: String,
         path: String,
         size: Number,
-        filetype: String,
         url: String
     });
 
@@ -107,10 +108,10 @@ gcsimage.prototype.addToSchema = function() {
         item.set(field.path, {
             bucket: '',
             filename: '',
+            filetype: '',
             originalname: '',
             path: '',
             size: 0,
-            filetype: '',
             url: ''
         });
     };
@@ -264,10 +265,10 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
             var fileData = {
                 bucket: field.options.bucket,
                 filename: filename,
+                filetype: filetype,
                 originalname: originalname,
                 path: path,
                 size: file.size,
-                filetype: filetype,
                 url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
             };
 

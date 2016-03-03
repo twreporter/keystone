@@ -2,17 +2,17 @@
  * Module dependencies.
  */
 
-var fs = require('fs-extra');
-var path = require('path');
 var _ = require('underscore');
-var moment = require('moment');
+var async = require('async');
+var fs = require('fs-extra');
+var gcsHelper = require('../../../lib/gcsHelper');
+var grappling = require('grappling-hook');
 var keystone = require('../../../');
+var moment = require('moment');
+var path = require('path');
+var super_ = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
-var super_ = require('../Type');
-var async = require('async');
-var grappling = require('grappling-hook');
-var gcsHelper = require('../../../lib/gcsHelper');
 
 /**
  * gcsimages FieldType Constructor
@@ -82,25 +82,26 @@ gcsimages.prototype.addToSchema = function() {
         // fields
         bucket: this._path.append('.bucket'),
         filename: this._path.append('.filename'),
+        filetype: this._path.append('.filetype'),
         originalname: this._path.append('.originalname'),
         path: this._path.append('.path'),
         size: this._path.append('.size'),
-        filetype: this._path.append('.filetype'),
         url: this._path.append('.url'),
+
         // virtuals
-        exists: this._path.append('.exists'),
-        upload: this._path.append('_upload'),
         action: this._path.append('_action'),
+        exists: this._path.append('.exists'),
         order: this._path.append('_order'),
+        upload: this._path.append('_upload'),
     };
 
     var schemaPaths = new mongoose.Schema({
         bucket: String,
         filename: String,
+        filetype: String,
         originalname: String,
         path: String,
         size: Number,
-        filetype: String,
         url: String
     });
 
@@ -289,10 +290,10 @@ gcsimages.prototype.uploadFiles = function(item, files, update, callback) {
                 var fileData = {
                     bucket: field.options.bucket,
                     filename: filename,
+                    filetype: filetype,
                     originalname: originalname,
                     path: path,
                     size: file.size,
-                    filetype: filetype,
                     url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
                 };
 
