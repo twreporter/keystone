@@ -6,7 +6,7 @@ module.exports = {
     upload: function(req, res) {
         if (req.files && req.files.file) {
             var options = {};
-            var gcsConfig = keystone.get('gcs config');
+            var gcsConfig = keystone.get('gcs config') || {};
 
             var bucket = gcsHelper.initBucket(gcsConfig);
 
