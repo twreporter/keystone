@@ -10,6 +10,30 @@ var moment = require('moment');
 var super_ = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
+var ExifImage = require('exif').ExifImage;
+
+function extractExif(image) {
+    return new Promise(function(resolve, reject) {
+        try {
+            new ExifImage({
+                image: image
+            }, function(error, exifData) {
+                if (error) {
+                    console.log('Error while extracting exif of image: ' + error.message);
+                    resolve({});
+                } else {
+                    if ( typeof exifData === 'object') {
+                        return resolve(exifData);
+                    }
+                    resolve({});
+                }
+            });
+        } catch (error) {
+            console.log('Error while extracting exif of image: ' + error.message);
+            resolve({});
+        }
+    });
+}
 
 /**
  *  FieldType Constructor
@@ -69,28 +93,36 @@ gcsimage.prototype.addToSchema = function() {
 
     var paths = this.paths = {
         // fields
+        artist: this._path.append('.artist'),
         bucket: this._path.append('.bucket'),
+        description: this._path.append('.description'),
         filename: this._path.append('.filename'),
         filetype: this._path.append('.filetype'),
+        height: this._path.append('.height'),
         originalname: this._path.append('.originalname'),
         path: this._path.append('.path'),
         size: this._path.append('.size'),
         url: this._path.append('.url'),
+        width: this._path.append('.width'),
 
         // virtuals
-        action: this._path.append('_action')
+        action: this._path.append('_action'),
         exists: this._path.append('.exists'),
         upload: this._path.append('_upload'),
     };
 
     var schemaPaths = this._path.addTo({}, {
+        artist: String,
         bucket: String,
+        description: String,
         filename: String,
         filetype: String,
+        height: Number,
         originalname: String,
         path: String,
         size: Number,
-        url: String
+        url: String,
+        width: Number
     });
 
     schema.add(schemaPaths);
@@ -106,13 +138,17 @@ gcsimage.prototype.addToSchema = function() {
 
     var reset = function(item) {
         item.set(field.path, {
+            artist: '',
             bucket: '',
+            description: '',
             filename: '',
             filetype: '',
+            height: 0,
             originalname: '',
             path: '',
             size: 0,
-            url: ''
+            url: '',
+            width: 0
         });
     };
 
@@ -262,20 +298,27 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
         }).then(function(uploadedFile) {
             return gcsHelper.makeFilePublicPrivateRead(uploadedFile, isPublicRead);
         }).then(function(response) {
-            var fileData = {
-                bucket: field.options.bucket,
-                filename: filename,
-                filetype: filetype,
-                originalname: originalname,
-                path: path,
-                size: file.size,
-                url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
-            };
-
-            if (update) {
-                item.set(field.path, fileData);
-            }
-            return callback(null, fileData);
+            extractExif(file.path).then(function(exifData) {
+                exifData.image = exifData.image || {};
+                exifData.exif = exifData.exif || {};
+                var fileData = {
+                    artist: exifData.image.Artist || '',
+                    bucket: field.options.bucket,
+                    description: exifData.image.ImageDescription || '',
+                    filename: filename,
+                    filetype: filetype,
+                    height: exifData.exif.ExifImageHeight || exifData.image.ImageHeight || 0,
+                    originalname: originalname,
+                    path: path,
+                    size: file.size,
+                    url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
+                    width: exifData.exif.ExifImageWidth || exifData.image.ImageWidth || 0
+                };
+                if (update) {
+                    item.set(field.path, fileData);
+                }
+                return callback(null, fileData);
+            });
         }).catch(function(err) {
             return callback(err);
         });
