@@ -3,8 +3,10 @@
  */
 
 var _ = require('underscore');
-var grappling = require('grappling-hook');
+var fs = require('fs');
 var gcsHelper = require('../../../lib/gcsHelper');
+var gm = require('gm');
+var grappling = require('grappling-hook');
 var keystone = require('../../../');
 var moment = require('moment');
 var super_ = require('../Type');
@@ -295,9 +297,9 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
         var bucket = gcsHelper.initBucket(field.gcsConfig, field.options.bucket);
         gcsHelper.uploadFileToBucket(bucket, file.path, {
             destination: path + filename,
-        }).then(function(uploadedFile) {
-            return gcsHelper.makeFilePublicPrivateRead(uploadedFile, isPublicRead);
-        }).then(function(response) {
+            filetype: filetype,
+            isPublicRead: isPublicRead
+        }).then(function(apiResponse) {
             extractExif(file.path).then(function(exifData) {
                 exifData.image = exifData.image || {};
                 exifData.exif = exifData.exif || {};
