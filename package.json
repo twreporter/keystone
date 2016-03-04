@@ -46,6 +46,7 @@
     "expression-match": "0.0.16",
     "fs-extra": "0.26.5",
     "gcloud": "^0.28.0",
+    "gm": "^1.21.1",
     "grappling-hook": "3.0.0",
     "history": "2.0.0",
     "i": "0.3.4",
