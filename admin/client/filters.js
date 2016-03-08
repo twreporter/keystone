@@ -25,6 +25,7 @@ module.exports = {
 	numberarray: require('../../fields/types/numberarray/NumberArrayFilter'),
 	password: require('../../fields/types/password/PasswordFilter'),
 	relationship: require('../../fields/types/relationship/RelationshipFilter'),
+    imagerelationship: require('../../fields/types/imagerelationship/ImageRelationshipFilter'),
 	s3file: require('../../fields/types/s3file/S3FileFilter'),
 	select: require('../../fields/types/select/SelectFilter'),
 	text: require('../../fields/types/text/TextFilter'),
