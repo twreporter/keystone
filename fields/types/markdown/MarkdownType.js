@@ -57,6 +57,7 @@ markdown.prototype.addToSchema = function () {
 		html: this._path.append('.html'),
 	};
 
+
 	var markedOptions = this.markedOptions;
 
 	var setMarkdown = function (value) {
@@ -133,6 +134,7 @@ markdown.prototype.isModified = function (item) {
 
 markdown.prototype.updateItem = function (item, data, callback) {
 	var value = this.getValueFromData(data);
+
 	if (value !== undefined) {
 		item.set(this.paths.md, value);
 	} else if (this.paths.md in data) {
