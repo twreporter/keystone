@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import { Editor, EditorState, ContentState, RichUtils } from 'draft-js';
 import { FormInput } from 'elemental';
 import Draft from 'draft-js';
@@ -10,11 +9,6 @@ import ReactDOM from 'react-dom';
 import tinymce from 'tinymce';
 
 let { processHTML } = DraftPasteProcessor;
-
-/**
- * TODO:
- * - Remove dependency on underscore
- */
 
 var lastId = 0;
 
@@ -28,10 +22,32 @@ module.exports = Field.create({
 
 	getInitialState () {
 		// convert saved editor content into the editor state
+		let editorState;
+		try {
+			// const formData = JSON.parse(this.props.value);
+			const formData = this.props.value;
+			if (formData.draft && formData.html && formData.html !== '') {
+				// create an EditorState from the raw Draft data
+				let contentState = Draft.ContentState.createFromBlockArray(Draft.convertFromRaw(formData.draft));
+				editorState = Draft.EditorState.createWithContent(contentState);
+			} else {
+				// create empty draft object
+				editorState = EditorState.createEmpty();
+			}
+		}
+		catch (error) {
+			// transform existing HTML content produced by TinyMCE
+			if (this.props.value && typeof (this.props.value) === 'string') {
+				// create an EditorState from HTML
+				editorState = EditorState.createWithContent(ContentState.createFromBlockArray(processHTML(this.props.value)));
+			} else {
+				// create empty EditorState
+				editorState = EditorState.createEmpty();
+			}
+		}
+
 		return {
-			editorState: this.props.value ? EditorState.createWithContent(
-				ContentState.createFromBlockArray(processHTML(this.props.value))
-			) : EditorState.createEmpty(),
+			editorState: editorState,
 			id: getId(),
 		};
 	},
@@ -49,11 +65,18 @@ module.exports = Field.create({
 		});
 		const content = Draft.convertToRaw(editorState.getCurrentContent());
 		const cHtml = DraftHtmlConverter(content);
-		console.log('getCurrentContent', content);
-		console.log('HTML', cHtml, typeof (cHtml));
 		this.setState({ editorState });
-		this.setState({ value: cHtml });
-		this._currentValue = this.state.value;
+
+		// set value if the content has been changed
+		if (this.state.html !== cHtml) {
+			this.setState({ value: {
+				draft: content,
+				html: cHtml,
+			} });
+			this.setState({ draftStr: JSON.stringify(this.state.value) });
+			this._currentValue = this.state.draftStr;
+		}
+
 	},
 
 	focus () {
@@ -95,7 +118,7 @@ module.exports = Field.create({
 		// If the user changes block type before entering any text, we can
 		// either style the placeholder or hide it. Let's just hide it now.
 		let className = 'mce-edit-area RichInput';
-		var contentState = editorState.getCurrentContent();
+		let contentState = editorState.getCurrentContent();
 
 		if (!contentState.hasText()) {
 			if (contentState.getBlockMap().first().getType() !== 'unstyled') {
@@ -124,7 +147,7 @@ module.exports = Field.create({
 						ref="editor"
 						spellCheck={useSpellCheck}
 						/>
-					<FormInput type="hidden" name={this.props.path} value={this.props.value} />
+					<FormInput type="hidden" name={this.props.path} value={this.state.draftStr} />
 				</div>
 			</div>
 		);
@@ -177,13 +200,14 @@ class StyleButton extends React.Component {
 	}
 }
 
+// block settings
 const BLOCK_TYPES = [
+	{ label: 'Blockquote', style: 'blockquote' },
+	{ label: 'Code Block', style: 'code-block' },
 	{ label: 'H1', style: 'header-one' },
 	{ label: 'H2', style: 'header-two' },
-	{ label: 'Blockquote', style: 'blockquote' },
-	{ label: 'UL', style: 'unordered-list-item' },
 	{ label: 'OL', style: 'ordered-list-item' },
-	{ label: 'Code Block', style: 'code-block' },
+	{ label: 'UL', style: 'unordered-list-item' },
 ];
 
 const BlockStyleControls = (props) => {
@@ -209,11 +233,12 @@ const BlockStyleControls = (props) => {
 	);
 };
 
+// inline style settings
 var INLINE_STYLES = [
 	{ label: 'Bold', style: 'BOLD' },
 	{ label: 'Italic', style: 'ITALIC' },
-	{ label: 'Underline', style: 'UNDERLINE' },
 	{ label: 'Monospace', style: 'CODE' },
+	{ label: 'Underline', style: 'UNDERLINE' },
 ];
 
 const InlineStyleControls = (props) => {
@@ -232,187 +257,3 @@ const InlineStyleControls = (props) => {
 		</div>
 	);
 };
-
-// module.exports = HtmlField;
-
-// module.exports = Field.create({
-//
-// 	displayName: 'HtmlField',
-//
-// 	getInitialState () {
-// 		return {
-// 			id: getId(),
-// 			isFocused: false,
-// 		};
-// 	},
-//
-// 	initWysiwyg () {
-// 		if (!this.props.wysiwyg) return;
-//
-// 		var self = this;
-// 		var opts = this.getOptions();
-//
-// 		opts.setup = function (editor) {
-// 			self.editor = editor;
-// 			editor.on('change', self.valueChanged);
-// 			editor.on('focus', self.focusChanged.bind(self, true));
-// 			editor.on('blur', self.focusChanged.bind(self, false));
-// 		};
-//
-// 		this._currentValue = this.props.value;
-// 		tinymce.init(opts);
-// 	},
-//
-// 	componentDidUpdate (prevProps, prevState) {
-// 		if (prevState.isCollapsed && !this.state.isCollapsed) {
-// 			this.initWysiwyg();
-// 		}
-//
-// 		if (_.isEqual(this.props.dependsOn, this.props.currentDependencies)
-// 			&& !_.isEqual(this.props.currentDependencies, prevProps.currentDependencies)) {
-// 			var instance = tinymce.get(prevState.id);
-// 			if (instance) {
-// 				tinymce.EditorManager.execCommand('mceRemoveEditor', true, prevState.id);
-// 				this.initWysiwyg();
-// 			} else {
-// 				this.initWysiwyg();
-// 			}
-// 		}
-// 	},
-//
-// 	componentDidMount () {
-// 		this.initWysiwyg();
-// 	},
-//
-// 	componentWillReceiveProps (nextProps) {
-// 		if (this.editor && this._currentValue !== nextProps.value) {
-// 			this.editor.setContent(nextProps.value);
-// 		}
-// 	},
-//
-// 	focusChanged (focused) {
-// 		this.setState({
-// 			isFocused: focused,
-// 		});
-// 	},
-//
-// 	valueChanged () {
-// 		var content;
-// 		if (this.editor) {
-// 			content = this.editor.getContent();
-// 		} else if (this.refs.editor) {
-// 			content = this.refs.editor.getDOMNode().value;
-// 		} else {
-// 			return;
-// 		}
-//
-// 		console.log('TinyMCE content', content);
-//
-// 		this._currentValue = content;
-// 		this.props.onChange({
-// 			path: this.props.path,
-// 			value: content,
-// 		});
-// 	},
-//
-// 	getOptions () {
-// 		var plugins = ['code', 'link'];
-// 		var options = Object.assign(
-// 				{},
-// 				Keystone.wysiwyg.options,
-// 				this.props.wysiwyg
-// 			);
-// 		var toolbar = options.overrideToolbar ? '' : 'bold italic | alignleft aligncenter alignright | bullist numlist | outdent indent | removeformat | link ';
-// 		var i;
-//
-// 		if (options.enableImages) {
-// 			plugins.push('image');
-// 			toolbar += ' | image';
-// 		}
-//
-// 		if (options.enableCloudinaryUploads || options.enableS3Uploads) {
-// 			plugins.push('uploadimage');
-// 			toolbar += options.enableImages ? ' uploadimage' : ' | uploadimage';
-// 		}
-//
-// 		if (options.additionalButtons) {
-// 			var additionalButtons = options.additionalButtons.split(',');
-// 			for (i = 0; i < additionalButtons.length; i++) {
-// 				toolbar += (' | ' + additionalButtons[i]);
-// 			}
-// 		}
-// 		if (options.additionalPlugins) {
-// 			var additionalPlugins = options.additionalPlugins.split(',');
-// 			for (i = 0; i < additionalPlugins.length; i++) {
-// 				plugins.push(additionalPlugins[i]);
-// 			}
-// 		}
-// 		if (options.importcss) {
-// 			plugins.push('importcss');
-// 			var importcssOptions = {
-// 				content_css: options.importcss,
-// 				importcss_append: true,
-// 				importcss_merge_classes: true,
-// 			};
-//
-// 			Object.assign(options.additionalOptions, importcssOptions);
-// 		}
-//
-// 		if (!options.overrideToolbar) {
-// 			toolbar += ' | code';
-// 		}
-//
-// 		var opts = {
-// 			selector: '#' + this.state.id,
-// 			toolbar: toolbar,
-// 			plugins: plugins,
-// 			menubar: options.menubar || false,
-// 			skin: options.skin || 'keystone',
-// 		};
-//
-// 		if (this.shouldRenderField()) {
-// 			opts.uploadimage_form_url = options.enableS3Uploads ? Keystone.adminPath + '/api/s3/upload' : Keystone.adminPath + '/api/cloudinary/upload';
-// 		} else {
-// 			Object.assign(opts, {
-// 				mode: 'textareas',
-// 				readonly: true,
-// 				menubar: false,
-// 				toolbar: 'code',
-// 				statusbar: false,
-// 			});
-// 		}
-//
-// 		if (options.additionalOptions) {
-// 			Object.assign(opts, options.additionalOptions);
-// 		}
-//
-// 		return opts;
-// 	},
-//
-// 	getFieldClassName () {
-// 		var className = this.props.wysiwyg ? 'wysiwyg' : 'code';
-// 		return className;
-// 	},
-//
-// 	handleChange: function (event) {
-// 		console.log("handleChange", event);
-// 	},
-//
-// 	renderField () {
-// 		var className = this.state.isFocused ? 'is-focused' : '';
-// 		var style = {
-// 			height: this.props.height,
-// 		};
-// 		return (
-// 			<div className={className}>
-// 				<RichEditor html={this.props.value} onChange={this.handleChange} />
-// 				<FormInput multiline ref="editor" style={style} onChange={this.valueChanged} id={this.state.id} className={this.getFieldClassName()} name={this.props.path} value={this.props.value} />
-// 			</div>
-// 		);
-// 	},
-//
-// 	renderValue () {
-// 		return <FormInput multiline noedit value={this.props.value} />;
-// 	},
-//
-// });

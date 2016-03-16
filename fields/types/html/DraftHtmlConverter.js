@@ -3,22 +3,22 @@
 import InlineStylesProcessor from './InlineStylesProcessor';
 
 let blockTagMap = {
+	'blockquote': `<blockquote>%content%</blockquote>\n`,
+	'code-block': `<code>%content%</code>\n`,
+	'default': `<p>%content%</p>\n`,
 	'header-one': `<h1>%content%</h1>\n`,
 	'header-two': `<h1>%content%</h1>\n`,
-	'unstyled': `<p>%content%</p>\n`,
-	'code-block': `<code>%content%</code>\n`,
-	'blockquote': `<blockquote>%content%</blockquote>\n`,
 	'ordered-list-item': `<li>%content%</li>\n`,
 	'unordered-list-item': `<li>%content%</li>\n`,
-	'default': `<p>%content%</p>\n`,
+	'unstyled': `<p>%content%</p>\n`,
 };
 
 let inlineTagMap = {
 	BOLD: ['<strong>', '</strong>'],
-	ITALIC: ['<em>', '</em>'],
-	UNDERLINE: ['<u>', '</u>'],
 	CODE: ['<code>', '</code>'],
 	default: ['<span>', '</span>'],
+	ITALIC: ['<em>', '</em>'],
+	UNDERLINE: ['<u>', '</u>'],
 };
 
 let entityTagMap = {
