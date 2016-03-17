@@ -24,7 +24,6 @@ module.exports = Field.create({
 		// convert saved editor content into the editor state
 		let editorState;
 		try {
-			// const formData = JSON.parse(this.props.value);
 			const formData = this.props.value;
 			if (formData.draft && formData.html && formData.html !== '') {
 				// create an EditorState from the raw Draft data
@@ -36,19 +35,18 @@ module.exports = Field.create({
 			}
 		}
 		catch (error) {
-			// transform existing HTML content produced by TinyMCE
-			if (this.props.value && typeof (this.props.value) === 'string') {
-				// create an EditorState from HTML
-				editorState = EditorState.createWithContent(ContentState.createFromBlockArray(processHTML(this.props.value)));
-			} else {
-				// create empty EditorState
-				editorState = EditorState.createEmpty();
-			}
+			// create empty EditorState
+			editorState = EditorState.createEmpty();
 		}
 
 		return {
 			editorState: editorState,
 			id: getId(),
+			value: {
+				draft: null,
+				draftStr: '',
+				html: null
+			}
 		};
 	},
 
@@ -64,11 +62,11 @@ module.exports = Field.create({
 			value: this.state.value,
 		});
 		const content = Draft.convertToRaw(editorState.getCurrentContent());
-		const cHtml = DraftHtmlConverter(content);
+		const cHtml = DraftHtmlConverter.convert(content);
 		this.setState({ editorState });
 
 		// set value if the content has been changed
-		if (this.state.html !== cHtml) {
+		if (this.state.value.html !== cHtml) {
 			this.setState({ value: {
 				draft: content,
 				html: cHtml,

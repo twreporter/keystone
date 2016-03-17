@@ -31,35 +31,19 @@ html.prototype.addFilterToQuery = TextType.prototype.addFilterToQuery;
  */
 
 html.prototype.addToSchema = function () {
-	console.log("addToSchema");
 	var schema = this.list.schema;
 
 	var paths = this.paths = {
-		// md: this._path.append('.md'),
 		draft: this._path.append('.draft'),
-		// draftHistory: this._path.append('.draftHistory'),
 		html: this._path.append('.html'),
 	};
 
 	var markedOptions = this.markedOptions;
 
-	// var setDraft = function (val) {
-	// 	if (val && val.draft && val.html) {
-	// 		console.log("\n setDraft", val.draft, typeof(val.draft));
-	// 		console.log("\n setHtml", val.html);
-	// 		this.set(paths.draft, JSON.stringify(val.draft));
-	// 		this.set(paths.html, val.html);
-	// 	}
-	// 	return JSON.stringify(val.draft);
-	// };
-	console.log("this.path", this.path);
-
 	schema.nested[this.path] = true;
 	schema.add({
 		html: { type: String },
-		// md: { type: String, set: setMarkdown },
 		draft: { type: Object },
-		// draftHistory: { type: Array, set: setMarkdown },
 	}, this.path + '.');
 
 	this.bindUnderscoreMethods();
@@ -113,20 +97,12 @@ html.prototype.isModified = function (item) {
 
 html.prototype.updateItem = function (item, data, callback) {
 	var value = this.getValueFromData(data);
-	console.log("updateItem");
 	if (value && value !== '') {
 		var dObj = JSON.parse(value);
-		console.log("\n *** data:", data, "\n *** dObj:", dObj);
-		console.log("\n *** value.draft:", dObj.draft);
 		if (dObj.draft) {
 			item.set(this.paths.draft, dObj.draft);
 			item.set(this.paths.html, dObj.html);
 		}
-		// if (data) {
-		// 	item.set(this.paths.draft, value.draft);
-		// } else if (this.paths.draft in data) {
-		// 	item.set(this.paths.draft, data[this.paths.draft]);
-		// }
 	}
 
 	process.nextTick(callback);
