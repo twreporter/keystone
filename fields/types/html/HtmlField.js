@@ -1,16 +1,20 @@
-import { Editor, EditorState, ContentState, RichUtils } from 'draft-js';
+'use strict';
+
 import { FormInput } from 'elemental';
-import Draft from 'draft-js';
+import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
+import decorator from './entityDecorator'
+import CONSTANT from './CONSTANT';
 import DraftHtmlConverter from './DraftHtmlConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import Field from '../Field';
+import LinkButton from './LinkButton';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import tinymce from 'tinymce';
 
-let { processHTML } = DraftPasteProcessor;
 
-var lastId = 0;
+let { processHTML } = DraftPasteProcessor;
+let lastId = 0;
 
 function getId () {
 	return 'keystone-html-' + lastId++;
@@ -21,60 +25,60 @@ module.exports = Field.create({
 	displayName: 'HtmlField',
 
 	getInitialState () {
+
 		// convert saved editor content into the editor state
 		let editorState;
 		try {
-			const formData = this.props.value;
-			if (formData.draft && formData.html && formData.html !== '') {
+			const {draft, html} = this.props.value;
+			if (draft && html !== '') {
 				// create an EditorState from the raw Draft data
-				let contentState = Draft.ContentState.createFromBlockArray(Draft.convertFromRaw(formData.draft));
-				editorState = Draft.EditorState.createWithContent(contentState);
+				let contentState = ContentState.createFromBlockArray(convertFromRaw(draft));
+				editorState = EditorState.createWithContent(contentState, decorator);
 			} else {
 				// create empty draft object
-				editorState = EditorState.createEmpty();
+				editorState = EditorState.createEmpty(decorator);
 			}
 		}
 		catch (error) {
 			// create empty EditorState
-			editorState = EditorState.createEmpty();
+			editorState = EditorState.createEmpty(decorator);
 		}
 
 		return {
-			editorState: editorState,
-			id: getId(),
-			value: {
-				draft: null,
-				draftStr: '',
-				html: null
-			}
+            editorState: editorState,
+            valueStr: JSON.stringify(this.props.value),
+			id: getId()
 		};
 	},
 
-	componentWillReceiveProps (nextProps) {
-		if (this.editor && this._currentValue !== nextProps.value) {
-			this.editor.setContent(nextProps.value);
-		}
-	},
+    shouldComponentUpdate (nextProps, nextState) {
+        // editorState is immutable
+        if (this.state.editorState === nextState.editorState) {
+            return false;
+        }
+        return true;
+    },
 
 	onChange (editorState) {
-		this.props.onChange({
-			path: this.props.path,
-			value: this.state.value,
-		});
-		const content = Draft.convertToRaw(editorState.getCurrentContent());
-		const cHtml = DraftHtmlConverter.convert(content);
-		this.setState({ editorState });
+		const content = convertToRaw(editorState.getCurrentContent());
+        const cHtml = DraftHtmlConverter.convert(content);
 
-		// set value if the content has been changed
-		if (this.state.value.html !== cHtml) {
-			this.setState({ value: {
-				draft: content,
-				html: cHtml,
-			} });
-			this.setState({ draftStr: JSON.stringify(this.state.value) });
-			this._currentValue = this.state.draftStr;
-		}
+        const valueStr = JSON.stringify({
+            draft: content,
+            html: cHtml
+        });
 
+        // update value if the content has been changed
+        if (valueStr !== this.state.valueStr) {
+            this.setState({
+                valueStr,
+                editorState
+            });
+        } else {
+            this.setState({
+                editorState
+            })
+        }
 	},
 
 	focus () {
@@ -109,6 +113,36 @@ module.exports = Field.create({
 		);
 	},
 
+    toggleLink (entity, value) {
+        const {url, text} = value;
+        const {editorState} = this.state;
+        const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || url, url: url}) : null;
+        const selection = editorState.getSelection();
+        let action;
+        let contentState;
+
+        if (selection.isCollapsed()) {
+            action = 'insertText';
+        } else {
+            action = 'replaceText';
+        }
+        contentState = Modifier[action](
+            editorState.getCurrentContent(),
+            selection,
+            text || url,
+            null,
+            entityKey
+        );
+        const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
+        this.onChange(_editorState);
+    },
+
+    toggleEntity (entity, value) {
+        if (entity === CONSTANT.link) {
+            this.toggleLink(entity, value);
+        }
+    },
+
 	renderField () {
 		const { editorState } = this.state;
 		const useSpellCheck = true;
@@ -129,11 +163,15 @@ module.exports = Field.create({
 				<BlockStyleControls
 					editorState={editorState}
 					onToggle={this.toggleBlockType}
-					/>
+				/>
 				<InlineStyleControls
 					editorState={editorState}
 					onToggle={this.toggleInlineStyle}
-					/>
+                />
+                <EntityControls
+                    editorState={editorState}
+                    onToggle={this.toggleEntity}
+                />
 				<div className={className} onClick={this.focus}>
 					<Editor
 						blockStyleFn={getBlockStyle}
@@ -145,14 +183,14 @@ module.exports = Field.create({
 						ref="editor"
 						spellCheck={useSpellCheck}
 						/>
-					<FormInput type="hidden" name={this.props.path} value={this.state.draftStr} />
+					<FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
 				</div>
 			</div>
 		);
 	},
 
 	renderValue () {
-		return <FormInput multiline noedit value={this.props.value} />;
+		return <FormInput multiline noedit value={JSON.stringify(this.props.value)} />;
 	},
 });
 
@@ -255,3 +293,52 @@ const InlineStyleControls = (props) => {
 		</div>
 	);
 };
+
+// entities
+const ENTITIES = [CONSTANT.link];
+const EntityControls = (props) => {
+    const {editorState} = props;
+    const selection = editorState.getSelection();
+    const startKey = selection.getStartKey();
+    const startOffset = selection.getStartOffset();
+    const startBlock = editorState
+    .getCurrentContent()
+    .getBlockForKey(selection.getStartKey());
+
+    const endOffset = selection.getEndOffset();
+
+    const entityKey = startBlock.getEntityAt(startOffset);
+    let text = '';
+    let url = '';
+
+    if (!selection.isCollapsed()) {
+        const blockText = startBlock.getText();
+        text = blockText.slice(startOffset, endOffset);
+    }
+    if (entityKey !== null) {
+        const linkInstance = Entity.get(entityKey);
+        const data = linkInstance.getData();
+        url = data ? data.url : url;
+        text = data ? data.text : (text || url);
+    }
+
+    function onToggle (entity, changedValue) {
+        props.onToggle(entity, changedValue);
+    }
+
+    return (
+        <div className="RichEditor-controls">
+			{ENTITIES.map((entity) =>
+				<LinkButton
+					active={ entityKey !== null}
+					key={entity}
+					label={entity}
+					onToggle={onToggle.bind(null, entity)}
+                    urlValue={url}
+                    textValue={text}
+				/>
+			)}
+        </div>
+    );
+};
+
