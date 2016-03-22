@@ -118,16 +118,17 @@ module.exports = Field.create({
         const {editorState} = this.state;
         const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || url, url: url}) : null;
         const selection = editorState.getSelection();
-        let action;
-        let contentState;
+        let contentState = editorState.getCurrentContent();
 
         if (selection.isCollapsed()) {
-            action = 'insertText';
-        } else {
-            action = 'replaceText';
+            contentState = Modifier.removeRange(
+                editorState.getCurrentContent(),
+                selection,
+                'backward'
+            );
         }
-        contentState = Modifier[action](
-            editorState.getCurrentContent(),
+        contentState = Modifier.replaceText(
+            contentState,
             selection,
             text || url,
             null,
