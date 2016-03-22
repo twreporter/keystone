@@ -22,7 +22,7 @@ let inlineTagMap = {
 };
 
 let entityTagMap = {
-	link: ['<a href="<%= href %>">', '</a>'],
+    link: ['<a href="<%= url %>">', '</a>'],
 };
 
 let nestedTagMap = {
