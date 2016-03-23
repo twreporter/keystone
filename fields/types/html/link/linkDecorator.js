@@ -1,6 +1,6 @@
 import React from 'react';
 import { Entity } from 'draft-js';
-import CONSTANT from './CONSTANT';
+import CONSTANT from '../CONSTANT';
 
 const styles = {
     link: {
@@ -31,4 +31,4 @@ function findLinkEntities(contentBlock, callback) {
     );
 }
 
-export default { strategy: findEntityRanges, component: Link };
+export default { strategy: findLinkEntities, component: Link };
