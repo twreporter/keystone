@@ -4,10 +4,10 @@ import { FormInput } from 'elemental';
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
 import decorator from './entityDecorator'
 import CONSTANT from './CONSTANT';
-import DraftHtmlConverter from './DraftHtmlConverter';
+import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import Field from '../Field';
-import LinkButton from './LinkButton';
+import LinkButton from './link/LinkButton';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import tinymce from 'tinymce';
@@ -61,7 +61,7 @@ module.exports = Field.create({
 
 	onChange (editorState) {
 		const content = convertToRaw(editorState.getCurrentContent());
-        const cHtml = DraftHtmlConverter.convert(content);
+        const cHtml = DraftConverter.convertToHtml(content);
 
         const valueStr = JSON.stringify({
             draft: content,
