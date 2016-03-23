@@ -2,16 +2,16 @@ import { Button, FormField, FormInput, InputGroup, Modal } from 'elemental';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const LinkButton = React.createClass({
-    displayName: 'LinkButton',
+const LinkEditingBlock = React.createClass({
+    displayName: 'LinkEditingBlock',
 
     _textValue: '',
 
     _urlValue: '',
 
     propTypes: {
-        active: React.PropTypes.bool,
         label: React.PropTypes.string,
+        isModalOpen: React.PropTypes.bool,
         onToggle: React.PropTypes.func.isRequired,
         textValue: React.PropTypes.string,
         urlValue: React.PropTypes.string
@@ -19,8 +19,8 @@ const LinkButton = React.createClass({
 
     getDefaultProps () {
         return {
-            active: false,
-            label: 'Link',
+            label: 'link',
+            isModalOpen: true,
             textValue: '',
             urlValue: ''
         }
@@ -30,7 +30,7 @@ const LinkButton = React.createClass({
         this._textValue = this.props.textValue;
         this._urlValue = this.props.urlValue;
         return {
-            isModalOpen: false,
+            isModalOpen: this.props.isModalOpen,
             textValue: this.props.textValue,
             urlValue: this.props.urlValue
         };
@@ -40,9 +40,16 @@ const LinkButton = React.createClass({
         this._textValue = nextProps.textValue;
         this._urlValue = nextProps.urlValue;
         this.setState({
+            isModalOpen: nextProps.isModalOpen,
             textValue: nextProps.textValue,
             urlValue: nextProps.urlValue
         });
+    },
+
+    componentWillUnmount () {
+        console.log('unmount LinkEditingBlock');
+        this._textValue = '';
+        this._urlValue = '';
     },
 
     toggleModal () {
@@ -71,7 +78,7 @@ const LinkButton = React.createClass({
         });
     },
 
-    showEditingBlock () {
+    render() {
         return (
             <Modal isOpen={this.state.isModalOpen} onCancel={this.toggleModal} backdropClosesModal>
                 <Modal.Header text={"Insert " + this.props.label} showCloseButton onClose={this.toggleModal} />
@@ -89,23 +96,7 @@ const LinkButton = React.createClass({
                 </Modal.Footer>
             </Modal>
         );
-    },
-
-    render() {
-        let className = 'RichEditor-styleButton Button Button--link';
-        if (this.props.active) {
-            className += ' RichEditor-activeButton';
-        }
-
-        return (
-            <div>
-                {this.showEditingBlock()}
-                <span className={className} onMouseDown={this.toggleModal}>
-                    {this.props.label}
-                </span>
-            </div>
-        );
     }
 });
 
-export default LinkButton;
+export default LinkEditingBlock;

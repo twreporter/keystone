@@ -7,7 +7,7 @@ import CONSTANT from './CONSTANT';
 import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import Field from '../Field';
-import LinkButton from './LinkButton';
+import LinkButton from './link/LinkButton';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import tinymce from 'tinymce';
