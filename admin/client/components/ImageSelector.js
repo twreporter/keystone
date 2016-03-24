@@ -1,5 +1,5 @@
 'use strict';
-import { Button, FormInput, InputGroup, Pagination } from 'elemental';
+import { Button, FormInput, InputGroup, Modal, Pagination } from 'elemental';
 import qs from 'qs';
 import xhr from 'xhr';
 import ImagesSelection from '../../../admin/client/components/ImagesSelection';
@@ -25,6 +25,7 @@ class ImageSelector extends React.Component {
             images: [],
             totalImages: 0,
             isSelectionOpen: props.isSelectionOpen,
+            selectedImages: props.selectedImages,
             tagFilter: ''
         };
 
@@ -41,6 +42,15 @@ class ImageSelector extends React.Component {
         this.getImages = this._getImages.bind(this);
         this.renderTagFilter = this._renderTagFilter.bind(this);
         this.onChange = props.onChange;
+        this.onCancel = () => {
+            this.toggleSelect(false);
+            props.onFinish();
+        }
+        this.onSave = () => {
+            this.toggleSelect(false);
+            this.onChange(this.state.selectedImages);
+            props.onFinish();
+        }
     }
 
     componentWillMount () {
@@ -53,7 +63,8 @@ class ImageSelector extends React.Component {
 
     componentWillReceiveProps (nextProps) {
         this.setState({
-            isSelectionOpen: nextProps.isSelectionOpen
+            isSelectionOpen: nextProps.isSelectionOpen,
+            selectedImages: nextProps.selectedImages
         });
     }
 
@@ -161,16 +172,15 @@ class ImageSelector extends React.Component {
     }
 
 	_updateSelection (selectedImages) {
-        this.onChange(selectedImages);
+        this.setState({
+            selectedImages: selectedImages
+        });
 	}
 
 	_toggleSelect (visible) {
 		this.setState({
             isSelectionOpen: visible
 		});
-        if (!visible) {
-            this.props.onFinish();
-        }
     }
 
     _getImages () {
@@ -227,6 +237,7 @@ class ImageSelector extends React.Component {
         );
     }
 
+
 	render () {
         if (this.state.error) {
             return (
@@ -235,16 +246,18 @@ class ImageSelector extends React.Component {
         }
 
         // const { many } = this.props;
-        const { isSelectionOpen, images } = this.state;
-        if ( isSelectionOpen && images.length > 0) {
-            return (
-                <ImagesSelection
-                    images={images}
-                    modalIsOpen={isSelectionOpen}
-                    onCancel={this.toggleSelect.bind(this, false)}
-                    updateSelection={this.updateSelection}
-                >
+        const { isSelectionOpen, images, selectedImages } = this.state;
+        return (
+            <Modal isOpen={isSelectionOpen} onCancel={this.onCancel} backdropClosesModal>
+                <Modal.Header text="Select image" showCloseButton onClose={this.onCancel} />
+                <Modal.Body>
                     {this.renderTagFilter()}
+                    <ImagesSelection
+                        doSelectMany={this.props.doSelectMany}
+                        images={images}
+                        selectedImages={selectedImages}
+                        updateSelection={this.updateSelection}
+                    />
                     <Pagination
                         currentPage={this.state.currentPage}
                         onPageSelect={this.handlePageSelect}
@@ -252,24 +265,30 @@ class ImageSelector extends React.Component {
                         total={this.state.totalImages}
                         limit={PAGINATION_LIMIT}
                     />
-                </ImagesSelection>
-            );
-        }
-
-        return null;
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button type="primary" onClick={this.onSave}>Save</Button>
+                    <Button type="primary" onClick={this.onCancel}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>
+        );
     }
 }
 
 ImageSelector.propTypes = {
     apiPath: React.PropTypes.string,
+    doSelectMany: React.PropTypes.bool,
     isSelectionOpen: React.PropTypes.bool,
     onChange: React.PropTypes.func.isRequired,
-    onFinish: React.PropTypes.func.isRequired
+    onFinish: React.PropTypes.func.isRequired,
+    selectedImages: React.PropTypes.array
 };
 
 ImageSelector.defaultProps = {
     apiPath: '',
-    isSelectionOpen: false
+    doSelectMany: false,
+    isSelectionOpen: false,
+    selectedImages: []
 };
 
 export default ImageSelector;

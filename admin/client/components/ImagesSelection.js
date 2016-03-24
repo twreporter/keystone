@@ -1,6 +1,4 @@
 import React from 'react';
-import { Button, Modal } from 'elemental';
-import xhr from 'xhr';
 
 const ImageItem = React.createClass({
     displayName: 'ImageItem',
@@ -104,7 +102,9 @@ const ImageGrid = React.createClass({
         const { columns, padding, onSelect, onDeselect } = this.props;
         const width = Math.floor(100 / columns);
         const imageNodes = images.map((image, index) => {
-            const isSelected = selectedImages.indexOf(image) > -1;
+            const isSelected = selectedImages.find((element) => {
+                return element.id === image.id;
+            }) ? true : false;
             return (
                 <ImageItem
                     id={image.id}
@@ -131,37 +131,33 @@ const ImagesSelection = React.createClass({
 	displayName: 'ImagesSelection',
 	propTypes: {
         doSelectMany: React.PropTypes.bool,
-		err: React.PropTypes.object,
         images: React.PropTypes.array,
-        loadMore: React.PropTypes.func,
-        modalIsOpen: React.PropTypes.bool,
-		onCancel: React.PropTypes.func,
         selectedImages: React.PropTypes.array,
-        updateSelection: React.PropTypes.func
+        updateSelection: React.PropTypes.func.isRequired
 	},
+
 	getDefaultProps () {
 		return {
             doSelectMany: false,
-            err: null,
             images: [],
-            modalIsOpen: false,
 			selectedImages: []
 		};
 	},
+
 	getInitialState () {
 		return {
             doSelectMany: this.props.doSelectMany,
-			err: this.props.err,
             images: Array.isArray(this.props.images) ? this.props.images : [],
             modalIsOpen: this.props.modalIsOpen,
             selectedImages: Array.isArray(this.props.selectedImages) ? this.props.selectedImages : []
 		};
 	},
+
     componentWillReceiveProps (nextProps) {
         this.setState({
             doSelectMany: nextProps.doSelectMany,
             images: nextProps.images,
-            modalIsOpen: nextProps.modalIsOpen
+            selectedImages: nextProps.selectedImages
         });
     },
 
@@ -176,6 +172,7 @@ const ImagesSelection = React.createClass({
         this.setState({
             selectedImages: _selectImages
         });
+        this.props.updateSelection(_selectImages);
     },
 
     onDeselect (image) {
@@ -190,32 +187,18 @@ const ImagesSelection = React.createClass({
         this.setState({
             selectedImages: _selectImages
         });
-    },
-
-    onSave () {
-        this.props.updateSelection(this.state.selectedImages);
-        this.props.onCancel();
+        this.props.updateSelection(_selectImages);
     },
 
 	render () {
 		return (
-            <Modal isOpen={this.state.modalIsOpen} onCancel={this.props.onCancel} backdropClosesModal>
-                <Modal.Header text="Select image" showCloseButton onClose={this.props.onCancel} />
-                <Modal.Body>
-                    {this.props.children}
-                    <ImageGrid
-                        doSelectMany={this.state.doSelectMany}
-                        images={this.state.images}
-                        onDeselect={this.onDeselect}
-                        onSelect={this.onSelect}
-                        selectedImages={this.state.selectedImages}
-                    />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="primary" onClick={this.onSave}>Save</Button>
-                    <Button type="primary" onClick={this.props.onCancel}>Cancel</Button>
-                </Modal.Footer>
-            </Modal>
+            <ImageGrid
+                doSelectMany={this.state.doSelectMany}
+                images={this.state.images}
+                onDeselect={this.onDeselect}
+                onSelect={this.onSelect}
+                selectedImages={this.state.selectedImages}
+            />
 		);
 	}
 });

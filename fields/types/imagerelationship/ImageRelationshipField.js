@@ -166,6 +166,7 @@ module.exports = Field.create({
             <div>
                 <ImageSelector
                     isSelectionOpen={isSelectionOpen}
+                    selectedImages={selectedImages}
                     onChange={this.updateSelection}
                     apiPath={this.props.refList.path}
                     onFinish={this.closeSelection}
