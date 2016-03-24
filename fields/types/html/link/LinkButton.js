@@ -1,49 +1,11 @@
-import { Button, FormField, FormInput, InputGroup, Modal } from 'elemental';
+import StyleButton from '../base/StyleButton';
 import LinkEditingBlock from './LinkEditingBlock';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-const LinkButton = React.createClass({
-    displayName: 'LinkButton',
-
-    _textValue: '',
-
-    _urlValue: '',
-
-    propTypes: {
-        active: React.PropTypes.bool,
-        label: React.PropTypes.string,
-        onToggle: React.PropTypes.func.isRequired,
-        textValue: React.PropTypes.string,
-        urlValue: React.PropTypes.string
-    },
-
-    getDefaultProps () {
-        return {
-            active: false,
-            label: 'Link'
-        }
-    },
-
-    getInitialState () {
-        return {
-            active: this.props.active,
-            shouldRenderEditingBlock: false
-        };
-    },
-
-    componentWillReceiveProps (nextProps) {
-        this.setState({
-            active: nextProps.active,
-            shouldRenderEditingBlock: false
-        });
-    },
-
-    renderEditingBlock (e) {
-        this.setState({
-            shouldRenderEditingBlock: true
-        });
-    },
+export class LinkButton extends StyleButton {
+    constructor(props) {
+        super(props);
+    }
 
     render() {
         const { active, shouldRenderEditingBlock } = this.state;
@@ -59,15 +21,18 @@ const LinkButton = React.createClass({
             />
         ) : null;
 
+        let button = super.render();
+
         return (
             <div>
                 {Block}
-                <span className={className} onClick={this.renderEditingBlock}>
-                    {this.props.label}
-                </span>
+                {button}
             </div>
         );
     }
-});
+}
+
+LinkButton.propTypes = StyleButton.propTypes;
+LinkButton.defaultProps = StyleButton.defaultProps;
 
 export default LinkButton;
