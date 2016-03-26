@@ -5,7 +5,7 @@ import xhr from 'xhr';
 import ImagesSelection from '../../../admin/client/components/ImagesSelection';
 import React from 'react';
 
-const PAGE_SIZE = 1;
+const PAGE_SIZE = 3;
 const PAGINATION_LIMIT = 5;
 const API = '/api/';
 
@@ -15,9 +15,6 @@ class ImageSelector extends React.Component {
 
         // tag input in the tag field
         this._tagInput = '';
-
-        // keystone api path
-        this.apiPath = props.apiPath;
 
         this.state = {
             currentPage: 1,
@@ -41,14 +38,13 @@ class ImageSelector extends React.Component {
         this.toggleSelect = this._toggleSelect.bind(this);
         this.getImages = this._getImages.bind(this);
         this.renderTagFilter = this._renderTagFilter.bind(this);
-        this.onChange = props.onChange;
         this.onCancel = () => {
             this.toggleSelect(false);
             props.onFinish();
         }
         this.onSave = () => {
             this.toggleSelect(false);
-            this.onChange(this.state.selectedImages);
+            props.onChange(this.state.selectedImages);
             props.onFinish();
         }
     }
@@ -113,11 +109,10 @@ class ImageSelector extends React.Component {
      * @return {Promise}
      */
 	_loadImages (queryString = '') {
-        const _this = this;
 
         return new Promise((resolve, reject) => {
             xhr({
-                url: Keystone.adminPath + API + _this.apiPath + '?' + queryString,
+                url: Keystone.adminPath + API + this.props.apiPath + '?' + queryString,
                 responseType: 'json',
             }, (err, resp, data) => {
                 if (err) {
@@ -184,18 +179,17 @@ class ImageSelector extends React.Component {
     }
 
     _getImages () {
-        const _this = this;
         this.buildQueryString('', this.state.currentPage, PAGE_SIZE)
         .then((queryString) => {
-            return _this.loadImages(queryString);
+            return this.loadImages(queryString);
         })
         .then(function(images) {
-            _this.setState({
+            this.setState({
                 images: images
             });
         }, function(reason) {
             console.log(reason);
-            _this.setState({
+            this.setState({
                 error: reason
             });
         });
@@ -248,27 +242,29 @@ class ImageSelector extends React.Component {
         // const { many } = this.props;
         const { isSelectionOpen, images, selectedImages } = this.state;
         return (
-            <Modal isOpen={isSelectionOpen} onCancel={this.onCancel} backdropClosesModal>
+            <Modal isOpen={isSelectionOpen} onCancel={this.onCancel} width="large" backdropClosesModal>
                 <Modal.Header text="Select image" showCloseButton onClose={this.onCancel} />
                 <Modal.Body>
-                    {this.renderTagFilter()}
-                    <ImagesSelection
-                        doSelectMany={this.props.doSelectMany}
-                        images={images}
-                        selectedImages={selectedImages}
-                        updateSelection={this.updateSelection}
-                    />
-                    <Pagination
-                        currentPage={this.state.currentPage}
-                        onPageSelect={this.handlePageSelect}
-                        pageSize={PAGE_SIZE}
-                        total={this.state.totalImages}
-                        limit={PAGINATION_LIMIT}
-                    />
+                    <div style={{width: '50%'}}>
+                        {this.renderTagFilter()}
+                        <ImagesSelection
+                            doSelectMany={this.props.doSelectMany}
+                            images={images}
+                            selectedImages={selectedImages}
+                            updateSelection={this.updateSelection}
+                        />
+                        <Pagination
+                            currentPage={this.state.currentPage}
+                            onPageSelect={this.handlePageSelect}
+                            pageSize={PAGE_SIZE}
+                            total={this.state.totalImages}
+                            limit={PAGINATION_LIMIT}
+                        />
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type="primary" onClick={this.onSave}>Save</Button>
-                    <Button type="primary" onClick={this.onCancel}>Cancel</Button>
+                    <Button type="link-cancel" onClick={this.onCancel}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
         );
