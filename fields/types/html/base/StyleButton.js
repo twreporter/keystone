@@ -42,17 +42,12 @@ class StyleButton extends React.Component {
 
 StyleButton.propTypes = {
     active: React.PropTypes.bool,
-    label: React.PropTypes.string,
-    onToggle: React.PropTypes.func.isRequired,
-    textValue: React.PropTypes.string,
-    urlValue: React.PropTypes.string
+    label: React.PropTypes.string
 };
 
 StyleButton.defaultProps = {
     active: false,
-    label: 'Link',
-    textValue: '',
-    urlValue: '',
+    label: 'base'
 };
 
 export default StyleButton;

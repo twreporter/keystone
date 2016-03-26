@@ -8,17 +8,23 @@ class ImageItem extends React.Component {
         this.state = {
             isSelected: props.isSelected
         };
-        this.handleClick = (e) => {
-            props.onClick(e);
-        }
     }
+
+    _handleClick (e) {
+        this.props.onClick(e);
+    }
+
+    _handleRemove (e) {
+        this.props.onRemove(e);
+    }
+
     componentWillReceiveProps (nextProps) {
         this.setState({
             isSelected: nextProps.isSelected
         });
     }
     render () {
-        const { width, padding, url, link, doShowRemove, onRemove } = this.props;
+        const { width, padding, url, link, doShowRemove } = this.props;
         const { isSelected } = this.state;
 
         const styles = {
@@ -41,12 +47,12 @@ class ImageItem extends React.Component {
         };
 
         const RemoveBt = doShowRemove ? (
-            <Pill type="primary" onClear={onRemove} />
+            <Pill type="primary" onClear={this._handleRemove.bind(this)} />
         ): null;
 
         return (
-            <div onClick={this.handleClick} className="imageGridItem" style={styles.imageGridItem}>
-                <div className="imageWrapper" style={styles.imageWrapper}></div>
+            <div onClick={this._handleClick.bind(this)} className="imageGridItem" style={styles.imageGridItem}>
+                <div className="imageWrapper" style={styles.imageWrapper}>{RemoveBt}</div>
             </div>
         );
     }
@@ -78,15 +84,15 @@ class ImageGrid extends React.Component {
             images: props.images,
             selectedImages: props.selectedImages
         };
-        this.handleClick = (image) => {
-            this.props.handleClick(image);
-        }
     }
     componentWillReceiveProps (nextProps) {
         this.setState({
             images: nextProps.images,
             selectedImages: nextProps.selectedImages
         });
+    }
+    _handleClick (image) {
+        this.props.onClick(image);
     }
     render () {
         const { images, selectedImages } = this.state;
@@ -102,7 +108,7 @@ class ImageGrid extends React.Component {
                     isSelected={isSelected}
                     key={image.id}
                     link={image.link}
-                    onClick={this.handleClick.bind(this, image)}
+                    onClick={this._handleClick.bind(this, image)}
                     padding={padding}
                     url={image.url}
                     width={width}
@@ -121,7 +127,7 @@ class ImageGrid extends React.Component {
 ImageGrid.propTypes = {
     columns: React.PropTypes.number,
     images: React.PropTypes.array.isRequired,
-    handleClick: React.PropTypes.func.isRequired,
+    onClick: React.PropTypes.func.isRequired,
     padding: React.PropTypes.number,
     selectedImages: React.PropTypes.array
 };

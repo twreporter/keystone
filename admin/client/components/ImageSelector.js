@@ -27,26 +27,12 @@ class ImageSelector extends React.Component {
         };
 
         // method binding
-        this.buildQueryString = this._buildQueryString.bind(this);
-        this.buildTagFilters = this._buildTagFilters.bind(this);
-        this.loadImages = this._loadImages.bind(this);
-        this.loadTagIds = this._loadTagIds.bind(this);
-        this.handlePageSelect = this._handlePageSelect.bind(this);
-        this.updateSelection = this._updateSelection.bind(this);
-        this.searchByTag = this._searchByTag.bind(this);
         this.tagFilterChange = this._tagFilterChange.bind(this);
-        this.toggleSelect = this._toggleSelect.bind(this);
-        this.getImages = this._getImages.bind(this);
-        this.renderTagFilter = this._renderTagFilter.bind(this);
-        this.onCancel = () => {
-            this.toggleSelect(false);
-            props.onFinish();
-        }
-        this.onSave = () => {
-            this.toggleSelect(false);
-            props.onChange(this.state.selectedImages);
-            props.onFinish();
-        }
+        this.updateSelection = this._updateSelection.bind(this);
+        this.handlePageSelect = this._handlePageSelect.bind(this);
+        this.searchByTag = this._searchByTag.bind(this);
+        this.handleCancel = this._handleCancel.bind(this);
+        this.handleSave = this._handleSave.bind(this);
     }
 
     componentWillMount () {
@@ -64,13 +50,23 @@ class ImageSelector extends React.Component {
         });
     }
 
+    _handleCancel () {
+        this.toggleSelect(false);
+        this.props.onFinish();
+    }
+    _handleSave () {
+        this.toggleSelect(false);
+        this.props.onChange(this.state.selectedImages);
+        this.props.onFinish();
+    }
+
     /** build query string for keystone api
      * @param {string} [tag=] - Tag input
      * @param {number} [page=0] - Page we used to calculate how many items we want to skip
      * @param {limit} [limit=10] - The number of items we want to get
      * @return {Promise}
      */
-    _buildQueryString (tag='', page=0, limit=10) {
+    buildQueryString (tag='', page=0, limit=10) {
         if (tag) {
             return this.loadTagIds(tag)
             .then((ids) => {
@@ -89,7 +85,7 @@ class ImageSelector extends React.Component {
      * @param {limit} [limit=10] - The number of items we want to get
      * @return {string} a query string
      */
-    _buildTagFilters (tagIds=[], page=0, limit=10) {
+    buildTagFilters (tagIds=[], page=0, limit=10) {
         let filters = {
             tags: {
                 value: tagIds
@@ -108,8 +104,7 @@ class ImageSelector extends React.Component {
      * @param {string} [queryString=] - Query string for keystone api
      * @return {Promise}
      */
-	_loadImages (queryString = '') {
-
+	loadImages (queryString = '') {
         return new Promise((resolve, reject) => {
             xhr({
                 url: Keystone.adminPath + API + this.props.apiPath + '?' + queryString,
@@ -132,7 +127,7 @@ class ImageSelector extends React.Component {
      * @param {string} tag - Tag string
      * @return {Promise}
      */
-    _loadTagIds (tag) {
+    loadTagIds (tag) {
         return new Promise((resolve, reject) => {
             xhr({
                 url: Keystone.adminPath + API + 'tags?basic&search=' + tag,
@@ -172,22 +167,22 @@ class ImageSelector extends React.Component {
         });
 	}
 
-	_toggleSelect (visible) {
+	toggleSelect (visible) {
 		this.setState({
             isSelectionOpen: visible
 		});
     }
 
-    _getImages () {
+    getImages () {
         this.buildQueryString('', this.state.currentPage, PAGE_SIZE)
         .then((queryString) => {
             return this.loadImages(queryString);
         })
-        .then(function(images) {
+        .then((images) => {
             this.setState({
                 images: images
             });
-        }, function(reason) {
+        }, (reason) => {
             console.log(reason);
             this.setState({
                 error: reason
@@ -218,7 +213,7 @@ class ImageSelector extends React.Component {
         });
     }
 
-    _renderTagFilter () {
+    renderTagFilter () {
         return (
             <InputGroup contiguous>
             <InputGroup.Section grow>
@@ -242,8 +237,8 @@ class ImageSelector extends React.Component {
         // const { many } = this.props;
         const { isSelectionOpen, images, selectedImages } = this.state;
         return (
-            <Modal isOpen={isSelectionOpen} onCancel={this.onCancel} width="large" backdropClosesModal>
-                <Modal.Header text="Select image" showCloseButton onClose={this.onCancel} />
+            <Modal isOpen={isSelectionOpen} onCancel={this.handleCancel} width="large" backdropClosesModal>
+                <Modal.Header text="Select image" showCloseButton onClose={this.handleCancel} />
                 <Modal.Body>
                     <div style={{width: '50%'}}>
                         {this.renderTagFilter()}
@@ -263,8 +258,8 @@ class ImageSelector extends React.Component {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button type="primary" onClick={this.onSave}>Save</Button>
-                    <Button type="link-cancel" onClick={this.onCancel}>Cancel</Button>
+                    <Button type="primary" onClick={this.handleSave}>Save</Button>
+                    <Button type="link-cancel" onClick={this.handleCancel}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
         );

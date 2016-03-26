@@ -59,7 +59,7 @@ const ImagesSelection = React.createClass({
             <ImageGrid
                 doSelectMany={this.state.doSelectMany}
                 images={this.state.images}
-                handleClick={this.handleClick}
+                onClick={this.handleClick}
                 selectedImages={this.state.selectedImages}
             />
 		);

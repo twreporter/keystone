@@ -2,11 +2,10 @@
 
 import { CompositeDecorator } from 'draft-js';
 import linkDecorator from './link/linkDecorator';
+import imageDecorator from './image/imageDecorator';
 import React from 'react';
 
-const decorator = new CompositeDecorator([{
-    strategy: linkDecorator.strategy,
-    component: linkDecorator.component
-}]);
+const decorator = new CompositeDecorator([ linkDecorator, imageDecorator
+]);
 
 export default decorator;

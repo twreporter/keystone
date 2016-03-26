@@ -1,6 +1,7 @@
 'use strict';
 const CONST = {
-    link: 'link'
+    link: 'link',
+    image: 'image'
 };
 
 export default CONST;

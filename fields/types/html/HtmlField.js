@@ -7,6 +7,7 @@ import CONSTANT from './CONSTANT';
 import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import Field from '../Field';
+import ImageButton from './image/imageButton';
 import LinkButton from './link/LinkButton';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -138,9 +139,35 @@ module.exports = Field.create({
         this.onChange(_editorState);
     },
 
+    toggleImage (entity, value) {
+        const image = Array.isArray(value) ? value[0] : null;
+        if (!image) {
+            return;
+        }
+        const {editorState} = this.state;
+        const entityKey = image.url !== '' ? Entity.create(entity, 'IMMUTABLE', {filetype: image.filetype, url: image.url}) : null;
+        const selection = editorState.getSelection();
+        let contentState = editorState.getCurrentContent();
+
+        contentState = Modifier.replaceText(
+            contentState,
+            selection,
+            image.url,
+            null,
+            entityKey
+        );
+        const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
+        this.onChange(_editorState);
+    },
+
     toggleEntity (entity, value) {
-        if (entity === CONSTANT.link) {
-            this.toggleLink(entity, value);
+        switch (entity) {
+            case CONSTANT.link:
+                return this.toggleLink(entity, value);
+            case CONSTANT.image:
+                return this.toggleImage(entity, value);
+            default:
+                return;
         }
     },
 
@@ -296,7 +323,7 @@ const InlineStyleControls = (props) => {
 };
 
 // entities
-const ENTITIES = [CONSTANT.link];
+const ENTITIES = [CONSTANT.link, CONSTANT.image];
 const EntityControls = (props) => {
     const {editorState} = props;
     const selection = editorState.getSelection();
@@ -307,38 +334,56 @@ const EntityControls = (props) => {
     .getBlockForKey(selection.getStartKey());
 
     const endOffset = selection.getEndOffset();
-
     const entityKey = startBlock.getEntityAt(startOffset);
-    let text = '';
-    let url = '';
+    let data;
+    let entityInstance;
+    let selectedText = '';
 
     if (!selection.isCollapsed()) {
         const blockText = startBlock.getText();
-        text = blockText.slice(startOffset, endOffset);
+        selectedText = blockText.slice(startOffset, endOffset);
     }
     if (entityKey !== null) {
-        const linkInstance = Entity.get(entityKey);
-        const data = linkInstance.getData();
-        url = data ? data.url : url;
-        text = data ? data.text : (text || url);
+        entityInstance = Entity.get(entityKey);
+        data = entityInstance.getData();
     }
 
     function onToggle (entity, changedValue) {
         props.onToggle(entity, changedValue);
     }
 
+    function chooseButton (entity) {
+        let active = entityInstance ? entityInstance.getType() === entity : false;
+        switch (entity) {
+            case CONSTANT.link:
+                return (
+                    <LinkButton
+                        active={active}
+                        key={entity}
+                        label={entity}
+                        onToggle={onToggle.bind(null, entity)}
+                        urlValue={data ? data.url : ''}
+                        textValue={data ? data.text : selectedText}
+                    />
+                );
+            case CONSTANT.image:
+                return (
+                    <ImageButton
+                        active={active}
+                        apiPath="images"
+                        key={entity}
+                        label={entity}
+                        onToggle={onToggle.bind(null, entity)}
+                    />
+                );
+            default:
+                return;
+        }
+    }
+
     return (
         <div className="RichEditor-controls">
-			{ENTITIES.map((entity) =>
-				<LinkButton
-					active={ entityKey !== null}
-					key={entity}
-					label={entity}
-					onToggle={onToggle.bind(null, entity)}
-                    urlValue={url}
-                    textValue={text}
-				/>
-			)}
+			{ENTITIES.map(chooseButton)}
         </div>
     );
 };
