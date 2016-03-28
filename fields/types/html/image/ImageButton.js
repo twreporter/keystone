@@ -26,7 +26,7 @@ export class ImageButton extends StyleButton {
         let Block = shouldRenderEditingBlock ? (
             <ImageEditingBlock
                 apiPath={this.props.apiPath}
-                doSelectMany={true}
+                doSelectMany={false}
                 isSelectionOpen={true}
                 onChange={this.props.onToggle}
                 onFinish={this.onFinish}

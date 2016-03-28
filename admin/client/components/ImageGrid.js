@@ -43,6 +43,7 @@ class ImageItem extends React.Component {
                 backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
+                cursor: 'pointer',
                 paddingBottom: '100%',
                 position: 'relative',
                 textAlign: 'right',
