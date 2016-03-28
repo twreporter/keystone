@@ -1,4 +1,4 @@
-use strict';
+'use strict';
 
 import { CompositeDecorator } from 'draft-js';
 import imageDecorator from './image/imageDecorator';
