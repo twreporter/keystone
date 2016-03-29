@@ -1,11 +1,11 @@
+import { Button, FormInput, InputGroup, Pagination } from 'elemental';
 import async from 'async';
 import qs from 'qs';
 import xhr from 'xhr';
-import Lists from '../../../admin/client/stores/Lists';
 import Field from '../Field';
-import React from 'react';
-import { Button, FormInput, InputGroup, Pagination } from 'elemental';
 import ImageSelector from '../../../admin/client/components/ImageSelector';
+import Lists from '../../../admin/client/stores/Lists';
+import React from 'react';
 
 const API = '/api/';
 

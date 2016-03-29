@@ -2,10 +2,11 @@
 import { Button, FormInput, InputGroup, Modal, Pagination } from 'elemental';
 import qs from 'qs';
 import xhr from 'xhr';
-import ImagesSelection from '../../../admin/client/components/ImagesSelection';
+import ImagesEditor from './ImagesEditor';
+import ImagesSelection from './ImagesSelection';
 import React from 'react';
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 4;
 const PAGINATION_LIMIT = 5;
 const API = '/api/';
 
@@ -240,7 +241,7 @@ class ImageSelector extends React.Component {
             <Modal isOpen={isSelectionOpen} onCancel={this.handleCancel} width="large" backdropClosesModal>
                 <Modal.Header text="Select image" showCloseButton onClose={this.handleCancel} />
                 <Modal.Body>
-                    <div style={{width: '50%'}}>
+                    <div>
                         {this.renderTagFilter()}
                         <ImagesSelection
                             doSelectMany={this.props.doSelectMany}
@@ -254,6 +255,12 @@ class ImageSelector extends React.Component {
                             pageSize={PAGE_SIZE}
                             total={this.state.totalImages}
                             limit={PAGINATION_LIMIT}
+                        />
+                    </div>
+                    <div>
+                        <ImagesEditor
+                            images={selectedImages}
+                            onChange={this.updateSelection}
                         />
                     </div>
                 </Modal.Body>
