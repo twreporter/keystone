@@ -1,5 +1,6 @@
 'use strict';
 import { ImageGrid } from './ImageGrid';
+import { shallowEqual } from 'react-pure-render';
 import React from 'react';
 
 const ImagesSelection = React.createClass({
@@ -22,7 +23,6 @@ const ImagesSelection = React.createClass({
 	getInitialState () {
 		return {
             images: Array.isArray(this.props.images) ? this.props.images : [],
-            modalIsOpen: this.props.modalIsOpen,
             selectedImages: Array.isArray(this.props.selectedImages) ? this.props.selectedImages : []
 		};
 	},
@@ -34,6 +34,15 @@ const ImagesSelection = React.createClass({
         });
     },
 
+    shouldComponentUpdate (nextProps, nextState) {
+        let shouldUpdate = false;
+        if (this.props.doSelectMany !== nextProps.doSelectMany ||
+            this.props.updateSelection !== nextProps.updateSelection) {
+                shouldUpdate = true;
+        }
+        return shouldUpdate || !shallowEqual(this.state, nextState);
+    },
+
     handleClick (image) {
         let _selectImages = this.state.selectedImages;
         let filtered = _selectImages.filter((selectedImage) => {
@@ -43,7 +52,9 @@ const ImagesSelection = React.createClass({
         // select the image
         if (filtered.length === _selectImages.length) {
             if (this.props.doSelectMany) {
-                filtered.push(image);
+                // create a new array for pure render
+                const len = filtered.length;
+                filtered = len === 0 ? [image] : filtered.concat(image);
             } else {
                 filtered = [image];
             }
