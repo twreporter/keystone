@@ -218,8 +218,9 @@ class ImagesEditor extends Component {
         const filtered = images.filter((image) => image.id !== imageToRemove.id);
         this.setState({
             images: filtered
+        }, () => {
+            this.props.onChange(filtered);
         });
-        this.props.onChange(filtered);
     }
 
     _handleChange (imageToChange) {
@@ -232,8 +233,9 @@ class ImagesEditor extends Component {
         });
         this.setState({
             images: changed
+        }, () => {
+            this.props.onChange(changed);
         });
-        this.props.onChange(changed);
     }
 
     render () {
