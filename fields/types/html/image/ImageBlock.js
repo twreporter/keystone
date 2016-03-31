@@ -72,7 +72,7 @@ export default class ImageBlock extends React.Component {
     const EditBlock = editMode ? (
         <ImageSelector
             apiPath="images"
-            doSelectMandy={false}
+            doSelectMany={false}
             isSelectionOpen={true}
             onChange={this.onValueChange}
             onFinish={this.handleFinish}

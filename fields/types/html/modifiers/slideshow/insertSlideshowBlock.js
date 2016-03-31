@@ -10,9 +10,9 @@ import {
   Modifier,
   genKey,
 } from 'draft-js';
-import CONSTANT from '../CONSTANT';
+import CONSTANT from '../../CONSTANT';
 
-export default (editorState, image) => {
+export default (editorState, images) => {
   var contentState = editorState.getCurrentContent();
   var selectionState = editorState.getSelection();
 
@@ -29,12 +29,11 @@ export default (editorState, image) => {
   var asMedia = Modifier.setBlockType(afterSplit, insertionTarget, 'media');
 
   var entityKey = Entity.create(
-    CONSTANT.image,
+    CONSTANT.slideshow,
     'IMMUTABLE',
     {
-        url: image.url,
-        caption: image.description,
-        type: CONSTANT.image
+        images: images,
+        type: CONSTANT.slideshow
     }
   );
 
