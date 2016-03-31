@@ -1,18 +1,19 @@
 'use strict';
 
-import { FormInput } from 'elemental';
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
+import { insertImageBlock, replaceImageBlock, removeImageBlock } from './modifiers/index';
+import { FormInput } from 'elemental';
 import decorator from './entityDecorator'
+import { shallowEqual } from 'react-pure-render';
 import CONSTANT from './CONSTANT';
 import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import Field from '../Field';
 import ImageButton from './image/imageButton';
 import LinkButton from './link/LinkButton';
+import MediaBlock from './base/MediaBlock';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import tinymce from 'tinymce';
-
 
 let { processHTML } = DraftPasteProcessor;
 let lastId = 0;
@@ -47,21 +48,17 @@ module.exports = Field.create({
 
 		return {
             editorState: editorState,
+            id: getId(),
             valueStr: JSON.stringify(this.props.value),
-			id: getId()
 		};
 	},
 
     shouldComponentUpdate (nextProps, nextState) {
-        // editorState is immutable
-        if (this.state.editorState === nextState.editorState) {
-            return false;
-        }
-        return true;
+        return !shallowEqual(this.state, nextState);
     },
 
-	onChange (editorState) {
-		const content = convertToRaw(editorState.getCurrentContent());
+    onChange (editorState) {
+        const content = convertToRaw(editorState.getCurrentContent());
         const cHtml = DraftConverter.convertToHtml(content);
 
         const valueStr = JSON.stringify({
@@ -80,7 +77,7 @@ module.exports = Field.create({
                 editorState
             })
         }
-	},
+    },
 
 	focus () {
 		this.refs.editor.focus();
@@ -144,20 +141,7 @@ module.exports = Field.create({
         if (!image) {
             return;
         }
-        const {editorState} = this.state;
-        const entityKey = image.url !== '' ? Entity.create(entity, 'IMMUTABLE', {filetype: image.filetype, url: image.url}) : null;
-        const selection = editorState.getSelection();
-        let contentState = editorState.getCurrentContent();
-
-        contentState = Modifier.replaceText(
-            contentState,
-            selection,
-            image.url,
-            null,
-            entityKey
-        );
-        const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
-        this.onChange(_editorState);
+        this._insertImage(image);
     },
 
     toggleEntity (entity, value) {
@@ -169,6 +153,41 @@ module.exports = Field.create({
             default:
                 return;
         }
+    },
+
+    _removeImage (blockKey) {
+        const _editorState =  removeImageBlock(this.state.editorState, blockKey);
+        this.onChange(_editorState);
+    },
+
+    _replaceImage (blockKey, image) {
+        const _editorState = replaceImageBlock(this.state.editorState, blockKey, image);
+        this.onChange(_editorState);
+    },
+
+    _insertImage (image) {
+        const _editorState = insertImageBlock(this.state.editorState, image);
+        this.onChange(_editorState);
+    },
+
+    _blockRenderer (block) {
+        if (block.getType() === 'media') {
+            return {
+                component: MediaBlock,
+                props: {
+                    onFinishEdit: (blockKey, image) => {
+                        if (image) {
+                            return this._replaceImage(blockKey, image);
+                        }
+                        this._removeImage(blockKey);
+                    },
+                    onRemove: (blockKey) => {
+                        this._removeImage(blockKey);
+                    }
+                }
+            }
+        }
+        return null;
     },
 
 	renderField () {
@@ -202,6 +221,7 @@ module.exports = Field.create({
                 />
 				<div className={className} onClick={this.focus}>
 					<Editor
+                        blockRendererFn={this._blockRenderer}
 						blockStyleFn={getBlockStyle}
 						customStyleMap={styleMap}
 						editorState={editorState}
