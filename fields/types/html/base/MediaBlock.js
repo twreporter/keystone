@@ -1,8 +1,8 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import ImageBlock from '../image/ImageBlock';
 import CONSTANT from '../CONSTANT';
+import ImageBlock from '../image/ImageBlock';
 import React from 'react';
 
 export default class MediaBlock extends React.Component {
