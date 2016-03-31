@@ -61,8 +61,9 @@ const ImagesSelection = React.createClass({
         }
         this.setState({
             selectedImages: filtered
+        }, () => {
+            this.props.updateSelection(filtered);
         });
-        this.props.updateSelection(filtered);
     },
 
 	render () {

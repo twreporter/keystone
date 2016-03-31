@@ -10,6 +10,7 @@ let blockTagMap = {
     'header-two': `<h1>%content%</h1>\n`,
     'ordered-list-item': `<li>%content%</li>\n`,
     'unordered-list-item': `<li>%content%</li>\n`,
+    'media': `<div>%content%</div>\n`,
     'unstyled': `<p>%content%</p>\n`,
 };
 
