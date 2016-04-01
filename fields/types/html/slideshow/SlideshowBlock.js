@@ -59,32 +59,22 @@ export default class SlideshowBlock extends ImageBlock {
         return null;
     }
 
-    const EditBlock = editMode ? (
-        <ImageSelector
-            apiPath="images"
-            doSelectMany={true}
-            isSelectionOpen={true}
-            onChange={this.onValueChange}
-            onFinish={this.handleFinish}
-            selectedImages={images}
-        />
-    ) : null;
+    const EditBlock = editMode ? this._renderImageSelector({
+          apiPath: 'images',
+          doSelectMany: true,
+          isSelectionOpen: true,
+          onChange: this.onValueChange,
+          onFinish: this.handleFinish,
+          selectedImages: images
+    }): null;
 
-    const ImageNodes = images.map((image) => {
-        return <div><figure><img src={image.url} width="100%"/><figcaption>{image.description}</figcaption></figure></div>;
-    });
-
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1
-    };
     return (
-        <Slider {...settings}>
-            {ImageNodes}
-        </Slider>
+      <figure
+        contentEditable={false}
+        >
+        <img src="https://storage.googleapis.com/twreporter-article.twreporter.org/slideshow.jpg" width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
+        {EditBlock}
+      </figure>
     );
   }
 }
