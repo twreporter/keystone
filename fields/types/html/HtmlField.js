@@ -61,7 +61,7 @@ module.exports = Field.create({
 
     onChange (editorState) {
         const content = convertToRaw(editorState.getCurrentContent());
-        const cHtml = ''; //DraftConverter.convertToHtml(content);
+        const cHtml = DraftConverter.convertToHtml(content);
 
         const valueStr = JSON.stringify({
             draft: content,

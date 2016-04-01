@@ -74,7 +74,7 @@ export default class SlideshowBlock extends ImageBlock {
         return <div><figure><img src={image.url} width="100%"/><figcaption>{image.description}</figcaption></figure></div>;
     });
 
-    var settings = {
+    const settings = {
         dots: true,
         infinite: true,
         speed: 500,
@@ -82,7 +82,7 @@ export default class SlideshowBlock extends ImageBlock {
         slidesToScroll: 1
     };
     return (
-        <Slider>
+        <Slider {...settings}>
             {ImageNodes}
         </Slider>
     );
