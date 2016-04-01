@@ -23,6 +23,7 @@ export default class SlideshowBlock extends ImageBlock {
 
   _trimImage(image) {
       return {
+          id: image.id,
           url: image.url,
           description: image.description
       };

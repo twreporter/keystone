@@ -3,7 +3,7 @@
 import { Entity } from 'draft-js';
 import CONSTANT from '../CONSTANT';
 import ImageModifier from './image/image-modifier';
-import SlideshowModifer from './slideshow/slideshow-modifier';
+import SlideshowModifier from './slideshow/slideshow-modifier';
 
 const handleFinishEdit = (editorState, blockKey, valueChanged) => {
     const block = editorState.getCurrentContent().getBlockForKey(blockKey);
