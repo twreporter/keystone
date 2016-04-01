@@ -1,10 +1,8 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import ImageSelector from '../../../../admin/client/components/ImageSelector';
 import ImageBlock from '../image/ImageBlock';
 import React from 'react';
-import Slider from 'react-slick';
 
 export default class SlideshowBlock extends ImageBlock {
   constructor(props) {
@@ -69,12 +67,12 @@ export default class SlideshowBlock extends ImageBlock {
     }): null;
 
     return (
-      <figure
-        contentEditable={false}
-        >
-        <img src="https://storage.googleapis.com/twreporter-article.twreporter.org/slideshow.jpg" width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
-        {EditBlock}
-      </figure>
+        <figure
+            contentEditable={false}
+            >
+            <img src="https://storage.googleapis.com/twreporter-article.twreporter.org/slideshow.jpg" width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
+            {EditBlock}
+        </figure>
     );
   }
 }

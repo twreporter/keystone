@@ -27,7 +27,8 @@ export default class ImageBlock extends React.Component {
       this.props.blockProps.onFinishEdit(this.props.block.getKey(), this.state.image);
   }
 
-  _handleClick() {
+  _handleClick(e) {
+      e.stopPropagation();
       if (this.state.editMode) {
           return;
       }
