@@ -5,7 +5,7 @@ import removeImageBlock from './removeImageBlock';
 export {insertImageBlock};
 export {replaceImageBlock};
 export {removeImageBlock};
-export {
+export default {
     insertImageBlock,
     replaceImageBlock,
     removeImageBlock

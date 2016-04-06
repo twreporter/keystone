@@ -33,7 +33,8 @@ export default (editorState, image) => {
     'IMMUTABLE',
     {
         url: image.url,
-        caption: image.description,
+        description: image.description,
+        id: image.id,
         type: CONSTANT.image
     }
   );

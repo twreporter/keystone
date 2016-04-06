@@ -68,7 +68,6 @@ DnDItem.propTypes = {
     connectDragSource: PropTypes.func.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
     isDragging: PropTypes.bool.isRequired,
-    id: PropTypes.any.isRequired,
     moveImage: PropTypes.func.isRequired,
     findImage: PropTypes.func.isRequired
 };
@@ -163,8 +162,8 @@ class DnDContainer extends Component {
                         url={image.url}
                         style={{border: '1px solid gainsboro'}}
                     >
-                        <FormField label="" htmlFor="image-caption-input" style={{paddingTop: '5px'}}>
-                            <FormInput placeholder="input caption here" defaultValue={image.description} name="image-caption-input" onChange={this._handleInputChange.bind(this, image)} />
+                        <FormField key={image.id} label="" htmlFor="image-caption-input" style={{paddingTop: '5px'}}>
+                            <FormInput key={image.id} placeholder="input caption here" defaultValue={image.description} name="image-caption-input" onChange={this._handleInputChange.bind(this, image)} />
                         </FormField>
                     </ImageItem>
                 </ImageDnDItem>
