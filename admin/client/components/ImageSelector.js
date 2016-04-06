@@ -235,7 +235,6 @@ class ImageSelector extends React.Component {
             );
         }
 
-        // const { many } = this.props;
         const { isSelectionOpen, images, selectedImages } = this.state;
         return (
             <Modal isOpen={isSelectionOpen} onCancel={this.handleCancel} width="large" backdropClosesModal>
@@ -244,9 +243,9 @@ class ImageSelector extends React.Component {
                     <div>
                         {this.renderTagFilter()}
                         <ImagesSelection
-                            doSelectMany={this.props.doSelectMany}
                             images={images}
                             selectedImages={selectedImages}
+                            selectionLimit={this.props.selectionLimit}
                             updateSelection={this.updateSelection}
                         />
                         <Pagination
@@ -275,18 +274,18 @@ class ImageSelector extends React.Component {
 
 ImageSelector.propTypes = {
     apiPath: React.PropTypes.string,
-    doSelectMany: React.PropTypes.bool,
     isSelectionOpen: React.PropTypes.bool,
     onChange: React.PropTypes.func.isRequired,
     onFinish: React.PropTypes.func.isRequired,
-    selectedImages: React.PropTypes.array
+    selectedImages: React.PropTypes.array,
+    selectionLimit: React.PropTypes.number
 };
 
 ImageSelector.defaultProps = {
     apiPath: '',
-    doSelectMany: false,
     isSelectionOpen: false,
-    selectedImages: []
+    selectedImages: [],
+    selectionLimit: 1
 };
 
 export default ImageSelector;

@@ -1,6 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
+import CONSTANT from '../CONSTANT';
 import ImageBlock from '../image/ImageBlock';
 import React from 'react';
 
@@ -60,11 +61,11 @@ export default class SlideshowBlock extends ImageBlock {
 
     const EditBlock = editMode ? this._renderImageSelector({
           apiPath: 'images',
-          doSelectMany: true,
           isSelectionOpen: true,
           onChange: this.onValueChange,
           onFinish: this.handleFinish,
-          selectedImages: images
+          selectedImages: images,
+          selectionLimit: CONSTANT.slideshowSelectionLimit
     }): null;
 
     return (

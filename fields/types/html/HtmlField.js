@@ -403,10 +403,10 @@ const EntityControls = (props) => {
                     <ImageButton
                         active={active}
                         apiPath="images"
-                        doSelectMany={true}
                         key={entity}
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
+                        selectionLimit={CONSTANT.slideshowSelectionLimit}
                     />
                 );
             default:
