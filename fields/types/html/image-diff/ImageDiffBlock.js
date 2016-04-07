@@ -1,9 +1,9 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import SlideshowBlock from '../slideshow/SlideshowBlock';
 import ImagesDiff from '../../../../admin/client/components/ImagesDiff';
 import React from 'react';
+import SlideshowBlock from '../slideshow/SlideshowBlock';
 
 export default class ImageDiffBlock extends SlideshowBlock{
   constructor(props) {

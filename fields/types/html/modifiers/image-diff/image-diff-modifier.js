@@ -1,12 +1,12 @@
 import insertImageDiffBlock from './insertImageDiffBlock';
-import replaceImageDiffBlock from '../slideshow/replaceSlideshowBlock';
 import removeImageDiffBlock from '../image/removeImageBlock';
+import replaceImageDiffBlock from '../slideshow/replaceSlideshowBlock';
 
 export {insertImageDiffBlock};
-export {replaceImageDiffBlock};
 export {removeImageDiffBlock};
+export {replaceImageDiffBlock};
 export default {
     insertImageDiffBlock,
-    replaceImageDiffBlock,
-    removeImageDiffBlock
+    removeImageDiffBlock,
+    replaceImageDiffBlock
 };
