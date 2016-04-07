@@ -10,6 +10,7 @@ import {
   Modifier,
   genKey,
 } from 'draft-js';
+import {pick} from 'lodash';
 import CONSTANT from '../../CONSTANT';
 
 export default (editorState, images) => {
@@ -32,7 +33,9 @@ export default (editorState, images) => {
     CONSTANT.imageDiff,
     'IMMUTABLE',
     {
-        images: images,
+        images: images.map((image) => {
+            return pick(image, CONSTANT.imageRequiredProps)
+        }),
         type: CONSTANT.imageDiff
     }
   );

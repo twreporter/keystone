@@ -22,20 +22,9 @@ export default class SlideshowBlock extends ImageBlock {
     return Array.isArray(images) && images.length > 0 ? false : true;
   }
 
-  _trimImage(image) {
-      return {
-          id: image.id,
-          url: image.url,
-          description: image.description
-      };
-  }
-
   _onValueChange(value) {
       let images = this._isEmptyArray(value) ? null : value;
-      images = images ? images.map(this._trimImage) : images;
-
       const entityKey = this.props.block.getEntityAt(0);
-      Entity.mergeData(entityKey, {images});
 
       this.setState({
         editMode: false,

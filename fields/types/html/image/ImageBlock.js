@@ -47,10 +47,9 @@ export default class ImageBlock extends React.Component {
   _onValueChange(value) {
       const image = Array.isArray(value) && value[0] ? value[0] : null;
       const entityKey = this.props.block.getEntityAt(0);
-      Entity.mergeData(entityKey, {url: image && image.url, description: image && image.description});
       this.setState({
-        editMode: false,
-        image: image
+          editMode: false,
+          image: image
       }, this._finishEdit);
   }
 
