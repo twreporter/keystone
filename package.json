@@ -71,6 +71,7 @@
     "qs": "^4.0.0",
     "queryfilter": "0.0.4",
     "range_check": "1.2.0",
+    "rc-slider": "^3.5.1",
     "react": "^0.14.7",
     "react-addons-css-transition-group": "0.14.7",
     "react-alt-text": "1.1.0",
