@@ -6,17 +6,17 @@ import React from 'react';
 const ImagesSelection = React.createClass({
 	displayName: 'ImagesSelection',
 	propTypes: {
-        doSelectMany: React.PropTypes.bool,
         images: React.PropTypes.array,
         selectedImages: React.PropTypes.array,
+        selectionLimit: React.PropTypes.number,
         updateSelection: React.PropTypes.func.isRequired
 	},
 
 	getDefaultProps () {
 		return {
-            doSelectMany: false,
             images: [],
-			selectedImages: []
+			selectedImages: [],
+            selectionLimit: 1
 		};
 	},
 
@@ -36,10 +36,10 @@ const ImagesSelection = React.createClass({
 
     shouldComponentUpdate (nextProps, nextState) {
         let shouldUpdate = false;
-        if (this.props.doSelectMany !== nextProps.doSelectMany ||
-            this.props.updateSelection !== nextProps.updateSelection) {
+        if ( this.props.updateSelection !== nextProps.updateSelection ||
+            this.props.selectionLimit !== nextProps.selectionLimit ) {
                 shouldUpdate = true;
-        }
+            }
         return shouldUpdate || !shallowEqual(this.state, nextState);
     },
 
@@ -51,9 +51,13 @@ const ImagesSelection = React.createClass({
 
         // select the image
         if (filtered.length === _selectImages.length) {
-            if (this.props.doSelectMany) {
-                // create a new array for pure render
+            // select many
+            if (this.props.selectionLimit > 1) {
                 const len = filtered.length;
+                if (len >= this.props.selectionLimit) {
+                    filtered.shift();
+                }
+                // create a new array for pure render
                 filtered = len === 0 ? [image] : filtered.concat(image);
             } else {
                 filtered = [image];
@@ -69,7 +73,6 @@ const ImagesSelection = React.createClass({
 	render () {
 		return (
             <ImageGrid
-                doSelectMany={this.state.doSelectMany}
                 images={this.state.images}
                 onClick={this.handleClick}
                 selectedImages={this.state.selectedImages}

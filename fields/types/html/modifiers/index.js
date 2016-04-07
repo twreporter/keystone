@@ -3,6 +3,7 @@
 import { Entity } from 'draft-js';
 import CONSTANT from '../CONSTANT';
 import ImageModifier from './image/image-modifier';
+import ImageDiffModifier from './image-diff/image-diff-modifier';
 import SlideshowModifier from './slideshow/slideshow-modifier';
 
 const handleFinishEdit = (editorState, blockKey, valueChanged) => {
@@ -27,6 +28,11 @@ const handleFinishEdit = (editorState, blockKey, valueChanged) => {
                 return SlideshowModifier.replaceSlideshowBlock(editorState, blockKey, valueChanged);
             }
             return SlideshowModifier.removeSlideshowBlock(editorState, blockKey);
+        case CONSTANT.imageDiff:
+            if (Array.isArray(valueChanged) && valueChanged.length === 2) {
+                return ImageDiffModifier.replaceImageDiffBlock(editorState, blockKey, valueChanged);
+            }
+            return ImageDiffModifier.removeImageDiffBlock(editorState, blockKey);
         default:
             return editorState;
     }

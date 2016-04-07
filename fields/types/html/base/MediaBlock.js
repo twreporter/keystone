@@ -3,6 +3,7 @@
 import { Entity } from 'draft-js';
 import CONSTANT from '../CONSTANT';
 import ImageBlock from '../image/ImageBlock';
+import ImageDiffBlock from '../image-diff/ImageDiffBlock';
 import React from 'react';
 import SlideshowBlock from '../slideshow/SlideshowBlock';
 
@@ -28,6 +29,9 @@ export default class MediaBlock extends React.Component {
                 break;
             case CONSTANT.slideshow:
                 BlockComponent = SlideshowBlock;
+                break;
+            case CONSTANT.imageDiff:
+                BlockComponent = ImageDiffBlock;
                 break;
             default:
                 return;

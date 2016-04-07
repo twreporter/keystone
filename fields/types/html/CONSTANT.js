@@ -2,7 +2,9 @@
 const CONST = {
     link: 'link',
     image: 'image',
-    slideshow: 'slideshow'
+    slideshow: 'slideshow',
+    imageDiff: 'imageDiff',
+    slideshowSelectionLimit: 30
 };
 
 export default CONST;

@@ -4,6 +4,7 @@ import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifi
 import { FormInput } from 'elemental';
 import { shallowEqual } from 'react-pure-render';
 import { insertImageBlock } from './modifiers/image/image-modifier';
+import { insertImageDiffBlock } from './modifiers/image-diff/image-diff-modifier';
 import { insertSlideshowBlock } from './modifiers/slideshow/slideshow-modifier';
 import decorator from './entityDecorator'
 import BlockModifier from './modifiers/index';
@@ -154,6 +155,14 @@ module.exports = Field.create({
         this._insertSlideshow(images);
     },
 
+    toggleImageDiff(entity, value) {
+        const images = Array.isArray(value) && value.length === 2 ? value : null;
+        if (!images) {
+            return;
+        }
+        this._insertImageDiff(images);
+    },
+
     toggleEntity (entity, value) {
         switch (entity) {
             case CONSTANT.link:
@@ -162,6 +171,8 @@ module.exports = Field.create({
                 return this.toggleImage(entity, value);
             case CONSTANT.slideshow:
                 return this.toggleSlideshow(entity, value);
+            case CONSTANT.imageDiff:
+                return this.toggleImageDiff(entity, value);
             default:
                 return;
         }
@@ -174,6 +185,11 @@ module.exports = Field.create({
 
     _insertSlideshow (images) {
         const _editorState = insertSlideshowBlock(this.state.editorState, images);
+        this.onChange(_editorState);
+    },
+
+    _insertImageDiff (images) {
+        const _editorState = insertImageDiffBlock(this.state.editorState, images);
         this.onChange(_editorState);
     },
 
@@ -403,10 +419,21 @@ const EntityControls = (props) => {
                     <ImageButton
                         active={active}
                         apiPath="images"
-                        doSelectMany={true}
                         key={entity}
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
+                        selectionLimit={CONSTANT.slideshowSelectionLimit}
+                    />
+                );
+            case CONSTANT.imageDiff:
+                return (
+                    <ImageButton
+                        active={active}
+                        apiPath="images"
+                        key={entity}
+                        label={entity}
+                        onToggle={onToggle.bind(null, entity)}
+                        selectionLimit={2}
                     />
                 );
             default:
