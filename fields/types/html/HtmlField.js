@@ -1,10 +1,12 @@
 'use strict';
 
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { insertImageBlock, replaceImageBlock, removeImageBlock } from './modifiers/index';
 import { FormInput } from 'elemental';
-import decorator from './entityDecorator'
 import { shallowEqual } from 'react-pure-render';
+import { insertImageBlock } from './modifiers/image/image-modifier';
+import { insertSlideshowBlock } from './modifiers/slideshow/slideshow-modifier';
+import decorator from './entityDecorator'
+import BlockModifier from './modifiers/index';
 import CONSTANT from './CONSTANT';
 import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
@@ -144,29 +146,34 @@ module.exports = Field.create({
         this._insertImage(image);
     },
 
+    toggleSlideshow (entity, value) {
+        const images = Array.isArray(value) && value.length > 0 ? value : null;
+        if (!images) {
+            return;
+        }
+        this._insertSlideshow(images);
+    },
+
     toggleEntity (entity, value) {
         switch (entity) {
             case CONSTANT.link:
                 return this.toggleLink(entity, value);
             case CONSTANT.image:
                 return this.toggleImage(entity, value);
+            case CONSTANT.slideshow:
+                return this.toggleSlideshow(entity, value);
             default:
                 return;
         }
     },
 
-    _removeImage (blockKey) {
-        const _editorState =  removeImageBlock(this.state.editorState, blockKey);
-        this.onChange(_editorState);
-    },
-
-    _replaceImage (blockKey, image) {
-        const _editorState = replaceImageBlock(this.state.editorState, blockKey, image);
-        this.onChange(_editorState);
-    },
-
     _insertImage (image) {
         const _editorState = insertImageBlock(this.state.editorState, image);
+        this.onChange(_editorState);
+    },
+
+    _insertSlideshow (images) {
+        const _editorState = insertSlideshowBlock(this.state.editorState, images);
         this.onChange(_editorState);
     },
 
@@ -175,14 +182,9 @@ module.exports = Field.create({
             return {
                 component: MediaBlock,
                 props: {
-                    onFinishEdit: (blockKey, image) => {
-                        if (image) {
-                            return this._replaceImage(blockKey, image);
-                        }
-                        this._removeImage(blockKey);
-                    },
-                    onRemove: (blockKey) => {
-                        this._removeImage(blockKey);
+                    onFinishEdit: (blockKey, valueChanged) => {
+                        const _editorState = BlockModifier.handleFinishEdit(this.state.editorState, blockKey, valueChanged);
+                        this.onChange(_editorState);
                     }
                 }
             }
@@ -343,7 +345,7 @@ const InlineStyleControls = (props) => {
 };
 
 // entities
-const ENTITIES = [CONSTANT.link, CONSTANT.image];
+const ENTITIES = Object.keys(CONSTANT);
 const EntityControls = (props) => {
     const {editorState} = props;
     const selection = editorState.getSelection();
@@ -391,6 +393,17 @@ const EntityControls = (props) => {
                     <ImageButton
                         active={active}
                         apiPath="images"
+                        key={entity}
+                        label={entity}
+                        onToggle={onToggle.bind(null, entity)}
+                    />
+                );
+            case CONSTANT.slideshow:
+                return (
+                    <ImageButton
+                        active={active}
+                        apiPath="images"
+                        doSelectMany={true}
                         key={entity}
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}

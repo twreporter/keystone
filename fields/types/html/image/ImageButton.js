@@ -18,6 +18,7 @@ export class ImageButton extends StyleButton {
 
     render() {
         const { active, shouldRenderEditingBlock } = this.state;
+        const { apiPath, doSelectMany, onToggle } = this.props;
         let className = 'RichEditor-styleButton Button Button--link';
         if (active) {
             className += ' RichEditor-activeButton';
@@ -25,10 +26,10 @@ export class ImageButton extends StyleButton {
 
         let Block = shouldRenderEditingBlock ? (
             <ImageEditingBlock
-                apiPath={this.props.apiPath}
-                doSelectMany={false}
+                apiPath={apiPath}
+                doSelectMany={doSelectMany}
                 isSelectionOpen={true}
-                onChange={this.props.onToggle}
+                onChange={onToggle}
                 onFinish={this.onFinish}
             />
         ) : null;
@@ -46,10 +47,12 @@ export class ImageButton extends StyleButton {
 
 ImageButton.propTypes = objectAssign(StyleButton.propTypes, {
     apiPath: React.PropTypes.string,
+    doSelectMany: React.PropTypes.bool,
     onToggle: React.PropTypes.func.isRequired
 });
 ImageButton.defaultProps = objectAssign(StyleButton.defaultProps, {
-    apiPath: 'images'
+    apiPath: 'images',
+    doSelectMany: false
 });
 
 export default ImageButton;

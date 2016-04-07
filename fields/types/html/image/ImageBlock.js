@@ -27,7 +27,8 @@ export default class ImageBlock extends React.Component {
       this.props.blockProps.onFinishEdit(this.props.block.getKey(), this.state.image);
   }
 
-  _handleClick() {
+  _handleClick(e) {
+      e.stopPropagation();
       if (this.state.editMode) {
           return;
       }
@@ -62,6 +63,12 @@ export default class ImageBlock extends React.Component {
       this.props.onRemove(this.props.block.getKey());
   }
 
+  _renderImageSelector(props) {
+      return (
+          <ImageSelector {...props}/>
+      );
+  }
+
   render() {
     let { editMode, image } = this.state;
     image = image || this._getValue();
@@ -69,22 +76,20 @@ export default class ImageBlock extends React.Component {
         return null;
     }
 
-    const EditBlock = editMode ? (
-        <ImageSelector
-            apiPath="images"
-            doSelectMandy={false}
-            isSelectionOpen={true}
-            onChange={this.onValueChange}
-            onFinish={this.handleFinish}
-            selectedImages={[image]}
-        />
-    ) : null;
+    const EditBlock = editMode ? this._renderImageSelector({
+          apiPath: 'images',
+          doSelectMany: false,
+          isSelectionOpen: true,
+          onChange: this.onValueChange,
+          onFinish: this.handleFinish,
+          selectedImages: [image]
+    }) : null;
 
     return (
       <figure
         contentEditable={false}
         >
-        <img src={image.url} width="350px" onClick={this.handleClick} style={{cursor: "pointer"}}/>
+        <img src={image.url} width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
         <figcaption>{image.description}</figcaption>
         {EditBlock}
       </figure>

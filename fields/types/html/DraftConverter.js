@@ -24,7 +24,8 @@ let inlineTagMap = {
 
 let entityTagMap = {
     link: ['<a href="<%= url %>">', '</a>'],
-    image: ['<img src="<%= url %>">', '</img>']
+    image: ['<img src="<%= url %>">', '</img>'],
+    slideshow: ['<ol> <% _.forEach(images, function(image) { %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>']
 };
 
 let nestedTagMap = {
