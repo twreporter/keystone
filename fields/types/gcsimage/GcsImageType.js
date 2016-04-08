@@ -12,6 +12,7 @@ var super_ = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
 var ExifImage = require('exif').ExifImage;
+var sizeOf = require('image-size');
 
 function extractExif(image) {
     return new Promise(function(resolve, reject) {
@@ -332,6 +333,7 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
                 return;
             }
         }).then(function(value) {
+            var dimensions = sizeOf(file.path);
             extractExif(file.path).then(function(exifData) {
                 exifData.image = exifData.image || {};
                 exifData.exif = exifData.exif || {};
@@ -341,12 +343,12 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
                     description: exifData.image.ImageDescription || '',
                     filename: filename,
                     filetype: filetype,
-                    height: exifData.exif.ExifImageHeight || exifData.image.ImageHeight || 0,
+                    height: dimensions.height || exifData.exif.ExifImageHeight || exifData.image.ImageHeight || 0,
                     originalname: originalname,
                     path: path,
                     size: file.size,
                     url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
-                    width: exifData.exif.ExifImageWidth || exifData.image.ImageWidth || 0
+                    width: dimensions.width ||  exifData.exif.ExifImageWidth || exifData.image.ImageWidth || 0
                 };
                 if (update) {
                     item.set(field.path, fileData);

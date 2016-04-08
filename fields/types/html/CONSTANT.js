@@ -4,7 +4,8 @@ const CONST = {
     image: 'image',
     slideshow: 'slideshow',
     imageDiff: 'imageDiff',
-    slideshowSelectionLimit: 30
+    slideshowSelectionLimit: 30,
+    imageRequiredProps: ['id', 'url', 'description', 'width', 'height']
 };
 
 export default CONST;

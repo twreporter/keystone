@@ -10,6 +10,7 @@ import {
   Modifier,
   genKey,
 } from 'draft-js';
+import {merge, pick} from 'lodash';
 import CONSTANT from '../../CONSTANT';
 
 export default (editorState, image) => {
@@ -31,12 +32,7 @@ export default (editorState, image) => {
   var entityKey = Entity.create(
     CONSTANT.image,
     'IMMUTABLE',
-    {
-        url: image.url,
-        description: image.description,
-        id: image.id,
-        type: CONSTANT.image
-    }
+    merge(pick(image, CONSTANT.imageRequiredProps), {type: CONSTANT.image})
   );
 
   var charData = CharacterMetadata.create({entity: entityKey});
