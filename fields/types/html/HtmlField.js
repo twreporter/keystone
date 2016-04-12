@@ -1,5 +1,3 @@
-'use strict';
-
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
 import { FormInput } from 'elemental';
 import { shallowEqual } from 'react-pure-render';
@@ -63,10 +61,12 @@ module.exports = Field.create({
     onChange (editorState) {
         const content = convertToRaw(editorState.getCurrentContent());
         const cHtml = DraftConverter.convertToHtml(content);
+        const apiData = DraftConverter.convertToApiData(content);
 
         const valueStr = JSON.stringify({
             draft: content,
-            html: cHtml
+            html: cHtml,
+            apiData
         });
 
         // update value if the content has been changed

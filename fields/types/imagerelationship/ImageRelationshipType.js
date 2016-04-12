@@ -149,10 +149,6 @@ imagerelationship.prototype.inputIsValid = function (data, required, item) {
  * Treats an empty string as a null value.
  */
 imagerelationship.prototype.updateItem = function (item, data, callback) {
-    console.log('!!!!!!!!!');
-    console.log('item:', item);
-    console.log('data:', data);
-    console.log('this.path:', this.path);
 	if (!(this.path in data)) {
 		return process.nextTick(callback);
 	}
