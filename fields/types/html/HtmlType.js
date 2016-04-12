@@ -35,7 +35,8 @@ html.prototype.addToSchema = function () {
 
 	var paths = this.paths = {
 		draft: this._path.append('.draft'),
-		html: this._path.append('.html'),
+        html: this._path.append('.html'),
+        apiData: this._path.append('.apiData')
 	};
 
 	var markedOptions = this.markedOptions;
@@ -43,7 +44,8 @@ html.prototype.addToSchema = function () {
 	schema.nested[this.path] = true;
 	schema.add({
 		html: { type: String },
-		draft: { type: Object },
+        draft: { type: Object },
+        apiData: {type: Object}
 	}, this.path + '.');
 
 	this.bindUnderscoreMethods();
@@ -101,7 +103,8 @@ html.prototype.updateItem = function (item, data, callback) {
 		var dObj = JSON.parse(value);
 		if (dObj.draft) {
 			item.set(this.paths.draft, dObj.draft);
-			item.set(this.paths.html, dObj.html);
+            item.set(this.paths.html, dObj.html);
+            item.set(this.paths.apiData, dObj.apiData)
 		}
 	}
 
