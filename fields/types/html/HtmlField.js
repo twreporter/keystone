@@ -23,6 +23,10 @@ function getId () {
 	return 'keystone-html-' + lastId++;
 }
 
+function refreshEditorState(editorState) {
+    return EditorState.forceSelection(editorState, editorState.getCurrentContent().getSelectionAfter());
+}
+
 // class HtmlField extends React.Component {
 module.exports = Field.create({
 	displayName: 'HtmlField',
@@ -201,6 +205,9 @@ module.exports = Field.create({
                     onFinishEdit: (blockKey, valueChanged) => {
                         const _editorState = BlockModifier.handleFinishEdit(this.state.editorState, blockKey, valueChanged);
                         this.onChange(_editorState);
+                    },
+                    refreshEditorState: () => {
+                        this.onChange(refreshEditorState(this.state.editorState));
                     }
                 }
             }
