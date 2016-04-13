@@ -197,6 +197,8 @@ module.exports = Field.create({
 
     _blockRenderer (block) {
         if (block.getType() === 'atomic') {
+            const entityKey = block.getEntityAt(0);
+            const data =  entityKey ? Entity.get(entityKey).getData(): null;
             return {
                 component: AtomicBlock,
                 props: {
@@ -206,7 +208,8 @@ module.exports = Field.create({
                     },
                     refreshEditorState: () => {
                         this.onChange(refreshEditorState(this.state.editorState));
-                    }
+                    },
+                    alignment: data && data.alignment
                 }
             }
         }

@@ -12,7 +12,7 @@ export default function WrapComponent(WrappedComponent) {
             super(props);
             this.align = this._align.bind(this);
             this.state = {
-                alignment: 'center'
+                alignment: props.blockProps.alignment || 'center'
             }
         }
 
