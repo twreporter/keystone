@@ -1,17 +1,17 @@
 'use strict';
 
+import { insertImageBlock, insertImagesBlock } from './insertAtomicBlock';
+import { replaceImageBlock, replaceImagesBlock } from './replaceBlock';
 import { Entity } from 'draft-js';
+import removeBlock from './removeBlock';
 import CONSTANT from '../CONSTANT';
-import ImageModifier from './image/image-modifier';
-import ImageDiffModifier from './image-diff/image-diff-modifier';
-import SlideshowModifier from './slideshow/slideshow-modifier';
 
-const handleFinishEdit = (editorState, blockKey, valueChanged) => {
+const handleAtomicEdit = (editorState, blockKey, valueChanged) => {
     const block = editorState.getCurrentContent().getBlockForKey(blockKey);
-    const entityKey = block.getEntityAt(0);
+    const entityKey = block.getEntityAt(0)
     let blockType;
     try {
-        blockType = entityKey ? Entity.get(entityKey).getData().type : null;
+        blockType = entityKey ? Entity.get(entityKey).getType() : null;
     } catch (e) {
         console.log('Get entity type in the block occurs error ', e);
         return editorState;
@@ -20,24 +20,24 @@ const handleFinishEdit = (editorState, blockKey, valueChanged) => {
     switch (blockType) {
         case CONSTANT.image:
             if (valueChanged) {
-                return ImageModifier.replaceImageBlock(editorState, blockKey, valueChanged);
+                return replaceImageBlock(editorState, blockKey, valueChanged);
             }
-            return ImageModifier.removeImageBlock(editorState, blockKey);
+            return removeBlock(editorState, blockKey);
         case CONSTANT.slideshow:
             if (Array.isArray(valueChanged) && valueChanged.length > 0) {
-                return SlideshowModifier.replaceSlideshowBlock(editorState, blockKey, valueChanged);
+                return replaceImagesBlock(editorState, blockKey, valueChanged);
             }
-            return SlideshowModifier.removeSlideshowBlock(editorState, blockKey);
+            return removeBlock(editorState, blockKey);
         case CONSTANT.imageDiff:
             if (Array.isArray(valueChanged) && valueChanged.length === 2) {
-                return ImageDiffModifier.replaceImageDiffBlock(editorState, blockKey, valueChanged);
+                return replaceImagesBlock(editorState, blockKey, valueChanged);
             }
-            return ImageDiffModifier.removeImageDiffBlock(editorState, blockKey);
+            return removeBlock(editorState, blockKey);
         default:
             return editorState;
     }
 };
 
 export default {
-    handleFinishEdit
+    handleAtomicEdit
 };
