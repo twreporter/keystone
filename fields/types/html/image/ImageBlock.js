@@ -69,29 +69,33 @@ export default class ImageBlock extends React.Component {
   }
 
   render() {
-    let { editMode, image } = this.state;
-    image = image || this._getValue();
-    if (!image) {
-        return null;
-    }
+      let { editMode, image } = this.state;
+      let { className } = this.props;
+      image = image || this._getValue();
+      if (!image) {
+          return null;
+      }
 
-    const EditBlock = editMode ? this._renderImageSelector({
+      const EditBlock = editMode ? this._renderImageSelector({
           apiPath: 'images',
           isSelectionOpen: true,
           onChange: this.onValueChange,
           onFinish: this.handleFinish,
           selectedImages: [image],
           selectionLimit: 1
-    }) : null;
+      }) : null;
 
-    return (
-      <figure
-        contentEditable={false}
-        >
-        <img src={image.url} width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
-        <figcaption>{image.description}</figcaption>
-        {EditBlock}
-      </figure>
-    );
+      className = `imageWrapper ${className}`;
+      return (
+          <div
+              className={className}
+              contentEditable={false}
+              >
+              <img src={image.url} width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
+              <figcaption>{image.description}</figcaption>
+              {EditBlock}
+              {this.props.children}
+          </div>
+      );
   }
 }

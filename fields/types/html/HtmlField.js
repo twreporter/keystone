@@ -21,6 +21,10 @@ function getId () {
 	return 'keystone-html-' + lastId++;
 }
 
+function refreshEditorState(editorState) {
+    return EditorState.forceSelection(editorState, editorState.getCurrentContent().getSelectionAfter());
+}
+
 // class HtmlField extends React.Component {
 module.exports = Field.create({
 	displayName: 'HtmlField',
@@ -193,13 +197,19 @@ module.exports = Field.create({
 
     _blockRenderer (block) {
         if (block.getType() === 'atomic') {
+            const entityKey = block.getEntityAt(0);
+            const data =  entityKey ? Entity.get(entityKey).getData(): null;
             return {
                 component: AtomicBlock,
                 props: {
                     onFinishEdit: (blockKey, valueChanged) => {
                         const _editorState = BlockModifier.handleAtomicEdit(this.state.editorState, blockKey, valueChanged);
                         this.onChange(_editorState);
-                    }
+                    },
+                    refreshEditorState: () => {
+                        this.onChange(refreshEditorState(this.state.editorState));
+                    },
+                    alignment: data && data.alignment
                 }
             }
         }
@@ -212,7 +222,7 @@ module.exports = Field.create({
 
 		// If the user changes block type before entering any text, we can
 		// either style the placeholder or hide it. Let's just hide it now.
-		let className = 'mce-edit-area RichInput';
+		let className = 'RichEditor-editor';
 		let contentState = editorState.getCurrentContent();
 
 		if (!contentState.hasText()) {

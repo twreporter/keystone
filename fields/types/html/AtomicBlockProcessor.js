@@ -55,6 +55,7 @@ function getResizedImageUrls(imageUrl) {
 
 const processor = {
     convertBlock(entityMap, block) {
+        let alignment = 'center';
         let content;
         let entityRange = block.entityRanges[0];
         const entity = entityMap[entityRange.key];
@@ -62,15 +63,17 @@ const processor = {
         switch (type) {
             case CONSTANT.slideshow:
             case CONSTANT.imageDiff:
+                alignment = entity.data && entity.data.alignment || alignment;
                 content = this.convertImagesBlock(entity);
                 break;
             case CONSTANT.image:
+                alignment = entity.data && entity.data.alignment || alignment;
                 content = [this.convertImageBlock(entity)];
                 break;
             default:
                 return;
         }
-        return new ApiDataInstance({type: type, content: content})
+        return new ApiDataInstance({alignment, type, content})
     },
 
     convertImageBlock(entity) {
