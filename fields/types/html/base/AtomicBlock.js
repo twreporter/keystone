@@ -14,13 +14,7 @@ export default class MediaBlock extends React.Component {
 
     render() {
         const entityKey = this.props.block.getEntityAt(0);
-        const entity =  entityKey ? Entity.get(entityKey).getData(): null;
-
-        if (!entity) {
-            return;
-        }
-
-        const type = entity.type;
+        const type =  entityKey ? Entity.get(entityKey).getType(): null;
         let BlockComponent;
 
         switch (type) {

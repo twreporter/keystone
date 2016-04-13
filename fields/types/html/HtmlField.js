@@ -1,9 +1,7 @@
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
 import { FormInput } from 'elemental';
 import { shallowEqual } from 'react-pure-render';
-import { insertImageBlock } from './modifiers/image/image-modifier';
-import { insertImageDiffBlock } from './modifiers/image-diff/image-diff-modifier';
-import { insertSlideshowBlock } from './modifiers/slideshow/slideshow-modifier';
+import { insertImageBlock, insertImagesBlock } from './modifiers/insertAtomicBlock';
 import decorator from './entityDecorator'
 import BlockModifier from './modifiers/index';
 import CONSTANT from './CONSTANT';
@@ -12,7 +10,7 @@ import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import Field from '../Field';
 import ImageButton from './image/imageButton';
 import LinkButton from './link/LinkButton';
-import MediaBlock from './base/MediaBlock';
+import AtomicBlock from './base/AtomicBlock';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -179,27 +177,27 @@ module.exports = Field.create({
     },
 
     _insertImage (image) {
-        const _editorState = insertImageBlock(this.state.editorState, image);
+        const _editorState = insertImageBlock(this.state.editorState, CONSTANT.image, image);
         this.onChange(_editorState);
     },
 
     _insertSlideshow (images) {
-        const _editorState = insertSlideshowBlock(this.state.editorState, images);
+        const _editorState = insertImagesBlock(this.state.editorState, CONSTANT.slideshow, images);
         this.onChange(_editorState);
     },
 
     _insertImageDiff (images) {
-        const _editorState = insertImageDiffBlock(this.state.editorState, images);
+        const _editorState = insertImagesBlock(this.state.editorState, CONSTANT.imageDiff, images);
         this.onChange(_editorState);
     },
 
     _blockRenderer (block) {
-        if (block.getType() === 'media') {
+        if (block.getType() === 'atomic') {
             return {
-                component: MediaBlock,
+                component: AtomicBlock,
                 props: {
                     onFinishEdit: (blockKey, valueChanged) => {
-                        const _editorState = BlockModifier.handleFinishEdit(this.state.editorState, blockKey, valueChanged);
+                        const _editorState = BlockModifier.handleAtomicEdit(this.state.editorState, blockKey, valueChanged);
                         this.onChange(_editorState);
                     }
                 }
