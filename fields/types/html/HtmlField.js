@@ -219,7 +219,7 @@ module.exports = Field.create({
 
 		// If the user changes block type before entering any text, we can
 		// either style the placeholder or hide it. Let's just hide it now.
-		let className = 'mce-edit-area RichInput';
+		let className = 'RichEditor-editor';
 		let contentState = editorState.getCurrentContent();
 
 		if (!contentState.hasText()) {

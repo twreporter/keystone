@@ -87,7 +87,7 @@ export default class ImageBlock extends React.Component {
 
       className = `imageWrapper ${className}`;
       return (
-          <figure
+          <div
               className={className}
               contentEditable={false}
               >
@@ -95,7 +95,7 @@ export default class ImageBlock extends React.Component {
               <figcaption>{image.description}</figcaption>
               {EditBlock}
               {this.props.children}
-          </figure>
+          </div>
       );
   }
 }

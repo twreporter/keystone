@@ -1,6 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
+import classNames from 'classnames';
 import ImagesDiff from '../../../../admin/client/components/ImagesDiff';
 import React from 'react';
 import SlideshowBlock from '../slideshow/SlideshowBlock';
@@ -27,12 +28,14 @@ export default class ImageDiffBlock extends SlideshowBlock{
     }): null;
 
     return (
-      <div style={{position:"relative"}}>
+      <div className={classNames(this.props.className, 'imageWrapper')}
+          style={{position:"relative"}}>
         <ImagesDiff
             after={images[1].url}
             before={images[0].url}
         />
         {EditBlock}
+        {this.props.children}
       </div>
     );
   }

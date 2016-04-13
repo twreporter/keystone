@@ -8,7 +8,7 @@ import ImageDiffBlock from '../image-diff/ImageDiffBlock';
 import React from 'react';
 import SlideshowBlock from '../slideshow/SlideshowBlock';
 
-class MediaBlock extends React.Component {
+class AtomicBlock extends React.Component {
     constructor(props) {
         super(props);
         this.alignLeft = this._alignLeft.bind(this);
@@ -30,35 +30,33 @@ class MediaBlock extends React.Component {
 
     render() {
         const entityKey = this.props.block.getEntityAt(0);
-        const entity =  entityKey ? Entity.get(entityKey).getData(): null;
+        const type =  entityKey ? Entity.get(entityKey).getType(): null;
 
-        if (!entity) {
-            return;
-        }
-        const buttons = [
-            <span className="alignmentButton"
-                onClick={this.alignLeft}
-                style={{ marginLeft: '-2.4em' }}
-                role="button" key={'left'}
-                >
-                L
-            </span>,
-            <span className="alignmentButton"
-                onClick={this.alignCenter}
-                role="button" key={'center'}
-                >
-                C
-            </span>,
-            <span className="alignmentButton"
-                onClick={this.alignRight}
-                style={{ marginLeft: '0.9em' }}
-                role="button" key={'right'}
-                >
-                R
-            </span>,
-        ];
+        const Buttons = (
+            <div>
+                <span className="alignmentButton"
+                    onClick={this.alignLeft}
+                    style={{ marginLeft: '-2.4em' }}
+                    role="button" key={'left'}
+                    >
+                    L
+                </span>
+                <span className="alignmentButton"
+                    onClick={this.alignCenter}
+                    role="button" key={'center'}
+                    >
+                    C
+                </span>
+                <span className="alignmentButton"
+                    onClick={this.alignRight}
+                    style={{ marginLeft: '0.9em' }}
+                    role="button" key={'right'}
+                    >
+                    R
+                </span>
+            </div>
+        );
 
-        const type = entity.type;
         const { alignment } = this.props;
         let className = alignment;
         let BlockComponent;
@@ -82,10 +80,10 @@ class MediaBlock extends React.Component {
                 {...this.props}
                 className={className}
                 >
-                {buttons}
+                {Buttons}
             </BlockComponent>
         );
     }
 }
 
-export default Alignment(MediaBlock);
+export default Alignment(AtomicBlock);

@@ -1,6 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
+import classNames from 'classnames';
 import CONSTANT from '../CONSTANT';
 import ImageBlock from '../image/ImageBlock';
 import React from 'react';
@@ -58,12 +59,14 @@ export default class SlideshowBlock extends ImageBlock {
     }): null;
 
     return (
-        <figure
+        <div
             contentEditable={false}
+            className={classNames(this.props.className, 'imageWrapper')}
             >
             <img src="https://storage.googleapis.com/twreporter-article.twreporter.org/slideshow.jpg" width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
             {EditBlock}
-        </figure>
+            {this.props.children}
+        </div>
     );
   }
 }
