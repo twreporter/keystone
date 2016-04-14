@@ -1,9 +1,9 @@
 'use strict';
 
-import { insertImageBlock, insertImagesBlock } from './insertAtomicBlock';
-import { replaceImageBlock, replaceImagesBlock } from './replaceBlock';
+import { insertImageBlock, insertImagesBlock } from './insert-atomic-block';
+import { replaceImageBlock, replaceImagesBlock } from './replace-block';
 import { Entity } from 'draft-js';
-import removeBlock from './removeBlock';
+import removeBlock from './remove-block';
 import CONSTANT from '../CONSTANT';
 
 const handleAtomicEdit = (editorState, blockKey, valueChanged) => {

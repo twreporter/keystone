@@ -1,12 +1,12 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import Alignment from './BlockAlignmentWrapper';
+import Alignment from './block-alignment-wrapper';
 import CONSTANT from '../CONSTANT';
-import ImageBlock from '../image/ImageBlock';
-import ImageDiffBlock from '../image-diff/ImageDiffBlock';
+import ImageBlock from '../image/image-block';
+import ImageDiffBlock from '../image-diff/Image-diff-block';
 import React from 'react';
-import SlideshowBlock from '../slideshow/SlideshowBlock';
+import SlideshowBlock from '../slideshow/slideshow-block';
 
 class AtomicBlock extends React.Component {
     constructor(props) {

@@ -1,8 +1,8 @@
 'use strict';
 import objectAssign from 'object-assign';
-import ImageEditingBlock from './ImageEditingBlock';
+import ImageEditingBlock from './image-editing-block';
 import React from 'react';
-import StyleButton from '../base/StyleButton';
+import StyleButton from '../base/style-button';
 
 export class ImageButton extends StyleButton {
     constructor(props) {

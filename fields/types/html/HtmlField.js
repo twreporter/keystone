@@ -1,18 +1,18 @@
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
 import { FormInput } from 'elemental';
 import { shallowEqual } from 'react-pure-render';
-import { insertImageBlock, insertImagesBlock } from './modifiers/insertAtomicBlock';
+import { insertImageBlock, insertImagesBlock } from './modifiers/insert-atomic-block';
 import decorator from './entityDecorator'
 import blockStyleFn from './base/block-style-fn';
 import quoteTypes from './quote/quote-types';
-import AtomicBlock from './base/AtomicBlock';
+import AtomicBlock from './base/atomic-block';
 import BlockModifier from './modifiers/index';
 import CONSTANT from './CONSTANT';
 import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import Field from '../Field';
-import ImageButton from './image/imageButton';
-import LinkButton from './link/LinkButton';
+import ImageButton from './image/image-button';
+import LinkButton from './link/link-button';
 import React from 'react';
 import ReactDOM from 'react-dom';
 

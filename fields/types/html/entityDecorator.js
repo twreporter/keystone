@@ -1,7 +1,7 @@
 'use strict';
 
 import { CompositeDecorator } from 'draft-js';
-import linkDecorator from './link/linkDecorator';
+import linkDecorator from './link/link-decorator';
 import quoteDecorator from './quote/quote-decorator';
 import React from 'react';
 
