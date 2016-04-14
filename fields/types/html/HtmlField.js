@@ -3,6 +3,9 @@ import { FormInput } from 'elemental';
 import { shallowEqual } from 'react-pure-render';
 import { insertImageBlock, insertImagesBlock } from './modifiers/insertAtomicBlock';
 import decorator from './entityDecorator'
+import blockStyleFn from './base/block-style-fn';
+import quoteTypes from './quote/quote-types';
+import AtomicBlock from './base/AtomicBlock';
 import BlockModifier from './modifiers/index';
 import CONSTANT from './CONSTANT';
 import DraftConverter from './DraftConverter';
@@ -10,7 +13,6 @@ import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import Field from '../Field';
 import ImageButton from './image/imageButton';
 import LinkButton from './link/LinkButton';
-import AtomicBlock from './base/AtomicBlock';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -99,9 +101,10 @@ module.exports = Field.create({
 	},
 
 	toggleBlockType (blockType) {
+        let editorState = this.state.editorState;
 		this.onChange(
 			RichUtils.toggleBlockType(
-				this.state.editorState,
+			    editorState,
 				blockType
 			)
 		);
@@ -248,7 +251,7 @@ module.exports = Field.create({
 				<div className={className} onClick={this.focus}>
 					<Editor
                         blockRendererFn={this._blockRenderer}
-						blockStyleFn={getBlockStyle}
+						blockStyleFn={blockStyleFn}
 						customStyleMap={styleMap}
 						editorState={editorState}
 						handleKeyCommand={this.handleKeyCommand}
@@ -278,13 +281,6 @@ const styleMap = {
 	},
 };
 
-function getBlockStyle (block) {
-	switch (block.getType()) {
-		case 'blockquote': return 'RichEditor-blockquote';
-		default: return null;
-	}
-}
-
 class StyleButton extends React.Component {
 	constructor () {
 		super();
@@ -312,7 +308,10 @@ class StyleButton extends React.Component {
 
 // block settings
 const BLOCK_TYPES = [
-	{ label: 'Blockquote', style: 'blockquote' },
+    { label: quoteTypes.blockquote.label, style: 'blockquote' },
+    { label: quoteTypes.introquote.label, style: 'introquote'},
+    { label: quoteTypes.pumpingquote.label, style: 'pumpingquote'},
+    { label: quoteTypes.forwardquote.label, style: 'forwardquote'},
 	{ label: 'Code Block', style: 'code-block' },
 	{ label: 'H1', style: 'header-one' },
 	{ label: 'H2', style: 'header-two' },

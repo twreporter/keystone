@@ -2,12 +2,16 @@
 
 'use strict';
 import { List } from 'immutable';
+import quoteTypes from './quote/quote-types';
 import ApiDataInstance from './ApiDataInstance';
 import AtomicBlockProcessor from './AtomicBlockProcessor';
 import InlineStylesProcessor from './InlineStylesProcessor';
 
 let blockTagMap = {
-    'blockquote': `<blockquote>%content%</blockquote>\n`,
+    'blockquote': `<blockquote class="${quoteTypes.blockquote.style}">%content%</blockquote>\n`,
+    'introquote': `<blockquote class="${quoteTypes.introquote.style}">%content%</blockquote>\n`,
+    'pumpingquote': `<blockquote class="${quoteTypes.pumpingquote.style}">%content%</blockquote>\n`,
+    'forwardquote': `<blockquote class="${quoteTypes.forwardquote.style}">%content%</blockquote>\n`,
     'code-block': `<code>%content%</code>\n`,
     'default': `<p>%content%</p>\n`,
     'header-one': `<h1>%content%</h1>\n`,
@@ -91,6 +95,11 @@ function convertBlocksToApiData (blocks, entityMap) {
 
             if (block.type.startsWith('atomic') || block.type.startsWith('media')) {
                 apiDataArr = apiDataArr.push(AtomicBlockProcessor.convertBlock(entityMap, block));
+            } else if (quoteTypes.hasOwnProperty(block.type)) {
+                let style = quoteTypes[block.type].style;
+                let converted = InlineStylesProcessor(inlineTagMap, entityTagMap, entityMap, block);
+                // set type as blockquote for easy understanding
+                apiDataArr = apiDataArr.push(new ApiDataInstance({type: 'blockquote', content: [converted], styles: [style]}));
             } else {
                 let converted = InlineStylesProcessor(inlineTagMap, entityTagMap, entityMap, block);
                 apiDataArr = apiDataArr.push(new ApiDataInstance({type: block.type, content: [converted]}));
