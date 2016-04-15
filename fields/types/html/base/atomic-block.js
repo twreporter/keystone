@@ -1,8 +1,9 @@
 'use strict';
 
 import { Entity } from 'draft-js';
+import { entityType } from '../CONSTANT';
 import Alignment from './block-alignment-wrapper';
-import CONSTANT from '../CONSTANT';
+import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
 import ImageDiffBlock from '../image-diff/Image-diff-block';
 import React from 'react';
@@ -33,7 +34,7 @@ class AtomicBlock extends React.Component {
         const type =  entityKey ? Entity.get(entityKey).getType(): null;
 
         const Buttons = (
-            <div>
+            <div style={{textAlign: "center"}}>
                 <span className="alignmentButton"
                     onClick={this.alignLeft}
                     style={{ marginLeft: '-2.4em' }}
@@ -62,13 +63,16 @@ class AtomicBlock extends React.Component {
         let BlockComponent;
 
         switch (type) {
-            case CONSTANT.image:
+            case entityType.embeddedCode:
+                BlockComponent = EmbeddedCodeBlock;
+                break;
+            case entityType.image:
                 BlockComponent = ImageBlock;
                 break;
-            case CONSTANT.slideshow:
+            case entityType.slideshow:
                 BlockComponent = SlideshowBlock;
                 break;
-            case CONSTANT.imageDiff:
+            case entityType.imageDiff:
                 BlockComponent = ImageDiffBlock;
                 break;
             default:

@@ -1,6 +1,5 @@
 import { Button, FormField, FormInput, InputGroup, Modal } from 'elemental';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 const LinkEditingBlock = React.createClass({
     displayName: 'LinkEditingBlock',

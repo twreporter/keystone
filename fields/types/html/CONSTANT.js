@@ -1,11 +1,17 @@
 'use strict';
-const CONST = {
-    link: 'link',
-    image: 'image',
-    slideshow: 'slideshow',
-    imageDiff: 'imageDiff',
+
+const constant = {
     slideshowSelectionLimit: 30,
     imageRequiredProps: ['id', 'url', 'description', 'width', 'height']
 };
 
-export default CONST;
+const entityType = {
+    embeddedCode: 'embeddedCode',
+    link: 'link',
+    image: 'image',
+    imageDiff: 'imageDiff',
+    slideshow: 'slideshow'
+};
+
+
+export {  constant, entityType };

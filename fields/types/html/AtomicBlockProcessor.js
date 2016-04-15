@@ -3,7 +3,7 @@ import http from 'https';
 import url from 'url';
 // import sizeOf from 'image-size';
 import ApiDataInstance from './ApiDataInstance';
-import CONSTANT from './CONSTANT';
+import { entityType } from './CONSTANT';
 
 /*
 function getImageSize(imageUrl) {
@@ -61,12 +61,16 @@ const processor = {
         const entity = entityMap[entityRange.key];
         const type = entity && entity.type;
         switch (type) {
-            case CONSTANT.slideshow:
-            case CONSTANT.imageDiff:
+            case entityType.embeddedCode:
+                alignment = entity.data && entity.data.alignment || alignment;
+                content = [entity.data.embeddedCode];
+                break;
+            case entityType.slideshow:
+            case entityType.imageDiff:
                 alignment = entity.data && entity.data.alignment || alignment;
                 content = this.convertImagesBlock(entity);
                 break;
-            case CONSTANT.image:
+            case entityType.image:
                 alignment = entity.data && entity.data.alignment || alignment;
                 content = [this.convertImageBlock(entity)];
                 break;
