@@ -3,7 +3,7 @@
 import { Entity } from 'draft-js';
 import classNames from 'classnames';
 import CONSTANT from '../CONSTANT';
-import ImageBlock from '../image/ImageBlock';
+import ImageBlock from '../image/image-block';
 import React from 'react';
 
 export default class SlideshowBlock extends ImageBlock {

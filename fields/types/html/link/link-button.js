@@ -1,6 +1,6 @@
 import objectAssign from 'object-assign';
-import StyleButton from '../base/StyleButton';
-import LinkEditingBlock from './LinkEditingBlock';
+import StyleButton from '../base/style-button';
+import LinkEditingBlock from './link-editing-block';
 import React from 'react';
 
 export class LinkButton extends StyleButton {

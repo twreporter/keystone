@@ -4,7 +4,7 @@ import { Entity } from 'draft-js';
 import classNames from 'classnames';
 import ImagesDiff from '../../../../admin/client/components/ImagesDiff';
 import React from 'react';
-import SlideshowBlock from '../slideshow/SlideshowBlock';
+import SlideshowBlock from '../slideshow/slideshow-block';
 
 export default class ImageDiffBlock extends SlideshowBlock{
   constructor(props) {
