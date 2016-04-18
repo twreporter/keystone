@@ -3,13 +3,39 @@
  */
 
 var _ = require('underscore');
-var grappling = require('grappling-hook');
+var fs = require('fs');
 var gcsHelper = require('../../../lib/gcsHelper');
+var grappling = require('grappling-hook');
 var keystone = require('../../../');
 var moment = require('moment');
 var super_ = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
+var ExifImage = require('exif').ExifImage;
+var sizeOf = require('image-size');
+
+function extractExif(image) {
+    return new Promise(function(resolve, reject) {
+        try {
+            new ExifImage({
+                image: image
+            }, function(error, exifData) {
+                if (error) {
+                    console.log('Error while extracting exif of image: ' + error.message);
+                    resolve({});
+                } else {
+                    if (typeof exifData === 'object') {
+                        return resolve(exifData);
+                    }
+                    resolve({});
+                }
+            });
+        } catch (error) {
+            console.log('Error while extracting exif of image: ' + error.message);
+            resolve({});
+        }
+    });
+}
 
 /**
  *  FieldType Constructor
@@ -69,28 +95,36 @@ gcsimage.prototype.addToSchema = function() {
 
     var paths = this.paths = {
         // fields
+        artist: this._path.append('.artist'),
         bucket: this._path.append('.bucket'),
+        description: this._path.append('.description'),
         filename: this._path.append('.filename'),
         filetype: this._path.append('.filetype'),
+        height: this._path.append('.height'),
         originalname: this._path.append('.originalname'),
         path: this._path.append('.path'),
         size: this._path.append('.size'),
         url: this._path.append('.url'),
+        width: this._path.append('.width'),
 
         // virtuals
-        action: this._path.append('_action')
+        action: this._path.append('_action'),
         exists: this._path.append('.exists'),
         upload: this._path.append('_upload'),
     };
 
     var schemaPaths = this._path.addTo({}, {
+        artist: String,
         bucket: String,
+        description: String,
         filename: String,
         filetype: String,
+        height: Number,
         originalname: String,
         path: String,
         size: Number,
-        url: String
+        url: String,
+        width: Number
     });
 
     schema.add(schemaPaths);
@@ -106,13 +140,17 @@ gcsimage.prototype.addToSchema = function() {
 
     var reset = function(item) {
         item.set(field.path, {
+            artist: '',
             bucket: '',
+            description: '',
             filename: '',
             filetype: '',
+            height: 0,
             originalname: '',
             path: '',
             size: 0,
-            url: ''
+            url: '',
+            width: 0
         });
     };
 
@@ -138,14 +176,20 @@ gcsimage.prototype.addToSchema = function() {
             var promise = new Promise(function(resolve, reject) {
                 var gcsConfig = field.gcsConfig;
                 var bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.bucket));
-                bucket.deleteFiles({
-                    prefix: _this.get(paths.path) + _this.get(paths.filename)
-                }, function(err) {
-                    if (err) {
-                        return reject(err);
-                    }
+                var filename = _this.get(paths.filename);
+                if (filename && typeof filename === 'string') {
+                    var filenameWithoutExt = filename.split('.');
+                    bucket.deleteFiles({
+                        prefix: _this.get(paths.path) + filenameWithoutExt
+                    }, function(err) {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve();
+                    });
+                } else {
                     resolve();
-                });
+                }
             });
             reset(this);
             return promise;
@@ -237,6 +281,9 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
     var isPublicRead = field.options.publicRead ? field.options.publicRead : false;
     var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : '';
     var filename = prefix + file.name;
+    var split = filename.split('.');
+    var filenameWithoutExt = split[0];
+    var ext = split[1] || '';
     var originalname = file.originalname;
     var filetype = file.mimetype || file.type;
 
@@ -257,27 +304,66 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
         }
 
         var bucket = gcsHelper.initBucket(field.gcsConfig, field.options.bucket);
-        gcsHelper.uploadFileToBucket(bucket, file.path, {
+        gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
             destination: path + filename,
-        }).then(function(uploadedFile) {
-            return gcsHelper.makeFilePublicPrivateRead(uploadedFile, isPublicRead);
-        }).then(function(response) {
-            var fileData = {
-                bucket: field.options.bucket,
-                filename: filename,
-                filetype: filetype,
-                originalname: originalname,
-                path: path,
-                size: file.size,
-                url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
-            };
-
-            if (update) {
-                item.set(field.path, fileData);
+            filetype: filetype,
+            isPublicRead: isPublicRead
+        }).then(function(apiResponse) {
+            // resizing image and upload resized images
+            if (typeof field.options.resize === 'function') {
+                var resizeFunc = field.options.resize;
+                if (Array.isArray(field.options.resizeOpts) && field.options.resizeOpts.length > 0) {
+                    var promises = [];
+                    var resizeOpts = field.options.resizeOpts;
+                    for (var i = 0; i < resizeOpts.length; i++) {
+                        var resizeOpt = resizeOpts[i] || {};
+                        promises.push(gcsHelper.uploadFileToBucket(bucket, resizeFunc(file.path, resizeOpt.width, resizeOpt.height, resizeOpt.options), {
+                            destination: path + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
+                            filetype: filetype,
+                            isPublicRead: isPublicRead
+                        }));
+                    }
+                    return Promise.all(promises);
+                } else {
+                    // skip resizing
+                    return;
+                }
+            } else {
+                // skip resizing
+                return;
             }
-            return callback(null, fileData);
+        }).then(function(value) {
+            var dimensions = sizeOf(file.path);
+            extractExif(file.path).then(function(exifData) {
+                exifData.image = exifData.image || {};
+                exifData.exif = exifData.exif || {};
+                var fileData = {
+                    artist: exifData.image.Artist || '',
+                    bucket: field.options.bucket,
+                    description: exifData.image.ImageDescription || '',
+                    filename: filename,
+                    filetype: filetype,
+                    height: dimensions.height || exifData.exif.ExifImageHeight || exifData.image.ImageHeight || 0,
+                    originalname: originalname,
+                    path: path,
+                    size: file.size,
+                    url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
+                    width: dimensions.width ||  exifData.exif.ExifImageWidth || exifData.image.ImageWidth || 0
+                };
+                if (update) {
+                    item.set(field.path, fileData);
+                }
+                return callback(null, fileData);
+            });
         }).catch(function(err) {
-            return callback(err);
+            bucket.deleteFiles({
+                prefix: path + filenameWithoutExt
+            }, function(deleteErr) {
+                if (err) {
+                    return callback(deleteErr);
+                }
+                callback(err);
+            });
         });
     };
 
