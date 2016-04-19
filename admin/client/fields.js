@@ -11,6 +11,7 @@ module.exports = {
 	email: require('../../fields/types/email/EmailField'),
 	embedly: require('../../fields/types/embedly/EmbedlyField'),
 	geopoint: require('../../fields/types/geopoint/GeoPointField'),
+    gcsfile: require('../../fields/types/gcsfile/GcsFileField'),
     gcsimage: require('../../fields/types/gcsimage/GcsImageField'),
     gcsimages: require('../../fields/types/gcsimages/GcsImagesField'),
 	html: require('../../fields/types/html/HtmlField'),

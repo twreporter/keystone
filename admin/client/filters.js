@@ -11,6 +11,7 @@ module.exports = {
 	email: require('../../fields/types/email/EmailFilter'),
 	embedly: require('../../fields/types/embedly/EmbedlyFilter'),
 	// geopoint: require('../../fields/types/geopoint/GeoPointFilter'),
+    gcsfile: require('../../fields/types/gcsfile/GcsFileFilter'),
     gcsimage: require('../../fields/types/gcsimage/GcsImageFilter'),
     gcsimages: require('../../fields/types/gcsimages/GcsImagesFilter'),
 	html: require('../../fields/types/html/HtmlFilter'),
