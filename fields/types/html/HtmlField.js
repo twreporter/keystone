@@ -67,7 +67,6 @@ module.exports = Field.create({
         const content = convertToRaw(editorState.getCurrentContent());
         const cHtml = DraftConverter.convertToHtml(content);
         const apiData = DraftConverter.convertToApiData(content);
-        console.log('content:', content);
 
         const valueStr = JSON.stringify({
             draft: content,
@@ -337,7 +336,6 @@ const BlockStyleControls = (props) => {
 	.getCurrentContent()
 	.getBlockForKey(selection.getStartKey())
 	.getType();
-
 	return (
 		<div className="RichEditor-controls">
 			{BLOCK_TYPES.map((type) =>
@@ -390,15 +388,19 @@ const EntityControls = (props) => {
     .getBlockForKey(selection.getStartKey());
 
     const endOffset = selection.getEndOffset();
-    const entityKey = startBlock.getEntityAt(startOffset);
     let data;
     let entityInstance;
+    let entityKey;
     let selectedText = '';
 
     if (!selection.isCollapsed()) {
         const blockText = startBlock.getText();
         selectedText = blockText.slice(startOffset, endOffset);
+        entityKey = startBlock.getEntityAt(startOffset);
+    } else {
+        entityKey = startBlock.getEntityAt(0);
     }
+
     if (entityKey !== null) {
         entityInstance = Entity.get(entityKey);
         data = entityInstance.getData();
