@@ -1,5 +1,4 @@
 import quoteTypes from './quote-types';
-import CONSTANT from '../CONSTANT';
 import React from 'react';
 
 const Quote = (props) => {

@@ -1,15 +1,19 @@
+'use strict';
+import { shallowEqual } from 'react-pure-render';
 import React from 'react';
 
 class StyleButton extends React.Component {
     constructor(props) {
         super(props);
-        this._textValue = '';
-        this._urlValue = '';
         this.state = {
             active: props.active,
             shouldRenderEditingBlock: false
         };
         this.renderEditingBlock = this._renderEditingBlock.bind(this);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.label !== nextProps.label || !shallowEqual(this.state, nextState);
     }
 
     componentWillReceiveProps (nextProps) {

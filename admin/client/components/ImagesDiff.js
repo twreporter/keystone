@@ -49,7 +49,7 @@ export default class ImagesDiff extends Component {
 
     render() {
         return (
-            <div className='ImageDiff' style={{display: 'inline-block', height: this.state.height}}>
+            <div className='ImageDiff' style={{height: this.state.height}}>
                 {this.renderSwipe()}
             </div>
         );

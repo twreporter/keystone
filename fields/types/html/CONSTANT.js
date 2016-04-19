@@ -1,11 +1,24 @@
 'use strict';
-const CONST = {
-    link: 'link',
-    image: 'image',
-    slideshow: 'slideshow',
-    imageDiff: 'imageDiff',
-    slideshowSelectionLimit: 30,
-    imageRequiredProps: ['id', 'url', 'description', 'width', 'height']
+
+const ENTITY = {
+    embeddedCode: {
+        type: 'embeddedCode',
+    },
+    link: {
+        type: 'link'
+    },
+    image: {
+        type: 'image',
+        imageRequiredProps: ['id', 'url', 'description', 'width', 'height']
+    },
+    imageDiff: {
+        type: 'imageDiff'
+    },
+    slideshow: {
+        type: 'slideshow',
+        slideshowSelectionLimit: 30
+    }
 };
 
-export default CONST;
+
+export { ENTITY };

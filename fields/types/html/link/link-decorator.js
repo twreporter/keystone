@@ -1,6 +1,6 @@
 import React from 'react';
 import { Entity } from 'draft-js';
-import CONSTANT from '../CONSTANT';
+import { ENTITY } from '../CONSTANT';
 
 const styles = {
     link: {
@@ -24,7 +24,7 @@ function findLinkEntities(contentBlock, callback) {
             const entityKey = character.getEntity();
             return (
                 entityKey !== null &&
-                    Entity.get(entityKey).getType() === CONSTANT.link
+                    Entity.get(entityKey).getType() === ENTITY.link.type
             );
         },
         callback

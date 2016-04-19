@@ -1,15 +1,16 @@
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
 import { FormInput } from 'elemental';
 import { shallowEqual } from 'react-pure-render';
-import { insertImageBlock, insertImagesBlock } from './modifiers/insert-atomic-block';
+import { insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock } from './modifiers/insert-atomic-block';
 import decorator from './entityDecorator'
 import blockStyleFn from './base/block-style-fn';
 import quoteTypes from './quote/quote-types';
 import AtomicBlock from './base/atomic-block';
 import BlockModifier from './modifiers/index';
-import CONSTANT from './CONSTANT';
+import { ENTITY } from './CONSTANT';
 import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
+import EmbeddedCodeBt from './embedded-code/embedded-code-bt';
 import Field from '../Field';
 import ImageButton from './image/image-button';
 import LinkButton from './link/link-button';
@@ -119,6 +120,13 @@ module.exports = Field.create({
 		);
 	},
 
+    toggleEmbeddedCode(entity, value) {
+        if (value && value.embeddedCode) {
+            const _editorState = insertEmbeddedCodeBlock(this.state.editorState, ENTITY.embeddedCode.type, value);
+            this.onChange(_editorState);
+        }
+    },
+
     toggleLink (entity, value) {
         const {url, text} = value;
         const {editorState} = this.state;
@@ -170,13 +178,15 @@ module.exports = Field.create({
 
     toggleEntity (entity, value) {
         switch (entity) {
-            case CONSTANT.link:
+            case ENTITY.embeddedCode.type:
+                return this.toggleEmbeddedCode(entity, value);
+            case ENTITY.link.type:
                 return this.toggleLink(entity, value);
-            case CONSTANT.image:
+            case ENTITY.image.type:
                 return this.toggleImage(entity, value);
-            case CONSTANT.slideshow:
+            case ENTITY.slideshow.type:
                 return this.toggleSlideshow(entity, value);
-            case CONSTANT.imageDiff:
+            case ENTITY.imageDiff.type:
                 return this.toggleImageDiff(entity, value);
             default:
                 return;
@@ -184,17 +194,17 @@ module.exports = Field.create({
     },
 
     _insertImage (image) {
-        const _editorState = insertImageBlock(this.state.editorState, CONSTANT.image, image);
+        const _editorState = insertImageBlock(this.state.editorState, ENTITY.image.type, image);
         this.onChange(_editorState);
     },
 
     _insertSlideshow (images) {
-        const _editorState = insertImagesBlock(this.state.editorState, CONSTANT.slideshow, images);
+        const _editorState = insertImagesBlock(this.state.editorState, ENTITY.slideshow.type, images);
         this.onChange(_editorState);
     },
 
     _insertImageDiff (images) {
-        const _editorState = insertImagesBlock(this.state.editorState, CONSTANT.imageDiff, images);
+        const _editorState = insertImagesBlock(this.state.editorState, ENTITY.imageDiff.type, images);
         this.onChange(_editorState);
     },
 
@@ -326,7 +336,6 @@ const BlockStyleControls = (props) => {
 	.getCurrentContent()
 	.getBlockForKey(selection.getStartKey())
 	.getType();
-
 	return (
 		<div className="RichEditor-controls">
 			{BLOCK_TYPES.map((type) =>
@@ -368,7 +377,7 @@ const InlineStyleControls = (props) => {
 };
 
 // entities
-const ENTITIES = Object.keys(CONSTANT);
+const ENTITIES = Object.keys(ENTITY);
 const EntityControls = (props) => {
     const {editorState} = props;
     const selection = editorState.getSelection();
@@ -379,15 +388,19 @@ const EntityControls = (props) => {
     .getBlockForKey(selection.getStartKey());
 
     const endOffset = selection.getEndOffset();
-    const entityKey = startBlock.getEntityAt(startOffset);
     let data;
     let entityInstance;
+    let entityKey;
     let selectedText = '';
 
     if (!selection.isCollapsed()) {
         const blockText = startBlock.getText();
         selectedText = blockText.slice(startOffset, endOffset);
+        entityKey = startBlock.getEntityAt(startOffset);
+    } else {
+        entityKey = startBlock.getEntityAt(0);
     }
+
     if (entityKey !== null) {
         entityInstance = Entity.get(entityKey);
         data = entityInstance.getData();
@@ -400,7 +413,7 @@ const EntityControls = (props) => {
     function chooseButton (entity) {
         let active = entityInstance ? entityInstance.getType() === entity : false;
         switch (entity) {
-            case CONSTANT.link:
+            case ENTITY.link.type:
                 return (
                     <LinkButton
                         active={active}
@@ -411,7 +424,7 @@ const EntityControls = (props) => {
                         textValue={data ? data.text : selectedText}
                     />
                 );
-            case CONSTANT.image:
+            case ENTITY.image.type:
                 return (
                     <ImageButton
                         active={active}
@@ -421,7 +434,7 @@ const EntityControls = (props) => {
                         onToggle={onToggle.bind(null, entity)}
                     />
                 );
-            case CONSTANT.slideshow:
+            case ENTITY.slideshow.type:
                 return (
                     <ImageButton
                         active={active}
@@ -429,10 +442,10 @@ const EntityControls = (props) => {
                         key={entity}
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
-                        selectionLimit={CONSTANT.slideshowSelectionLimit}
+                        selectionLimit={ENTITY.slideshow.slideshowSelectionLimit}
                     />
                 );
-            case CONSTANT.imageDiff:
+            case ENTITY.imageDiff.type:
                 return (
                     <ImageButton
                         active={active}
@@ -441,6 +454,16 @@ const EntityControls = (props) => {
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
                         selectionLimit={2}
+                    />
+                );
+            case ENTITY.embeddedCode.type:
+                return (
+                    <EmbeddedCodeBt
+                        active={active}
+                        key={entity}
+                        label={entity}
+                        onToggle={onToggle.bind(null, entity)}
+                        embeddedCode={data ? data.embeddedCode : ''}
                     />
                 );
             default:
