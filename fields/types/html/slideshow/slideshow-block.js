@@ -1,7 +1,7 @@
 'use strict';
 
-import { constant } from '../CONSTANT';
 import { Entity } from 'draft-js';
+import { ENTITY } from '../CONSTANT';
 import classNames from 'classnames';
 import ImageBlock from '../image/image-block';
 import React from 'react';
@@ -55,7 +55,7 @@ export default class SlideshowBlock extends ImageBlock {
           onChange: this.onValueChange,
           onFinish: this.handleFinish,
           selectedImages: images,
-          selectionLimit: constant.slideshowSelectionLimit
+          selectionLimit: ENTITY.slideshow.slideshowSelectionLimit
     }): null;
 
     return (

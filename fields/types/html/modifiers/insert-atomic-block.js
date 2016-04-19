@@ -1,11 +1,11 @@
 'use strict';
 
-import { constant } from '../CONSTANT';
-import {pick} from 'lodash';
+import { pick } from 'lodash';
 import {
   AtomicBlockUtils,
   Entity,
 } from 'draft-js';
+import { ENTITY } from '../CONSTANT';
 
 export function insertImagesBlock(editorState, type, images) {
   const entityKey = Entity.create(
@@ -13,7 +13,7 @@ export function insertImagesBlock(editorState, type, images) {
     'IMMUTABLE',
     {
         images: images.map((image) => {
-            return pick(image, constant.imageRequiredProps)
+            return pick(image, ENTITY.image.imageRequiredProps)
         })
     }
   );
@@ -25,7 +25,7 @@ export function insertImageBlock(editorState, type, image) {
   const entityKey = Entity.create(
     type,
     'IMMUTABLE',
-    pick(image, constant.imageRequiredProps)
+    pick(image, ENTITY.image.imageRequiredProps)
   );
 
   return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');

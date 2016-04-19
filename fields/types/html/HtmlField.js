@@ -7,7 +7,7 @@ import blockStyleFn from './base/block-style-fn';
 import quoteTypes from './quote/quote-types';
 import AtomicBlock from './base/atomic-block';
 import BlockModifier from './modifiers/index';
-import { constant, entityType } from './CONSTANT';
+import { ENTITY } from './CONSTANT';
 import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import EmbeddedCodeBt from './embedded-code/embedded-code-bt';
@@ -122,7 +122,7 @@ module.exports = Field.create({
 
     toggleEmbeddedCode(entity, value) {
         if (value && value.embeddedCode) {
-            const _editorState = insertEmbeddedCodeBlock(this.state.editorState, entityType.embeddedCode, value);
+            const _editorState = insertEmbeddedCodeBlock(this.state.editorState, ENTITY.embeddedCode.type, value);
             this.onChange(_editorState);
         }
     },
@@ -178,15 +178,15 @@ module.exports = Field.create({
 
     toggleEntity (entity, value) {
         switch (entity) {
-            case entityType.embeddedCode:
+            case ENTITY.embeddedCode.type:
                 return this.toggleEmbeddedCode(entity, value);
-            case entityType.link:
+            case ENTITY.link.type:
                 return this.toggleLink(entity, value);
-            case entityType.image:
+            case ENTITY.image.type:
                 return this.toggleImage(entity, value);
-            case entityType.slideshow:
+            case ENTITY.slideshow.type:
                 return this.toggleSlideshow(entity, value);
-            case entityType.imageDiff:
+            case ENTITY.imageDiff.type:
                 return this.toggleImageDiff(entity, value);
             default:
                 return;
@@ -194,17 +194,17 @@ module.exports = Field.create({
     },
 
     _insertImage (image) {
-        const _editorState = insertImageBlock(this.state.editorState, entityType.image, image);
+        const _editorState = insertImageBlock(this.state.editorState, ENTITY.image.type, image);
         this.onChange(_editorState);
     },
 
     _insertSlideshow (images) {
-        const _editorState = insertImagesBlock(this.state.editorState, entityType.slideshow, images);
+        const _editorState = insertImagesBlock(this.state.editorState, ENTITY.slideshow.type, images);
         this.onChange(_editorState);
     },
 
     _insertImageDiff (images) {
-        const _editorState = insertImagesBlock(this.state.editorState, entityType.imageDiff, images);
+        const _editorState = insertImagesBlock(this.state.editorState, ENTITY.imageDiff.type, images);
         this.onChange(_editorState);
     },
 
@@ -377,7 +377,7 @@ const InlineStyleControls = (props) => {
 };
 
 // entities
-const ENTITIES = Object.keys(entityType);
+const ENTITIES = Object.keys(ENTITY);
 const EntityControls = (props) => {
     const {editorState} = props;
     const selection = editorState.getSelection();
@@ -413,7 +413,7 @@ const EntityControls = (props) => {
     function chooseButton (entity) {
         let active = entityInstance ? entityInstance.getType() === entity : false;
         switch (entity) {
-            case entityType.link:
+            case ENTITY.link.type:
                 return (
                     <LinkButton
                         active={active}
@@ -424,7 +424,7 @@ const EntityControls = (props) => {
                         textValue={data ? data.text : selectedText}
                     />
                 );
-            case entityType.image:
+            case ENTITY.image.type:
                 return (
                     <ImageButton
                         active={active}
@@ -434,7 +434,7 @@ const EntityControls = (props) => {
                         onToggle={onToggle.bind(null, entity)}
                     />
                 );
-            case entityType.slideshow:
+            case ENTITY.slideshow.type:
                 return (
                     <ImageButton
                         active={active}
@@ -442,10 +442,10 @@ const EntityControls = (props) => {
                         key={entity}
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
-                        selectionLimit={constant.slideshowSelectionLimit}
+                        selectionLimit={ENTITY.slideshow.slideshowSelectionLimit}
                     />
                 );
-            case entityType.imageDiff:
+            case ENTITY.imageDiff.type:
                 return (
                     <ImageButton
                         active={active}
@@ -456,7 +456,7 @@ const EntityControls = (props) => {
                         selectionLimit={2}
                     />
                 );
-            case entityType.embeddedCode:
+            case ENTITY.embeddedCode.type:
                 return (
                     <EmbeddedCodeBt
                         active={active}

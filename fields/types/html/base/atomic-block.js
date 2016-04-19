@@ -1,7 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import { entityType } from '../CONSTANT';
+import { ENTITY } from '../CONSTANT';
 import Alignment from './block-alignment-wrapper';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
@@ -63,16 +63,16 @@ class AtomicBlock extends React.Component {
         let BlockComponent;
 
         switch (type) {
-            case entityType.embeddedCode:
+            case ENTITY.embeddedCode.type:
                 BlockComponent = EmbeddedCodeBlock;
                 break;
-            case entityType.image:
+            case ENTITY.image.type:
                 BlockComponent = ImageBlock;
                 break;
-            case entityType.slideshow:
+            case ENTITY.slideshow.type:
                 BlockComponent = SlideshowBlock;
                 break;
-            case entityType.imageDiff:
+            case ENTITY.imageDiff.type:
                 BlockComponent = ImageDiffBlock;
                 break;
             default:

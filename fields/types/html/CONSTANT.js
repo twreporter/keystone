@@ -1,17 +1,24 @@
 'use strict';
 
-const constant = {
-    slideshowSelectionLimit: 30,
-    imageRequiredProps: ['id', 'url', 'description', 'width', 'height']
+const ENTITY = {
+    embeddedCode: {
+        type: 'embeddedCode',
+    },
+    link: {
+        type: 'link'
+    },
+    image: {
+        type: 'image',
+        imageRequiredProps: ['id', 'url', 'description', 'width', 'height']
+    },
+    imageDiff: {
+        type: 'imageDiff'
+    },
+    slideshow: {
+        type: 'slideshow',
+        slideshowSelectionLimit: 30
+    }
 };
 
-const entityType = {
-    embeddedCode: 'embeddedCode',
-    link: 'link',
-    image: 'image',
-    imageDiff: 'imageDiff',
-    slideshow: 'slideshow'
-};
 
-
-export {  constant, entityType };
+export { ENTITY };

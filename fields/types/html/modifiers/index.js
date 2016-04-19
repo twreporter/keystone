@@ -1,6 +1,6 @@
 'use strict';
 
-import { entityType } from '../CONSTANT';
+import { ENTITY } from '../CONSTANT';
 import { insertImageBlock, insertImagesBlock } from './insert-atomic-block';
 import { replaceImageBlock, replaceImagesBlock } from './replace-block';
 import { Entity } from 'draft-js';
@@ -18,17 +18,17 @@ const handleAtomicEdit = (editorState, blockKey, valueChanged) => {
     }
 
     switch (blockType) {
-        case entityType.image:
+        case ENTITY.image.type:
             if (valueChanged) {
                 return replaceImageBlock(editorState, blockKey, valueChanged);
             }
             return removeBlock(editorState, blockKey);
-        case entityType.slideshow:
+        case ENTITY.slideshow.type:
             if (Array.isArray(valueChanged) && valueChanged.length > 0) {
                 return replaceImagesBlock(editorState, blockKey, valueChanged);
             }
             return removeBlock(editorState, blockKey);
-        case entityType.imageDiff:
+        case ENTITY.imageDiff.type:
             if (Array.isArray(valueChanged) && valueChanged.length === 2) {
                 return replaceImagesBlock(editorState, blockKey, valueChanged);
             }
