@@ -1,6 +1,6 @@
 import React from 'react';
 
-class StyleButton extends React.Component {
+class EntityStyleButton extends React.Component {
     constructor(props) {
         super(props);
         this._textValue = '';
@@ -26,28 +26,34 @@ class StyleButton extends React.Component {
     }
 
     render() {
-        const { active, shouldRenderEditingBlock } = this.state;
-        let className = 'RichEditor-styleButton Button Button--link';
-        if (active) {
-            className += ' RichEditor-activeButton';
-        }
+      const { active, shouldRenderEditingBlock } = this.state;
+      // let className = 'RichEditor-styleButton Button Button--link';
+      let className = '';
+      if (active) {
+        className += ' RichEditor-activeButton';
+      }
 
-        return (
-            <span className={className} onClick={this.renderEditingBlock}>
-                {this.props.label}
-            </span>
-        );
+      return (
+        <span
+          type="default"
+          className={className}
+          onClick={this.renderEditingBlock}
+          data-tooltip={this.props.label}>
+  				<i className={ 'fa ' + this.props.icon }></i>
+  				<span>{this.props.text}</span>
+        </span>
+      );
     }
 }
 
-StyleButton.propTypes = {
+EntityStyleButton.propTypes = {
     active: React.PropTypes.bool,
     label: React.PropTypes.string
 };
 
-StyleButton.defaultProps = {
+EntityStyleButton.defaultProps = {
     active: false,
     label: 'base'
 };
 
-export default StyleButton;
+export default EntityStyleButton;

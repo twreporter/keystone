@@ -2,9 +2,9 @@
 import objectAssign from 'object-assign';
 import ImageEditingBlock from './image-editing-block';
 import React from 'react';
-import StyleButton from '../base/style-button';
+import EntityStyleButton from '../base/style-button';
 
-export class ImageButton extends StyleButton {
+export class ImageButton extends EntityStyleButton {
     constructor(props) {
         super(props);
         this.onFinish = this._onFinish.bind(this);
@@ -37,7 +37,7 @@ export class ImageButton extends StyleButton {
         let button = super.render();
 
         return (
-            <div style={{display: "inline-block"}}>
+            <div className="Button Button--default" style={{display: "inline-block"}}>
                 {Block}
                 {button}
             </div>
@@ -45,12 +45,12 @@ export class ImageButton extends StyleButton {
     }
 }
 
-ImageButton.propTypes = objectAssign(StyleButton.propTypes, {
+ImageButton.propTypes = objectAssign(EntityStyleButton.propTypes, {
     apiPath: React.PropTypes.string,
     onToggle: React.PropTypes.func.isRequired,
     selectionLimit: React.PropTypes.number
 });
-ImageButton.defaultProps = objectAssign(StyleButton.defaultProps, {
+ImageButton.defaultProps = objectAssign(EntityStyleButton.defaultProps, {
     apiPath: 'images',
     selectionLimit: 1
 });
