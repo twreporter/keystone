@@ -11,6 +11,7 @@ var Columns = {
 	email: require('../../fields/types/email/EmailColumn'),
 	embedly: require('../../fields/types/embedly/EmbedlyColumn'),
     geopoint: require('../../fields/types/geopoint/GeoPointColumn'),
+    gcsfile: require('../../fields/types/gcsfile/GcsFileColumn'),
     gcsimage: require('../../fields/types/gcsimage/GcsImageColumn'),
     gcsimages: require('../../fields/types/gcsimages/GcsImagesColumn'),
 	html: require('../../fields/types/html/HtmlColumn'),
