@@ -1,5 +1,5 @@
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { FormInput } from 'elemental';
+import { FormInput, Button, ButtonGroup } from 'elemental';
 import { shallowEqual } from 'react-pure-render';
 import { insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock } from './modifiers/insert-atomic-block';
 import decorator from './entityDecorator'
@@ -301,32 +301,35 @@ class StyleButton extends React.Component {
 	}
 
 	render () {
-		let className = 'RichEditor-styleButton Button Button--link';
+		let className = '';
 		if (this.props.active) {
 			className += ' RichEditor-activeButton';
 		}
 
 		return (
-			<span
-				className={className}
-				onMouseDown={this.onToggle}>
-				{this.props.label}
-			</span>
+			<Button
+				type="default"
+				className={className + ' tooltip-box'}
+				onMouseDown={this.onToggle}
+				data-tooltip={this.props.label}>
+				<i className={ 'fa ' + this.props.icon }></i>
+				<span>{this.props.text}</span>
+			</Button>
 		);
 	}
 }
 
 // block settings
 const BLOCK_TYPES = [
-    { label: quoteTypes.blockquote.label, style: 'blockquote' },
-    { label: quoteTypes.introquote.label, style: 'introquote'},
-    { label: quoteTypes.pumpingquote.label, style: 'pumpingquote'},
-    { label: quoteTypes.forwardquote.label, style: 'forwardquote'},
-	{ label: 'Code Block', style: 'code-block' },
-	{ label: 'H1', style: 'header-one' },
-	{ label: 'H2', style: 'header-two' },
-	{ label: 'OL', style: 'ordered-list-item' },
-	{ label: 'UL', style: 'unordered-list-item' },
+  { label: quoteTypes.blockquote.label, style: 'blockquote', icon: 'fa-quote-right', text: ' Block' },
+  { label: quoteTypes.introquote.label, style: 'introquote', icon: 'fa-quote-right', text: ' Intro' },
+  { label: quoteTypes.pumpingquote.label, style: 'pumpingquote', icon: 'fa-quote-right', text: ' Pumping' },
+  { label: quoteTypes.forwardquote.label, style: 'forwardquote', icon: 'fa-quote-right', text: ' Forward' },
+	{ label: 'Code Block', style: 'code-block', icon: 'fa-code', text: '' },
+	{ label: 'H1', style: 'header-one', icon: 'fa-header', text: '1' },
+	{ label: 'H2', style: 'header-two', icon: 'fa-header', text: '2' },
+	{ label: 'OL', style: 'ordered-list-item', icon: 'fa-list-ol', text: '' },
+	{ label: 'UL', style: 'unordered-list-item', icon: 'fa-list-ul', text: '' },
 ];
 
 const BlockStyleControls = (props) => {
@@ -337,7 +340,7 @@ const BlockStyleControls = (props) => {
 	.getBlockForKey(selection.getStartKey())
 	.getType();
 	return (
-		<div className="RichEditor-controls">
+		<ButtonGroup className="RichEditor-controls">
 			{BLOCK_TYPES.map((type) =>
 				<StyleButton
 					key={type.label}
@@ -345,24 +348,26 @@ const BlockStyleControls = (props) => {
 					label={type.label}
 					onToggle={props.onToggle}
 					style={type.style}
+					icon={type.icon}
+					text={type.text}
 					/>
 			)}
-		</div>
+		</ButtonGroup>
 	);
 };
 
 // inline style settings
 var INLINE_STYLES = [
-	{ label: 'Bold', style: 'BOLD' },
-	{ label: 'Italic', style: 'ITALIC' },
-	{ label: 'Monospace', style: 'CODE' },
-	{ label: 'Underline', style: 'UNDERLINE' },
+	{ label: 'Bold', style: 'BOLD', icon: 'fa-bold', text: '' },
+	{ label: 'Italic', style: 'ITALIC', icon: 'fa-italic', text: '' },
+	{ label: 'Underline', style: 'UNDERLINE', icon: 'fa-underline', text: '' },
+	{ label: 'Monospace', style: 'CODE', icon: 'fa-terminal', text: '' },
 ];
 
 const InlineStyleControls = (props) => {
 	var currentStyle = props.editorState.getCurrentInlineStyle();
 	return (
-		<div className="RichEditor-controls">
+		<div className="ButtonGroup">
 			{INLINE_STYLES.map(type =>
 				<StyleButton
 					key={type.label}
@@ -370,6 +375,8 @@ const InlineStyleControls = (props) => {
 					label={type.label}
 					onToggle={props.onToggle}
 					style={type.style}
+					icon={type.icon}
+					text={type.text}
 					/>
 			)}
 		</div>
@@ -422,6 +429,8 @@ const EntityControls = (props) => {
                         onToggle={onToggle.bind(null, entity)}
                         urlValue={data ? data.url : ''}
                         textValue={data ? data.text : selectedText}
+												icon='fa-link'
+												text=''
                     />
                 );
             case ENTITY.image.type:
@@ -432,6 +441,8 @@ const EntityControls = (props) => {
                         key={entity}
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
+												icon='fa-photo'
+												text=' Image'
                     />
                 );
             case ENTITY.slideshow.type:
@@ -443,6 +454,8 @@ const EntityControls = (props) => {
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
                         selectionLimit={ENTITY.slideshow.slideshowSelectionLimit}
+                        icon='fa-slideshare'
+                        text=' Slideshow'
                     />
                 );
             case ENTITY.imageDiff.type:
@@ -454,6 +467,8 @@ const EntityControls = (props) => {
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
                         selectionLimit={2}
+												icon='fa-object-ungroup'
+												text=' Diff'
                     />
                 );
             case ENTITY.embeddedCode.type:
@@ -472,9 +487,8 @@ const EntityControls = (props) => {
     }
 
     return (
-        <div className="RichEditor-controls">
-			{ENTITIES.map(chooseButton)}
-        </div>
+        <ButtonGroup>
+					{ENTITIES.map(chooseButton)}
+        </ButtonGroup>
     );
 };
-
