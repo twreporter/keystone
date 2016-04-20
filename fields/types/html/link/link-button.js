@@ -1,9 +1,9 @@
 import objectAssign from 'object-assign';
-import StyleButton from '../base/style-button';
+import EntityStyleButton from '../base/style-button';
 import LinkEditingBlock from './link-editing-block';
 import React from 'react';
 
-export class LinkButton extends StyleButton {
+export class LinkButton extends EntityStyleButton {
     constructor(props) {
         super(props);
     }
@@ -25,7 +25,7 @@ export class LinkButton extends StyleButton {
         let button = super.render();
 
         return (
-            <div style={{display: "inline-block"}}>
+            <div className="Button Button--default" style={{display: "inline-block"}}>
                 {Block}
                 {button}
             </div>
@@ -33,12 +33,12 @@ export class LinkButton extends StyleButton {
     }
 }
 
-LinkButton.propTypes = objectAssign(StyleButton.propTypes, {
+LinkButton.propTypes = objectAssign(EntityStyleButton.propTypes, {
     onToggle: React.PropTypes.func.isRequired,
     textValue: React.PropTypes.string,
     urlValue: React.PropTypes.string
 });
-LinkButton.defaultProps = objectAssign(StyleButton.defaultProps, {
+LinkButton.defaultProps = objectAssign(EntityStyleButton.defaultProps, {
     textValue: '',
     urlValue: ''
 });
