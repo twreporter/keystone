@@ -36,6 +36,7 @@ module.exports = Field.create({
 
 		// convert saved editor content into the editor state
 		let editorState;
+		let isEnlarged = false;
 		try {
 			const {draft, html} = this.props.value;
 			if (draft && html !== '') {
@@ -229,13 +230,20 @@ module.exports = Field.create({
         return null;
     },
 
+	enlargeEditor () {
+		this.setState({ isEnlarged: !this.state.isEnlarged });
+	},
+
 	renderField () {
 		const { editorState } = this.state;
 		const useSpellCheck = true;
 
 		// If the user changes block type before entering any text, we can
 		// either style the placeholder or hide it. Let's just hide it now.
+		let outerClassName = '';
 		let className = 'RichEditor-editor';
+		let expandIcon = 'fa-expand';
+		let expandBtnClass = '';
 		let contentState = editorState.getCurrentContent();
 
 		if (!contentState.hasText()) {
@@ -244,33 +252,41 @@ module.exports = Field.create({
 			}
 		}
 
+		if (this.state.isEnlarged) {
+			outerClassName = 'DraftEditor-fullscreen';
+			expandIcon = 'fa-compress';
+			expandBtnClass = ' expanded';
+		}
+
 		return (
-			<div className="RichEditor-root">
-				<BlockStyleControls
-					editorState={editorState}
-					onToggle={this.toggleBlockType}
-				/>
-				<InlineStyleControls
-					editorState={editorState}
-					onToggle={this.toggleInlineStyle}
-                />
-                <EntityControls
-                    editorState={editorState}
-                    onToggle={this.toggleEntity}
-                />
-				<div className={className} onClick={this.focus}>
-					<Editor
-                        blockRendererFn={this._blockRenderer}
-						blockStyleFn={blockStyleFn}
-						customStyleMap={styleMap}
-						editorState={editorState}
-						handleKeyCommand={this.handleKeyCommand}
-						onChange={this.onChange}
-						placeholder="Enter HTML Here..."
-						ref="editor"
-						spellCheck={useSpellCheck}
-						/>
-					<FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
+			<div className={outerClassName}>
+				<div className="RichEditor-root">
+					<div className={'DraftEditor-controls' + expandBtnClass}>
+						<div className={'DraftEditor-controlsInner' + expandBtnClass}>
+							<BlockStyleControls
+								editorState={editorState}
+								onToggle={this.toggleBlockType}
+							/>
+							<InlineStyleControls
+								editorState={editorState}
+								onToggle={this.toggleInlineStyle} />
+			      	<EntityControls editorState={editorState} onToggle={this.toggleEntity} />
+							<Button type={'hollow-primary DraftEditor-expandButton' + expandBtnClass} onClick={this.enlargeEditor}><i className={'fa ' + expandIcon} aria-hidden="true"></i></Button>
+						</div>
+					</div>
+					<div className={className + expandBtnClass} onClick={this.focus}>
+						<Editor blockRendererFn={this._blockRenderer}
+							blockStyleFn={blockStyleFn}
+							customStyleMap={styleMap}
+							editorState={editorState}
+							handleKeyCommand={this.handleKeyCommand}
+							onChange={this.onChange}
+							placeholder="Enter HTML Here..."
+							ref="editor"
+							spellCheck={useSpellCheck}
+							/>
+						<FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
+					</div>
 				</div>
 			</div>
 		);
@@ -312,7 +328,7 @@ class StyleButton extends React.Component {
 				className={className + ' tooltip-box'}
 				onMouseDown={this.onToggle}
 				data-tooltip={this.props.label}>
-				<i className={ 'fa ' + this.props.icon }></i>
+				<i className={'fa ' + this.props.icon}></i>
 				<span>{this.props.text}</span>
 			</Button>
 		);
@@ -340,7 +356,7 @@ const BlockStyleControls = (props) => {
 	.getBlockForKey(selection.getStartKey())
 	.getType();
 	return (
-		<ButtonGroup className="RichEditor-controls">
+		<ButtonGroup>
 			{BLOCK_TYPES.map((type) =>
 				<StyleButton
 					key={type.label}
