@@ -495,6 +495,7 @@ const EntityControls = (props) => {
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
                         embeddedCode={data ? data.embeddedCode : ''}
+                        text=' Embedded'
                     />
                 );
             default:

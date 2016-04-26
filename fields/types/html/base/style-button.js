@@ -9,7 +9,7 @@ class EntityStyleButton extends React.Component {
             active: props.active,
             shouldRenderEditingBlock: false
         };
-        this.renderEditingBlock = this._renderEditingBlock.bind(this);
+        this.handleToggle = this._handleToggle.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -23,9 +23,9 @@ class EntityStyleButton extends React.Component {
         });
     }
 
-    _renderEditingBlock (e) {
+    _handleToggle() {
         this.setState({
-            shouldRenderEditingBlock: true
+            shouldRenderEditingBlock: !this.state.shouldRenderEditingBlock
         });
     }
 
@@ -41,7 +41,7 @@ class EntityStyleButton extends React.Component {
         <span
           type="default"
           className={className}
-          onClick={this.renderEditingBlock}
+          onClick={this.handleToggle}
           data-tooltip={this.props.label}>
   				<i className={ 'fa ' + this.props.icon }></i>
   				<span>{this.props.text}</span>

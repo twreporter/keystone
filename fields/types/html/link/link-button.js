@@ -10,22 +10,23 @@ export class LinkButton extends EntityStyleButton {
 
     render() {
         const { active, shouldRenderEditingBlock } = this.state;
-        let className = 'RichEditor-styleButton Button Button--link';
-        if (active) {
-            className += ' RichEditor-activeButton';
-        }
 
         let Block = shouldRenderEditingBlock ? (
             <LinkEditingBlock
                 {...this.props}
                 isModalOpen={true}
+                handleToggle={this.handleToggle}
             />
         ) : null;
 
         let button = super.render();
 
         return (
-            <div className="Button Button--default" style={{display: "inline-block"}}>
+            <div
+                className="Button Button--default"
+                style={{display: "inline-block"}}
+                onClick={this.handleToggle}
+                >
                 {Block}
                 {button}
             </div>
