@@ -19,10 +19,6 @@ export class ImageButton extends EntityStyleButton {
     render() {
         const { active, shouldRenderEditingBlock } = this.state;
         const { apiPath, selectionLimit, onToggle } = this.props;
-        let className = 'RichEditor-styleButton Button Button--link';
-        if (active) {
-            className += ' RichEditor-activeButton';
-        }
 
         let Block = shouldRenderEditingBlock ? (
             <ImageEditingBlock
@@ -37,7 +33,11 @@ export class ImageButton extends EntityStyleButton {
         let button = super.render();
 
         return (
-            <div className="Button Button--default" style={{display: "inline-block"}}>
+            <div
+                className="Button Button--default"
+                style={{display: "inline-block"}}
+                onClick={this.renderEditingBlock}
+                >
                 {Block}
                 {button}
             </div>

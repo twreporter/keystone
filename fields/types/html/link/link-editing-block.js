@@ -52,6 +52,7 @@ const LinkEditingBlock = React.createClass({
     },
 
     toggleModal () {
+        this.props.handleToggle();
         this.setState({
             isModalOpen: !this.state.isModalOpen
         });

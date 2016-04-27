@@ -11,24 +11,25 @@ class EmbbedCodeBt extends StyleButton {
 
     render() {
         const { active, shouldRenderEditingBlock } = this.state;
-        let className = 'RichEditor-styleButton Button Button-embedded-code';
-        if (active) {
-            className += ' RichEditor-activeButton';
-        }
 
         let Block = shouldRenderEditingBlock ? (
             <EmbeddedCodeEditingBlock
                 {...this.props}
                 isModalOpen={true}
+                handleToggle={this.handleToggle}
             />
         ) : null;
 
         let button = super.render();
 
         return (
-            <div style={{display: "inline-block"}}>
-                {Block}
-                {button}
+          <div
+              className="Button Button--default"
+              style={{display: "inline-block"}}
+              onClick={this.handleToggle}
+              >
+              {Block}
+              {button}
             </div>
         );
     }

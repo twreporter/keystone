@@ -3,7 +3,6 @@ import React from 'react';
 
 class EmbeddedCodeEditingBlock extends React.Component {
     constructor(props) {
-        console.log('props', props);
         super(props);
         this._embeddedCode = '';
         this.state = {
@@ -27,6 +26,7 @@ class EmbeddedCodeEditingBlock extends React.Component {
     }
 
     _toggleModal() {
+        this.props.handleToggle();
         this.setState({
             isModalOpen: !this.state.isModalOpen
         });
@@ -47,7 +47,6 @@ class EmbeddedCodeEditingBlock extends React.Component {
     }
 
     render() {
-        console.log('rendering EmbbedCodeEditingBlock');
         return (
             <Modal isOpen={this.state.isModalOpen} onCancel={this.toggleModal} backdropClosesModal>
                 <Modal.Header text={"Insert " + this.props.label} showCloseButton onClose={this.toggleModal} />
