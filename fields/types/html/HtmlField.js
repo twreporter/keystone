@@ -5,6 +5,7 @@ import { insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock } from './
 import decorator from './entityDecorator'
 import blockStyleFn from './base/block-style-fn';
 import quoteTypes from './quote/quote-types';
+// import AnnotationBt from './annotation/annotation-bt';
 import AtomicBlock from './base/atomic-block';
 import BlockModifier from './modifiers/index';
 import { ENTITY } from './CONSTANT';
@@ -128,6 +129,32 @@ module.exports = Field.create({
         }
     },
 
+    /*
+    toggleAnnotation(entity, value) {
+        const {text, annotation} = value;
+        const {editorState} = this.state;
+        const entityKey = !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || annotation, annotation: annotation}) : null;
+        const selection = editorState.getSelection();
+        let contentState = editorState.getCurrentContent();
+
+        if (selection.isCollapsed()) {
+            contentState = Modifier.removeRange(
+                editorState.getCurrentContent(),
+                selection,
+                'backward'
+            );
+        }
+        contentState = Modifier.replaceText(
+            contentState,
+            selection,
+            text || url,
+            null,
+            entityKey
+        );
+        const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
+        this.onChange(_editorState);
+    },
+    */
     toggleLink (entity, value) {
         const {url, text} = value;
         const {editorState} = this.state;
@@ -179,6 +206,10 @@ module.exports = Field.create({
 
     toggleEntity (entity, value) {
         switch (entity) {
+            /*
+            case ENTITY.annotation.type:
+                return this.toggleAnnotation(entity, value);
+                */
             case ENTITY.embeddedCode.type:
                 return this.toggleEmbeddedCode(entity, value);
             case ENTITY.link.type:
@@ -436,6 +467,21 @@ const EntityControls = (props) => {
     function chooseButton (entity) {
         let active = entityInstance ? entityInstance.getType() === entity : false;
         switch (entity) {
+            /*
+            case ENTITY.annotation.type:
+                return (
+                    <AnnotationBt
+                        active={active}
+                        key={entity}
+                        label={entity}
+                        onToggle={onToggle.bind(null, entity)}
+                        text={data ? data.text : selectedText}
+                        annotation = {data ? data.annotation : ''}
+                        icon='fa-pencil-square-o'
+                        iconText=''
+                    />
+                );
+                */
             case ENTITY.link.type:
                 return (
                     <LinkButton
@@ -443,10 +489,10 @@ const EntityControls = (props) => {
                         key={entity}
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
-                        urlValue={data ? data.url : ''}
-                        textValue={data ? data.text : selectedText}
-												icon='fa-link'
-												text=''
+                        url={data ? data.url : ''}
+                        text={data ? data.text : selectedText}
+                        icon='fa-link'
+                        iconText=''
                     />
                 );
             case ENTITY.image.type:
@@ -457,8 +503,8 @@ const EntityControls = (props) => {
                         key={entity}
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
-												icon='fa-photo'
-												text=' Image'
+                        icon='fa-photo'
+                        iconText=' Image'
                     />
                 );
             case ENTITY.slideshow.type:
@@ -471,7 +517,7 @@ const EntityControls = (props) => {
                         onToggle={onToggle.bind(null, entity)}
                         selectionLimit={ENTITY.slideshow.slideshowSelectionLimit}
                         icon='fa-slideshare'
-                        text=' Slideshow'
+                        iconText=' Slideshow'
                     />
                 );
             case ENTITY.imageDiff.type:
@@ -483,8 +529,8 @@ const EntityControls = (props) => {
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
                         selectionLimit={2}
-												icon='fa-object-ungroup'
-												text=' Diff'
+                        icon='fa-object-ungroup'
+                        iconText=' Diff'
                     />
                 );
             case ENTITY.embeddedCode.type:
@@ -495,7 +541,7 @@ const EntityControls = (props) => {
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
                         embeddedCode={data ? data.embeddedCode : ''}
-                        text=' Embedded'
+                        iconText=' Embedded'
                     />
                 );
             default:

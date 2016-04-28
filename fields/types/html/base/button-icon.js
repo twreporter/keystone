@@ -34,7 +34,7 @@ class EntityStyleButton extends React.Component {
           className={className}
           data-tooltip={this.props.label}>
   				<i className={ 'fa ' + this.props.icon }></i>
-  				<span>{this.props.text}</span>
+  				<span>{this.props.iconText}</span>
         </span>
       );
     }
@@ -42,12 +42,14 @@ class EntityStyleButton extends React.Component {
 
 EntityStyleButton.propTypes = {
     active: React.PropTypes.bool,
-    label: React.PropTypes.string
+    label: React.PropTypes.string,
+    iconText: React.PropTypes.string
 };
 
 EntityStyleButton.defaultProps = {
     active: false,
-    label: 'base'
+    label: 'base',
+    iconText: ''
 };
 
 export default EntityStyleButton;
