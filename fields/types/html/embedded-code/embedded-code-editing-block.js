@@ -7,7 +7,6 @@ class EmbeddedCodeEditingBlock extends React.Component {
         this._embeddedCode = '';
         this.state = {
             embeddedCode: props.embeddedCode,
-            isModalOpen: props.isModalOpen
         }
         this.toggleModal = this._toggleModal.bind(this);
         this.handleChange = this._handleChange.bind(this);
@@ -16,8 +15,7 @@ class EmbeddedCodeEditingBlock extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            embeddedCode: nextProps.embeddedCode,
-            isModalOpen: nextProps.isModalOpen
+            embeddedCode: nextProps.embeddedCode
         });
     }
 
@@ -27,9 +25,6 @@ class EmbeddedCodeEditingBlock extends React.Component {
 
     _toggleModal() {
         this.props.handleToggle();
-        this.setState({
-            isModalOpen: !this.state.isModalOpen
-        });
     }
 
     _handleChange(e) {
@@ -37,18 +32,19 @@ class EmbeddedCodeEditingBlock extends React.Component {
     }
 
     _handleSave() {
-        this.props.onToggle({
-            embeddedCode: this._embeddedCode
-        });
         this.setState({
-            embeddedCode: this._embeddedCode,
-            isModalOpen: !this.state.isModalOpen
+            embeddedCode: this._embeddedCode
+        }, () => {
+            this.props.handleToggle();
+            this.props.onToggle({
+                embeddedCode: this._embeddedCode
+            });
         });
     }
 
     render() {
         return (
-            <Modal isOpen={this.state.isModalOpen} onCancel={this.toggleModal} backdropClosesModal>
+            <Modal isOpen={this.props.isModalOpen} onCancel={this.toggleModal} backdropClosesModal>
                 <Modal.Header text={"Insert " + this.props.label} showCloseButton onClose={this.toggleModal} />
                 <Modal.Body>
                     <FormField label="EmbeddedCode" htmlFor="form-input-embedded-code">

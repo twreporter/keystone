@@ -29,7 +29,6 @@ const LinkEditingBlock = React.createClass({
         this._textValue = this.props.textValue;
         this._urlValue = this.props.urlValue;
         return {
-            isModalOpen: this.props.isModalOpen,
             textValue: this.props.textValue,
             urlValue: this.props.urlValue
         };
@@ -39,23 +38,18 @@ const LinkEditingBlock = React.createClass({
         this._textValue = nextProps.textValue;
         this._urlValue = nextProps.urlValue;
         this.setState({
-            isModalOpen: nextProps.isModalOpen,
             textValue: nextProps.textValue,
             urlValue: nextProps.urlValue
         });
     },
 
     componentWillUnmount () {
-        console.log('unmount LinkEditingBlock');
         this._textValue = '';
         this._urlValue = '';
     },
 
     toggleModal () {
         this.props.handleToggle();
-        this.setState({
-            isModalOpen: !this.state.isModalOpen
-        });
     },
 
     handleUrlChange (e) {
@@ -67,20 +61,21 @@ const LinkEditingBlock = React.createClass({
     },
 
     handleSave () {
-        this.props.onToggle({
-            text: this._textValue,
-            url: this._urlValue
-        });
         this.setState({
-            isModalOpen: !this.state.isModalOpen,
             textValue: this._textValue,
             urlValue: this._urlValue
+        }, () => {
+            this.props.handleToggle();
+            this.props.onToggle({
+                text: this._textValue,
+                url: this._urlValue
+            });
         });
     },
 
     render() {
         return (
-            <Modal isOpen={this.state.isModalOpen} onCancel={this.toggleModal} backdropClosesModal>
+            <Modal isOpen={this.props.isModalOpen} onCancel={this.toggleModal} backdropClosesModal>
                 <Modal.Header text={"Insert " + this.props.label} showCloseButton onClose={this.toggleModal} />
                 <Modal.Body>
                     <FormField label="URL" htmlFor="form-input-url">
