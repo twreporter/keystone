@@ -31,7 +31,8 @@ let inlineTagMap = {
 };
 
 let entityTagMap = {
-    embeddedCode: ['<div><%= embeddedCode%>>', '</div>'],
+    annotation: ['<div><span><%= annotation %></span>', '</div>'],
+    embeddedCode: ['<div><%= embeddedCode%>', '</div>'],
     link: ['<a href="<%= url %>">', '</a>'],
     image: ['<img src="<%= url %>">', '</img>'],
     slideshow: ['<!-- slideshow component --> <ol> <% _.forEach(images, function(image) { %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],

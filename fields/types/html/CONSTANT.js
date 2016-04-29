@@ -1,11 +1,14 @@
 'use strict';
 
 const ENTITY = {
-    embeddedCode: {
-        type: 'embeddedCode',
+    annotation: {
+        type: 'annotation'
     },
     link: {
         type: 'link'
+    },
+    embeddedCode: {
+        type: 'embeddedCode'
     },
     image: {
         type: 'image',

@@ -5,7 +5,7 @@ import { insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock } from './
 import decorator from './entityDecorator'
 import blockStyleFn from './base/block-style-fn';
 import quoteTypes from './quote/quote-types';
-// import AnnotationBt from './annotation/annotation-bt';
+import AnnotationBt from './annotation/annotation-bt';
 import AtomicBlock from './base/atomic-block';
 import BlockModifier from './modifiers/index';
 import { ENTITY } from './CONSTANT';
@@ -122,62 +122,46 @@ module.exports = Field.create({
 		);
 	},
 
+    _toggleTextWithEntity(entityKey, text) {
+        const {editorState} = this.state;
+        const selection = editorState.getSelection();
+        let contentState = editorState.getCurrentContent();
+
+        if (selection.isCollapsed()) {
+            contentState = Modifier.removeRange(
+                editorState.getCurrentContent(),
+                selection,
+                'backward'
+            );
+        }
+        contentState = Modifier.replaceText(
+            contentState,
+            selection,
+            text,
+            null,
+            entityKey
+        );
+        const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
+        this.onChange(_editorState);
+    },
+
+    toggleAnnotation(entity, value) {
+        const {text, annotation} = value;
+        const entityKey = annotation !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || annotation, annotation: annotation}) : null;
+        this._toggleTextWithEntity(entityKey, text || annotation);
+    },
+
+    toggleLink (entity, value) {
+        const {url, text} = value;
+        const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || url, url: url}) : null;
+        this._toggleTextWithEntity(entityKey, text || url);
+    },
+
     toggleEmbeddedCode(entity, value) {
         if (value && value.embeddedCode) {
             const _editorState = insertEmbeddedCodeBlock(this.state.editorState, ENTITY.embeddedCode.type, value);
             this.onChange(_editorState);
         }
-    },
-
-    /*
-    toggleAnnotation(entity, value) {
-        const {text, annotation} = value;
-        const {editorState} = this.state;
-        const entityKey = !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || annotation, annotation: annotation}) : null;
-        const selection = editorState.getSelection();
-        let contentState = editorState.getCurrentContent();
-
-        if (selection.isCollapsed()) {
-            contentState = Modifier.removeRange(
-                editorState.getCurrentContent(),
-                selection,
-                'backward'
-            );
-        }
-        contentState = Modifier.replaceText(
-            contentState,
-            selection,
-            text || url,
-            null,
-            entityKey
-        );
-        const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
-        this.onChange(_editorState);
-    },
-    */
-    toggleLink (entity, value) {
-        const {url, text} = value;
-        const {editorState} = this.state;
-        const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || url, url: url}) : null;
-        const selection = editorState.getSelection();
-        let contentState = editorState.getCurrentContent();
-
-        if (selection.isCollapsed()) {
-            contentState = Modifier.removeRange(
-                editorState.getCurrentContent(),
-                selection,
-                'backward'
-            );
-        }
-        contentState = Modifier.replaceText(
-            contentState,
-            selection,
-            text || url,
-            null,
-            entityKey
-        );
-        const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
-        this.onChange(_editorState);
     },
 
     toggleImage (entity, value) {
@@ -206,10 +190,8 @@ module.exports = Field.create({
 
     toggleEntity (entity, value) {
         switch (entity) {
-            /*
             case ENTITY.annotation.type:
                 return this.toggleAnnotation(entity, value);
-                */
             case ENTITY.embeddedCode.type:
                 return this.toggleEmbeddedCode(entity, value);
             case ENTITY.link.type:
@@ -467,7 +449,6 @@ const EntityControls = (props) => {
     function chooseButton (entity) {
         let active = entityInstance ? entityInstance.getType() === entity : false;
         switch (entity) {
-            /*
             case ENTITY.annotation.type:
                 return (
                     <AnnotationBt
@@ -481,7 +462,6 @@ const EntityControls = (props) => {
                         iconText=''
                     />
                 );
-                */
             case ENTITY.link.type:
                 return (
                     <LinkButton
