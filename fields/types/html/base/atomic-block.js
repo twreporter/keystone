@@ -5,7 +5,7 @@ import { ENTITY } from '../CONSTANT';
 import Alignment from './block-alignment-wrapper';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
-import ImageDiffBlock from '../image-diff/Image-diff-block';
+import ImageDiffBlock from '../image-diff/image-diff-block';
 import React from 'react';
 import SlideshowBlock from '../slideshow/slideshow-block';
 

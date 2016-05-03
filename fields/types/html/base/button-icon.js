@@ -6,10 +6,8 @@ class EntityStyleButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            active: props.active,
-            shouldRenderEditingBlock: false
+            active: props.active
         };
-        this.renderEditingBlock = this._renderEditingBlock.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -18,19 +16,12 @@ class EntityStyleButton extends React.Component {
 
     componentWillReceiveProps (nextProps) {
         this.setState({
-            active: nextProps.active,
-            shouldRenderEditingBlock: false
-        });
-    }
-
-    _renderEditingBlock (e) {
-        this.setState({
-            shouldRenderEditingBlock: true
+            active: nextProps.active
         });
     }
 
     render() {
-      const { active, shouldRenderEditingBlock } = this.state;
+      const { active } = this.state;
       // let className = 'RichEditor-styleButton Button Button--link';
       let className = '';
       if (active) {
@@ -41,10 +32,9 @@ class EntityStyleButton extends React.Component {
         <span
           type="default"
           className={className}
-          onClick={this.renderEditingBlock}
           data-tooltip={this.props.label}>
   				<i className={ 'fa ' + this.props.icon }></i>
-  				<span>{this.props.text}</span>
+  				<span>{this.props.iconText}</span>
         </span>
       );
     }
@@ -52,12 +42,14 @@ class EntityStyleButton extends React.Component {
 
 EntityStyleButton.propTypes = {
     active: React.PropTypes.bool,
-    label: React.PropTypes.string
+    label: React.PropTypes.string,
+    iconText: React.PropTypes.string
 };
 
 EntityStyleButton.defaultProps = {
     active: false,
-    label: 'base'
+    label: 'base',
+    iconText: ''
 };
 
 export default EntityStyleButton;

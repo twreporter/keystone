@@ -16,6 +16,7 @@
 
 .DraftEditor-root {
   position: relative;
+  background: #fff;
 }
 
 /**
@@ -91,4 +92,62 @@
 .public-DraftStyleDefault-block {
   position: relative;
   white-space: pre-wrap;
+}
+
+/**
+ * enlarged full-screen HTML editor
+ */
+.DraftEditor-fullscreen {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  padding-left: 3em;
+  padding-right: 3em;
+  background: rgba(0,0,0, 0.5);
+  overflow-y: scroll;
+}
+.DraftEditor-fullscreen .RichEditor-root {
+  height: 100%;
+  padding: 0;
+}
+.DraftEditor-fullscreen .DraftEditor-editorContainer {
+  padding: 15px;
+}
+
+.DraftEditor-expandButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.DraftEditor-controls .ButtonGroup {
+  padding: 1px 2px;
+}
+.DraftEditor-expandButton.expanded {
+  right: 3em;
+  z-index: 300;
+  background: rgba(255,255,255,0.8);
+}
+.DraftEditor-controls.expanded {
+  position: fixed;
+  z-index: 200;
+  width: 100%;
+  top: 0;
+  left: 0;
+  padding: 0 3em;
+}
+.DraftEditor-controlsInner.expanded {
+  padding: 0.5em;
+  background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 67%, rgba(255,255,255,0) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,1)), color-stop(67%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,0)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 67%, rgba(255,255,255,0) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 67%, rgba(255,255,255,0) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 67%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 67%, rgba(255,255,255,0) 100%);
+}
+.RichEditor-editor.expanded {
+  border-top: 0;
+  padding-top: 2.5em !important;
 }
