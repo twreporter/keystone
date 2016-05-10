@@ -7,6 +7,9 @@ const ENTITY = {
     link: {
         type: 'link'
     },
+    infobox: {
+        type: 'infobox'
+    },
     embeddedCode: {
         type: 'embeddedCode'
     },

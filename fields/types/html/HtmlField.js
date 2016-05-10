@@ -1,19 +1,20 @@
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { FormInput, Button, ButtonGroup } from 'elemental';
+import { insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './modifiers/insert-atomic-block';
 import { shallowEqual } from 'react-pure-render';
-import { insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock } from './modifiers/insert-atomic-block';
+import { Button, ButtonGroup, FormInput } from 'elemental';
+import { ENTITY } from './CONSTANT';
 import decorator from './entityDecorator'
 import blockStyleFn from './base/block-style-fn';
 import quoteTypes from './quote/quote-types';
 import AnnotationBt from './annotation/annotation-bt';
 import AtomicBlock from './base/atomic-block';
 import BlockModifier from './modifiers/index';
-import { ENTITY } from './CONSTANT';
 import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import EmbeddedCodeBt from './embedded-code/embedded-code-bt';
 import Field from '../Field';
 import ImageButton from './image/image-button';
+import InfoBoxBt from './info-box/info-box-bt'
 import LinkButton from './link/link-button';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -151,6 +152,12 @@ module.exports = Field.create({
         this._toggleTextWithEntity(entityKey, text || annotation);
     },
 
+    toggleInfoBox(entity, value) {
+        const {body, title} = value;
+        const _editorState = insertInfoBoxBlock(this.state.editorState, ENTITY.infobox.type, title, body);
+        this.onChange(_editorState);
+    },
+
     toggleLink (entity, value) {
         const {url, text} = value;
         const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || url, url: url}) : null;
@@ -192,6 +199,8 @@ module.exports = Field.create({
         switch (entity) {
             case ENTITY.annotation.type:
                 return this.toggleAnnotation(entity, value);
+            case ENTITY.infobox.type:
+                return this.toggleInfoBox(entity, value);
             case ENTITY.embeddedCode.type:
                 return this.toggleEmbeddedCode(entity, value);
             case ENTITY.link.type:
@@ -460,6 +469,19 @@ const EntityControls = (props) => {
                         annotation = {data ? data.annotation : ''}
                         icon='fa-pencil-square-o'
                         iconText=''
+                    />
+                );
+            case ENTITY.infobox.type:
+                return (
+                    <InfoBoxBt
+                        active={active}
+                        key={entity}
+                        label={entity}
+                        onToggle={onToggle.bind(null, entity)}
+                        title={data ? data.title : selectedText}
+                        body = {data ? data.body : ''}
+                        icon=''
+                        iconText='infobox'
                     />
                 );
             case ENTITY.link.type:

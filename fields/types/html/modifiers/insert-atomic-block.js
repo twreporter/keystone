@@ -40,3 +40,16 @@ export function insertEmbeddedCodeBlock(editorState, type, embeddedCode) {
 
   return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
 }
+
+export function insertInfoBoxBlock(editorState, type, title = '', body = '') {
+  const entityKey = Entity.create(
+    type,
+    'IMMUTABLE',
+    {
+        title: title,
+        body: body
+    }
+  );
+
+  return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+}

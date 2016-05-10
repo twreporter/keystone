@@ -6,6 +6,7 @@ import Alignment from './block-alignment-wrapper';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
 import ImageDiffBlock from '../image-diff/image-diff-block';
+import InfoBoxBlock from '../info-box/info-box-block';
 import React from 'react';
 import SlideshowBlock from '../slideshow/slideshow-block';
 
@@ -65,6 +66,9 @@ class AtomicBlock extends React.Component {
         switch (type) {
             case ENTITY.embeddedCode.type:
                 BlockComponent = EmbeddedCodeBlock;
+                break;
+            case ENTITY.infobox.type:
+                BlockComponent = InfoBoxBlock;
                 break;
             case ENTITY.image.type:
                 BlockComponent = ImageBlock;
