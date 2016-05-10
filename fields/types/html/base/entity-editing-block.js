@@ -61,7 +61,7 @@ class EntityEditingBlock extends Component {
             const type = fields[field].type;
             const value = fields[field].value;
             return (
-                <FormField label={field} htmlFor={"form-input-"+field}>
+                <FormField label={field} htmlFor={"form-input-"+field} key={field}>
                     <FormInput type={type} multiline={type === 'textarea' ? true : false} placeholder={"Enter " + field} name={"form-input-"+field} onChange={this.handleChange.bind(this, field)} defaultValue={value}/>
                 </FormField>
             );
