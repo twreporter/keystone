@@ -165,8 +165,8 @@ module.exports = Field.create({
     },
 
     toggleEmbeddedCode(entity, value) {
-        if (value && value.embeddedCode) {
-            const _editorState = insertEmbeddedCodeBlock(this.state.editorState, ENTITY.embeddedCode.type, value);
+        if (value) {
+            const _editorState = insertEmbeddedCodeBlock(this.state.editorState, ENTITY.embeddedCode.type, value.caption, value.embeddedCode);
             this.onChange(_editorState);
         }
     },
@@ -542,6 +542,7 @@ const EntityControls = (props) => {
                         key={entity}
                         label={entity}
                         onToggle={onToggle.bind(null, entity)}
+                        caption={data ? data.caption : ''}
                         embeddedCode={data ? data.embeddedCode : ''}
                         iconText=' Embedded'
                     />
