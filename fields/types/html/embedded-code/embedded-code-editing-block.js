@@ -7,13 +7,18 @@ class EmbeddedCodeEditingBlock extends EntityEditingBlock {
     constructor(props) {
         super(props);
         this.state.editingFields = {
-            embeddedCode: props.embeddedCode,
+            caption: props.caption,
+            embeddedCode: props.embeddedCode
         };
     }
 
     // overwrite
     _composeEditingFields(props) {
         return {
+            caption: {
+                type: 'text',
+                value: props.caption
+            },
             embeddedCode: {
                 type: 'textarea',
                 value: props.embeddedCode
@@ -24,6 +29,7 @@ class EmbeddedCodeEditingBlock extends EntityEditingBlock {
     // overwrite
     _decomposeEditingFields(fields) {
         return {
+            caption: fields.caption.value,
             embeddedCode: fields.embeddedCode.value
         }
     }
@@ -32,10 +38,12 @@ class EmbeddedCodeEditingBlock extends EntityEditingBlock {
 EmbeddedCodeEditingBlock.displayName = 'EmbeddedCodeEditingBlock';
 
 EmbeddedCodeEditingBlock.propTypes = objectAssgin({}, EntityEditingBlock.propTypes, {
+    caption: React.PropTypes.string,
     embeddedCode: React.PropTypes.string,
 });
 
 EmbeddedCodeEditingBlock.defaultProps = objectAssgin({}, EntityEditingBlock.defaultProps, {
+    caption: '',
     embeddedCode: ''
 });
 

@@ -63,7 +63,10 @@ const processor = {
         switch (type) {
             case ENTITY.embeddedCode.type:
                 alignment = entity.data && entity.data.alignment || alignment;
-                content = [entity.data.embeddedCode];
+                content = [ {
+                    caption: entity.data.caption,
+                    embeddedCode: entity.data.embeddedCode
+                }];
                 break;
             case ENTITY.slideshow.type:
             case ENTITY.imageDiff.type:

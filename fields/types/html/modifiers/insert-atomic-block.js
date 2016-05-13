@@ -31,11 +31,14 @@ export function insertImageBlock(editorState, type, image) {
   return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
 }
 
-export function insertEmbeddedCodeBlock(editorState, type, embeddedCode) {
+export function insertEmbeddedCodeBlock(editorState, type, caption = '', embeddedCode = '') {
   const entityKey = Entity.create(
     type,
     'IMMUTABLE',
-    embeddedCode
+    {
+        caption,
+        embeddedCode
+    }
   );
 
   return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
