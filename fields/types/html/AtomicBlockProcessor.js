@@ -61,6 +61,13 @@ const processor = {
         const entity = entityMap[entityRange.key];
         const type = entity && entity.type;
         switch (type) {
+            case ENTITY.infobox.type:
+                alignment = entity.data && entity.data.alignment || alignment;
+                content = [ {
+                    title: entity.data.title,
+                    body: entity.data.body
+                }];
+                break;
             case ENTITY.embeddedCode.type:
                 alignment = entity.data && entity.data.alignment || alignment;
                 content = [ {
