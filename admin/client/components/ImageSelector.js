@@ -1,13 +1,14 @@
 'use strict';
 import { Button, FormInput, InputGroup, Modal, Pagination } from 'elemental';
+import _ from 'lodash';
 import qs from 'qs';
 import xhr from 'xhr';
 import ImagesEditor from './ImagesEditor';
 import ImagesSelection from './ImagesSelection';
 import React from 'react';
 
-const PAGE_SIZE = 4;
-const PAGINATION_LIMIT = 5;
+const PAGE_SIZE = 10;
+const PAGINATION_LIMIT = 10;
 const API = '/api/';
 
 class ImageSelector extends React.Component {
@@ -117,7 +118,15 @@ class ImageSelector extends React.Component {
                 }
                 this.state.totalImages = data.count;
                 resolve(data.results.map(function(result) {
-                    const image =  Object.assign({}, result.fields.image, {id: result.id});
+                    let url = _.get(result, ['fields', 'image', 'url'], '');
+                    if (url) {
+                        // use suffix with mobile url
+                        let matches = url.match(/^(http\:\/\/|https\:\/\/)(.*)\.(\w+?)$/)
+                        if (matches) {
+                            result.fields.image.url = matches[1] + matches[2] + '-mobile.' + matches[3];
+                        }
+                    }
+                    const image = Object.assign({}, result.fields.image, {id: result.id});
                     return image;
                 }));
             });
