@@ -103,6 +103,7 @@ gcsimage.prototype.addToSchema = function() {
         height: this._path.append('.height'),
         originalname: this._path.append('.originalname'),
         path: this._path.append('.path'),
+        resizedTargets: this._path.append('.resizedTargets'),
         size: this._path.append('.size'),
         url: this._path.append('.url'),
         width: this._path.append('.width'),
@@ -122,6 +123,7 @@ gcsimage.prototype.addToSchema = function() {
         height: Number,
         originalname: String,
         path: String,
+        resizedTargets: Object,
         size: Number,
         url: String,
         width: Number
@@ -148,6 +150,7 @@ gcsimage.prototype.addToSchema = function() {
             height: 0,
             originalname: '',
             path: '',
+            resizedTargets: {},
             size: 0,
             url: '',
             width: 0
@@ -314,16 +317,22 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
                 var resizeFunc = field.options.resize;
                 if (Array.isArray(field.options.resizeOpts) && field.options.resizeOpts.length > 0) {
                     var promises = [];
+                    var targets = {};
                     var resizeOpts = field.options.resizeOpts;
                     for (var i = 0; i < resizeOpts.length; i++) {
                         var resizeOpt = resizeOpts[i] || {};
+                        targets[resizeOpt.target] = {
+                            url: gcsHelper.getPublicUrl(field.options.bucket,path + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext)
+                        };
                         promises.push(gcsHelper.uploadFileToBucket(bucket, resizeFunc(file.path, resizeOpt.width, resizeOpt.height, resizeOpt.options), {
                             destination: path + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
                             filetype: filetype,
                             isPublicRead: isPublicRead
                         }));
                     }
-                    return Promise.all(promises);
+                    return Promise.all(promises).then(function(values) {
+                        return targets;
+                    });
                 } else {
                     // skip resizing
                     return;
@@ -332,12 +341,13 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
                 // skip resizing
                 return;
             }
-        }).then(function(value) {
+        }).then(function(targets) {
             var dimensions = sizeOf(file.path);
-            extractExif(file.path).then(function(exifData) {
+            return extractExif(file.path).then(function(exifData) {
                 exifData.image = exifData.image || {};
                 exifData.exif = exifData.exif || {};
-                var fileData = {
+                var fileData;
+                fileData = {
                     artist: exifData.image.Artist || '',
                     bucket: field.options.bucket,
                     description: exifData.image.ImageDescription || '',
@@ -347,19 +357,21 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
                     originalname: originalname,
                     path: path,
                     size: file.size,
+                    resizedTargets: targets || {},
                     url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
                     width: dimensions.width ||  exifData.exif.ExifImageWidth || exifData.image.ImageWidth || 0
                 };
                 if (update) {
                     item.set(field.path, fileData);
                 }
-                return callback(null, fileData);
+                callback(null, fileData);
             });
         }).catch(function(err) {
+            console.error('UPLOADING ERROR:', err);
             bucket.deleteFiles({
                 prefix: path + filenameWithoutExt
             }, function(deleteErr) {
-                if (err) {
+                if (deleteErr) {
                     return callback(deleteErr);
                 }
                 callback(err);

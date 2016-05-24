@@ -118,14 +118,6 @@ class ImageSelector extends React.Component {
                 }
                 this.state.totalImages = data.count;
                 resolve(data.results.map(function(result) {
-                    let url = _.get(result, ['fields', 'image', 'url'], '');
-                    if (url) {
-                        // use suffix with mobile url
-                        let matches = url.match(/^(http\:\/\/|https\:\/\/)(.*)\.(\w+?)$/)
-                        if (matches) {
-                            result.fields.image.url = matches[1] + matches[2] + '-mobile.' + matches[3];
-                        }
-                    }
                     const image = Object.assign({}, result.fields.image, {id: result.id});
                     return image;
                 }));
