@@ -118,7 +118,11 @@ class ImageSelector extends React.Component {
                 }
                 this.state.totalImages = data.count;
                 resolve(data.results.map(function(result) {
-                    const image = Object.assign({}, result.fields.image, {id: result.id});
+                    let image = _.get(result, [ 'fields', 'image'], {})
+                    // use desktop version url for rendering
+                    let resizedUrl = _.get(image, ['resizedTargets', 'desktop', 'url' ], image.url)
+                    _.set(image, [ 'src' ], resizedUrl);
+                    image = Object.assign(image, {id: result.id});
                     return image;
                 }));
             });

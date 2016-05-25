@@ -1,6 +1,7 @@
 'use strict';
 import { shallowEqual } from 'react-pure-render';
 import { Pill } from 'elemental';
+import _ from 'lodash';
 import objectAssign from 'object-assign';
 import React from 'react';
 
@@ -142,7 +143,7 @@ class ImageGrid extends React.Component {
                     link={image.link}
                     onClick={this._handleClick.bind(this, image)}
                     padding={padding}
-                    url={image.url}
+                    url={image.src}
                     width={width}
                 />
             );

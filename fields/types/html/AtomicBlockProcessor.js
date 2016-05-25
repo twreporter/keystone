@@ -27,29 +27,22 @@ function getImageSize(imageUrl) {
     }
     */
 
-function getResizedImageUrls(imageUrl) {
+function getResizedImageUrls(imageObj) {
     let desktop = '';
     let mobile = '';
     let tablet = '';
-    // TODO check url pattern
-    if (imageUrl && typeof imageUrl === 'string') {
-        const matched = imageUrl.match(/(\.[^.]+)?$/);
-        let ext = '';
-        let url = '';
-        if (matched !== null) {
-            url = imageUrl.substr(0, matched.index);
-            ext = matched[0];
-        } else {
-            url = imageUrl;
-        }
-        desktop = url + '-desktop' + ext;
-        mobile = url + '-mobile' + ext;
-        tablet = url + '-tablet' + ext;
+    let original = '';
+    if (imageObj){
+        desktop = _.get(imageObj, [ 'resizedTargets', 'desktop', 'url' ], imageObj.url);
+        mobile = _.get(imageObj, [ 'resizedTargets', 'mobile', 'url' ], imageObj.url);
+        tablet = _.get(imageObj, [ 'resizedTargets', 'tablet', 'url' ], imageObj.url);
+        original =  _.get(imageObj, [ 'url' ]);
     }
     return {
         desktop,
         mobile,
-        tablet
+        tablet,
+        original
     };
 }
 
@@ -93,11 +86,10 @@ const processor = {
     convertImageBlock(entity) {
         let image = entity.data || {};
         let rtn = {};
-        let urls = getResizedImageUrls(image.url);
+        let urls = getResizedImageUrls(image);
         Object.keys(urls).forEach((device) => {
             rtn[device] = _.merge({url: urls[device]}, _.pick(image, ['id', 'description']));
         });
-        _.set(rtn, 'original', image);
         return rtn;
     },
 
@@ -109,11 +101,10 @@ const processor = {
     _convertImagesBlock(images) {
         return images.map((image) => {
             let imageSet = {};
-            let urls = getResizedImageUrls(image.url);
+            let urls = getResizedImageUrls(image);
             Object.keys(urls).forEach((device) => {
                 imageSet[device] = _.merge({url: urls[device]}, _.pick(image, ['id', 'description']));
             });
-            _.set(imageSet, 'original', image);
             return imageSet;
         });
     }

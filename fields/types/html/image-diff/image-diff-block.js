@@ -1,6 +1,6 @@
 'use strict';
-
 import { Entity } from 'draft-js';
+import _ from 'lodash';
 import classNames from 'classnames';
 import ImagesDiff from '../../../../admin/client/components/ImagesDiff';
 import React from 'react';
@@ -14,9 +14,14 @@ export default class ImageDiffBlock extends SlideshowBlock{
   render() {
     let { editMode, images } = this.state;
     images = !this._isEmptyArray(images) ? images : this._getImagesFromEntity();
-    if (!images) {
+    if (!images || !Array.isArray(images)) {
         return null;
     }
+
+    images = images.map((image) => {
+      _.set(image, [ 'src' ], _.get(image, [ 'resizedTargets', 'desktop', 'url' ]))
+      return image;
+    })
 
     const EditBlock = editMode ? this._renderImageSelector({
           apiPath: 'images',
@@ -31,8 +36,8 @@ export default class ImageDiffBlock extends SlideshowBlock{
       <div className={classNames(this.props.className, 'imageWrapper')}
           style={{position:"relative"}}>
         <ImagesDiff
-            after={images[1].url}
-            before={images[0].url}
+            after={images[1].src}
+            before={images[0].src}
         />
         {EditBlock}
         {this.props.children}
