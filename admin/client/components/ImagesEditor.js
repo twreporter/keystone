@@ -159,7 +159,7 @@ class DnDContainer extends Component {
                         onChange={this._handleChange.bind(this, image)}
                         onRemove={this._handleRemove.bind(this, image)}
                         padding={0}
-                        url={image.url}
+                        url={image.src}
                         style={{border: '1px solid gainsboro'}}
                     >
                         <FormField key={image.id} label="" htmlFor="image-caption-input" style={{paddingTop: '5px'}}>
