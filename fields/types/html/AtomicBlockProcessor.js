@@ -5,52 +5,17 @@ import url from 'url';
 import ApiDataInstance from './ApiDataInstance';
 import { ENTITY } from './CONSTANT';
 
-/*
-function getImageSize(imageUrl) {
-    return new Promise((resolve, reject) => {
-        imageUrl = url.parse(imageUrl);
-        https.get(options, (response) => {
-            let chuncks = [];
-            response.on('data', (chunk) => {
-                chunks.push(chunk);
-            })
-            .on('end', () => {
-                let buffer = Buffer.concat(chunks);
-                // resolve(sizeOf(buffer));
-                resolve({});
-            })
-            .on('error', (err) => {
-                reject(err);
-            });
-        });
-    });
-    }
-    */
+function composeImageSet(imageObj = {}) {
+  let resizedTargets = _.merge({}, _.get(imageObj, [ 'resizedTargets' ], {}));
+  resizedTargets.original = {
+    url: imageObj.url,
+    width: imageObj.width,
+    height: imageObj.height
+  }
+  resizedTargets.id = imageObj.id;
+  resizedTargets.description = imageObj.description;
 
-function getResizedImageUrls(imageUrl) {
-    let desktop = '';
-    let mobile = '';
-    let tablet = '';
-    // TODO check url pattern
-    if (imageUrl && typeof imageUrl === 'string') {
-        const matched = imageUrl.match(/(\.[^.]+)?$/);
-        let ext = '';
-        let url = '';
-        if (matched !== null) {
-            url = imageUrl.substr(0, matched.index);
-            ext = matched[0];
-        } else {
-            url = imageUrl;
-        }
-        desktop = url + '-desktop' + ext;
-        mobile = url + '-mobile' + ext;
-        tablet = url + '-tablet' + ext;
-    }
-    return {
-        desktop,
-        mobile,
-        tablet
-    };
+  return resizedTargets;
 }
 
 const processor = {
@@ -92,13 +57,7 @@ const processor = {
 
     convertImageBlock(entity) {
         let image = entity.data || {};
-        let rtn = {};
-        let urls = getResizedImageUrls(image.url);
-        Object.keys(urls).forEach((device) => {
-            rtn[device] = _.merge({url: urls[device]}, _.pick(image, ['id', 'description']));
-        });
-        _.set(rtn, 'original', image);
-        return rtn;
+        return composeImageSet(image)
     },
 
     convertImagesBlock(entity) {
@@ -108,13 +67,7 @@ const processor = {
 
     _convertImagesBlock(images) {
         return images.map((image) => {
-            let imageSet = {};
-            let urls = getResizedImageUrls(image.url);
-            Object.keys(urls).forEach((device) => {
-                imageSet[device] = _.merge({url: urls[device]}, _.pick(image, ['id', 'description']));
-            });
-            _.set(imageSet, 'original', image);
-            return imageSet;
+            return composeImageSet(image);
         });
     }
 };

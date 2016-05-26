@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
 var fs = require('fs');
 var gcsHelper = require('../../../lib/gcsHelper');
 var grappling = require('grappling-hook');
@@ -103,6 +103,7 @@ gcsimage.prototype.addToSchema = function() {
         height: this._path.append('.height'),
         originalname: this._path.append('.originalname'),
         path: this._path.append('.path'),
+        resizedTargets: this._path.append('.resizedTargets'),
         size: this._path.append('.size'),
         url: this._path.append('.url'),
         width: this._path.append('.width'),
@@ -122,6 +123,7 @@ gcsimage.prototype.addToSchema = function() {
         height: Number,
         originalname: String,
         path: String,
+        resizedTargets: Object,
         size: Number,
         url: String,
         width: Number
@@ -148,6 +150,7 @@ gcsimage.prototype.addToSchema = function() {
             height: 0,
             originalname: '',
             path: '',
+            resizedTargets: {},
             size: 0,
             url: '',
             width: 0
@@ -196,7 +199,7 @@ gcsimage.prototype.addToSchema = function() {
         }
     };
 
-    _.each(schemaMethods, function(fn, key) {
+    _.forEach(schemaMethods, function(fn, key) {
         field.underscoreMethod(key, fn);
     });
 
@@ -292,7 +295,7 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
         update = false;
     }
 
-    if ((field.options.allowedTypes && !_.contains(field.options.allowedTypes, filetype) ||
+    if ((field.options.allowedTypes && !_.indexOf(field.options.allowedTypes, filetype) ||
         filetype.match('image.*') === null)) {
         return callback(new Error('Unsupported File Type: ' + filetype));
     }
@@ -314,16 +317,24 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
                 var resizeFunc = field.options.resize;
                 if (Array.isArray(field.options.resizeOpts) && field.options.resizeOpts.length > 0) {
                     var promises = [];
+                    var targets = {};
                     var resizeOpts = field.options.resizeOpts;
                     for (var i = 0; i < resizeOpts.length; i++) {
                         var resizeOpt = resizeOpts[i] || {};
+                        targets[resizeOpt.target] = {
+                            url: gcsHelper.getPublicUrl(field.options.bucket,path + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext),
+                            width: resizeOpt.width,
+                            height: resizeOpt.height
+                        };
                         promises.push(gcsHelper.uploadFileToBucket(bucket, resizeFunc(file.path, resizeOpt.width, resizeOpt.height, resizeOpt.options), {
                             destination: path + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
                             filetype: filetype,
                             isPublicRead: isPublicRead
                         }));
                     }
-                    return Promise.all(promises);
+                    return Promise.all(promises).then(function(values) {
+                        return targets;
+                    });
                 } else {
                     // skip resizing
                     return;
@@ -332,12 +343,35 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
                 // skip resizing
                 return;
             }
-        }).then(function(value) {
+        }).then(function(targets) {
             var dimensions = sizeOf(file.path);
-            extractExif(file.path).then(function(exifData) {
+
+            if (targets) {
+                try {
+                    _.forEach(targets, function(target) {
+                        if (typeof target.width === 'number' && typeof target.height !== 'number') {
+                            if (target.width < dimensions.width) {
+                                target.height = Math.round((target.width / dimensions.width) * dimensions.height);
+                            } else {
+                                target.height = dimensions.height;
+                            }
+                        } else if (typeof target.height === 'number' && typeof target.width !== 'number') {
+                            if (target.height < dimensions.height) {
+                                target.width = Math.round((target.height / dimensions.height) * dimensions.width);
+                            } else {
+                                target.width = dimensions.width;
+                            }
+                        }
+                    })
+                } catch (e) {
+                    console.warn('Calculating width and height of resized image occurs error ', e);
+                }
+            }
+            return extractExif(file.path).then(function(exifData) {
                 exifData.image = exifData.image || {};
                 exifData.exif = exifData.exif || {};
-                var fileData = {
+                var fileData;
+                fileData = {
                     artist: exifData.image.Artist || '',
                     bucket: field.options.bucket,
                     description: exifData.image.ImageDescription || '',
@@ -347,19 +381,21 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
                     originalname: originalname,
                     path: path,
                     size: file.size,
+                    resizedTargets: targets || {},
                     url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
                     width: dimensions.width ||  exifData.exif.ExifImageWidth || exifData.image.ImageWidth || 0
                 };
                 if (update) {
                     item.set(field.path, fileData);
                 }
-                return callback(null, fileData);
+                callback(null, fileData);
             });
         }).catch(function(err) {
+            console.error('UPLOADING ERROR:', err);
             bucket.deleteFiles({
                 prefix: path + filenameWithoutExt
             }, function(deleteErr) {
-                if (err) {
+                if (deleteErr) {
                     return callback(deleteErr);
                 }
                 callback(err);

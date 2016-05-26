@@ -15,7 +15,7 @@ const ENTITY = {
     },
     image: {
         type: 'image',
-        imageRequiredProps: ['id', 'url', 'description', 'width', 'height']
+        imageRequiredProps: ['id', 'url', 'description', 'width', 'height', 'resizedTargets']
     },
     imageDiff: {
         type: 'imageDiff'

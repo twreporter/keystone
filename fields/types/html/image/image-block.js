@@ -76,6 +76,8 @@ export default class ImageBlock extends React.Component {
           return null;
       }
 
+      image.src = _.get(image, ['resizedTargets', 'desktop', 'url'], image.url)
+
       const EditBlock = editMode ? this._renderImageSelector({
           apiPath: 'images',
           isSelectionOpen: true,
@@ -86,12 +88,13 @@ export default class ImageBlock extends React.Component {
       }) : null;
 
       className = `imageWrapper ${className}`;
+
       return (
           <div
               className={className}
               contentEditable={false}
               >
-              <img src={image.url} width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
+              <img src={image.src} width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
               <figcaption>{image.description}</figcaption>
               {EditBlock}
               {this.props.children}
