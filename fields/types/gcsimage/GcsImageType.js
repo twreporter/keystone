@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
 var fs = require('fs');
 var gcsHelper = require('../../../lib/gcsHelper');
 var grappling = require('grappling-hook');
@@ -199,7 +199,7 @@ gcsimage.prototype.addToSchema = function() {
         }
     };
 
-    _.each(schemaMethods, function(fn, key) {
+    _.forEach(schemaMethods, function(fn, key) {
         field.underscoreMethod(key, fn);
     });
 
@@ -295,7 +295,7 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
         update = false;
     }
 
-    if ((field.options.allowedTypes && !_.contains(field.options.allowedTypes, filetype) ||
+    if ((field.options.allowedTypes && !_.indexOf(field.options.allowedTypes, filetype) ||
         filetype.match('image.*') === null)) {
         return callback(new Error('Unsupported File Type: ' + filetype));
     }
@@ -322,7 +322,9 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
                     for (var i = 0; i < resizeOpts.length; i++) {
                         var resizeOpt = resizeOpts[i] || {};
                         targets[resizeOpt.target] = {
-                            url: gcsHelper.getPublicUrl(field.options.bucket,path + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext)
+                            url: gcsHelper.getPublicUrl(field.options.bucket,path + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext),
+                            width: resizeOpt.width,
+                            height: resizeOpt.height
                         };
                         promises.push(gcsHelper.uploadFileToBucket(bucket, resizeFunc(file.path, resizeOpt.width, resizeOpt.height, resizeOpt.options), {
                             destination: path + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
@@ -343,6 +345,28 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
             }
         }).then(function(targets) {
             var dimensions = sizeOf(file.path);
+
+            if (targets) {
+                try {
+                    _.forEach(targets, function(target) {
+                        if (typeof target.width === 'number' && typeof target.height !== 'number') {
+                            if (target.width < dimensions.width) {
+                                target.height = Math.round((target.width / dimensions.width) * dimensions.height);
+                            } else {
+                                target.height = dimensions.height;
+                            }
+                        } else if (typeof target.height === 'number' && typeof target.width !== 'number') {
+                            if (target.height < dimensions.height) {
+                                target.width = Math.round((target.height / dimensions.height) * dimensions.width);
+                            } else {
+                                target.width = dimensions.width;
+                            }
+                        }
+                    })
+                } catch (e) {
+                    console.warn('Calculating width and height of resized image occurs error ', e);
+                }
+            }
             return extractExif(file.path).then(function(exifData) {
                 exifData.image = exifData.image || {};
                 exifData.exif = exifData.exif || {};
