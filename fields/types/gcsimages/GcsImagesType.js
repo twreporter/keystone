@@ -285,6 +285,8 @@ gcsimages.prototype.uploadFile = function(file) {
  *
  * @api public
  */
+
+// Extract the common function with gcsimage
 gcsimages.prototype.uploadFiles = function(item, files, update, callback) {
 
     if (typeof update === 'function') {
