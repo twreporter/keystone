@@ -1,9 +1,8 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Field from '../Field';
 import { Button, FormField, FormInput, FormNote } from 'elemental';
-import Lightbox from '../../../admin/client/components/Lightbox';
 import classnames from 'classnames';
 
 const SUPPORTED_TYPES = ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/x-icon', 'application/pdf', 'image/x-tiff', 'image/x-tiff', 'application/postscript', 'image/vnd.adobe.photoshop', 'image/svg+xml'];
@@ -27,7 +26,6 @@ var Thumbnail = React.createClass({
 		deleted: React.PropTypes.bool,
 		height: React.PropTypes.number,
 		isQueued: React.PropTypes.bool,
-		openLightbox: React.PropTypes.func,
 		shouldRenderActionButton: React.PropTypes.bool,
 		toggleDelete: React.PropTypes.func,
 		url: React.PropTypes.string,
@@ -41,7 +39,7 @@ var Thumbnail = React.createClass({
 
 	render () {
 		let iconClassName;
-		let { deleted, height, isQueued, url, width, openLightbox } = this.props;
+		let { deleted, height, isQueued, url, width } = this.props;
 		let previewClassName = classnames('image-preview', {
 			action: (deleted || isQueued),
 		});
@@ -56,7 +54,7 @@ var Thumbnail = React.createClass({
 		return (
 			<div className="image-field image-sortable" title={title}>
 				<div className={previewClassName}>
-					<a href={url} onClick={openLightbox} className="img-thumbnail">
+					<a href={url} className="img-thumbnail">
 						<img style={{ height: '90' }} className="img-load" src={url} />
 						<span className={iconClassName} />
 					</a>
@@ -74,63 +72,30 @@ module.exports = Field.create({
 		var thumbnails = [];
 		var self = this;
 
-		_.each(this.props.value, function (item) {
-			self.pushThumbnail(item, thumbnails);
+		_.forEach(this.props.value, function (item) {
+      thumbnails.push(item);
 		});
 
 		return { thumbnails: thumbnails };
 	},
 
-	openLightbox (index) {
-		event.preventDefault();
-		this.setState({
-			lightboxIsVisible: true,
-			lightboxImageIndex: index,
-		});
-	},
-
-	closeLightbox () {
-		this.setState({
-			lightboxIsVisible: false,
-			lightboxImageIndex: null,
-		});
-	},
-
-	renderLightbox () {
-		if (!this.props.value || !this.props.value.length) return;
-
-		let images = this.props.value.map(image => image.url);
-
-		return (
-			<Lightbox
-				images={images}
-				initialImage={this.state.lightboxImageIndex}
-				isOpen={this.state.lightboxIsVisible}
-				onCancel={this.closeLightbox}
-			/>
-		);
-	},
-
 	removeThumbnail (i) {
 		var thumbs = this.state.thumbnails;
-		var thumb = thumbs[i];
+    var thumb = _.get(thumbs , [i], {});
 
-		if (thumb.props.isQueued) {
-			thumbs[i] = null;
+		if (thumb.isQueued) {
+      thumbs.splice(i, 1);
 		} else {
-			thumb.props.deleted = !thumb.props.deleted;
+			thumb.deleted = !thumb.deleted;
 		}
 
 		this.setState({ thumbnails: thumbs });
 	},
 
-	pushThumbnail (args, thumbs) {
-		thumbs = thumbs || this.state.thumbnails;
-		var i = thumbs.length;
-		args.toggleDelete = this.removeThumbnail.bind(this, i);
-		args.shouldRenderActionButton = this.shouldRenderField();
-		args.openLightbox = this.openLightbox.bind(this, i);
-		thumbs.push(<Thumbnail key={i} {...args} />);
+	pushThumbnail (thumbnail) {
+    this.setState({
+      thumbnails: this.state.thumbnails.concat(thumbnail)
+    })
 	},
 
 	fileFieldNode () {
@@ -140,9 +105,9 @@ module.exports = Field.create({
 	getCount (key) {
 		var count = 0;
 
-		_.each(this.state.thumbnails, function (thumb) {
-			if (thumb && thumb.props[key]) count++;
-		});
+    _.forEach(this.state.thumbnails, function (thumb) {
+      if (thumb && thumb[key]) count++;
+    });
 
 		return count;
 	},
@@ -158,7 +123,7 @@ module.exports = Field.create({
 
 		this.setState({
 			thumbnails: this.state.thumbnails.filter(function (thumb) {
-				return !thumb.props.isQueued;
+				return !thumb.isQueued;
 			}),
 		});
 	},
@@ -167,8 +132,8 @@ module.exports = Field.create({
 		var self = this;
 
 		var files = event.target.files;
-		_.each(files, function (f) {
-			if (!_.includes(SUPPORTED_TYPES, f.type)) {
+		_.forEach(files, function (f) {
+			if (!_.indexOf(SUPPORTED_TYPES, f.type)) {
 				alert('Unsupported file type. Supported formats are: GIF, PNG, JPG, BMP, ICO, PDF, TIFF, EPS, PSD, SVG');
 				return;
 			}
@@ -247,20 +212,31 @@ module.exports = Field.create({
 	},
 
 	renderContainer () {
+    var _this = this;
+    var thumbs = this.state.thumbnails;
+    var thumbBlocks = [];
+    _.forEach(thumbs, function(thumb, index) {
+		  thumb.toggleDelete = _this.removeThumbnail.bind(_this, index);
+		  thumb.shouldRenderActionButton = _this.shouldRenderField();
+      thumbBlocks.push(<Thumbnail key={index} {...thumb} />)
+    });
+
 		return (
 			<div className="images-container">
-				{this.state.thumbnails}
+        {thumbBlocks}
 			</div>
 		);
 	},
 
 	renderFieldAction () {
-		if (!this.shouldRenderField()) return null;
+    if (!this.shouldRenderField()) {
+      return null;
+    }
 
 		var value = '';
 		var remove = [];
-		_.each(this.state.thumbnails, function (thumb) {
-			if (thumb && thumb.props.deleted) remove.push(thumb.props.path + thumb.props.filename);
+		_.forEach(this.state.thumbnails, function (thumb) {
+			if (thumb && !thumb.isQueued && thumb.deleted) remove.push(thumb.filename);
 		});
 		if (remove.length) value = 'remove:' + remove.join(',');
 
@@ -286,7 +262,6 @@ module.exports = Field.create({
 				{this.renderContainer()}
 				{this.renderToolbar()}
 				{this.renderNote()}
-				{this.renderLightbox()}
 			</FormField>
 		);
 	},
