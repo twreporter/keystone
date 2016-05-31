@@ -202,11 +202,7 @@ gcsimages.prototype.uploadFile = function(file) {
     }).then(function(response) {
         // resizing image and upload resized images
         if (typeof _this.options.resize === 'function') {
-            try {
             var split = filename.split('.');
-            } catch(e) {
-                console.log('err:', e);
-            }
             var filenameWithoutExt = split[0];
             var ext = split[1] || '';
             var resizeFunc = _this.options.resize;
@@ -272,7 +268,8 @@ gcsimages.prototype.uploadFile = function(file) {
         if (typeof _this.options.extractIPTC === 'function') {
             return _this.options.extractIPTC(file.path)
             .then(function(meta) {
-                return metaData.iptc = meta;
+              metaData.iptc = meta;
+              return metaData;
             })
         } else {
             return metaData;
@@ -283,7 +280,7 @@ gcsimages.prototype.uploadFile = function(file) {
 /**
  * Uploads the file for this field
  *
- * @api public
+  @api public
  */
 
 // Extract the common function with gcsimage
