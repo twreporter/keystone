@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
 var async = require('async');
 var fs = require('fs-extra');
 var gcsHelper = require('../../../lib/gcsHelper');
@@ -10,6 +10,7 @@ var grappling = require('grappling-hook');
 var keystone = require('../../../');
 var moment = require('moment');
 var path = require('path');
+var sizeOf = require('image-size');
 var super_ = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
@@ -21,33 +22,17 @@ var utils = require('keystone-utils');
  */
 
 function gcsimages(list, path, options) {
-    grappling.mixin(this).allowHooks('upload');
-    this._underscoreMethods = ['format', 'uploadFiles'];
+    this._underscoreMethods = ['uploadFiles'];
     this._fixedSize = 'full';
 
     // TODO: implement filtering, usage disabled for now
     options.nofilter = true;
-
-    // TODO: implement initial form, usage disabled for now
-    if (options.initial) {
-        throw new Error('Invalid Configuration\n\n' + 'gcsimages fields (' + list.key + '.' + path + ') do not currently support being used as initial fields.\n');
-    }
 
     if (options.overwrite !== false) {
         options.overwrite = true;
     }
 
     gcsimages.super_.call(this, list, path, options);
-
-    // Allow hook into before and after
-    if (options.pre && options.pre.upload) {
-        this.pre('upload', options.pre.upload);
-    }
-
-    if (options.post && options.post.upload) {
-        this.post('upload', options.post.upload);
-    }
-
 }
 
 /*!
@@ -80,44 +65,45 @@ gcsimages.prototype.addToSchema = function() {
 
     var paths = this.paths = {
         // fields
-        bucket: this._path.append('.bucket'),
         filename: this._path.append('.filename'),
         filetype: this._path.append('.filetype'),
-        originalname: this._path.append('.originalname'),
-        path: this._path.append('.path'),
+        gcsBucket: this._path.append('.gcsBucket'),
+        gcsDir: this._path.append('.gcsDir'),
+        height: this._path.append('.height'),
+        iptc: this._path.append('.iptc'),
+        resizedTargets: this._path.append('.resizedTargets'),
         size: this._path.append('.size'),
         url: this._path.append('.url'),
+        width: this._path.append('.width'),
 
         // virtuals
         action: this._path.append('_action'),
-        exists: this._path.append('.exists'),
         order: this._path.append('_order'),
-        upload: this._path.append('_upload'),
+        upload: this._path.append('_upload')
     };
 
     var schemaPaths = new mongoose.Schema({
-        bucket: String,
         filename: String,
         filetype: String,
-        originalname: String,
-        path: String,
+        gcsBucket: String,
+        gcsDir: String,
+        height: Number,
+        iptc: Object,
+        resizedTargets: Object,
         size: Number,
-        url: String
+        url: String,
+        width: Number
     });
 
-    // The .href virtual returns the public path of the file
-    schemaPaths.virtual('href').get(function() {
-        return field.href(this);
-    });
 
     schema.add(this._path.addTo({}, [schemaPaths]));
 
-    this.removeImage = function(item, filepath, method, callback) {
+    this.removeImage = function(item, filename, method, callback) {
         var images = item.get(field.path);
         var img;
         var index;
         for (var i = 0; i < images.length; i++) {
-            if (images[i].path + images[i].filename === filepath) {
+            if (images[i].filename === filename) {
                 index = i;
                 img = images[i];
                 break;
@@ -125,13 +111,14 @@ gcsimages.prototype.addToSchema = function() {
         }
 
         if (!img) return callback();
-        if (method === 'delete') {
+        if (method === 'delete' || method === 'remove') {
             var gcsConfig = this.gcsConfig;
-            var bucket = img.bucket;
-            var path = img.path;
+            var bucket = gcsHelper.initBucket(gcsConfig, img.gcsBucket);
+            var path = img.gcsDir;
             var filename = img.filename;
-            gcsHelper.initBucket(gcsConfig, bucket).deleteFiles({
-                prefix: path + filename
+            var filenameWithoutExt = filename.split('.')[0];
+            bucket.deleteFiles({
+                prefix: path + filenameWithoutExt
             }, function(err) {
                 if (err) {
                     console.log('delete files err:', err);
@@ -145,14 +132,6 @@ gcsimages.prototype.addToSchema = function() {
                     callback();
                 });
             });
-        } else {
-            images.splice(index, 1);
-            item.save(function(err) {
-                if (err) {
-                    return callback(err);
-                }
-                callback();
-            });
         }
     };
 
@@ -165,50 +144,6 @@ gcsimages.prototype.addToSchema = function() {
     });
 
     this.bindUnderscoreMethods();
-};
-
-
-/**
- * Formats the field value
- *
- * @api public
- */
-
-gcsimages.prototype.format = function(item, i) {
-    var files = item.get(this.path);
-    if (typeof i === 'undefined') {
-        return utils.plural(files.length, '* File');
-    }
-    var file = files[i];
-    if (!file) return '';
-    if (this.hasFormatter()) {
-        file.href = this.href(file);
-        return this.options.format.call(this, item, file);
-    }
-    return file.filename;
-};
-
-
-/**
- * Detects whether the field has a formatter function
- *
- * @api public
- */
-
-gcsimages.prototype.hasFormatter = function() {
-    return typeof this.options.format === 'function';
-};
-
-
-/**
- * Return the public href for a single stored file
- *
- * @api public
- */
-
-gcsimages.prototype.href = function(file) {
-    if (!file.filename) return '';
-    return gcsHelper.getPublicUrl(this.options.bucket, file.filename);
 };
 
 
@@ -246,13 +181,109 @@ gcsimages.prototype.updateItem = function(item, data, callback) { // eslint-disa
     process.nextTick(callback);
 };
 
+gcsimages.prototype.uploadFile = function(file) {
+    var gcsDir = this.options.destination ? this.options.destination : '';
+    var isPublicRead = this.options.publicRead ? this.options.publicRead : false;
+    var bucket = gcsHelper.initBucket(this.gcsConfig, this.options.bucket);
+    var prefix = this.options.datePrefix ? moment().format(this.options.datePrefix) + '-' : '';
+    var filename = prefix + file.name;
+    var filetype = file.mimetype || file.type;
+
+    if (this.options.allowedTypes && !_.indexOf(this.options.allowedTypes, filetype)) {
+        return Promise.reject(new Error('Unsupported File Type: ' + filetype));
+    }
+
+    var _this = this;
+    // upload image
+    return gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
+        destination: gcsDir + filename,
+        filetype: filetype,
+        isPublicRead: isPublicRead
+    }).then(function(response) {
+        // resizing image and upload resized images
+        if (typeof _this.options.resize === 'function') {
+            var split = filename.split('.');
+            var filenameWithoutExt = split[0];
+            var ext = split[1] || '';
+            var resizeFunc = _this.options.resize;
+            var promises = [];
+            var targets = {};
+            _.forEach(_this.options.resizeOpts, function(resizeOpt) {
+                targets[resizeOpt.target] = {
+                    url: gcsHelper.getPublicUrl(_this.options.bucket, gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext),
+                    width: resizeOpt.width,
+                    height: resizeOpt.height
+                };
+                promises.push(gcsHelper.uploadFileToBucket(bucket, resizeFunc(file.path, resizeOpt.width, resizeOpt.height, resizeOpt.options), {
+                    destination: gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
+                    filetype: filetype,
+                    isPublicRead: isPublicRead
+                }));
+            })
+            return Promise.all(promises).then(function(values) {
+                return targets;
+            });
+        } else {
+            // skip resizing
+            return;
+        }
+    }).then(function(targets) {
+        var dimensions = sizeOf(file.path);
+        if (targets) {
+            // calculate width and height of resized images
+            try {
+                _.forEach(targets, function(target) {
+                    if (typeof target.width === 'number' && typeof target.height !== 'number') {
+                        if (target.width < dimensions.width) {
+                            target.height = Math.round((target.width / dimensions.width) * dimensions.height);
+                        } else {
+                            target.height = dimensions.height;
+                            target.width = dimensions.width;
+                        }
+                    } else if (typeof target.height === 'number' && typeof target.width !== 'number') {
+                        if (target.height < dimensions.height) {
+                            target.width = Math.round((target.height / dimensions.height) * dimensions.width);
+                        } else {
+                            target.width = dimensions.width;
+                            target.height = dimensions.height;
+                        }
+                    }
+                })
+            } catch (e) {
+                console.warn('Calculating width and height of resized image occurs error ', e);
+            }
+        }
+        var metaData = {
+            filename: filename,
+            filetype: filetype,
+            gcsBucket: _this.options.bucket,
+            gcsDir: gcsDir,
+            height: dimensions.height || 0,
+            iptc: {},
+            resizedTargets: targets || {},
+            size: file.size,
+            url: gcsHelper.getPublicUrl(_this.options.bucket, gcsDir + filename),
+            width: dimensions.width || 0
+        }
+        if (typeof _this.options.extractIPTC === 'function') {
+            return _this.options.extractIPTC(file.path)
+            .then(function(meta) {
+              metaData.iptc = meta;
+              return metaData;
+            })
+        } else {
+            return metaData;
+        }
+    });
+};
 
 /**
  * Uploads the file for this field
  *
- * @api public
+  @api public
  */
 
+// Extract the common function with gcsimage
 gcsimages.prototype.uploadFiles = function(item, files, update, callback) {
 
     if (typeof update === 'function') {
@@ -260,64 +291,23 @@ gcsimages.prototype.uploadFiles = function(item, files, update, callback) {
         update = false;
     }
 
-    var field = this;
-    var path = field.options.destination ? field.options.destination : '';
-    var isPublicRead = field.options.publicRead ? field.options.publicRead : false;
-    var bucket = gcsHelper.initBucket(field.gcsConfig, field.options.bucket);
+    var _this = this;
+    var promises = [];
 
-    async.map(files, function(file, processedFile) {
+    _.forEach(files, function(file) {
+        promises.push(_this.uploadFile(file));
+    });
 
-        var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : '';
-        var originalname = file.originalname;
-        var filename = prefix + file.name;
-        var filetype = file.mimetype || file.type;
-
-        if (field.options.allowedTypes && !_.contains(field.options.allowedTypes, filetype)) {
-            return processedFile(new Error('Unsupported File Type: ' + filetype));
-        }
-
-        var doUpload = function(doneUpload) {
-
-            if (typeof field.options.filename === 'function') {
-                filename = field.options.filename(item, file);
+    Promise.all(promises).then(function(metas) {
+        _.forEach(metas, function(meta) {
+            if (update) {
+                item.get(_this.path).push(meta);
             }
-
-            gcsHelper.uploadFileToBucket(bucket, file.path, {
-                destination: path + filename,
-            }).then(function(uploadedFile) {
-                return gcsHelper.makeFilePublicPrivateRead(uploadedFile, isPublicRead);
-            }).then(function(response) {
-                var fileData = {
-                    bucket: field.options.bucket,
-                    filename: filename,
-                    filetype: filetype,
-                    originalname: originalname,
-                    path: path,
-                    size: file.size,
-                    url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
-                };
-
-                if (update) {
-                    item.get(field.path).push(fileData);
-                }
-                return doneUpload(null, fileData);
-            }).catch(function(err) {
-                return doneUpload(err);
-            });
-        };
-
-        field.callHook('pre:upload', item, file, function(err) {
-            if (err) return processedFile(err);
-            doUpload(function(err, fileData) {
-                if (err) return processedFile(err);
-                field.callHook('post:upload', item, file, fileData, function(err) {
-                    return processedFile(err, fileData);
-                });
-            });
         });
-
-    }, callback);
-
+        callback(null, metas)
+    }).catch(function(err) {
+        callback(err);
+    });
 };
 
 
@@ -362,12 +352,12 @@ gcsimages.prototype.getRequestHandler = function(item, req, paths, callback) {
             actions.forEach(function(action) {
                 action = action.split(':');
                 var method = action[0];
-                var filepaths = action[1];
+                var filename = action[1];
 
-                if (!method.match(/^(delete|remove)$/) || !filepaths) return;
+                if (!method.match(/^(delete|remove)$/) || !filename) return;
 
-                filepaths.split(',').forEach(function(filepath) {
-                    field.removeImage(item, filepath, method, function(err) {
+                filename.split(',').forEach(function(filename) {
+                    field.removeImage(item, filename, method, function(err) {
                         if (err) {
                             console.log('remove image fails:', err);
                         }
