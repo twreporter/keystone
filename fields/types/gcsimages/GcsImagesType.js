@@ -15,6 +15,8 @@ var super_ = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
 
+var PARALLEL_LIMIT = 1;
+
 /**
  * gcsimages FieldType Constructor
  * @extends Field
@@ -200,80 +202,93 @@ gcsimages.prototype.uploadFile = function(file) {
         filetype: filetype,
         isPublicRead: isPublicRead
     }).then(function(response) {
-        // resizing image and upload resized images
-        if (typeof _this.options.resize === 'function') {
-            var split = filename.split('.');
-            var filenameWithoutExt = split[0];
-            var ext = split[1] || '';
-            var resizeFunc = _this.options.resize;
-            var promises = [];
-            var targets = {};
-            _.forEach(_this.options.resizeOpts, function(resizeOpt) {
-                targets[resizeOpt.target] = {
-                    url: gcsHelper.getPublicUrl(_this.options.bucket, gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext),
-                    width: resizeOpt.width,
-                    height: resizeOpt.height
-                };
-                promises.push(gcsHelper.uploadFileToBucket(bucket, resizeFunc(file.path, resizeOpt.width, resizeOpt.height, resizeOpt.options), {
-                    destination: gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
-                    filetype: filetype,
-                    isPublicRead: isPublicRead
-                }));
-            })
-            return Promise.all(promises).then(function(values) {
-                return targets;
-            });
-        } else {
-            // skip resizing
-            return;
-        }
-    }).then(function(targets) {
-        var dimensions = sizeOf(file.path);
-        if (targets) {
-            // calculate width and height of resized images
-            try {
-                _.forEach(targets, function(target) {
-                    if (typeof target.width === 'number' && typeof target.height !== 'number') {
-                        if (target.width < dimensions.width) {
-                            target.height = Math.round((target.width / dimensions.width) * dimensions.height);
-                        } else {
-                            target.height = dimensions.height;
-                            target.width = dimensions.width;
-                        }
-                    } else if (typeof target.height === 'number' && typeof target.width !== 'number') {
-                        if (target.height < dimensions.height) {
-                            target.width = Math.round((target.height / dimensions.height) * dimensions.width);
-                        } else {
-                            target.width = dimensions.width;
-                            target.height = dimensions.height;
-                        }
+        return new Promise(function(resolve, reject) {
+            // resizing image and upload resized images
+            if (typeof _this.options.resize === 'function') {
+                var split = filename.split('.');
+                var filenameWithoutExt = split[0];
+                var ext = split[1] || '';
+                var resizeFunc = _this.options.resize;
+                var promises = [];
+                var targets = {};
+
+                // socket hang up troubleshooting https://googlecloudplatform.github.io/gcloud-node/#/docs/v0.29.0/guides/troubleshooting
+                async.eachLimit(_this.options.resizeOpts, PARALLEL_LIMIT, function(resizeOpt, asyncCallback) {
+                    targets[resizeOpt.target] = {
+                        url: gcsHelper.getPublicUrl(_this.options.bucket, gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext),
+                        width: resizeOpt.width,
+                        height: resizeOpt.height
+                    };
+                    gcsHelper.uploadFileToBucket(bucket, resizeFunc(file.path, resizeOpt.width, resizeOpt.height, resizeOpt.options), {
+                        destination: gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
+                        filetype: filetype,
+                        isPublicRead: isPublicRead
+                    }).then(function(result) {
+                        asyncCallback();
+                    }, function(err) {
+                        asyncCallback(err);
+                    });
+                }, function(error) {
+                    if (error) {
+                        reject(error);
                     }
+                    resolve(targets);
                 })
-            } catch (e) {
-                console.warn('Calculating width and height of resized image occurs error ', e);
+            } else {
+                resolve(targets);
             }
-        }
-        var metaData = {
-            filename: filename,
-            filetype: filetype,
-            gcsBucket: _this.options.bucket,
-            gcsDir: gcsDir,
-            height: dimensions.height || 0,
-            iptc: {},
-            resizedTargets: targets || {},
-            size: file.size,
-            url: gcsHelper.getPublicUrl(_this.options.bucket, gcsDir + filename),
-            width: dimensions.width || 0
-        }
-        if (typeof _this.options.extractIPTC === 'function') {
-            return _this.options.extractIPTC(file.path)
-            .then(function(meta) {
-              metaData.iptc = meta;
-              return metaData;
-            })
-        } else {
-            return metaData;
-        }
+        });
+    }).then(function(targets) {
+        return new Promise(function(resolve, reject) {
+            var dimensions = sizeOf(file.path);
+            if (targets) {
+                // calculate width and height of resized images
+                try {
+                    _.forEach(targets, function(target) {
+                        if (typeof target.width === 'number' && typeof target.height !== 'number') {
+                            if (target.width < dimensions.width) {
+                                target.height = Math.round((target.width / dimensions.width) * dimensions.height);
+                            } else {
+                                target.height = dimensions.height;
+                                target.width = dimensions.width;
+                            }
+                        } else if (typeof target.height === 'number' && typeof target.width !== 'number') {
+                            if (target.height < dimensions.height) {
+                                target.width = Math.round((target.height / dimensions.height) * dimensions.width);
+                            } else {
+                                target.width = dimensions.width;
+                                target.height = dimensions.height;
+                            }
+                        }
+                    })
+                } catch (e) {
+                    console.warn('Calculating width and height of resized image occurs error ', e);
+                }
+            }
+            var fileData = {
+                filename: filename,
+                filetype: filetype,
+                gcsBucket: _this.options.bucket,
+                gcsDir: gcsDir,
+                height: dimensions.height || 0,
+                iptc: {},
+                resizedTargets: targets || {},
+                size: file.size,
+                url: gcsHelper.getPublicUrl(_this.options.bucket, gcsDir + filename),
+                width: dimensions.width || 0
+            }
+            if (typeof _this.options.extractIPTC === 'function') {
+                _this.options.extractIPTC(file.path)
+                .then(function(meta) {
+                    fileData.iptc = meta;
+                    resolve(fileData);
+                }).catch(function(err) {
+                    reject(err);
+                })
+            } else {
+                resolve(fileData);
+            }
+        });
     });
 };
 
@@ -293,20 +308,27 @@ gcsimages.prototype.uploadFiles = function(item, files, update, callback) {
 
     var _this = this;
     var promises = [];
+    var dataToStore = [];
 
-    _.forEach(files, function(file) {
-        promises.push(_this.uploadFile(file));
-    });
-
-    Promise.all(promises).then(function(metas) {
-        _.forEach(metas, function(meta) {
+    // socket hang up troubleshooting https://googlecloudplatform.github.io/gcloud-node/#/docs/v0.29.0/guides/troubleshooting
+    async.eachLimit(files, PARALLEL_LIMIT, function(file, asyncCallback) {
+        _this.uploadFile(file)
+        .then(function(fileData) {
+            dataToStore.push(fileData);
             if (update) {
-                item.get(_this.path).push(meta);
+                item.get(_this.path).push(fileData);
             }
+            asyncCallback();
+        }).catch(function(err) {
+            console.log('err', err);
+            asyncCallback(err);
         });
-        callback(null, metas)
-    }).catch(function(err) {
-        callback(err);
+    }, function(err) {
+        if (err) {
+            console.log('err:', err);
+            return callback(err);
+        }
+        return callback(null, dataToStore);
     });
 };
 
