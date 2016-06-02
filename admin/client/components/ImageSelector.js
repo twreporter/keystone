@@ -1,6 +1,6 @@
 'use strict';
 import { Button, FormInput, InputGroup, Modal, Pagination } from 'elemental';
-import _ from 'lodash';
+import parseImageAPIResponse from '../../../lib/parseImageAPIResponse';
 import qs from 'qs';
 import xhr from 'xhr';
 import ImagesEditor from './ImagesEditor';
@@ -15,8 +15,8 @@ class ImageSelector extends React.Component {
     constructor(props) {
         super(props);
 
-        // tag input in the tag field
-        this._tagInput = '';
+        // input in the search field
+        this._searchInput = '';
 
         this.state = {
             currentPage: 1,
@@ -24,15 +24,14 @@ class ImageSelector extends React.Component {
             images: [],
             totalImages: 0,
             isSelectionOpen: props.isSelectionOpen,
-            selectedImages: props.selectedImages,
-            tagFilter: ''
+            selectedImages: props.selectedImages
         };
 
         // method binding
-        this.tagFilterChange = this._tagFilterChange.bind(this);
+        this.searchFilterChange = this._searchFilterChange.bind(this);
         this.updateSelection = this._updateSelection.bind(this);
         this.handlePageSelect = this._handlePageSelect.bind(this);
-        this.searchByTag = this._searchByTag.bind(this);
+        this.searchByInput = this._searchByInput.bind(this);
         this.handleCancel = this._handleCancel.bind(this);
         this.handleSave = this._handleSave.bind(this);
     }
@@ -42,7 +41,7 @@ class ImageSelector extends React.Component {
     }
 
     componentWillUnmount () {
-        this._tagInput = '';
+        this._searchInput = '';
     }
 
     componentWillReceiveProps (nextProps) {
@@ -63,39 +62,30 @@ class ImageSelector extends React.Component {
     }
 
     /** build query string for keystone api
-     * @param {string} [tag=] - Tag input
      * @param {number} [page=0] - Page we used to calculate how many items we want to skip
      * @param {limit} [limit=10] - The number of items we want to get
+     * @param {string[]} [filters=[]] - keywords for filtering
      * @return {Promise}
      */
-    buildQueryString (tag='', page=0, limit=10) {
-        if (tag) {
-            return this.loadTagIds(tag)
-            .then((ids) => {
-                return this.buildTagFilters(ids, page, PAGE_SIZE);
-            });
-        }
-        return Promise.resolve(qs.stringify({
-            limit: limit,
-            skip: page === 0 ? 0 : (page - 1) * limit
-        }));
+    _buildQueryString (page=0, limit=10, filters=[]) {
+        return Promise.resolve(this._buildFilters(filters, page, PAGE_SIZE));
     }
 
-    /** build query string filtered by tag ids for keystone api
-     * @param {string[]} [tagIds=[]] - Tag ids
+    /** build query string filtered by description for keystone api
+     * @param {string[]} [filters=[]] - keywords for filtering
      * @param {number} [page=0] - Page we used to calculate how many items we want to skip
      * @param {limit} [limit=10] - The number of items we want to get
      * @return {string} a query string
      */
-    buildTagFilters (tagIds=[], page=0, limit=10) {
-        let filters = {
-            tags: {
-                value: tagIds
+    _buildFilters (filters=[], page=0, limit=10) {
+        let filterQuery = {
+            description: {
+                value: filters
             }
         };
         let queryString = {
-            filters: JSON.stringify(filters),
-            select: 'image',
+            filters: JSON.stringify(filterQuery),
+            select: 'image,description,keywords',
             limit: limit,
             skip: page === 0 ? 0 : (page-1) * limit
         };
@@ -118,40 +108,14 @@ class ImageSelector extends React.Component {
                 }
                 this.state.totalImages = data.count;
                 resolve(data.results.map(function(result) {
-                    let image = _.get(result, [ 'fields', 'image'], {})
-                    // use desktop version url for rendering
-                    let resizedUrl = _.get(image, ['resizedTargets', 'desktop', 'url' ], image.url)
-                    _.set(image, [ 'src' ], resizedUrl);
-                    image = Object.assign(image, {id: result.id});
-                    return image;
+                    return parseImageAPIResponse(result);
                 }));
             });
         });
 	}
 
-    /** load Object ids according to tag string from keystone api
-     * @param {string} tag - Tag string
-     * @return {Promise}
-     */
-    loadTagIds (tag) {
-        return new Promise((resolve, reject) => {
-            xhr({
-                url: Keystone.adminPath + API + 'tags?basic&search=' + tag,
-                responseType: 'json',
-            }, (err, resp, data) => {
-                if (err) {
-                    console.error('Error loading tag ids: ', err);
-                    return reject(err);
-                }
-                resolve(data.results.map(function(result) {
-                    return result.id;
-                }));
-            });
-        });
-    }
-
     _handlePageSelect (selectedPage) {
-        this.buildQueryString(this.state.tagFilter, selectedPage, PAGE_SIZE)
+        this._buildQueryString(selectedPage, PAGE_SIZE, this._searchInput)
         .then((queryString) => {
             return this.loadImages(queryString)
         })
@@ -180,7 +144,7 @@ class ImageSelector extends React.Component {
     }
 
     getImages () {
-        this.buildQueryString('', this.state.currentPage, PAGE_SIZE)
+        this._buildQueryString(this.state.currentPage, PAGE_SIZE)
         .then((queryString) => {
             return this.loadImages(queryString);
         })
@@ -189,21 +153,21 @@ class ImageSelector extends React.Component {
                 images: images
             });
         }, (reason) => {
-            console.log(reason);
+            console.warn(reason);
             this.setState({
                 error: reason
             });
         });
     }
 
-    _tagFilterChange (event) {
-        this._tagInput = event.currentTarget.value;
+    _searchFilterChange (event) {
+        let inputString = event.currentTarget.value;
+        this._searchInput = inputString.split(',');
     }
 
-    _searchByTag () {
+    _searchByInput () {
         this.state.currentPage = 1;
-        let tag = this.state.tagFilter = this._tagInput;
-        this.buildQueryString(tag, this.state.currentPage, PAGE_SIZE)
+        this._buildQueryString(this.state.currentPage, PAGE_SIZE, this._searchInput)
         .then((queryString) => {
             return this.loadImages(queryString);
         })
@@ -223,10 +187,10 @@ class ImageSelector extends React.Component {
         return (
             <InputGroup contiguous>
             <InputGroup.Section grow>
-                    <FormInput type="text" placeholder="Input tag" defaultValue={this.state.tagFilter} onChange={this.tagFilterChange}/>
+                    <FormInput type="text" placeholder="Input tag" defaultValue={this._searchInput} onChange={this.searchFilterChange}/>
                 </InputGroup.Section>
                 <InputGroup.Section>
-                    <Button onClick={this.searchByTag}>Filter</Button>
+                    <Button onClick={this.searchByInput}>Filter</Button>
                 </InputGroup.Section>
             </InputGroup>
         );
