@@ -4,7 +4,6 @@
 
 var _ = require('underscore');
 var fs = require('fs');
-var grappling = require('grappling-hook');
 var gcsHelper = require('../../../lib/gcsHelper');
 var keystone = require('../../../');
 var moment = require('moment');
@@ -19,8 +18,6 @@ var utils = require('keystone-utils');
  */
 
 function gcsfile (list, path, options) {
-   grappling.mixin(this)
-       .allowHooks('pre:upload');
 	this._underscoreMethods = ['format', 'uploadFile'];
 	this._fixedSize = 'full';
 
@@ -35,12 +32,6 @@ function gcsfile (list, path, options) {
 			+ 'GcsFile fields (' + list.key + '.' + path + ') require the "gcs config" option to be set.\n\n'
 			+ 'See http://keystonejs.com/docs/configuration/#services-gcsfile for more information.\n');
 	}
-
-	// Could be more pre- hooks, just upload for now
-	if (options.pre && options.pre.upload) {
-		this.pre('upload', options.pre.upload);
-	}
-
 }
 
 /*!
@@ -72,12 +63,10 @@ gcsfile.prototype.addToSchema = function () {
 
     var paths = this.paths = {
         // fields
-        bucket: this._path.append('.bucket'),
         filename: this._path.append('.filename'),
         filetype: this._path.append('.filetype'),
-        originalname: this._path.append('.originalname'),
-        path: this._path.append('.path'),
-        projectId: this._path.append('.projectId'),
+        gcsBucket: this._path.append('.gcsBucket'),
+        gcsDir: this._path.append('.gcsDir'),
         size: this._path.append('.size'),
         url: this._path.append('.url'),
 
@@ -88,12 +77,10 @@ gcsfile.prototype.addToSchema = function () {
     };
 
     var schemaPaths = this._path.addTo({}, {
-        bucket: String,
         filename: String,
         filetype: String,
-        originalname: String,
-        path: String,
-        projectId: String,
+        gcsBucket: String,
+        gcsDir: String,
         size: Number,
         url: String
     });
@@ -111,12 +98,10 @@ gcsfile.prototype.addToSchema = function () {
 
 	var reset = function (item) {
 		item.set(field.path, {
-            bucket: '',
             filename: '',
             filetype: '',
-            originalname: '',
-            path: '',
-            projectId: '',
+            gcsBucket: '',
+            gcsDir: '',
             size: 0,
             url: ''
         });
@@ -143,11 +128,11 @@ gcsfile.prototype.addToSchema = function () {
             var _this = this;
             var promise = new Promise(function(resolve, reject) {
                 var gcsConfig = field.gcsConfig;
-                var bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.bucket));
+                var bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.gcsBucket));
                 var filename = _this.get(paths.filename);
                 if (filename && typeof filename === 'string') {
                     bucket.deleteFiles({
-                        prefix: _this.get(paths.path) + filename
+                        prefix: _this.get(paths.gcsDir) + filename
                     }, function(err) {
                         if (err) {
                             return reject(err);
@@ -243,13 +228,13 @@ gcsfile.prototype.updateItem = function (item, data, callback) { // eslint-disab
 
 gcsfile.prototype.uploadFile = function (item, file, update, callback) {
 
-	var field = this;
-    var path = field.options.destination || '';
+    var field = this;
+    var gcsDir = field.options.destination || '';
     var isPublicRead = field.options.publicRead || false;
-	var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : '';
-	var filename = prefix + file.name;
-	var originalname = file.originalname;
-	var filetype = file.mimetype || file.type;
+    var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : '';
+    var filename = prefix + file.name;
+    var originalname = file.originalname;
+    var filetype = file.mimetype || file.type;
 
 	if (typeof update === 'function') {
 		callback = update;
@@ -262,29 +247,19 @@ gcsfile.prototype.uploadFile = function (item, file, update, callback) {
 
 	var doUpload = function () {
 
-		if (typeof field.options.path === 'function') {
-			path = field.options.path(item, path);
-		}
-
-		if (typeof field.options.filename === 'function') {
-			filename = field.options.filename(item, filename, originalname);
-		}
-
         var bucket = gcsHelper.initBucket(field.gcsConfig, field.options.bucket);
         gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
-            destination: path + filename,
+            destination: gcsDir + filename,
             filetype: filetype,
             isPublicRead: isPublicRead
         }).then(function(response) {
             var fileData = {
-                bucket: field.options.bucket,
                 filename: filename,
                 filetype: filetype,
-                originalname: originalname,
-                path: path,
-                projectId: field.gcsConfig.projectId,
+                gcsBucket: field.options.bucket,
+                gcsDir: gcsDir,
                 size: file.size,
-                url: gcsHelper.getPublicUrl(field.options.bucket, path + filename),
+                url: gcsHelper.getPublicUrl(field.options.bucket, gcsDir + filename),
             };
 
             if (update) {
@@ -296,11 +271,7 @@ gcsfile.prototype.uploadFile = function (item, file, update, callback) {
         });
     };
 
-	this.callHook('pre:upload', item, file, function (err) {
-		if (err) return callback(err);
-		doUpload();
-	});
-
+    doUpload();
 };
 
 
