@@ -5,7 +5,7 @@ import parseImageAPIResponse from '../../../lib/parseImageAPIResponse';
 import qs from 'qs';
 import xhr from 'xhr';
 import ImagesEditor from './ImagesEditor';
-import ImagesSelection from './ImagesSelection';
+import ImageSelection from './ImageSelection';
 import SelectorMixin from './mixins/SelectorMixin';
 import React from 'react';
 
@@ -48,7 +48,7 @@ class ImageSelector extends SelectorMixin(React.Component) {
                 <Modal.Body>
                     <div>
                         {this._renderSearchFilter()}
-                        <ImagesSelection
+                        <ImageSelection
                             images={items}
                             selectedImages={selectedItems}
                             selectionLimit={this.props.selectionLimit}

@@ -3,8 +3,8 @@ import { ImageGrid } from './ImageGrid';
 import { shallowEqual } from 'react-pure-render';
 import React from 'react';
 
-const ImagesSelection = React.createClass({
-	displayName: 'ImagesSelection',
+const ImageSelection = React.createClass({
+	displayName: 'ImageSelection',
 	propTypes: {
         images: React.PropTypes.array,
         selectedImages: React.PropTypes.array,
@@ -81,4 +81,4 @@ const ImagesSelection = React.createClass({
 	}
 });
 
-module.exports = ImagesSelection;
+module.exports = ImageSelection;
