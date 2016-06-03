@@ -1,5 +1,6 @@
 import { Button, FormInput, InputGroup, Pagination } from 'elemental';
 import async from 'async';
+import parseImageAPIResponse from '../../../lib/parseImageAPIResponse';
 import qs from 'qs';
 import xhr from 'xhr';
 import Field from '../Field';
@@ -89,7 +90,7 @@ module.exports = Field.create({
                 if (err) {
                     return reject(err);
                 }
-                const image =  Object.assign({}, result.fields.image, {id: result.id});
+                let image = parseImageAPIResponse(result);
                 _this.cacheItem(image);
                 resolve(image);
             });
@@ -157,7 +158,7 @@ module.exports = Field.create({
             btValue = selectedImages[0] ? 'Change Photo' : 'Select Photo';
             imageNode = selectedImages[0] ? (
                 <span>
-                    <img src={ selectedImages[0].url } width="150" />
+                    <img src={ selectedImages[0].src } width="150" />
                     <FormInput ref="imageInput"  id={selectedImages[0].id} name={this.props.path} value={selectedImages[0].id} type="hidden" />
                 </span>
             ): null;
