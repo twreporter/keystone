@@ -69,9 +69,9 @@ class AudioSelector extends SelectorMixin(React.Component) {
         })
     }
 
-    loadItems (querstring = '') {
+    loadItems (querystring = '') {
         return new Promise((resolve, reject) => {
-            super.loadItems(querstring)
+            super.loadItems(querystring)
             .then((audios) => {
                 this._loadCoverPhotoForAudios(audios)
                 .then((audios) => {
