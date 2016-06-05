@@ -74,11 +74,18 @@ class AudioItem extends React.Component {
     }
 
     render () {
-      const { audio, coverPhoto, doShowRemove, title, description } = this.props;
+      const { audio, coverPhoto, doShowRemove, isSelected, title, description, width } = this.props;
       let image = _.get(coverPhoto, [ 'resizedTargets', 'desktop' ], {});
 
+      let style = {
+          border: isSelected ? '1px solid' : '',
+          boxSizing: 'border-box',
+          display: 'inline-block',
+          padding: '10px',
+          width: `${width}%`
+      }
       return (
-          <div onClick={this._handleSelect.bind(this)} style={{width: `${this.props.width}%`, display: 'inline-block'}}>
+          <div onClick={this._handleSelect.bind(this)} style={style}>
               <ImageItem
                   doShowRemove={doShowRemove}
                   id={_.get(coverPhoto, 'id')}
