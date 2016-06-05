@@ -67,28 +67,21 @@ let SelectorMixin = (superclass) => class extends superclass {
         return Promise.resolve(this._buildFilters(filters, page, this.PAGE_SIZE));
     }
 
-    /** build query string filtered by description for keystone api
+    /** build query string for keystone api
      * @param {string[]} [filters=[]] - keywords for filtering
      * @param {number} [page=0] - Page we used to calculate how many items we want to skip
      * @param {limit} [limit=10] - The number of items we want to get
      * @return {string} a query string
      */
     _buildFilters (filters=[], page=0, limit=10) {
-        let filterQuery = {
-            description: {
-                value: filters
-            }
-        };
         let queryString = {
-            filters: JSON.stringify(filterQuery),
-            select: 'image,description,keywords',
             limit: limit,
             skip: page === 0 ? 0 : (page-1) * limit
         };
         return qs.stringify(queryString);
     }
 
-    /** load images from keystone api
+    /** load items from keystone api
      * @param {string} [queryString=] - Query string for keystone api
      * @return {Promise}
      */
