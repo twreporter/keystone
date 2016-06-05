@@ -1,7 +1,7 @@
 'use strict';
-import { Button, FormInput, InputGroup, Modal, Pagination } from 'elemental';
+import { Button, Modal, Pagination } from 'elemental';
 import _ from 'lodash';
-import parseImageAPIResponse from '../../../lib/parseImageAPIResponse';
+import { parseImageAPIResponse } from '../../../lib/parseAPIResponse';
 import qs from 'qs';
 import xhr from 'xhr';
 import ImagesEditor from './ImagesEditor';

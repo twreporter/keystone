@@ -27,7 +27,7 @@ class ImageSelection extends SelectionMixin(React.Component) {
 		return (
             <ImageGrid
                 images={this.state.items}
-                onSelect={this.handleSelecet}
+                onSelect={this.handleSelect}
                 selectedImages={this.state.selectedItems}
             />
 		);
