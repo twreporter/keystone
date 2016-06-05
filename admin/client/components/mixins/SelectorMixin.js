@@ -4,7 +4,6 @@ import qs from 'qs';
 import xhr from 'xhr';
 import React from 'react';
 
-const API = '/api/';
 
 let SelectorMixin = (superclass) => class extends superclass {
     constructor(props) {
@@ -13,6 +12,7 @@ let SelectorMixin = (superclass) => class extends superclass {
         // input in the search field
         this._searchInput = '';
         this.PAGE_SIZE = 10;
+        this.API = '/api/';
 
         this.state = {
             currentPage: 1,
@@ -95,7 +95,7 @@ let SelectorMixin = (superclass) => class extends superclass {
 	loadItems (queryString = '') {
         return new Promise((resolve, reject) => {
             xhr({
-                url: Keystone.adminPath + API + this.props.apiPath + '?' + queryString,
+                url: Keystone.adminPath + this.API + this.props.apiPath + '?' + queryString,
                 responseType: 'json',
             }, (err, resp, data) => {
                 if (err) {
