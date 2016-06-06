@@ -13,9 +13,9 @@ class ImageItem extends React.Component {
         };
     }
 
-    _handleClick (e) {
-        if (typeof this.props.onClick === 'function') {
-            this.props.onClick(e);
+    _handleSelect (e) {
+        if (typeof this.props.onSelect === 'function') {
+            this.props.onSelect(e);
         }
     }
 
@@ -32,7 +32,7 @@ class ImageItem extends React.Component {
     shouldComponentUpdate (nextProps, nextState) {
         let shouldUpdate = false;
         Object.keys(this.props).forEach((prop) => {
-            if (prop === 'onRemove' || prop === 'onClick') {
+            if (prop === 'onRemove' || prop === 'onSelect') {
                 // do nothing
             }
             shouldUpdate = this.props[prop] ===  nextProps[prop] ? false : true;
@@ -41,7 +41,7 @@ class ImageItem extends React.Component {
     }
 
     render () {
-        const { width, padding, url, link, doShowRemove, style } = this.props;
+        const { width, padding, url, doShowRemove, style } = this.props;
         const { isSelected } = this.state;
 
         const styles = {
@@ -77,7 +77,7 @@ class ImageItem extends React.Component {
         ): null;
 
         return (
-            <div onClick={this._handleClick.bind(this)} className="imageGridItem" style={styles.imageGridItem}>
+            <div onClick={this._handleSelect.bind(this)} className="imageGridItem" style={styles.imageGridItem}>
                 <div className="imageWrapper" style={styles.imageWrapper}>{RemoveBt}</div>
                 {this.props.children}
             </div>
@@ -87,8 +87,7 @@ class ImageItem extends React.Component {
 ImageItem.propTypes = {
     doShowRemove: React.PropTypes.bool,
     isSelected: React.PropTypes.bool,
-    link: React.PropTypes.string,
-    onClick: React.PropTypes.func,
+    onSelect: React.PropTypes.func,
     onRemove: React.PropTypes.func,
     padding: React.PropTypes.number,
     url: React.PropTypes.string.isRequired,
@@ -99,7 +98,6 @@ ImageItem.propTypes = {
 ImageItem.defaultProps = {
     doShowRemove: false,
     isSelected: false,
-    link: '',
     padding: 0,
     url: '',
     style: {},
@@ -124,8 +122,8 @@ class ImageGrid extends React.Component {
         return  !shallowEqual(this.props, nextProps) ||
             !shallowEqual(this.state, nextState);
     }
-    _handleClick (image) {
-        this.props.onClick(image);
+    _handleSelect (image) {
+        this.props.onSelect(image);
     }
     render () {
         const { images, selectedImages } = this.state;
@@ -140,8 +138,7 @@ class ImageGrid extends React.Component {
                     id={image.id}
                     isSelected={isSelected}
                     key={image.id}
-                    link={image.link}
-                    onClick={this._handleClick.bind(this, image)}
+                    onSelect={this._handleSelect.bind(this, image)}
                     padding={padding}
                     url={image.src}
                     width={width}
@@ -160,7 +157,7 @@ class ImageGrid extends React.Component {
 ImageGrid.propTypes = {
     columns: React.PropTypes.number,
     images: React.PropTypes.array.isRequired,
-    onClick: React.PropTypes.func,
+    onSelect: React.PropTypes.func,
     padding: React.PropTypes.number,
     selectedImages: React.PropTypes.array
 };

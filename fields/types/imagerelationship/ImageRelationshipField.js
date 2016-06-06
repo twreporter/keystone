@@ -1,6 +1,7 @@
 import { Button, FormInput, InputGroup, Pagination } from 'elemental';
+import _ from 'lodash';
 import async from 'async';
-import parseImageAPIResponse from '../../../lib/parseImageAPIResponse';
+import { parseImageAPIResponse } from '../../../lib/parseAPIResponse';
 import qs from 'qs';
 import xhr from 'xhr';
 import Field from '../Field';
@@ -159,9 +160,9 @@ module.exports = Field.create({
             imageNode = selectedImages[0] ? (
                 <span>
                     <img src={ selectedImages[0].src } width="150" />
-                    <FormInput ref="imageInput"  id={selectedImages[0].id} name={this.props.path} value={selectedImages[0].id} type="hidden" />
                 </span>
             ): null;
+
         }
         return (
             <div>
@@ -173,6 +174,7 @@ module.exports = Field.create({
                     onFinish={this.closeSelection}
                 />
                 {imageNode}
+                <FormInput ref="imageInput"  id={_.get(selectedImages, [ 0, 'id'])} name={this.props.path} value={_.get(selectedImages, [0, 'id'])} type="hidden" />
                 <Button onClick={this.openSelection}>
                     {btValue}
                 </Button>

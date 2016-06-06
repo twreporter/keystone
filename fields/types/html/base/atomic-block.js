@@ -3,6 +3,7 @@
 import { Entity } from 'draft-js';
 import { ENTITY } from '../CONSTANT';
 import Alignment from './block-alignment-wrapper';
+import AudioBlock from '../audio/audio-block';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
 import ImageDiffBlock from '../image-diff/image-diff-block';
@@ -64,6 +65,9 @@ class AtomicBlock extends React.Component {
         let BlockComponent;
 
         switch (type) {
+            case ENTITY.audio.type:
+                BlockComponent = AudioBlock;
+                break;
             case ENTITY.embeddedCode.type:
                 BlockComponent = EmbeddedCodeBlock;
                 break;
