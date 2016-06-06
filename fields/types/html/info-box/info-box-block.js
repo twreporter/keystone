@@ -1,7 +1,6 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React from 'react';
 
 export default class InfoBoxBlock extends React.Component {

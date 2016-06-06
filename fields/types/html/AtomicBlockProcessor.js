@@ -26,6 +26,10 @@ const processor = {
         const entity = entityMap[entityRange.key];
         const type = entity && entity.type;
         switch (type) {
+            case ENTITY.audio.type:
+                alignment = entity.data && entity.data.alignment || alignment;
+                content = [this.convertAudioBlock(entity)];
+                break;
             case ENTITY.infobox.type:
                 alignment = entity.data && entity.data.alignment || alignment;
                 content = [ {
@@ -53,6 +57,10 @@ const processor = {
                 return;
         }
         return new ApiDataInstance({alignment, type, content})
+    },
+
+    convertAudioBlock(entity) {
+        return entity.data || {};
     },
 
     convertImageBlock(entity) {

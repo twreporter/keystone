@@ -1,11 +1,22 @@
 'use strict';
 
-import { pick } from 'lodash';
+import _ from 'lodash';
 import {
   AtomicBlockUtils,
   Entity,
 } from 'draft-js';
 import { ENTITY } from '../CONSTANT';
+
+export function insertAudioBlock(editorState, type, audio) {
+    _.set(audio, 'coverPhoto', _.pick(audio.coverPhoto, ENTITY.image.requiredProps));
+    const entityKey = Entity.create(
+        type,
+        'IMMUTABLE',
+        audio
+    );
+
+    return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+}
 
 export function insertImagesBlock(editorState, type, images) {
   const entityKey = Entity.create(
@@ -13,7 +24,7 @@ export function insertImagesBlock(editorState, type, images) {
     'IMMUTABLE',
     {
         images: images.map((image) => {
-            return pick(image, ENTITY.image.imageRequiredProps)
+            return _.pick(image, ENTITY.image.requiredProps)
         })
     }
   );
@@ -25,7 +36,7 @@ export function insertImageBlock(editorState, type, image) {
   const entityKey = Entity.create(
     type,
     'IMMUTABLE',
-    pick(image, ENTITY.image.imageRequiredProps)
+    _.pick(image, ENTITY.image.requiredProps)
   );
 
   return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');

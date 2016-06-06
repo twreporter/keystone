@@ -1,5 +1,5 @@
 import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './modifiers/insert-atomic-block';
+import { insertAudioBlock, insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './modifiers/insert-atomic-block';
 import { shallowEqual } from 'react-pure-render';
 import { Button, ButtonGroup, FormInput } from 'elemental';
 import { ENTITY } from './CONSTANT';
@@ -8,6 +8,7 @@ import blockStyleFn from './base/block-style-fn';
 import quoteTypes from './quote/quote-types';
 import AnnotationBt from './annotation/annotation-bt';
 import AtomicBlock from './base/atomic-block';
+import AudioButton from './audio/audio-bt';
 import BlockModifier from './modifiers/index';
 import DraftConverter from './DraftConverter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
@@ -171,6 +172,15 @@ module.exports = Field.create({
         }
     },
 
+    toggleAudio(entity, value) {
+        const audio = Array.isArray(value) ? value[0] : null;
+        if (!audio) {
+            return;
+        }
+        const _editorState = insertAudioBlock(this.state.editorState, ENTITY.audio.type, audio);
+        this.onChange(_editorState);
+    },
+
     toggleImage (entity, value) {
         const image = Array.isArray(value) ? value[0] : null;
         if (!image) {
@@ -197,6 +207,8 @@ module.exports = Field.create({
 
     toggleEntity (entity, value) {
         switch (entity) {
+            case ENTITY.audio.type:
+                return this.toggleAudio(entity, value);
             case ENTITY.annotation.type:
                 return this.toggleAnnotation(entity, value);
             case ENTITY.infobox.type:
@@ -471,6 +483,18 @@ const EntityControls = (props) => {
                         iconText=''
                     />
                 );
+            case ENTITY.audio.type:
+                return (
+                    <AudioButton
+                        active={active}
+                        apiPath="audios"
+                        key={entity}
+                        label={entity}
+                        onToggle={onToggle.bind(null, entity)}
+                        icon='fa-file-audio-o'
+                        iconText=' Audio'
+                    />
+                )
             case ENTITY.infobox.type:
                 return (
                     <InfoBoxBt
