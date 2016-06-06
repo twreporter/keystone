@@ -1,7 +1,7 @@
 import { Button, FormInput, InputGroup, Pagination } from 'elemental';
 import _ from 'lodash';
 import async from 'async';
-import parseImageAPIResponse from '../../../lib/parseImageAPIResponse';
+import { parseImageAPIResponse } from '../../../lib/parseAPIResponse';
 import qs from 'qs';
 import xhr from 'xhr';
 import Field from '../Field';

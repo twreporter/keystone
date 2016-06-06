@@ -32,6 +32,7 @@ let inlineTagMap = {
 
 let entityTagMap = {
     annotation: ['<div><span><%= annotation %></span>', '</div>'],
+    audio: ['<div><h4><%= title %></h4><span><%= description %></span><audio src="<%= url %>" />', '</div>'],
     embeddedCode: ['<div><%= embeddedCode%>', '</div>'],
     infobox: ['<div><div><span><%= title %></span></div><div><span><%= body %></span></div>', '</div>'],
     link: ['<a href="<%= url %>">', '</a>'],
