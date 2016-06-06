@@ -24,6 +24,9 @@ class AudioSelector extends SelectorMixin(React.Component) {
 
     _loadImage(imageId) {
         return new Promise((resolve, reject) => {
+            if (!imageId) {
+                return reject(new Error('Should provide imageId'))
+            }
             xhr({
                 url: Keystone.adminPath + this.API + 'images/' + imageId ,
                 responseType: 'json',
@@ -40,17 +43,13 @@ class AudioSelector extends SelectorMixin(React.Component) {
     _loadCoverPhotoForAudio(audio) {
         return new Promise((resolve, reject) => {
             let imageId = _.get(audio, [ 'fields', 'coverPhoto'])
-            if (imageId) {
-                this._loadImage(imageId)
-                .then((image) => {
-                    _.set(audio, [ 'fields', 'coverPhoto' ], image);
-                    resolve(parseAudioAPIResponse(audio));
-                }, (err) => {
-                    resolve(parseAudioAPIResponse(audio));
-                })
-            } else {
+            this._loadImage(imageId)
+            .then((image) => {
+                _.set(audio, [ 'fields', 'coverPhoto' ], image);
                 resolve(parseAudioAPIResponse(audio));
-            }
+            }, (err) => {
+                resolve(parseAudioAPIResponse(audio));
+            })
         });
     }
 
