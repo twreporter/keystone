@@ -102,6 +102,8 @@ class AudioItem extends React.Component {
                   mute={this.state.mute}
                   ref={(ref) => this.player = ref}
               />
+              <h4>{title}</h4>
+              <span>{description}</span>
               <Button type="primary" onClick={this.handleToggle}>
                   {(this.state.playing) ? 'Pause' : 'Play' }
               </Button>
