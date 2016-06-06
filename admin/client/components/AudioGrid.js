@@ -171,7 +171,6 @@ class AudioGrid extends React.Component {
                     audio={_.get(audio, 'url')}
                     coverPhoto={_.get(audio, 'coverPhoto')}
                     description={_.get(audio, 'description')}
-                    id={audio.id}
                     isSelected={isSelected}
                     key={audio.id}
                     onSelect={this._handleSelect.bind(this, audio)}
