@@ -103,7 +103,7 @@ class AudioItem extends React.Component {
                   ref={(ref) => this.player = ref}
               />
               <h3>{title}</h3>
-              <span>{description}</span>
+              <div dangerouslySetInnerHTML={{__html: description}} />
               <Button type="primary" onClick={this.handleToggle}>
                   {(this.state.playing) ? 'Pause' : 'Play' }
               </Button>

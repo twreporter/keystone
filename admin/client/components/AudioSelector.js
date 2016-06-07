@@ -80,7 +80,7 @@ class AudioSelector extends SelectorMixin(React.Component) {
         });
     }
 
-    /** build query string filtered by description for keystone api
+    /** build query string filtered by title for keystone api
      * @override
      * @param {string[]} [filters=[]] - keywords for filtering
      * @param {number} [page=0] - Page we used to calculate how many items we want to skip
@@ -89,7 +89,7 @@ class AudioSelector extends SelectorMixin(React.Component) {
      */
     _buildFilters (filters=[], page=0, limit=10) {
         let filterQuery = {
-            description: {
+            title: {
                 value: filters
             }
         };
