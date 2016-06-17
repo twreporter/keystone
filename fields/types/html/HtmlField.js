@@ -38,7 +38,7 @@ module.exports = Field.create({
 			const {draft, html} = this.props.value;
 			if (draft && html !== '') {
 				// create an EditorState from the raw Draft data
-				let contentState = ContentState.createFromBlockArray(convertFromRaw(draft));
+				let contentState = convertFromRaw(draft);
 				editorState = EditorState.createWithContent(contentState, decorator);
 			} else {
 				// create empty draft object
