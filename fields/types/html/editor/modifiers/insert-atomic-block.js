@@ -5,7 +5,20 @@ import {
   AtomicBlockUtils,
   Entity,
 } from 'draft-js';
-import { ENTITY } from '../CONSTANT';
+import ENTITY from '../entities';
+
+export function insertAnnotationBlock(editorState, type, text, annotation) {
+    const entityKey = Entity.create(
+        type,
+        'IMMUTABLE',
+        {
+          text,
+          annotation
+        }
+    );
+
+    return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+}
 
 export function insertAudioBlock(editorState, type, audio) {
     _.set(audio, 'coverPhoto', _.pick(audio.coverPhoto, ENTITY.image.requiredProps));

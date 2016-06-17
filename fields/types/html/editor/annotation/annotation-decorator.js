@@ -1,6 +1,6 @@
 import React from 'react';
 import { Entity } from 'draft-js';
-import { ENTITY } from '../CONSTANT';
+import ENTITY from '../entities';
 
 const Annotation = (props) => {
     const {text, annotation} = Entity.get(props.entityKey).getData();

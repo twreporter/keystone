@@ -1,7 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import { ENTITY } from '../CONSTANT';
+import ENTITY from '../entities';
 import Alignment from './block-alignment-wrapper';
 import AudioBlock from '../audio/audio-block';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
@@ -63,6 +63,7 @@ class AtomicBlock extends React.Component {
         const { alignment } = this.props;
         let className = alignment;
         let BlockComponent;
+        console.log(type);
 
         switch (type) {
             case ENTITY.audio.type:
@@ -84,7 +85,11 @@ class AtomicBlock extends React.Component {
                 BlockComponent = ImageDiffBlock;
                 break;
             default:
-                return;
+                return null;
+        }
+        console.log(type);
+        if (!BlockComponent) {
+          return null;
         }
 
         return (
