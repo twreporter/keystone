@@ -1,24 +1,18 @@
-import { convertFromRaw, convertToRaw, ContentState, Editor, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { insertAudioBlock, insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './modifiers/insert-atomic-block';
+import { convertFromRaw, convertToRaw, ContentState, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
+import { insertAudioBlock, insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './editor/modifiers/insert-atomic-block';
 import { shallowEqual } from 'react-pure-render';
-import { Button, ButtonGroup, FormInput } from 'elemental';
-import { ENTITY } from './CONSTANT';
-import decorator from './entityDecorator'
-import blockStyleFn from './base/block-style-fn';
-import quoteTypes from './quote/quote-types';
-import AnnotationBt from './annotation/annotation-bt';
-import AtomicBlock from './base/atomic-block';
-import AudioButton from './audio/audio-bt';
-import BlockModifier from './modifiers/index';
-import DraftConverter from './DraftConverter';
+import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
+import { Button, FormInput } from 'elemental';
+import ENTITY from './editor/entities';
+import decorator from './editor/entity-decorator'
+import quoteTypes from './editor/quote/quote-types';
+import AtomicBlock from './editor/base/atomic-block';
+import BlockModifier from './editor/modifiers/index';
+import DraftConverter from './editor/draft-converter';
+import DraftEditor from './editor/draft-editor';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
-import EmbeddedCodeBt from './embedded-code/embedded-code-bt';
 import Field from '../Field';
-import ImageButton from './image/image-button';
-import InfoBoxBt from './info-box/info-box-bt'
-import LinkButton from './link/link-button';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 let { processHTML } = DraftPasteProcessor;
 let lastId = 0;
@@ -44,7 +38,7 @@ module.exports = Field.create({
 			const {draft, html} = this.props.value;
 			if (draft && html !== '') {
 				// create an EditorState from the raw Draft data
-				let contentState = ContentState.createFromBlockArray(convertFromRaw(draft));
+				let contentState = convertFromRaw(draft);
 				editorState = EditorState.createWithContent(contentState, decorator);
 			} else {
 				// create empty draft object
@@ -297,31 +291,36 @@ module.exports = Field.create({
 				<div className="RichEditor-root">
 					<div className={'DraftEditor-controls' + expandBtnClass}>
 						<div className={'DraftEditor-controlsInner' + expandBtnClass}>
-							<BlockStyleControls
-								editorState={editorState}
-								onToggle={this.toggleBlockType}
-							/>
-							<InlineStyleControls
-								editorState={editorState}
-								onToggle={this.toggleInlineStyle} />
-			      	<EntityControls editorState={editorState} onToggle={this.toggleEntity} />
-							<Button type={'hollow-primary DraftEditor-expandButton' + expandBtnClass} onClick={this.enlargeEditor}><i className={'fa ' + expandIcon} aria-hidden="true"></i></Button>
-						</div>
-					</div>
-					<div className={className + expandBtnClass} onClick={this.focus}>
-						<Editor blockRendererFn={this._blockRenderer}
-							blockStyleFn={blockStyleFn}
-							customStyleMap={styleMap}
-							editorState={editorState}
-							handleKeyCommand={this.handleKeyCommand}
-							onChange={this.onChange}
-							placeholder="Enter HTML Here..."
-							ref="editor"
-							spellCheck={useSpellCheck}
-							/>
-						<FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
-					</div>
-				</div>
+                            <BlockStyleButtons
+                                buttons={BLOCK_TYPES}
+                                editorState={editorState}
+                                onToggle={this.toggleBlockType}
+                            />
+                            <InlineStyleButtons
+                                buttons={INLINE_STYLES}
+                                editorState={editorState}
+                                onToggle={this.toggleInlineStyle} />
+                            <EntityButtons
+                                entities={Object.keys(ENTITY)}
+                                editorState={editorState}
+                                onToggle={this.toggleEntity}
+                            />
+                            <Button type={'hollow-primary DraftEditor-expandButton' + expandBtnClass} onClick={this.enlargeEditor}><i className={'fa ' + expandIcon} aria-hidden="true"></i></Button>
+                        </div>
+                    </div>
+                    <div className={className + expandBtnClass} onClick={this.focus}>
+                        <DraftEditor
+                            blockRendererFn={this._blockRenderer}
+                            customStyleMap={styleMap}
+                            editorState={editorState}
+                            handleKeyCommand={this.handleKeyCommand}
+                            onChange={this.onChange}
+                            ref="editor"
+                            spellCheck={useSpellCheck}
+                        />
+                        <FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
+                    </div>
+                </div>
 			</div>
 		);
 	},
@@ -341,33 +340,6 @@ const styleMap = {
 	},
 };
 
-class StyleButton extends React.Component {
-	constructor () {
-		super();
-		this.onToggle = (e) => {
-			e.preventDefault();
-			this.props.onToggle(this.props.style);
-		};
-	}
-
-	render () {
-		let className = '';
-		if (this.props.active) {
-			className += ' RichEditor-activeButton';
-		}
-
-		return (
-			<Button
-				type="default"
-				className={className + ' tooltip-box'}
-				onMouseDown={this.onToggle}
-				data-tooltip={this.props.label}>
-				<i className={'fa ' + this.props.icon}></i>
-				<span>{this.props.text}</span>
-			</Button>
-		);
-	}
-}
 
 // block settings
 const BLOCK_TYPES = [
@@ -382,30 +354,6 @@ const BLOCK_TYPES = [
 	{ label: 'UL', style: 'unordered-list-item', icon: 'fa-list-ul', text: '' },
 ];
 
-const BlockStyleControls = (props) => {
-	const { editorState } = props;
-	const selection = editorState.getSelection();
-	const blockType = editorState
-	.getCurrentContent()
-	.getBlockForKey(selection.getStartKey())
-	.getType();
-	return (
-		<ButtonGroup>
-			{BLOCK_TYPES.map((type) =>
-				<StyleButton
-					key={type.label}
-					active={type.style === blockType}
-					label={type.label}
-					onToggle={props.onToggle}
-					style={type.style}
-					icon={type.icon}
-					text={type.text}
-					/>
-			)}
-		</ButtonGroup>
-	);
-};
-
 // inline style settings
 var INLINE_STYLES = [
 	{ label: 'Bold', style: 'BOLD', icon: 'fa-bold', text: '' },
@@ -414,171 +362,3 @@ var INLINE_STYLES = [
 	{ label: 'Monospace', style: 'CODE', icon: 'fa-terminal', text: '' },
 ];
 
-const InlineStyleControls = (props) => {
-	var currentStyle = props.editorState.getCurrentInlineStyle();
-	return (
-		<div className="ButtonGroup">
-			{INLINE_STYLES.map(type =>
-				<StyleButton
-					key={type.label}
-					active={currentStyle.has(type.style)}
-					label={type.label}
-					onToggle={props.onToggle}
-					style={type.style}
-					icon={type.icon}
-					text={type.text}
-					/>
-			)}
-		</div>
-	);
-};
-
-// entities
-const ENTITIES = Object.keys(ENTITY);
-const EntityControls = (props) => {
-    const {editorState} = props;
-    const selection = editorState.getSelection();
-    const startKey = selection.getStartKey();
-    const startOffset = selection.getStartOffset();
-    const startBlock = editorState
-    .getCurrentContent()
-    .getBlockForKey(selection.getStartKey());
-
-    const endOffset = selection.getEndOffset();
-    let data;
-    let entityInstance;
-    let entityKey;
-    let selectedText = '';
-
-    if (!selection.isCollapsed()) {
-        const blockText = startBlock.getText();
-        selectedText = blockText.slice(startOffset, endOffset);
-        entityKey = startBlock.getEntityAt(startOffset);
-    } else {
-        entityKey = startBlock.getEntityAt(0);
-    }
-
-    if (entityKey !== null) {
-        entityInstance = Entity.get(entityKey);
-        data = entityInstance.getData();
-    }
-
-    function onToggle (entity, changedValue) {
-        props.onToggle(entity, changedValue);
-    }
-
-    function chooseButton (entity) {
-        let active = entityInstance ? entityInstance.getType() === entity : false;
-        switch (entity) {
-            case ENTITY.annotation.type:
-                return (
-                    <AnnotationBt
-                        active={active}
-                        key={entity}
-                        label={entity}
-                        onToggle={onToggle.bind(null, entity)}
-                        text={data ? data.text : selectedText}
-                        annotation = {data ? data.annotation : ''}
-                        icon='fa-pencil-square-o'
-                        iconText=''
-                    />
-                );
-            case ENTITY.audio.type:
-                return (
-                    <AudioButton
-                        active={active}
-                        apiPath="audios"
-                        key={entity}
-                        label={entity}
-                        onToggle={onToggle.bind(null, entity)}
-                        icon='fa-file-audio-o'
-                        iconText=' Audio'
-                    />
-                )
-            case ENTITY.infobox.type:
-                return (
-                    <InfoBoxBt
-                        active={active}
-                        key={entity}
-                        label={entity}
-                        onToggle={onToggle.bind(null, entity)}
-                        title={data ? data.title : selectedText}
-                        body = {data ? data.body : ''}
-                        icon=''
-                        iconText='infobox'
-                    />
-                );
-            case ENTITY.link.type:
-                return (
-                    <LinkButton
-                        active={active}
-                        key={entity}
-                        label={entity}
-                        onToggle={onToggle.bind(null, entity)}
-                        url={data ? data.url : ''}
-                        text={data ? data.text : selectedText}
-                        icon='fa-link'
-                        iconText=''
-                    />
-                );
-            case ENTITY.image.type:
-                return (
-                    <ImageButton
-                        active={active}
-                        apiPath="images"
-                        key={entity}
-                        label={entity}
-                        onToggle={onToggle.bind(null, entity)}
-                        icon='fa-photo'
-                        iconText=' Image'
-                    />
-                );
-            case ENTITY.slideshow.type:
-                return (
-                    <ImageButton
-                        active={active}
-                        apiPath="images"
-                        key={entity}
-                        label={entity}
-                        onToggle={onToggle.bind(null, entity)}
-                        selectionLimit={ENTITY.slideshow.slideshowSelectionLimit}
-                        icon='fa-slideshare'
-                        iconText=' Slideshow'
-                    />
-                );
-            case ENTITY.imageDiff.type:
-                return (
-                    <ImageButton
-                        active={active}
-                        apiPath="images"
-                        key={entity}
-                        label={entity}
-                        onToggle={onToggle.bind(null, entity)}
-                        selectionLimit={2}
-                        icon='fa-object-ungroup'
-                        iconText=' Diff'
-                    />
-                );
-            case ENTITY.embeddedCode.type:
-                return (
-                    <EmbeddedCodeBt
-                        active={active}
-                        key={entity}
-                        label={entity}
-                        onToggle={onToggle.bind(null, entity)}
-                        caption={data ? data.caption : ''}
-                        embeddedCode={data ? data.embeddedCode : ''}
-                        iconText=' Embedded'
-                    />
-                );
-            default:
-                return;
-        }
-    }
-
-    return (
-        <ButtonGroup>
-					{ENTITIES.map(chooseButton)}
-        </ButtonGroup>
-    );
-};

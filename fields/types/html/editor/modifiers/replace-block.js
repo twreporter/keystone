@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import { Entity } from 'draft-js';
-import { ENTITY } from '../CONSTANT';
+import ENTITY from '../entities';
 
 export function replaceImageBlock(editorState, blockKey, image) {
   const content = editorState.getCurrentContent();

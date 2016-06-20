@@ -3,9 +3,9 @@
 'use strict';
 import { List } from 'immutable';
 import quoteTypes from './quote/quote-types';
-import ApiDataInstance from './ApiDataInstance';
-import AtomicBlockProcessor from './AtomicBlockProcessor';
-import InlineStylesProcessor from './InlineStylesProcessor';
+import ApiDataInstance from './api-data-instance';
+import AtomicBlockProcessor from './atomic-block-processor';
+import InlineStylesProcessor from './inline-styles-processor';
 
 let blockTagMap = {
     'blockquote': `<blockquote class="${quoteTypes.blockquote.style}">%content%</blockquote>\n`,

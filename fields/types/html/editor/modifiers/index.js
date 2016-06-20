@@ -1,6 +1,6 @@
 'use strict';
 
-import { ENTITY } from '../CONSTANT';
+import ENTITY from '../entities';
 import { insertImageBlock, insertImagesBlock } from './insert-atomic-block';
 import { replaceImageBlock, replaceImagesBlock } from './replace-block';
 import { Entity } from 'draft-js';

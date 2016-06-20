@@ -1,7 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import { ENTITY } from '../CONSTANT';
+import ENTITY from '../entities';
 import classNames from 'classnames';
 import ImageBlock from '../image/image-block';
 import React from 'react';

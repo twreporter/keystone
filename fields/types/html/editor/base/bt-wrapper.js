@@ -1,4 +1,4 @@
-import ButtonIcon from '../base/button-icon';
+import ButtonIcon from './button-icon';
 import React, { Component } from 'react';
 import { Entity } from 'draft-js';
 

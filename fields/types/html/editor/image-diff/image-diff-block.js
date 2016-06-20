@@ -2,7 +2,7 @@
 import { Entity } from 'draft-js';
 import _ from 'lodash';
 import classNames from 'classnames';
-import ImagesDiff from '../../../../admin/client/components/ImagesDiff';
+import ImagesDiff from '../../../../../admin/client/components/ImagesDiff';
 import React from 'react';
 import SlideshowBlock from '../slideshow/slideshow-block';
 
