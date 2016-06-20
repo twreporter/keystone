@@ -1,6 +1,6 @@
 'use strict';
-import {  EditorState, Entity, Modifier, RichUtils } from 'draft-js';
-import { InlineStyleButtons, EntityButtons } from '../editor-buttons';
+import { EditorState, Entity, Modifier, RichUtils } from 'draft-js';
+import { EntityButtons, InlineStyleButtons } from '../editor-buttons';
 import decorator from '../entity-decorator';
 import DraftEditor from '../draft-editor';
 import ENTITY from '../entities';
@@ -35,7 +35,6 @@ let DraftjsEditingMixin = (superclass) => class extends superclass {
 	}
 
     _renderDraftjsEditingField(editorState) {
-
         return (
             <div className="RichEditor-root">
                 <div className={'DraftEditor-controls'}>
@@ -87,13 +86,13 @@ let DraftjsEditingMixin = (superclass) => class extends superclass {
         this.onChange(_editorState);
     }
 
-    _toggleLink (entity, value) {
+    _toggleLink(entity, value) {
         const {url, text} = value;
         const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || url, url: url}) : null;
         this._toggleTextWithEntity(entityKey, text || url);
     }
 
-    _toggleEntity (entity, value) {
+    _toggleEntity(entity, value) {
         switch (entity) {
             case ENTITY.link.type:
                 return this._toggleLink(entity, value);
@@ -102,7 +101,7 @@ let DraftjsEditingMixin = (superclass) => class extends superclass {
         }
     }
 
-	_toggleInlineStyle (inlineStyle) {
+	_toggleInlineStyle(inlineStyle) {
 		this.onChange(
 			RichUtils.toggleInlineStyle(
 				this.state.editorState,
