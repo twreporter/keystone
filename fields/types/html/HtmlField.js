@@ -291,36 +291,36 @@ module.exports = Field.create({
 				<div className="RichEditor-root">
 					<div className={'DraftEditor-controls' + expandBtnClass}>
 						<div className={'DraftEditor-controlsInner' + expandBtnClass}>
-              <BlockStyleButtons
-                buttons={BLOCK_TYPES}
-								editorState={editorState}
-								onToggle={this.toggleBlockType}
-							/>
-							<InlineStyleButtons
-                buttons={INLINE_STYLES}
-								editorState={editorState}
-								onToggle={this.toggleInlineStyle} />
-              <EntityButtons
-                entities={Object.keys(ENTITY)}
-                editorState={editorState}
-                onToggle={this.toggleEntity}
-              />
-							<Button type={'hollow-primary DraftEditor-expandButton' + expandBtnClass} onClick={this.enlargeEditor}><i className={'fa ' + expandIcon} aria-hidden="true"></i></Button>
-						</div>
-					</div>
-					<div className={className + expandBtnClass} onClick={this.focus}>
-            <DraftEditor
-              blockRendererFn={this._blockRenderer}
-							customStyleMap={styleMap}
-							editorState={editorState}
-							handleKeyCommand={this.handleKeyCommand}
-							onChange={this.onChange}
-							ref="editor"
-							spellCheck={useSpellCheck}
-							/>
-						<FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
-					</div>
-				</div>
+                            <BlockStyleButtons
+                                buttons={BLOCK_TYPES}
+                                editorState={editorState}
+                                onToggle={this.toggleBlockType}
+                            />
+                            <InlineStyleButtons
+                                buttons={INLINE_STYLES}
+                                editorState={editorState}
+                                onToggle={this.toggleInlineStyle} />
+                            <EntityButtons
+                                entities={Object.keys(ENTITY)}
+                                editorState={editorState}
+                                onToggle={this.toggleEntity}
+                            />
+                            <Button type={'hollow-primary DraftEditor-expandButton' + expandBtnClass} onClick={this.enlargeEditor}><i className={'fa ' + expandIcon} aria-hidden="true"></i></Button>
+                        </div>
+                    </div>
+                    <div className={className + expandBtnClass} onClick={this.focus}>
+                        <DraftEditor
+                            blockRendererFn={this._blockRenderer}
+                            customStyleMap={styleMap}
+                            editorState={editorState}
+                            handleKeyCommand={this.handleKeyCommand}
+                            onChange={this.onChange}
+                            ref="editor"
+                            spellCheck={useSpellCheck}
+                        />
+                        <FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
+                    </div>
+                </div>
 			</div>
 		);
 	},

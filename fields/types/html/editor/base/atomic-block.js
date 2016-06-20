@@ -63,7 +63,6 @@ class AtomicBlock extends React.Component {
         const { alignment } = this.props;
         let className = alignment;
         let BlockComponent;
-        console.log(type);
 
         switch (type) {
             case ENTITY.audio.type:
@@ -87,7 +86,6 @@ class AtomicBlock extends React.Component {
             default:
                 return null;
         }
-        console.log(type);
         if (!BlockComponent) {
           return null;
         }
