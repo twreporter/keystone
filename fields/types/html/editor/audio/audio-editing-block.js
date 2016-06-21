@@ -1,15 +1,16 @@
 'use strict';
-import ImageSelector from '../../../../admin/client/components/ImageSelector';
+import AudioSelector from '../../../../../admin/client/components/AudioSelector';
 import React, { Component } from 'react';
 
-export default class ImageEditingBlock extends Component {
+class AudioEditingBlock extends Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         const { apiPath, onToggle, handleToggle, selectionLimit, isModalOpen } = this.props;
         return (
-            <ImageSelector
+            <AudioSelector
                 apiPath={apiPath}
                 isSelectionOpen={isModalOpen}
                 onChange={onToggle}
@@ -18,20 +19,23 @@ export default class ImageEditingBlock extends Component {
             />
         );
     }
+
 }
 
-ImageEditingBlock.propTypes = {
+AudioEditingBlock.propTypes = {
     apiPath: React.PropTypes.string,
     isModalOpen: React.PropTypes.bool,
     onToggle: React.PropTypes.func,
     handleToggle: React.PropTypes.func,
-    selectedImages: React.PropTypes.array,
+    selectedAudios: React.PropTypes.array,
     selectionLimit: React.PropTypes.number
 };
 
-ImageEditingBlock.defaultProps = {
-    apiPath: 'images',
+AudioEditingBlock.defaultProps = {
+    apiPath: 'audios',
     isModalOpen: false,
-    selectedImages: [],
+    selectedAudios: [],
     selectionLimit: 1
 };
+
+export default AudioEditingBlock;

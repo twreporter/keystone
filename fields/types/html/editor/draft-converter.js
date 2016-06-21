@@ -3,11 +3,11 @@
 'use strict';
 import { List } from 'immutable';
 import quoteTypes from './quote/quote-types';
-import ApiDataInstance from './ApiDataInstance';
-import AtomicBlockProcessor from './AtomicBlockProcessor';
-import InlineStylesProcessor from './InlineStylesProcessor';
+import ApiDataInstance from './api-data-instance';
+import AtomicBlockProcessor from './atomic-block-processor';
+import InlineStylesProcessor from './inline-styles-processor';
 
-let blockTagMap = {
+let defaultBlockTagMap = {
     'blockquote': `<blockquote class="${quoteTypes.blockquote.style}">%content%</blockquote>\n`,
     'introquote': `<blockquote class="${quoteTypes.introquote.style}">%content%</blockquote>\n`,
     'pumpingquote': `<blockquote class="${quoteTypes.pumpingquote.style}">%content%</blockquote>\n`,
@@ -30,7 +30,7 @@ let inlineTagMap = {
     UNDERLINE: ['<u>', '</u>'],
 };
 
-let entityTagMap = {
+let defaultEntityTagMap = {
     annotation: ['<div><span><%= annotation %></span>', '</div>'],
     audio: ['<div><h4><%= title %></h4><span><%= description %></span><audio src="<%= url %>" />', '</div>'],
     embeddedCode: ['<div><%= embeddedCode%>', '</div>'],
@@ -46,7 +46,7 @@ let nestedTagMap = {
     'unordered-list-item': ['<ul>', '</ul>'],
 };
 
-function _convertInlineStyle(block, entityMap) {
+function _convertInlineStyle(block, entityMap, blockTagMap, entityTagMap) {
     return blockTagMap[block.type] ? blockTagMap[block.type].replace(
         '%content%',
         InlineStylesProcessor(inlineTagMap, entityTagMap, entityMap, block)
@@ -56,7 +56,7 @@ function _convertInlineStyle(block, entityMap) {
     );
 }
 
-function _convertBlocksToHtml(blocks, entityMap) {
+function _convertBlocksToHtml(blocks, entityMap, blockTagMap, entityTagMap) {
     let html = '';
     let nestLevel = []; // store the list type of the previous item: null/ol/ul
     blocks.forEach((block) => {
@@ -72,7 +72,7 @@ function _convertBlocksToHtml(blocks, entityMap) {
             html += nestedTagMap[nestLevel.shift()][1]; // close with </ol> or </ul>
         }
 
-        html += _convertInlineStyle(block, entityMap);
+        html += _convertInlineStyle(block, entityMap, blockTagMap, entityTagMap);
     });
 
     // end tag with </ol> or </ul>: or if it is the last block
@@ -101,15 +101,15 @@ function convertBlocksToApiData (blocks, entityMap) {
                 apiDataArr = apiDataArr.push(AtomicBlockProcessor.convertBlock(entityMap, block));
             } else if (quoteTypes.hasOwnProperty(block.type)) {
                 let style = quoteTypes[block.type].style;
-                let converted = InlineStylesProcessor(inlineTagMap, entityTagMap, entityMap, block);
+                let converted = InlineStylesProcessor(inlineTagMap, defaultEntityTagMap, entityMap, block);
                 // set type as blockquote for easy understanding
                 apiDataArr = apiDataArr.push(new ApiDataInstance({type: 'blockquote', content: [converted], styles: [style]}));
             } else {
-                let converted = InlineStylesProcessor(inlineTagMap, entityTagMap, entityMap, block);
+                let converted = InlineStylesProcessor(inlineTagMap, defaultEntityTagMap, entityMap, block);
                 apiDataArr = apiDataArr.push(new ApiDataInstance({type: block.type, content: [converted]}));
             }
         } else {
-            let converted = InlineStylesProcessor(inlineTagMap, entityTagMap, entityMap, block);
+            let converted = InlineStylesProcessor(inlineTagMap, defaultEntityTagMap, entityMap, block);
 
             // previous block is not an item-list block
             if (nestLevel.length === 0) {
@@ -135,12 +135,14 @@ function convertBlocksToApiData (blocks, entityMap) {
     return apiDataArr;
 }
 
-function convertRawToHtml(raw) {
+function convertRawToHtml(raw, blockTagMap, entityTagMap) {
+    blockTagMap = blockTagMap || defaultBlockTagMap;
+    entityTagMap = entityTagMap || defaultEntityTagMap;
     let html = '';
     raw = raw || {};
     const blocks = Array.isArray(raw.blocks) ? raw.blocks : [];
     const entityMap = typeof raw.entityMap === 'object' ? raw.entityMap : {};
-    html = _convertBlocksToHtml(blocks, entityMap);
+    html = _convertBlocksToHtml(blocks, entityMap, blockTagMap, entityTagMap);
     return html;
 }
 

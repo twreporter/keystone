@@ -1,7 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import ImageSelector from '../../../../admin/client/components/ImageSelector';
+import ImageSelector from '../../../../../admin/client/components/ImageSelector';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React from 'react';
 

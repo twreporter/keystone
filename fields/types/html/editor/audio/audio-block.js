@@ -1,7 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import { AudioItem } from '../../../../admin/client/components/AudioGrid';
+import { AudioItem } from '../../../../../admin/client/components/AudioGrid';
 import React from 'react';
 
 export default class AudioBlock extends React.Component {

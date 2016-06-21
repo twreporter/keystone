@@ -2,8 +2,8 @@ import _ from 'lodash';
 import http from 'https';
 import url from 'url';
 // import sizeOf from 'image-size';
-import ApiDataInstance from './ApiDataInstance';
-import { ENTITY } from './CONSTANT';
+import ApiDataInstance from './api-data-instance';
+import ENTITY from './entities';
 
 function composeImageSet(imageObj = {}) {
   let resizedTargets = _.merge({}, _.get(imageObj, [ 'resizedTargets' ], {}));
@@ -26,6 +26,13 @@ const processor = {
         const entity = entityMap[entityRange.key];
         const type = entity && entity.type;
         switch (type) {
+            case ENTITY.annotation.type:
+                alignment = entity.data && entity.data.alignment || alignment;
+                content = [ {
+                    text: entity.data.text,
+                    annotation: entity.data.annotation
+                } ];
+                break;
             case ENTITY.audio.type:
                 alignment = entity.data && entity.data.alignment || alignment;
                 content = [this.convertAudioBlock(entity)];

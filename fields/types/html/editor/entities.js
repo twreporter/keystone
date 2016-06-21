@@ -31,4 +31,4 @@ const ENTITY = {
 };
 
 
-export { ENTITY };
+export default ENTITY;

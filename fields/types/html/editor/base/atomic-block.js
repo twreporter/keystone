@@ -1,7 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import { ENTITY } from '../CONSTANT';
+import ENTITY from '../entities';
 import Alignment from './block-alignment-wrapper';
 import AudioBlock from '../audio/audio-block';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
@@ -84,7 +84,10 @@ class AtomicBlock extends React.Component {
                 BlockComponent = ImageDiffBlock;
                 break;
             default:
-                return;
+                return null;
+        }
+        if (!BlockComponent) {
+          return null;
         }
 
         return (
