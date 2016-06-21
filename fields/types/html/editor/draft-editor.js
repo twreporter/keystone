@@ -44,18 +44,18 @@ class DraftEditor extends React.Component {
   }
 
   render() {
-		return (
-      <Editor blockRendererFn={this.props.blockRendererFn}
-        blockStyleFn={blockStyleFn}
-        customStyleMap={this.props.styleMap}
-        editorState={this.state.editorState}
-        handleKeyCommand={this.handleKeyCommand}
-        onChange={this.handleEditorStateChange}
-        placeholder="Enter HTML Here..."
-        spellCheck={this.props.spellCheck}
-        ref='editor'
-      />
-		);
+      return (
+          <Editor blockRendererFn={this.props.blockRendererFn}
+              blockStyleFn={blockStyleFn}
+              customStyleMap={this.props.styleMap}
+              editorState={this.state.editorState}
+              handleKeyCommand={this.handleKeyCommand}
+              onChange={this.handleEditorStateChange}
+              placeholder="Enter HTML Here..."
+              spellCheck={this.props.spellCheck}
+              ref='editor'
+          />
+      );
   }
 }
 

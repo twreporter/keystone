@@ -56,15 +56,18 @@ class EntityEditingBlock extends Component {
         });
     }
 
-    renderEditingFields(fields) {
+    _renderEditingField(field, type, value) {
+        return (
+            <FormField label={field} htmlFor={"form-input-"+field} key={field}>
+                <FormInput type={type} multiline={type === 'textarea' ? true : false} placeholder={"Enter " + field} name={"form-input-"+field} onChange={this.handleChange.bind(this, field)} defaultValue={value}/>
+            </FormField>
+        );
+    }
+    _renderEditingFields(fields) {
         let Fields = Object.keys(fields).map((field) => {
             const type = fields[field].type;
             const value = fields[field].value;
-            return (
-                <FormField label={field} htmlFor={"form-input-"+field} key={field}>
-                    <FormInput type={type} multiline={type === 'textarea' ? true : false} placeholder={"Enter " + field} name={"form-input-"+field} onChange={this.handleChange.bind(this, field)} defaultValue={value}/>
-                </FormField>
-            );
+            return this._renderEditingField(field, type, value);
         });
         return Fields;
     }
@@ -74,7 +77,7 @@ class EntityEditingBlock extends Component {
             <Modal isOpen={this.props.isModalOpen} onCancel={this.toggleModal} backdropClosesModal>
                 <Modal.Header text={"Insert " + this.props.label} showCloseButton onClose={this.toggleModal} />
                 <Modal.Body>
-                    {this.renderEditingFields(this.state.editingFields)}
+                    {this._renderEditingFields(this.state.editingFields)}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type="primary" onClick={this.handleSave}>Save</Button>
