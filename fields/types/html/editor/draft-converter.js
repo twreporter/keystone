@@ -103,10 +103,10 @@ function convertBlocksToApiData (blocks, entityMap) {
                 let style = quoteTypes[block.type].style;
                 let converted = InlineStylesProcessor(inlineTagMap, defaultEntityTagMap, entityMap, block);
                 // set type as blockquote for easy understanding
-                apiDataArr = apiDataArr.push(new ApiDataInstance({type: 'blockquote', content: [converted], styles: [style]}));
+                apiDataArr = apiDataArr.push(new ApiDataInstance({id: block.key, type: 'blockquote', content: [converted], styles: [style]}));
             } else {
                 let converted = InlineStylesProcessor(inlineTagMap, defaultEntityTagMap, entityMap, block);
-                apiDataArr = apiDataArr.push(new ApiDataInstance({type: block.type, content: [converted]}));
+                apiDataArr = apiDataArr.push(new ApiDataInstance({id: block.key, type: block.type, content: [converted]}));
             }
         } else {
             let converted = InlineStylesProcessor(inlineTagMap, defaultEntityTagMap, entityMap, block);
@@ -120,7 +120,7 @@ function convertBlocksToApiData (blocks, entityMap) {
                 content.push(converted);
             } else if (nestLevel[0] !== block.type) {
                 // previous block is a different item-list.
-                apiDataArr = apiDataArr.push(new ApiDataInstance({type: nestLevel[0], content: [content]}));
+                apiDataArr = apiDataArr.push(new ApiDataInstance({id: block.key, type: nestLevel[0], content: [content]}));
                 content = [converted];
                 nestLevel[0] = block.type;
             }
@@ -129,7 +129,7 @@ function convertBlocksToApiData (blocks, entityMap) {
 
     // last block is a item-list
     if (blocks.length > 0 && nestLevel.length > 0) {
-        apiDataArr = apiDataArr.push(new ApiDataInstance({type: blocks[blocks.length - 1].type, content: content}));
+      apiDataArr = apiDataArr.push(new ApiDataInstance({id: block.key, type: blocks[blocks.length - 1].type, content: content}));
     }
 
     return apiDataArr;

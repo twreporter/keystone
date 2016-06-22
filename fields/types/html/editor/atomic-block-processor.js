@@ -63,7 +63,7 @@ const processor = {
             default:
                 return;
         }
-        return new ApiDataInstance({alignment, type, content})
+        return new ApiDataInstance({id: block.key, alignment, type, content})
     },
 
     convertAudioBlock(entity) {
