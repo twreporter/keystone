@@ -1,45 +1,51 @@
 'use strict';
 
 import { Entity } from 'draft-js';
+import { AlignedInfoBox } from 'react-article-components/lib/main'
+import _ from 'lodash';
 import React from 'react';
 
 export default class InfoBoxBlock extends React.Component {
   constructor(props) {
     super(props);
-    let value = this._getValue() || {};
-    this.title = value.title || '';
-    this.body = value.body || '';
+    this.state = {
+        data:  this._getValue(props) || {}
+    }
   }
 
-  componentWillUnmount() {
-      this.title = '';
-      this.body = '';
+  componentWillReceiveProps(nextProps) {
+      this.setState({
+          data: this._getValue(nextProps) || {}
+      });
   }
 
-  _getValue() {
-      const entityKey = this.props.block.getEntityAt(0);
-      return entityKey ? Entity.get(entityKey).getData(): null;
+  _getValue(props) {
+      const blockKey = props.block.getKey();
+      let blocks = _.get(props, [ 'blockProps', 'data'], []);
+      let rtn = null;
+      for(let block of blocks) {
+        if (_.get(block, 'id') === blockKey) {
+          rtn = _.merge({}, block);
+          break;
+        }
+      }
+      return rtn;
   }
 
   render() {
-      let { className } = this.props;
-      if (!this.body && !this.title) {
+      if (!this.state.data) {
           return null;
       }
 
       return (
           <div
-              className={className}
               contentEditable={false}
-              style={{border: '1px solid'}}
               >
-              <div>
-                  <span>{this.title}</span>
-              </div>
-              <div>
-                  <span>{this.body}</span>
-              </div>
-              {this.props.children}
+              <AlignedInfoBox
+                  {...this.state.data}
+                  >
+                  {this.props.children}
+              </AlignedInfoBox>
           </div>
       );
   }

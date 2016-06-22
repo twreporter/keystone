@@ -61,6 +61,12 @@ module.exports = Field.create({
         return !shallowEqual(this.state, nextState);
     },
 
+    _convertToApiData(editorState) {
+        const content = convertToRaw(editorState.getCurrentContent());
+        const apiData = DraftConverter.convertToApiData(content);
+        return apiData.toJS();
+    },
+
     onChange (editorState) {
         const content = convertToRaw(editorState.getCurrentContent());
         const cHtml = DraftConverter.convertToHtml(content);
@@ -239,8 +245,6 @@ module.exports = Field.create({
 
     _blockRenderer (block) {
         if (block.getType() === 'atomic') {
-            const entityKey = block.getEntityAt(0);
-            const data =  entityKey ? Entity.get(entityKey).getData(): null;
             return {
                 component: AtomicBlock,
                 props: {
@@ -251,7 +255,7 @@ module.exports = Field.create({
                     refreshEditorState: () => {
                         this.onChange(refreshEditorState(this.state.editorState));
                     },
-                    alignment: data && data.alignment
+                    data: this._convertToApiData(this.state.editorState)
                 }
             }
         }
