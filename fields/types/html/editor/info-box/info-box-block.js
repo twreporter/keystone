@@ -1,7 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
-import { AlignedInfoBox } from 'twreporter-react-article-components/lib/main'
+import { AlignedInfoBox } from 'react-article-components/lib/main'
 import _ from 'lodash';
 import React from 'react';
 
