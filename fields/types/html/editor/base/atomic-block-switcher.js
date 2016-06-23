@@ -11,7 +11,7 @@ import InfoBoxBlock from '../info-box/info-box-block';
 import React from 'react';
 import SlideshowBlock from '../slideshow/slideshow-block';
 
-class AtomicBlock extends React.Component {
+class AtomicBlockSwitcher extends React.Component {
     constructor(props) {
         super(props);
         this.alignLeft = this._alignLeft.bind(this);
@@ -101,4 +101,4 @@ class AtomicBlock extends React.Component {
     }
 }
 
-export default Alignment(AtomicBlock);
+export default Alignment(AtomicBlockSwitcher);

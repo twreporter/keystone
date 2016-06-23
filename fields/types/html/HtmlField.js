@@ -6,7 +6,7 @@ import { Button, FormInput } from 'elemental';
 import ENTITY from './editor/entities';
 import decorator from './editor/entity-decorator'
 import quoteTypes from './editor/quote/quote-types';
-import AtomicBlock from './editor/base/atomic-block';
+import AtomicBlockSwitcher from './editor/base/atomic-block-switcher';
 import BlockModifier from './editor/modifiers/index';
 import DraftConverter from './editor/draft-converter';
 import DraftEditor from './editor/draft-editor';
@@ -246,7 +246,7 @@ module.exports = Field.create({
     _blockRenderer (block) {
         if (block.getType() === 'atomic') {
             return {
-                component: AtomicBlock,
+                component: AtomicBlockSwitcher,
                 props: {
                     onFinishEdit: (blockKey, valueChanged) => {
                         const _editorState = BlockModifier.handleAtomicEdit(this.state.editorState, blockKey, valueChanged);

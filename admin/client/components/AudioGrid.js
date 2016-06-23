@@ -1,11 +1,11 @@
 'use strict';
 import { shallowEqual } from 'react-pure-render';
+import { Audio }from 'react-article-components';
 import { Button } from 'elemental';
 import { ImageItem } from './ImageGrid';
 import { Pill } from 'elemental';
 import _ from 'lodash';
 import raf from 'raf' // requestAnimationFrame polyfill
-import Audio from 'react-howler';
 import React from 'react';
 
 class AudioItem extends React.Component {
@@ -85,30 +85,17 @@ class AudioItem extends React.Component {
           width: `${width}%`
       }
       return (
-          <div onClick={this._handleSelect.bind(this)} style={style}>
-              <ImageItem
-                  doShowRemove={doShowRemove}
-                  id={_.get(coverPhoto, 'id')}
-                  url={_.get(image, 'url')}
-                  width={100}
-              />
-              <Audio
-                  src={audio}
-                  playing={this.state.playing}
-                  onLoad={this.handleOnLoad}
-                  onPlay={this.handleOnPlay}
-                  onEnd={this.handleOnEnd}
-                  loop={this.state.loop}
-                  mute={this.state.mute}
-                  ref={(ref) => this.player = ref}
-              />
-              <h3>{title}</h3>
-              <div dangerouslySetInnerHTML={{__html: description}} />
-              <Button type="primary" onClick={this.handleToggle}>
-                  {(this.state.playing) ? 'Pause' : 'Play' }
-              </Button>
-          </div>
-      )
+        <div onClick={this._handleSelect.bind(this)} style={style}>
+          <Audio
+            content={[{
+              url: audio,
+              coverPhoto,
+              title,
+              description
+            }]}
+          />
+        </div>
+      );
   }
 }
 
@@ -154,7 +141,6 @@ class AudioGrid extends React.Component {
     }
 
     _handleSelect (audio) {
-        console.log('click audio:', audio);
         this.props.onSelect(audio);
     }
 
