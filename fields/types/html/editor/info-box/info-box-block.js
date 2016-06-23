@@ -1,35 +1,12 @@
 'use strict';
 
-import { Entity } from 'draft-js';
-import { AlignedInfoBox } from 'react-article-components/lib/main'
-import _ from 'lodash';
+import { AlignedInfoBox } from 'react-article-components'
+import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import React from 'react';
 
-export default class InfoBoxBlock extends React.Component {
+export default class InfoBoxBlock extends AtomicBlockRendererMixin(React.Component) {
   constructor(props) {
     super(props);
-    this.state = {
-        data:  this._getValue(props) || {}
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-      this.setState({
-          data: this._getValue(nextProps) || {}
-      });
-  }
-
-  _getValue(props) {
-      const blockKey = props.block.getKey();
-      let blocks = _.get(props, [ 'blockProps', 'data'], []);
-      let rtn = null;
-      for(let block of blocks) {
-        if (_.get(block, 'id') === blockKey) {
-          rtn = _.merge({}, block);
-          break;
-        }
-      }
-      return rtn;
   }
 
   render() {
