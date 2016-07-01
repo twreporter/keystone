@@ -26,9 +26,11 @@ export default class InfoBoxBlock extends AtomicBlockRendererMixin(React.Compone
       let blockContent = _.get(this.state.data, [ 'content', 0 ], {});
       let title = blockContent.title;
       let body = blockContent.body;
+      let draftRawObj = blockContent.draftRawObj;
       const EditBlock = (
           <InfoBoxEditingBlock
               body={body}
+              draftRawObj={draftRawObj}
               label='infobox'
               isModalOpen={this.state.editMode}
               title={title}

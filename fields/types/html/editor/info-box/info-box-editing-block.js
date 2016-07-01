@@ -10,17 +10,7 @@ import React from 'react';
 class InfoBoxEditingBlock extends EntityEditingBlock {
     constructor(props) {
         super(props);
-        const processedHTML = DraftPasteProcessor.processHTML(props.body);
-        const initialState = ContentState.createFromBlockArray(processedHTML);
-        let editorState = EditorState.createWithContent(initialState, decorator);
-
-        this.state = {
-            editorState: editorState,
-            editingFields: {
-                title: props.title,
-                body: props.body
-            }
-        }
+        this.state.editorState = this._initEditorState(props.draftRawObj);
     }
 
     // overwrite EntityEditingBlock._composeEditingFields
@@ -37,6 +27,7 @@ class InfoBoxEditingBlock extends EntityEditingBlock {
         };
     }
 
+
     // overwrite EntityEditingBlock._decomposeEditingFields
     _decomposeEditingFields(fields) {
         let { editorState } = this.state;
@@ -44,7 +35,8 @@ class InfoBoxEditingBlock extends EntityEditingBlock {
         const cHtml = DraftConverter.convertToHtml(content);
         return {
             title: fields.title.value,
-            body: cHtml
+            body: cHtml,
+            draftRawObj: content
         }
     }
 

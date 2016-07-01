@@ -30,7 +30,8 @@ const processor = {
                 alignment = entity.data && entity.data.alignment || alignment;
                 content = [ {
                     text: entity.data.text,
-                    annotation: entity.data.annotation
+                    annotation: entity.data.annotation,
+                    draftRawObj: entity.data.draftRawObj
                 } ];
                 break;
             case ENTITY.audio.type:
@@ -41,7 +42,8 @@ const processor = {
                 alignment = entity.data && entity.data.alignment || alignment;
                 content = [ {
                     title: entity.data.title,
-                    body: entity.data.body
+                    body: entity.data.body,
+                    draftRawObj: entity.data.draftRawObj
                 }];
                 break;
             case ENTITY.embeddedCode.type:

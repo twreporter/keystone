@@ -9,8 +9,6 @@ export function replaceAtomicBlock(atomicBlockType, editorState, blockKey, value
   const block = content.getBlockForKey(blockKey);
   const entityKey = block.getEntityAt(0);
   let requiredProps = _.get(ENTITY, [ atomicBlockType, 'requiredProps' ])
-  console.log('replaceAtomicBlock')
-  console.log('value:', value);
   if (requiredProps) {
     Entity.mergeData(entityKey, _.pick(value, requiredProps));
   } else {

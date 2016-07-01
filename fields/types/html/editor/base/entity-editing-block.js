@@ -1,6 +1,6 @@
 'use strict';
 import { Button, FormField, FormInput, InputGroup, Modal } from 'elemental';
-import { EditorState, Entity, Modifier, RichUtils } from 'draft-js';
+import { convertFromRaw, EditorState, Entity, Modifier, RichUtils } from 'draft-js';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from '../editor-buttons';
 import decorator from '../entity-decorator';
 import quoteTypes from '../quote/quote-types';
@@ -13,18 +13,19 @@ class EntityEditingBlock extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            editingFields: {},
-            editorState: EditorState.createEmpty(decorator)
-        };
         this.toggleModal = this._toggleModal.bind(this);
         this.handleSave = this._handleSave.bind(this);
         this.composeEditingFields = this._composeEditingFields.bind(this);
         this.focus = this._focus.bind(this);
         this.handleEditorStateChange = this._handleEditorStateChange.bind(this);
-        this.toggleBlockTyle = this._toggleBlockStyle.bind(this);
+        this.toggleBlockType = this._toggleBlockStyle.bind(this);
         this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
         this.toggleEntity = this._toggleEntity.bind(this);
+        this._editingFields = this.composeEditingFields(props);
+        this.state = {
+            editingFields: this._editingFields,
+            editorState: EditorState.createEmpty(decorator)
+        };
     }
 
     componentWillReceiveProps(nextProps) {
@@ -38,6 +39,17 @@ class EntityEditingBlock extends Component {
         this._editingFields = null;
     }
 
+    _initEditorState(draftRawObj) {
+        let editorState;
+        if (draftRawObj) {
+            let contentState = convertFromRaw(draftRawObj);
+            editorState = EditorState.createWithContent(contentState, decorator);
+        } else {
+            editorState = EditorState.createEmpty(decorator);
+        }
+        return editorState;
+    }
+
     // need to be overwrited
     _handleEditorStateChange(editorState) {
         this.setState({
@@ -48,13 +60,13 @@ class EntityEditingBlock extends Component {
 
     // this function should be overwritten by children
     _composeEditingFields(props) {
-        console.warning('_composeEditingFields should be extended');
+        console.warn('_composeEditingFields should be extended');
         return {};
     }
 
     // this function should be overwritten by children
     _decomposeEditingFields(fields) {
-        console.warning('_decomposeEditingFields should be extended');
+        console.warn('_decomposeEditingFields should be extended');
         return {};
     }
 
@@ -140,7 +152,7 @@ class EntityEditingBlock extends Component {
         return Fields;
     }
 
-    _toggleBlockStyle(blockStyle) {
+    _toggleBlockStyle(blockType) {
         this.handleEditorStateChange(
             RichUtils.toggleBlockType(
                 this.state.editorState,

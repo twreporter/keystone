@@ -25,9 +25,11 @@ export default class AnnotationBlock extends AtomicBlockRendererMixin(React.Comp
       let blockContent = _.get(this.state.data, [ 'content', 0 ], {});
       let text = blockContent.text;
       let annotation = blockContent.annotation;
+      let draftRawObj = blockContent.draftRawObj;
       const EditBlock = (
           <AnnotationEditingBlock
               annotation={annotation}
+              draftRawObj={draftRawObj}
               label='annotation'
               isModalOpen={this.state.editMode}
               text={text}

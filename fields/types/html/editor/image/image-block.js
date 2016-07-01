@@ -44,7 +44,7 @@ export default class ImageBlock extends AtomicBlockRendererMixin(React.Component
       return (
           <div
               contentEditable={false}
-              onClick={this.handleClick}
+              onClick={this.toggleEditMode}
               style={{ cursor: 'pointer' }}
               >
               <AlignedImage

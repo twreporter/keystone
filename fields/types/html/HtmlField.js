@@ -148,14 +148,14 @@ module.exports = Field.create({
     },
 
     toggleAnnotation(entity, value) {
-        const {text, annotation} = value;
-        const _editorState = insertAnnotationBlock(this.state.editorState, ENTITY.annotation.type, text, annotation);
+        const {text, annotation, draftRawObj} = value;
+        const _editorState = insertAnnotationBlock(this.state.editorState, ENTITY.annotation.type, text, annotation, draftRawObj);
         this.onChange(_editorState);
     },
 
     toggleInfoBox(entity, value) {
-        const {body, title} = value;
-        const _editorState = insertInfoBoxBlock(this.state.editorState, ENTITY.infobox.type, title, body);
+        const {body, title, draftRawObj} = value;
+        const _editorState = insertInfoBoxBlock(this.state.editorState, ENTITY.infobox.type, title, body, draftRawObj);
         this.onChange(_editorState);
     },
 
@@ -254,6 +254,9 @@ module.exports = Field.create({
                         // workaround here.
                         // use refreshEditorState to make the Editor rerender
                         this.onChange(refreshEditorState(_editorState));
+                    },
+                    refreshEditorState: () => {
+                        this.onChange(refreshEditorState(this.state.editorState));
                     },
                     data: this._convertToApiData(this.state.editorState)
                 }
