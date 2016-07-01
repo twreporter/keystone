@@ -8,9 +8,7 @@ import DraftEditor from '../draft-editor';
 import ENTITY from '../entities';
 import React, { Component } from 'react';
 
-// This is an abstract class to be extended
-class EntityEditingBlock extends Component {
-
+let EntityEditingBlock = (superclass) => class extends Component {
     constructor(props) {
         super(props);
         this.toggleModal = this._toggleModal.bind(this);
@@ -228,18 +226,6 @@ class EntityEditingBlock extends Component {
         );
     }
 }
-
-EntityEditingBlock.propTypes = {
-    label: React.PropTypes.string,
-    isModalOpen: React.PropTypes.bool,
-    onToggle: React.PropTypes.func.isRequired,
-    toggleModal: React.PropTypes.func.isRequired
-};
-
-EntityEditingBlock.defaultProps = {
-    label: 'default',
-    isModalOpen: true
-};
 
 // block settings
 const BLOCK_TYPES = [

@@ -4,13 +4,12 @@ import decorator from '../entity-decorator';
 import objectAssgin from 'object-assign';
 import DraftConverter from '../draft-converter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
-import EntityEditingBlock from '../base/entity-editing-block';
+import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';
 
-class AnnotationEditingBlock extends EntityEditingBlock {
+class AnnotationEditingBlock extends EntityEditingBlockMixin(React.Component) {
     constructor(props) {
         super(props);
-
         this.state.editorState = this._initEditorState(props.draftRawObj);
     }
 
@@ -51,14 +50,20 @@ class AnnotationEditingBlock extends EntityEditingBlock {
 
 AnnotationEditingBlock.displayName = 'AnnotationEditingBlock';
 
-AnnotationEditingBlock.propTypes = objectAssgin({}, EntityEditingBlock.propTypes, {
+AnnotationEditingBlock.propTypes = {
     annotation: React.PropTypes.string,
-    text: React.PropTypes.string
-});
+    draftRawObj: React.PropTypes.object,
+    isModalOpen: React.PropTypes.bool,
+    onToggle: React.PropTypes.func.isRequired,
+    text: React.PropTypes.string,
+    toggleModal: React.PropTypes.func
+};
 
-AnnotationEditingBlock.defaultProps = objectAssgin({}, EntityEditingBlock.defaultProps, {
+AnnotationEditingBlock.defaultProps ={
     annotation: '',
+    draftRawObj: null,
+    isModalOpen: false,
     text: ''
-});
+};
 
 export default AnnotationEditingBlock;

@@ -1,9 +1,8 @@
 'use strict';
-import objectAssgin from 'object-assign';
-import EntityEditingBlock from '../base/entity-editing-block';
+import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';
 
-class LinkEditingBlock extends EntityEditingBlock {
+class LinkEditingBlock extends EntityEditingBlockMixin(React.Component) {
 
     constructor(props) {
         super(props);
@@ -38,14 +37,18 @@ class LinkEditingBlock extends EntityEditingBlock {
 
 LinkEditingBlock.displayName = 'LinkEditingBlock';
 
-LinkEditingBlock.propTypes = objectAssgin({}, EntityEditingBlock.propTypes, {
+LinkEditingBlock.propTypes = {
     text: React.PropTypes.string,
+    isModalOpen: React.PropTypes.bool,
+    onToggle: React.PropTypes.func.isRequired,
+    toggleModal: React.PropTypes.func,
     url: React.PropTypes.string
-});
+};
 
-LinkEditingBlock.defaultProps = objectAssgin({}, EntityEditingBlock.defaultProps, {
+LinkEditingBlock.defaultProps = {
     text: '',
-    url: ''
-});
+    isModalOpen: false,
+    url: '',
+};
 
 export default LinkEditingBlock;

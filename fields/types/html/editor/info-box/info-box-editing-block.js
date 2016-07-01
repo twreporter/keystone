@@ -1,13 +1,12 @@
 'use strict'
 import { convertToRaw, ContentState, EditorState } from 'draft-js';
 import decorator from '../entity-decorator';
-import objectAssgin from 'object-assign';
 import DraftConverter from '../draft-converter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
-import EntityEditingBlock from '../base/entity-editing-block';
+import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';
 
-class InfoBoxEditingBlock extends EntityEditingBlock {
+class InfoBoxEditingBlock extends EntityEditingBlockMixin(React.Component) {
     constructor(props) {
         super(props);
         this.state.editorState = this._initEditorState(props.draftRawObj);
@@ -51,14 +50,20 @@ class InfoBoxEditingBlock extends EntityEditingBlock {
 
 InfoBoxEditingBlock.displayName = 'InfoBoxEditingBlock';
 
-InfoBoxEditingBlock.propTypes = objectAssgin({}, EntityEditingBlock.propTypes, {
+InfoBoxEditingBlock.propTypes = {
     body: React.PropTypes.string,
-    title: React.PropTypes.string
-});
+    draftRawObj: React.PropTypes.object,
+    isModalOpen: React.PropTypes.bool,
+    onToggle: React.PropTypes.func.isRequired,
+    title: React.PropTypes.string,
+    toggleModal: React.PropTypes.func
+};
 
-InfoBoxEditingBlock.defaultProps = objectAssgin({}, EntityEditingBlock.defaultProps, {
+InfoBoxEditingBlock.defaultProps = {
     body: '',
+    draftRawObj: null,
+    isModalOpen: false,
     title: ''
-});
+};
 
 export default InfoBoxEditingBlock;
