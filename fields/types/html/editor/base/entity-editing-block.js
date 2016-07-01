@@ -71,7 +71,7 @@ class EntityEditingBlock extends Component {
 		const { editorState } = this.state;
 		const newState = RichUtils.handleKeyCommand(editorState, command);
 		if (newState) {
-			this.onChange(newState);
+			this.handleEditorStateChange(newState);
 			return true;
 		}
 		return false;
@@ -141,7 +141,7 @@ class EntityEditingBlock extends Component {
     }
 
     _toggleBlockStyle(blockStyle) {
-        this.onChange(
+        this.handleEditorStateChange(
             RichUtils.toggleBlockType(
                 this.state.editorState,
                 blockType
@@ -159,7 +159,7 @@ class EntityEditingBlock extends Component {
     }
 
     _toggleInlineStyle(inlineStyle) {
-        this.onChange(
+        this.handleEditorStateChange(
             RichUtils.toggleInlineStyle(
                 this.state.editorState,
                 inlineStyle
@@ -197,7 +197,7 @@ class EntityEditingBlock extends Component {
             entityKey
         );
         const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
-        this.onChange(_editorState);
+        this.handleEditorStateChange(_editorState);
     }
 
 

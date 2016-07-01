@@ -3,6 +3,7 @@
 import { Entity } from 'draft-js';
 import ENTITY from '../entities';
 import Alignment from './block-alignment-wrapper';
+import AnnotationBlock from '../annotation/annotation-block';
 import AudioBlock from '../audio/audio-block';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
@@ -65,6 +66,9 @@ class AtomicBlockSwitcher extends React.Component {
         let BlockComponent;
 
         switch (type) {
+            case ENTITY.annotation.type:
+                BlockComponent = AnnotationBlock;
+                break;
             case ENTITY.audio.type:
                 BlockComponent = AudioBlock;
                 break;

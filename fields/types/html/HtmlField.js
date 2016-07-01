@@ -1,5 +1,5 @@
 import { convertFromRaw, convertToRaw, ContentState, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { insertAudioBlock, insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './editor/modifiers/insert-atomic-block';
+import { insertAnnotationBlock, insertAudioBlock, insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './editor/modifiers/insert-atomic-block';
 import { shallowEqual } from 'react-pure-render';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
@@ -149,8 +149,8 @@ module.exports = Field.create({
 
     toggleAnnotation(entity, value) {
         const {text, annotation} = value;
-        const entityKey = annotation !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || annotation, annotation: annotation}) : null;
-        this._toggleTextWithEntity(entityKey, text || annotation);
+        const _editorState = insertAnnotationBlock(this.state.editorState, ENTITY.annotation.type, text, annotation);
+        this.onChange(_editorState);
     },
 
     toggleInfoBox(entity, value) {
