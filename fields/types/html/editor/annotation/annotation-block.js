@@ -11,10 +11,8 @@ export default class AnnotationBlock extends AtomicBlockRendererMixin(React.Comp
   }
 
   _handleEditingBlockChange(value) {
-      // call AtomicBlockRendererMixin.onValueChange
       this.onValueChange(value);
-      // call AtomicBlockRendererMixin.handleFinish
-      this.handleFinish();
+      this.toggleEditMode();
   }
 
   render() {

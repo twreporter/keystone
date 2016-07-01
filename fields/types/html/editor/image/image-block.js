@@ -20,6 +20,7 @@ export default class ImageBlock extends AtomicBlockRendererMixin(React.Component
   // override AtomicBlockRendererMixin._onValueChange
   _onValueChange(value) {
       this.value = _.get(value, 0)
+      this.props.blockProps.onFinishEdit(this.props.block.getKey(), this.value);
   }
 
   render() {
@@ -27,16 +28,13 @@ export default class ImageBlock extends AtomicBlockRendererMixin(React.Component
           return null;
       }
 
-      let imageObj = _.get(this.state.data, [ 'content', 0 ], {});
-      let image = _.get(imageObj, 'tablet' );
-      image.src = _.get(image, 'url');
-      image.description = _.get(imageObj, 'description' )
+      let image = _.get(this.state.data, [ 'content', 0 ], {});
 
       const EditBlock = this.state.editMode ? this._renderImageSelector({
           apiPath: 'images',
           isSelectionOpen: true,
           onChange: this.onValueChange,
-          onFinish: this.handleFinish,
+          onFinish: this.toggleEditMode,
           selectedImages: [image],
           selectionLimit: 1
       }) : null;

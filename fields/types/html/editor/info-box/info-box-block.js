@@ -12,10 +12,8 @@ export default class InfoBoxBlock extends AtomicBlockRendererMixin(React.Compone
   }
 
   _handleEditingBlockChange(value) {
-      // call AtomicBlockRendererMixin.onValueChange
       this.onValueChange(value);
-      // call AtomicBlockRendererMixin.handleFinish
-      this.handleFinish();
+      this.toggleEditMode();
   }
 
   render() {
