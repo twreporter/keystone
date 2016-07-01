@@ -42,11 +42,7 @@ class InfoBoxEditingBlock extends DraftjsEditingMixin(EntityEditingBlock) {
     _decomposeEditingFields(fields) {
         let { editorState } = this.state;
         const content = convertToRaw(editorState.getCurrentContent());
-        const cHtml = DraftConverter.convertToHtml(content, {
-            unstyled: `<div class="info-box">%content%</div>\n`,
-        }, {
-            link: ['<a class="info-box-link" href="<%= url %>"><span class="info-box-link-text">', '</span></a>'],
-        });
+        const cHtml = DraftConverter.convertToHtml(content);
         return {
             title: fields.title.value,
             body: cHtml

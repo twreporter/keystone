@@ -1,7 +1,8 @@
 'use strict';
 import { EditorState, Entity, Modifier, RichUtils } from 'draft-js';
-import { EntityButtons, InlineStyleButtons } from '../editor-buttons';
+import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from '../editor-buttons';
 import decorator from '../entity-decorator';
+import quoteTypes from '../quote/quote-types';
 import DraftEditor from '../draft-editor';
 import ENTITY from '../entities';
 import React from 'react';
@@ -15,6 +16,7 @@ let DraftjsEditingMixin = (superclass) => class extends superclass {
         };
         this.focus = this._focus.bind(this);
         this.onChange = this._onChange.bind(this);
+        this.toggleBlockTyle = this._toggleBlockStyle.bind(this);
         this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
         this.toggleEntity = this._toggleEntity.bind(this);
     }
@@ -39,6 +41,11 @@ let DraftjsEditingMixin = (superclass) => class extends superclass {
             <div className="RichEditor-root">
                 <div className={'DraftEditor-controls'}>
                     <div className={'DraftEditor-controlsInner'}>
+                        <BlockStyleButtons
+                          buttons={BLOCK_TYPES}
+                          editorState={editorState}
+                          onToggle={this.toggleBlockType}
+                        />
                         <InlineStyleButtons
                             buttons={INLINE_STYLES}
                             editorState={editorState}
@@ -101,19 +108,37 @@ let DraftjsEditingMixin = (superclass) => class extends superclass {
         }
     }
 
-	_toggleInlineStyle(inlineStyle) {
-		this.onChange(
-			RichUtils.toggleInlineStyle(
-				this.state.editorState,
-				inlineStyle
-			)
-		);
-	}
+    _toggleBlockStyle(blockStyle) {
+        this.onChange(
+            RichUtils.toggleBlockType(
+                this.state.editorState,
+                blockType
+            )
+        );
+    }
+
+    _toggleInlineStyle(inlineStyle) {
+        this.onChange(
+            RichUtils.toggleInlineStyle(
+                this.state.editorState,
+                inlineStyle
+            )
+        );
+    }
 
     _focus() {
         this.refs.editor.focus();
     }
 }
+
+// block settings
+const BLOCK_TYPES = [
+  { label: quoteTypes.blockquote.label, style: 'blockquote', icon: 'fa-quote-right', text: ' Block' },
+	{ label: 'H1', style: 'header-one', icon: 'fa-header', text: '1' },
+	{ label: 'H2', style: 'header-two', icon: 'fa-header', text: '2' },
+	{ label: 'OL', style: 'ordered-list-item', icon: 'fa-list-ol', text: '' },
+	{ label: 'UL', style: 'unordered-list-item', icon: 'fa-list-ul', text: '' },
+];
 
 // inline style settings
 var INLINE_STYLES = [

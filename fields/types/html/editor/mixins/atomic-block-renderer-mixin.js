@@ -5,14 +5,22 @@ let AtomicBlockRendererMixin = (superclass) => class extends superclass {
     constructor(props) {
         super(props);
         this.state = {
-            data:  this._getValue(props) || {}
+            data:  this._getValue(props) || {},
+            editMode: false
         }
+        this.value = null;
+        this.handleClick = this._handleClick.bind(this);
+        this.handleFinish = this._handleFinish.bind(this);
+        this.onValueChange = this._onValueChange.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             data: this._getValue(nextProps) || {}
         });
+    }
+    componentWillUnmout() {
+        this.value = null;
     }
 
     _getValue(props) {
@@ -27,6 +35,31 @@ let AtomicBlockRendererMixin = (superclass) => class extends superclass {
         }
         return rtn;
     }
+
+    _handleClick(e) {
+        e.stopPropagation();
+        if (this.state.editMode) {
+            return;
+        }
+
+        this.setState({
+            editMode: true,
+        });
+    }
+
+    _handleFinish() {
+        this.setState({
+            editMode: false,
+        });
+
+        this.props.blockProps.onFinishEdit(this.props.block.getKey(), this.value);
+    }
+
+    // need to override by children to update the data back to parent component
+    _onValueChange(value) {
+        this.value = value;
+    }
+
 }
 
 export default AtomicBlockRendererMixin;

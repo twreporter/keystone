@@ -21,10 +21,6 @@ class DraftEditor extends React.Component {
     });
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-      return !shallowEqual(this.state, nextState);
-  }
-
   _handleEditorStateChange(editorState) {
     this.props.onChange(editorState);
   }
@@ -52,6 +48,7 @@ class DraftEditor extends React.Component {
               handleKeyCommand={this.handleKeyCommand}
               onChange={this.handleEditorStateChange}
               placeholder="Enter HTML Here..."
+              readOnly={this.props.readOnly}
               spellCheck={this.props.spellCheck}
               ref='editor'
           />
@@ -64,12 +61,14 @@ DraftEditor.propTypes = {
   customStyleMap: React.PropTypes.object,
   editorState: React.PropTypes.object,
   onChange: React.PropTypes.func.isRequired,
+  readOnly: React.PropTypes.bool,
   spellCheck: React.PropTypes.bool
 };
 
 DraftEditor.defaultProps = {
   customStyleMap: {},
   editorState: {},
+  readOnly: false,
   spellCheck: true
 };
 

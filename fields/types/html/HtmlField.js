@@ -250,10 +250,10 @@ module.exports = Field.create({
                 props: {
                     onFinishEdit: (blockKey, valueChanged) => {
                         const _editorState = BlockModifier.handleAtomicEdit(this.state.editorState, blockKey, valueChanged);
-                        this.onChange(_editorState);
-                    },
-                    refreshEditorState: () => {
-                        this.onChange(refreshEditorState(this.state.editorState));
+
+                        // workaround here.
+                        // use refreshEditorState to make the Editor rerender
+                        this.onChange(refreshEditorState(_editorState));
                     },
                     data: this._convertToApiData(this.state.editorState)
                 }
