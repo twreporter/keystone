@@ -9,7 +9,7 @@ let AtomicBlockRendererMixin = (superclass) => class extends superclass {
             editMode: false
         }
         this.value = null;
-        this.handleClick = this._handleClick.bind(this);
+        this.toggleEditMode = this._toggleEditMode.bind(this);
         this.handleFinish = this._handleFinish.bind(this);
         this.onValueChange = this._onValueChange.bind(this);
     }
@@ -36,14 +36,12 @@ let AtomicBlockRendererMixin = (superclass) => class extends superclass {
         return rtn;
     }
 
-    _handleClick(e) {
-        e.stopPropagation();
-        if (this.state.editMode) {
-            return;
+    _toggleEditMode(e) {
+        if (typeof _.get(e, 'stopPropagation') === 'function') {
+            e.stopPropagation();
         }
-
         this.setState({
-            editMode: true,
+            editMode: !this.state.editMode
         });
     }
 
@@ -59,7 +57,6 @@ let AtomicBlockRendererMixin = (superclass) => class extends superclass {
     _onValueChange(value) {
         this.value = value;
     }
-
 }
 
 export default AtomicBlockRendererMixin;

@@ -2,7 +2,7 @@
 
 import ENTITY from '../entities';
 import { insertImageBlock, insertImagesBlock } from './insert-atomic-block';
-import { replaceImageBlock, replaceImagesBlock } from './replace-block';
+import { replaceAtomicBlock, replaceImageBlock, replaceImagesBlock } from './replace-block';
 import { Entity } from 'draft-js';
 import removeBlock from './remove-block';
 
@@ -18,11 +18,6 @@ const handleAtomicEdit = (editorState, blockKey, valueChanged) => {
     }
 
     switch (blockType) {
-        case ENTITY.image.type:
-            if (valueChanged) {
-                return replaceImageBlock(editorState, blockKey, valueChanged);
-            }
-            return removeBlock(editorState, blockKey);
         case ENTITY.slideshow.type:
             if (Array.isArray(valueChanged) && valueChanged.length > 0) {
                 return replaceImagesBlock(editorState, blockKey, valueChanged);
@@ -31,6 +26,15 @@ const handleAtomicEdit = (editorState, blockKey, valueChanged) => {
         case ENTITY.imageDiff.type:
             if (Array.isArray(valueChanged) && valueChanged.length === 2) {
                 return replaceImagesBlock(editorState, blockKey, valueChanged);
+            }
+            return removeBlock(editorState, blockKey);
+        case ENTITY.annotation.type:
+        case ENTITY.audio.type:
+        case ENTITY.embeddedCode.type:
+        case ENTITY.image.type:
+        case ENTITY.infobox.type:
+            if (valueChanged) {
+                return replaceAtomicBlock(blockType, editorState, blockKey, valueChanged);
             }
             return removeBlock(editorState, blockKey);
         default:

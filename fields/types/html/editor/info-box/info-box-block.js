@@ -2,11 +2,20 @@
 
 import { AlignedInfoBox } from 'react-article-components'
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
+import InfoBoxEditingBlock from './info-box-editing-block';
 import React from 'react';
 
 export default class InfoBoxBlock extends AtomicBlockRendererMixin(React.Component) {
   constructor(props) {
     super(props);
+    this.handleEditingBlockChange  = this._handleEditingBlockChange.bind(this);
+  }
+
+  _handleEditingBlockChange(value) {
+      // call AtomicBlockRendererMixin.onValueChange
+      this.onValueChange(value);
+      // call AtomicBlockRendererMixin.handleFinish
+      this.handleFinish();
   }
 
   render() {
@@ -14,15 +23,32 @@ export default class InfoBoxBlock extends AtomicBlockRendererMixin(React.Compone
           return null;
       }
 
+      let blockContent = _.get(this.state.data, [ 'content', 0 ], {});
+      let title = blockContent.title;
+      let body = blockContent.body;
+      const EditBlock = (
+          <InfoBoxEditingBlock
+              body={body}
+              label='infobox'
+              isModalOpen={this.state.editMode}
+              title={title}
+              onToggle={this.handleEditingBlockChange}
+              toggleModal={this.toggleEditMode}
+          />
+      );
+
       return (
           <div
               contentEditable={false}
+              onClick={this.toggleEditMode}
+              style={{ cursor: 'pointer' }}
               >
               <AlignedInfoBox
                   {...this.state.data}
                   >
                   {this.props.children}
               </AlignedInfoBox>
+              {EditBlock}
           </div>
       );
   }

@@ -1,5 +1,11 @@
 'use strict';
 import { Button, FormField, FormInput, InputGroup, Modal } from 'elemental';
+import { EditorState, Entity, Modifier, RichUtils } from 'draft-js';
+import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from '../editor-buttons';
+import decorator from '../entity-decorator';
+import quoteTypes from '../quote/quote-types';
+import DraftEditor from '../draft-editor';
+import ENTITY from '../entities';
 import React, { Component } from 'react';
 
 // This is an abstract class to be extended
@@ -8,12 +14,17 @@ class EntityEditingBlock extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            editingFields: {}
+            editingFields: {},
+            editorState: EditorState.createEmpty(decorator)
         };
         this.toggleModal = this._toggleModal.bind(this);
-        this.handleChange = this._handleChange.bind(this);
         this.handleSave = this._handleSave.bind(this);
         this.composeEditingFields = this._composeEditingFields.bind(this);
+        this.focus = this._focus.bind(this);
+        this.handleEditorStateChange = this._handleEditorStateChange.bind(this);
+        this.toggleBlockTyle = this._toggleBlockStyle.bind(this);
+        this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
+        this.toggleEntity = this._toggleEntity.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -27,6 +38,14 @@ class EntityEditingBlock extends Component {
         this._editingFields = null;
     }
 
+    // need to be overwrited
+    _handleEditorStateChange(editorState) {
+        this.setState({
+            editorState: editorState
+        });
+    }
+
+
     // this function should be overwritten by children
     _composeEditingFields(props) {
         console.warning('_composeEditingFields should be extended');
@@ -39,30 +58,79 @@ class EntityEditingBlock extends Component {
         return {};
     }
 
-    _toggleModal() {
-        this.props.handleToggle();
+    _focus() {
+        this.refs.editor.focus();
     }
 
-    _handleChange(field, e) {
+
+    _handleEditingFieldChange(field, e) {
         this._editingFields[field].value = e.target.value;
     }
+
+	_handleKeyCommand(command) {
+		const { editorState } = this.state;
+		const newState = RichUtils.handleKeyCommand(editorState, command);
+		if (newState) {
+			this.onChange(newState);
+			return true;
+		}
+		return false;
+	}
 
     _handleSave() {
         this.setState({
             editingFields: this._editingFields
         }, () => {
-            this.props.handleToggle();
+            this.props.toggleModal();
             this.props.onToggle(this._decomposeEditingFields(this._editingFields));
         });
     }
 
+    _renderDraftjsEditingField(editorState) {
+        return (
+            <div className="RichEditor-root">
+                <div className={'DraftEditor-controls'}>
+                    <div className={'DraftEditor-controlsInner'}>
+                        <BlockStyleButtons
+                          buttons={BLOCK_TYPES}
+                          editorState={editorState}
+                          onToggle={this.toggleBlockType}
+                        />
+                        <InlineStyleButtons
+                            buttons={INLINE_STYLES}
+                            editorState={editorState}
+                            onToggle={this.toggleInlineStyle} />
+                        <EntityButtons
+                            entities={['link']}
+                            editorState={editorState}
+                            onToggle={this.toggleEntity}
+                        />
+                    </div>
+                </div>
+                <div className={'RichEditor-editor'} onClick={this.focus}>
+                    <DraftEditor
+                        editorState={editorState}
+                        handleKeyCommand={this._handleKeyCommand}
+                        onChange={this.handleEditorStateChange}
+                        ref="editor"
+                        spellCheck={true}
+                    />
+                </div>
+            </div>
+        );
+    }
+
     _renderEditingField(field, type, value) {
+        if (type === 'html') {
+            return this._renderDraftjsEditingField(this.state.editorState);
+        }
         return (
             <FormField label={field} htmlFor={"form-input-"+field} key={field}>
-                <FormInput type={type} multiline={type === 'textarea' ? true : false} placeholder={"Enter " + field} name={"form-input-"+field} onChange={this.handleChange.bind(this, field)} defaultValue={value}/>
+                <FormInput type={type} multiline={type === 'textarea' ? true : false} placeholder={"Enter " + field} name={"form-input-"+field} onChange={this._handleEditingFieldChange.bind(this, field)} defaultValue={value}/>
             </FormField>
         );
     }
+
     _renderEditingFields(fields) {
         let Fields = Object.keys(fields).map((field) => {
             const type = fields[field].type;
@@ -71,6 +139,67 @@ class EntityEditingBlock extends Component {
         });
         return Fields;
     }
+
+    _toggleBlockStyle(blockStyle) {
+        this.onChange(
+            RichUtils.toggleBlockType(
+                this.state.editorState,
+                blockType
+            )
+        );
+    }
+
+    _toggleEntity(entity, value) {
+        switch (entity) {
+            case ENTITY.link.type:
+                return this._toggleLink(entity, value);
+            default:
+                return;
+        }
+    }
+
+    _toggleInlineStyle(inlineStyle) {
+        this.onChange(
+            RichUtils.toggleInlineStyle(
+                this.state.editorState,
+                inlineStyle
+            )
+        );
+    }
+
+    _toggleLink(entity, value) {
+        const {url, text} = value;
+        const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || url, url: url}) : null;
+        this._toggleTextWithEntity(entityKey, text || url);
+    }
+
+    _toggleModal() {
+        this.props.toggleModal();
+    }
+
+    _toggleTextWithEntity(entityKey, text) {
+        const {editorState} = this.state;
+        const selection = editorState.getSelection();
+        let contentState = editorState.getCurrentContent();
+
+        if (selection.isCollapsed()) {
+            contentState = Modifier.removeRange(
+                editorState.getCurrentContent(),
+                selection,
+                'backward'
+            );
+        }
+        contentState = Modifier.replaceText(
+            contentState,
+            selection,
+            text,
+            null,
+            entityKey
+        );
+        const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
+        this.onChange(_editorState);
+    }
+
 
     render() {
         return (
@@ -91,12 +220,30 @@ class EntityEditingBlock extends Component {
 EntityEditingBlock.propTypes = {
     label: React.PropTypes.string,
     isModalOpen: React.PropTypes.bool,
-    onToggle: React.PropTypes.func.isRequired
+    onToggle: React.PropTypes.func.isRequired,
+    toggleModal: React.PropTypes.func.isRequired
 };
 
 EntityEditingBlock.defaultProps = {
     label: 'default',
     isModalOpen: true
 };
+
+// block settings
+const BLOCK_TYPES = [
+  { label: quoteTypes.blockquote.label, style: 'blockquote', icon: 'fa-quote-right', text: ' Block' },
+	{ label: 'H1', style: 'header-one', icon: 'fa-header', text: '1' },
+	{ label: 'H2', style: 'header-two', icon: 'fa-header', text: '2' },
+	{ label: 'OL', style: 'ordered-list-item', icon: 'fa-list-ol', text: '' },
+	{ label: 'UL', style: 'unordered-list-item', icon: 'fa-list-ul', text: '' },
+];
+
+// inline style settings
+var INLINE_STYLES = [
+	{ label: 'Bold', style: 'BOLD', icon: 'fa-bold', text: '' },
+	{ label: 'Italic', style: 'ITALIC', icon: 'fa-italic', text: '' },
+	{ label: 'Underline', style: 'UNDERLINE', icon: 'fa-underline', text: '' }
+];
+
 
 export default EntityEditingBlock;

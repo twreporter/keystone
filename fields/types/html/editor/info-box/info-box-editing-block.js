@@ -2,13 +2,12 @@
 import { convertToRaw, ContentState, EditorState } from 'draft-js';
 import decorator from '../entity-decorator';
 import objectAssgin from 'object-assign';
-import DraftjsEditingMixin from '../mixins/draftjs-editing-mixin';
 import DraftConverter from '../draft-converter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import EntityEditingBlock from '../base/entity-editing-block';
 import React from 'react';
 
-class InfoBoxEditingBlock extends DraftjsEditingMixin(EntityEditingBlock) {
+class InfoBoxEditingBlock extends EntityEditingBlock {
     constructor(props) {
         super(props);
         const processedHTML = DraftPasteProcessor.processHTML(props.body);
@@ -49,27 +48,12 @@ class InfoBoxEditingBlock extends DraftjsEditingMixin(EntityEditingBlock) {
         }
     }
 
-    // overwrite EntityEditingBlock._handleChange
-    _handleChange(field, e) {
+    // overwrite EntityEditingBlock._handleEditingFieldChange
+    _handleEditingFieldChange(field, e) {
         if (field === 'body') {
             return;
         }
-        return super._handleChange(field, e);
-    }
-
-    // overwrite DraftjsEditingMixin._onChange
-    _onChange(editorState) {
-        this.setState({
-            editorState: editorState
-        });
-    }
-
-    // overwrite EntityEditingBlock._renderEditingField
-    _renderEditingField(field, type, value) {
-        if (type === 'html') {
-            return super._renderDraftjsEditingField(this.state.editorState);
-        }
-        return super._renderEditingField(field, type, value);
+        return super._handleEditingFieldChange(field, e);
     }
 };
 
