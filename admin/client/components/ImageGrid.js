@@ -140,7 +140,7 @@ class ImageGrid extends React.Component {
                     key={image.id}
                     onSelect={this._handleSelect.bind(this, image)}
                     padding={padding}
-                    url={image.src}
+                    url={image.url}
                     width={width}
                 />
             );

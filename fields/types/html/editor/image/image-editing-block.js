@@ -7,13 +7,13 @@ export default class ImageEditingBlock extends Component {
         super(props);
     }
     render() {
-        const { apiPath, onToggle, handleToggle, selectionLimit, isModalOpen } = this.props;
+        const { apiPath, onToggle, toggleModal, selectionLimit, isModalOpen } = this.props;
         return (
             <ImageSelector
                 apiPath={apiPath}
                 isSelectionOpen={isModalOpen}
                 onChange={onToggle}
-                onFinish={handleToggle}
+                onFinish={toggleModal}
                 selectionLimit={selectionLimit}
             />
         );
@@ -24,7 +24,7 @@ ImageEditingBlock.propTypes = {
     apiPath: React.PropTypes.string,
     isModalOpen: React.PropTypes.bool,
     onToggle: React.PropTypes.func,
-    handleToggle: React.PropTypes.func,
+    toggleModal: React.PropTypes.func,
     selectedImages: React.PropTypes.array,
     selectionLimit: React.PropTypes.number
 };

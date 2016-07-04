@@ -1,11 +1,10 @@
 'use strict';
 
-import { AlignedInfoBox } from 'react-article-components'
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
-import InfoBoxEditingBlock from './info-box-editing-block';
+import AnnotationEditingBlock from './annotation-editing-block';
 import React from 'react';
 
-export default class InfoBoxBlock extends AtomicBlockRendererMixin(React.Component) {
+export default class AnnotationBlock extends AtomicBlockRendererMixin(React.Component) {
   constructor(props) {
     super(props);
     this.handleEditingBlockChange  = this._handleEditingBlockChange.bind(this);
@@ -22,16 +21,16 @@ export default class InfoBoxBlock extends AtomicBlockRendererMixin(React.Compone
       }
 
       let blockContent = _.get(this.state.data, [ 'content', 0 ], {});
-      let title = blockContent.title;
-      let body = blockContent.body;
+      let text = blockContent.text;
+      let annotation = blockContent.annotation;
       let draftRawObj = blockContent.draftRawObj;
       const EditBlock = (
-          <InfoBoxEditingBlock
-              body={body}
+          <AnnotationEditingBlock
+              annotation={annotation}
               draftRawObj={draftRawObj}
-              label='infobox'
+              label='annotation'
               isModalOpen={this.state.editMode}
-              title={title}
+              text={text}
               onToggle={this.handleEditingBlockChange}
               toggleModal={this.toggleEditMode}
           />
@@ -42,12 +41,13 @@ export default class InfoBoxBlock extends AtomicBlockRendererMixin(React.Compone
               contentEditable={false}
               onClick={this.toggleEditMode}
               style={{ cursor: 'pointer' }}
-              >
-              <AlignedInfoBox
-                  {...this.state.data}
-                  >
-                  {this.props.children}
-              </AlignedInfoBox>
+          >
+              <div>
+                  要被註解的字串：{text}
+              </div>
+              <div>
+                  註解：{annotation}
+              </div>
               {EditBlock}
           </div>
       );

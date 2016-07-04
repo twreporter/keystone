@@ -3,6 +3,7 @@
 import { Entity } from 'draft-js';
 import ENTITY from '../entities';
 import Alignment from './block-alignment-wrapper';
+import AnnotationBlock from '../annotation/annotation-block';
 import AudioBlock from '../audio/audio-block';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
@@ -19,15 +20,18 @@ class AtomicBlockSwitcher extends React.Component {
         this.alignRight = this._alignRight.bind(this);
     }
 
-    _alignLeft() {
+    _alignLeft(e) {
+        e.stopPropagation();
         this.props.align('left');
     }
 
-    _alignCenter() {
+    _alignCenter(e) {
+        e.stopPropagation();
         this.props.align('center');
     }
 
-    _alignRight() {
+    _alignRight(e) {
+        e.stopPropagation();
         this.props.align('right');
     }
 
@@ -65,6 +69,9 @@ class AtomicBlockSwitcher extends React.Component {
         let BlockComponent;
 
         switch (type) {
+            case ENTITY.annotation.type:
+                BlockComponent = AnnotationBlock;
+                break;
             case ENTITY.audio.type:
                 BlockComponent = AudioBlock;
                 break;

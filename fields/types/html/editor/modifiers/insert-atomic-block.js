@@ -1,19 +1,19 @@
 'use strict';
 
-import _ from 'lodash';
 import {
   AtomicBlockUtils,
   Entity,
 } from 'draft-js';
 import ENTITY from '../entities';
 
-export function insertAnnotationBlock(editorState, type, text, annotation) {
+export function insertAnnotationBlock(editorState, type, text, annotation, draftRawObj) {
     const entityKey = Entity.create(
         type,
         'IMMUTABLE',
         {
           text,
-          annotation
+          annotation,
+          draftRawObj
         }
     );
 
@@ -21,7 +21,6 @@ export function insertAnnotationBlock(editorState, type, text, annotation) {
 }
 
 export function insertAudioBlock(editorState, type, audio) {
-    _.set(audio, 'coverPhoto', _.pick(audio.coverPhoto, ENTITY.image.requiredProps));
     const entityKey = Entity.create(
         type,
         'IMMUTABLE',
@@ -36,9 +35,7 @@ export function insertImagesBlock(editorState, type, images) {
     type,
     'IMMUTABLE',
     {
-        images: images.map((image) => {
-            return _.pick(image, ENTITY.image.requiredProps)
-        })
+        images
     }
   );
 
@@ -49,7 +46,7 @@ export function insertImageBlock(editorState, type, image) {
   const entityKey = Entity.create(
     type,
     'IMMUTABLE',
-    _.pick(image, ENTITY.image.requiredProps)
+    image
   );
 
   return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
@@ -68,13 +65,14 @@ export function insertEmbeddedCodeBlock(editorState, type, caption = '', embedde
   return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
 }
 
-export function insertInfoBoxBlock(editorState, type, title = '', body = '') {
+export function insertInfoBoxBlock(editorState, type, title = '', body = '', draftRawObj) {
   const entityKey = Entity.create(
     type,
     'IMMUTABLE',
     {
         title: title,
-        body: body
+        body: body,
+        draftRawObj
     }
   );
 

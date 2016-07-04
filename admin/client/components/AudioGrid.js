@@ -75,7 +75,6 @@ class AudioItem extends React.Component {
 
     render () {
       const { audio, coverPhoto, doShowRemove, isSelected, title, description, width } = this.props;
-      let image = _.get(coverPhoto, [ 'resizedTargets', 'desktop' ], {});
 
       let style = {
           border: isSelected ? '1px solid' : '',
