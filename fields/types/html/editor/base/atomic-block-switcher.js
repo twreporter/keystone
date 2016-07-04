@@ -20,15 +20,18 @@ class AtomicBlockSwitcher extends React.Component {
         this.alignRight = this._alignRight.bind(this);
     }
 
-    _alignLeft() {
+    _alignLeft(e) {
+        e.stopPropagation();
         this.props.align('left');
     }
 
-    _alignCenter() {
+    _alignCenter(e) {
+        e.stopPropagation();
         this.props.align('center');
     }
 
-    _alignRight() {
+    _alignRight(e) {
+        e.stopPropagation();
         this.props.align('right');
     }
 
