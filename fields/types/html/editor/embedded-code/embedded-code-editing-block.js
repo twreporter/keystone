@@ -1,9 +1,8 @@
 'use strict';
-import objectAssgin from 'object-assign';
-import EntityEditingBlock from '../base/entity-editing-block';
+import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';
 
-class EmbeddedCodeEditingBlock extends EntityEditingBlock {
+class EmbeddedCodeEditingBlock extends EntityEditingBlockMixin(React.Component) {
     constructor(props) {
         super(props);
         this.state.editingFields = {
@@ -37,14 +36,18 @@ class EmbeddedCodeEditingBlock extends EntityEditingBlock {
 
 EmbeddedCodeEditingBlock.displayName = 'EmbeddedCodeEditingBlock';
 
-EmbeddedCodeEditingBlock.propTypes = objectAssgin({}, EntityEditingBlock.propTypes, {
+EmbeddedCodeEditingBlock.propTypes = {
     caption: React.PropTypes.string,
     embeddedCode: React.PropTypes.string,
-});
+    isModalOpen: React.PropTypes.bool,
+    onToggle: React.PropTypes.func.isRequired,
+    toggleModal: React.PropTypes.func
+};
 
-EmbeddedCodeEditingBlock.defaultProps = objectAssgin({}, EntityEditingBlock.defaultProps, {
+EmbeddedCodeEditingBlock.defaultProps = {
     caption: '',
-    embeddedCode: ''
-});
+    embeddedCode: '',
+    isModalOpen: false
+};
 
 export default EmbeddedCodeEditingBlock;

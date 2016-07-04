@@ -14,10 +14,10 @@ export default function WrapComponent(EditingBlockComponent) {
             this.state = {
                 isToggled: true
             };
-            this.handleToggle = this._handleToggle.bind(this);
+            this.toggleModal = this._toggleModal.bind(this);
         }
 
-        _handleToggle() {
+        _toggleModal() {
             this.setState({
                 isToggled: !this.state.isToggled
             });
@@ -28,12 +28,12 @@ export default function WrapComponent(EditingBlockComponent) {
                 <div
                     className="Button Button--default"
                     style={{display: "inline-block"}}
-                    onClick={this.handleToggle}
+                    onClick={this.toggleModal}
                     >
                     <EditingBlockComponent
                         {...this.props}
                         isModalOpen={!this.state.isToggled}
-                        handleToggle={this.handleToggle}
+                        toggleModal={this.toggleModal}
                     />
                     <ButtonIcon
                         {...this.props}

@@ -1,15 +1,16 @@
 'use strict'
+import { convertFromRaw, convertToRaw, ContentState, EditorState } from 'draft-js';
+import decorator from '../entity-decorator';
 import objectAssgin from 'object-assign';
-import EntityEditingBlock from '../base/entity-editing-block';
+import DraftConverter from '../draft-converter';
+import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
+import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';
 
-class AnnotationEditingBlock extends EntityEditingBlock {
+class AnnotationEditingBlock extends EntityEditingBlockMixin(React.Component) {
     constructor(props) {
         super(props);
-        this.state.editingFields = {
-            text: props.text,
-            annotation: props.annotation
-        };
+        this.state.editorState = this._initEditorState(props.draftRawObj);
     }
 
     // overwrite
@@ -20,7 +21,7 @@ class AnnotationEditingBlock extends EntityEditingBlock {
                 value: props.text
             },
             annotation: {
-                type: 'textarea',
+                type: 'html',
                 value: props.annotation
             }
         };
@@ -28,23 +29,41 @@ class AnnotationEditingBlock extends EntityEditingBlock {
 
     // overwrite
     _decomposeEditingFields(fields) {
+        let { editorState } = this.state;
+        const content = convertToRaw(editorState.getCurrentContent());
+        const cHtml = DraftConverter.convertToHtml(content);
         return {
             text: fields.text.value,
-            annotation: fields.annotation.value
+            annotation: cHtml,
+            draftRawObj: content
         }
+    }
+
+    // overwrite EntityEditingBlock._handleEditingFieldChange
+    _handleEditingFieldChange(field, e) {
+        if (field === 'annotation') {
+            return;
+        }
+        return super._handleEditingFieldChange(field, e);
     }
 };
 
 AnnotationEditingBlock.displayName = 'AnnotationEditingBlock';
 
-AnnotationEditingBlock.propTypes = objectAssgin({}, EntityEditingBlock.propTypes, {
+AnnotationEditingBlock.propTypes = {
     annotation: React.PropTypes.string,
-    text: React.PropTypes.string
-});
+    draftRawObj: React.PropTypes.object,
+    isModalOpen: React.PropTypes.bool,
+    onToggle: React.PropTypes.func.isRequired,
+    text: React.PropTypes.string,
+    toggleModal: React.PropTypes.func
+};
 
-AnnotationEditingBlock.defaultProps = objectAssgin({}, EntityEditingBlock.defaultProps, {
+AnnotationEditingBlock.defaultProps ={
     annotation: '',
+    draftRawObj: null,
+    isModalOpen: false,
     text: ''
-});
+};
 
 export default AnnotationEditingBlock;

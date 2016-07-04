@@ -1,65 +1,14 @@
 'use strict';
 
-import { Entity } from 'draft-js';
+import { AlignedImage } from 'react-article-components'
+import _ from 'lodash';
+import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import ImageSelector from '../../../../../admin/client/components/ImageSelector';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React from 'react';
 
-export default class ImageBlock extends React.Component {
+export default class ImageBlock extends AtomicBlockRendererMixin(React.Component) {
   constructor(props) {
     super(props);
-    this.state = {
-        editMode: false,
-        image: null
-    };
-    this.onValueChange = this._onValueChange.bind(this);
-    this.handleClick = this._handleClick.bind(this);
-    this.handleFinish = this._handleFinish.bind(this);
-    this.handleRemove = this._handleRemove.bind(this);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-
-    this._remove = () => {
-      this.props.blockProps.onRemove(this.props.block.getKey());
-    };
-  }
-
-  _finishEdit() {
-      this.props.blockProps.onFinishEdit(this.props.block.getKey(), this.state.image);
-  }
-
-  _handleClick(e) {
-      e.stopPropagation();
-      if (this.state.editMode) {
-          return;
-      }
-
-      this.setState({
-          editMode: true,
-      });
-  }
-
-  _handleFinish() {
-      this.setState({
-          editMode: false
-      });
-  }
-
-  _onValueChange(value) {
-      const image = Array.isArray(value) && value[0] ? value[0] : null;
-      const entityKey = this.props.block.getEntityAt(0);
-      this.setState({
-          editMode: false,
-          image: image
-      }, this._finishEdit);
-  }
-
-  _getValue() {
-      const entityKey = this.props.block.getEntityAt(0);
-      return entityKey ? Entity.get(entityKey).getData(): null;
-  }
-
-  _handleRemove(evt) {
-      this.props.onRemove(this.props.block.getKey());
   }
 
   _renderImageSelector(props) {
@@ -68,36 +17,40 @@ export default class ImageBlock extends React.Component {
       );
   }
 
+  // override AtomicBlockRendererMixin._onValueChange
+  _onValueChange(value) {
+      this.value = _.get(value, 0)
+      this.props.blockProps.onFinishEdit(this.props.block.getKey(), this.value);
+  }
+
   render() {
-      let { editMode, image } = this.state;
-      let { className } = this.props;
-      image = image || this._getValue();
-      if (!image) {
+      if (!this.state.data) {
           return null;
       }
 
-      image.src = _.get(image, ['resizedTargets', 'desktop', 'url'], image.url)
+      let image = _.get(this.state.data, [ 'content', 0 ], {});
 
-      const EditBlock = editMode ? this._renderImageSelector({
+      const EditBlock = this.state.editMode ? this._renderImageSelector({
           apiPath: 'images',
           isSelectionOpen: true,
           onChange: this.onValueChange,
-          onFinish: this.handleFinish,
+          onFinish: this.toggleEditMode,
           selectedImages: [image],
           selectionLimit: 1
       }) : null;
 
-      className = `imageWrapper ${className}`;
-
       return (
           <div
-              className={className}
               contentEditable={false}
+              onClick={this.toggleEditMode}
+              style={{ cursor: 'pointer' }}
               >
-              <img src={image.src} width="100%" onClick={this.handleClick} style={{cursor: "pointer"}}/>
-              <figcaption>{image.description}</figcaption>
-              {EditBlock}
-              {this.props.children}
+              <AlignedImage
+                {...this.state.data}
+                >
+                {this.props.children}
+              </AlignedImage>
+              { EditBlock }
           </div>
       );
   }

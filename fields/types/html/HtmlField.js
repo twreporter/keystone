@@ -1,5 +1,5 @@
 import { convertFromRaw, convertToRaw, ContentState, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { insertAudioBlock, insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './editor/modifiers/insert-atomic-block';
+import { insertAnnotationBlock, insertAudioBlock, insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './editor/modifiers/insert-atomic-block';
 import { shallowEqual } from 'react-pure-render';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
@@ -148,14 +148,14 @@ module.exports = Field.create({
     },
 
     toggleAnnotation(entity, value) {
-        const {text, annotation} = value;
-        const entityKey = annotation !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || annotation, annotation: annotation}) : null;
-        this._toggleTextWithEntity(entityKey, text || annotation);
+        const {text, annotation, draftRawObj} = value;
+        const _editorState = insertAnnotationBlock(this.state.editorState, ENTITY.annotation.type, text, annotation, draftRawObj);
+        this.onChange(_editorState);
     },
 
     toggleInfoBox(entity, value) {
-        const {body, title} = value;
-        const _editorState = insertInfoBoxBlock(this.state.editorState, ENTITY.infobox.type, title, body);
+        const {body, title, draftRawObj} = value;
+        const _editorState = insertInfoBoxBlock(this.state.editorState, ENTITY.infobox.type, title, body, draftRawObj);
         this.onChange(_editorState);
     },
 
@@ -250,7 +250,10 @@ module.exports = Field.create({
                 props: {
                     onFinishEdit: (blockKey, valueChanged) => {
                         const _editorState = BlockModifier.handleAtomicEdit(this.state.editorState, blockKey, valueChanged);
-                        this.onChange(_editorState);
+
+                        // workaround here.
+                        // use refreshEditorState to make the Editor rerender
+                        this.onChange(refreshEditorState(_editorState));
                     },
                     refreshEditorState: () => {
                         this.onChange(refreshEditorState(this.state.editorState));
@@ -347,10 +350,7 @@ const styleMap = {
 
 // block settings
 const BLOCK_TYPES = [
-  { label: quoteTypes.blockquote.label, style: 'blockquote', icon: 'fa-quote-right', text: ' Block' },
-  { label: quoteTypes.introquote.label, style: 'introquote', icon: 'fa-quote-right', text: ' Intro' },
-  { label: quoteTypes.pumpingquote.label, style: 'pumpingquote', icon: 'fa-quote-right', text: ' Pumping' },
-  { label: quoteTypes.forwardquote.label, style: 'forwardquote', icon: 'fa-quote-right', text: ' Forward' },
+    { label: quoteTypes.blockquote.label, style: 'blockquote', icon: 'fa-quote-right', text: ' Block' },
 	{ label: 'Code Block', style: 'code-block', icon: 'fa-code', text: '' },
 	{ label: 'H1', style: 'header-one', icon: 'fa-header', text: '1' },
 	{ label: 'H2', style: 'header-two', icon: 'fa-header', text: '2' },

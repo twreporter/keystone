@@ -14,12 +14,10 @@ const ENTITY = {
         type: 'embeddedCode'
     },
     audio: {
-        type: 'audio',
-        requiredProps: [ 'id', 'coverPhoto', 'description', 'filetype', 'title', 'url' ]
+        type: 'audio'
     },
     image: {
-        type: 'image',
-        requiredProps: ['id', 'url', 'description', 'width', 'height', 'resizedTargets']
+        type: 'image'
     },
     imageDiff: {
         type: 'imageDiff'

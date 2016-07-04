@@ -1,27 +1,15 @@
 'use strict'
 import { convertToRaw, ContentState, EditorState } from 'draft-js';
 import decorator from '../entity-decorator';
-import objectAssgin from 'object-assign';
-import DraftjsEditingMixin from '../mixins/draftjs-editing-mixin';
 import DraftConverter from '../draft-converter';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
-import EntityEditingBlock from '../base/entity-editing-block';
+import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';
 
-class InfoBoxEditingBlock extends DraftjsEditingMixin(EntityEditingBlock) {
+class InfoBoxEditingBlock extends EntityEditingBlockMixin(React.Component) {
     constructor(props) {
         super(props);
-        const processedHTML = DraftPasteProcessor.processHTML(props.body);
-        const initialState = ContentState.createFromBlockArray(processedHTML);
-        let editorState = EditorState.createWithContent(initialState, decorator);
-
-        this.state = {
-            editorState: editorState,
-            editingFields: {
-                title: props.title,
-                body: props.body
-            }
-        }
+        this.state.editorState = this._initEditorState(props.draftRawObj);
     }
 
     // overwrite EntityEditingBlock._composeEditingFields
@@ -38,55 +26,44 @@ class InfoBoxEditingBlock extends DraftjsEditingMixin(EntityEditingBlock) {
         };
     }
 
+
     // overwrite EntityEditingBlock._decomposeEditingFields
     _decomposeEditingFields(fields) {
         let { editorState } = this.state;
         const content = convertToRaw(editorState.getCurrentContent());
-        const cHtml = DraftConverter.convertToHtml(content, {
-            unstyled: `<div class="info-box">%content%</div>\n`,
-        }, {
-            link: ['<a class="info-box-link" href="<%= url %>"><span class="info-box-link-text">', '</span></a>'],
-        });
+        const cHtml = DraftConverter.convertToHtml(content);
         return {
             title: fields.title.value,
-            body: cHtml
+            body: cHtml,
+            draftRawObj: content
         }
     }
 
-    // overwrite EntityEditingBlock._handleChange
-    _handleChange(field, e) {
+    // overwrite EntityEditingBlock._handleEditingFieldChange
+    _handleEditingFieldChange(field, e) {
         if (field === 'body') {
             return;
         }
-        return super._handleChange(field, e);
-    }
-
-    // overwrite DraftjsEditingMixin._onChange
-    _onChange(editorState) {
-        this.setState({
-            editorState: editorState
-        });
-    }
-
-    // overwrite EntityEditingBlock._renderEditingField
-    _renderEditingField(field, type, value) {
-        if (type === 'html') {
-            return super._renderDraftjsEditingField(this.state.editorState);
-        }
-        return super._renderEditingField(field, type, value);
+        return super._handleEditingFieldChange(field, e);
     }
 };
 
 InfoBoxEditingBlock.displayName = 'InfoBoxEditingBlock';
 
-InfoBoxEditingBlock.propTypes = objectAssgin({}, EntityEditingBlock.propTypes, {
+InfoBoxEditingBlock.propTypes = {
     body: React.PropTypes.string,
-    title: React.PropTypes.string
-});
+    draftRawObj: React.PropTypes.object,
+    isModalOpen: React.PropTypes.bool,
+    onToggle: React.PropTypes.func.isRequired,
+    title: React.PropTypes.string,
+    toggleModal: React.PropTypes.func
+};
 
-InfoBoxEditingBlock.defaultProps = objectAssgin({}, EntityEditingBlock.defaultProps, {
+InfoBoxEditingBlock.defaultProps = {
     body: '',
+    draftRawObj: null,
+    isModalOpen: false,
     title: ''
-});
+};
 
 export default InfoBoxEditingBlock;
