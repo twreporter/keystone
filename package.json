@@ -1,6 +1,6 @@
 {
   "name": "twreporter-keystone",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
