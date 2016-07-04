@@ -350,10 +350,7 @@ const styleMap = {
 
 // block settings
 const BLOCK_TYPES = [
-  { label: quoteTypes.blockquote.label, style: 'blockquote', icon: 'fa-quote-right', text: ' Block' },
-  { label: quoteTypes.introquote.label, style: 'introquote', icon: 'fa-quote-right', text: ' Intro' },
-  { label: quoteTypes.pumpingquote.label, style: 'pumpingquote', icon: 'fa-quote-right', text: ' Pumping' },
-  { label: quoteTypes.forwardquote.label, style: 'forwardquote', icon: 'fa-quote-right', text: ' Forward' },
+    { label: quoteTypes.blockquote.label, style: 'blockquote', icon: 'fa-quote-right', text: ' Block' },
 	{ label: 'Code Block', style: 'code-block', icon: 'fa-code', text: '' },
 	{ label: 'H1', style: 'header-one', icon: 'fa-header', text: '1' },
 	{ label: 'H2', style: 'header-two', icon: 'fa-header', text: '2' },
