@@ -1,8 +1,7 @@
 'use strict';
 
-import { Entity } from 'draft-js';
+import { Slideshow } from 'react-article-components'
 import _ from 'lodash';
-import classNames from 'classnames';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import ENTITY from '../entities';
 import ImageSelector from '../../../../../admin/client/components/ImageSelector';
@@ -26,6 +25,24 @@ export default class SlideshowBlock extends AtomicBlockRendererMixin(React.Compo
 
       let images = _.get(this.state.data, 'content', []);
 
+      const EditBt = (
+        <i className="fa fa-pencil-square-o" onClick={this.toggleEditMode} style={{
+          position: 'absolute',
+          fontSize: '50px',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          width: '55px',
+          height: '50px',
+          margin: 'auto',
+          backgroundColor: '#FFF',
+          borderRadius: '5px',
+          textAlign: 'center',
+          cursor: 'pointer'
+        }}/>
+      );
+
       const EditBlock = this.state.editMode ? this._renderImageSelector({
           apiPath: 'images',
           isSelectionOpen: true,
@@ -38,11 +55,17 @@ export default class SlideshowBlock extends AtomicBlockRendererMixin(React.Compo
       return (
           <div
               contentEditable={false}
-              className={classNames(this.props.className, 'imageWrapper')}
+              className="slideshow-container"
+              style={{
+                position: 'relative'
+              }}
           >
-              <img src="https://storage.googleapis.com/twreporter-article.twreporter.org/slideshow.jpg" width="100%" onClick={this.toggleEditMode} style={{cursor: "pointer"}}/>
-              {EditBlock}
-              {this.props.children}
+            <Slideshow
+              {...this.state.data}
+            >
+            </Slideshow>
+            { EditBt }
+            { EditBlock }
           </div>
       );
   }
