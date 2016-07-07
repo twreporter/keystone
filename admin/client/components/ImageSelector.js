@@ -46,7 +46,10 @@ class ImageSelector extends SelectorMixin(React.Component) {
             <Modal isOpen={isSelectionOpen} onCancel={this.handleCancel} width="large" backdropClosesModal>
                 <Modal.Header text="Select image" showCloseButton onClose={this.handleCancel} />
                 <Modal.Body>
-                    <div>
+                  <div style={{
+                    marginBottom: '30px',
+                    borderBottom: '3px solid'
+                  }}>
                         {this._renderSearchFilter()}
                         <ImageSelection
                             images={items}

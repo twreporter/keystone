@@ -11,7 +11,7 @@ let SelectorMixin = (superclass) => class extends superclass {
 
         // input in the search field
         this._searchInput = '';
-        this.PAGE_SIZE = 10;
+        this.PAGE_SIZE = 6;
         this.API = '/api/';
 
         this.state = {
@@ -59,21 +59,26 @@ let SelectorMixin = (superclass) => class extends superclass {
 
     /** build query string for keystone api
      * @param {number} [page=0] - Page we used to calculate how many items we want to skip
-     * @param {limit} [limit=10] - The number of items we want to get
-     * @param {string[]} [filters=[]] - keywords for filtering
+     * @param {limit} [limit=6] - The number of items we want to get
+     * @param {string} [input=''] - keyword for filtering
      * @return {Promise}
      */
-    _buildQueryString (page=0, limit=10, filters=[]) {
-        return Promise.resolve(this._buildFilters(filters, page, this.PAGE_SIZE));
+    _buildQueryString (page=0, limit=6, input='') {
+        let queryString = {
+            search: input,
+            limit: limit,
+            skip: page === 0 ? 0 : (page-1) * limit
+        };
+        return Promise.resolve(qs.stringify(queryString));
     }
 
     /** build query string for keystone api
      * @param {string[]} [filters=[]] - keywords for filtering
      * @param {number} [page=0] - Page we used to calculate how many items we want to skip
-     * @param {limit} [limit=10] - The number of items we want to get
+     * @param {limit} [limit=6] - The number of items we want to get
      * @return {string} a query string
      */
-    _buildFilters (filters=[], page=0, limit=10) {
+    _buildFilters (filters=[], page=0, limit=6) {
         let queryString = {
             limit: limit,
             skip: page === 0 ? 0 : (page-1) * limit
@@ -148,8 +153,7 @@ let SelectorMixin = (superclass) => class extends superclass {
     }
 
     _searchFilterChange (event) {
-        let inputString = event.currentTarget.value;
-        this._searchInput = inputString.split(',');
+        this._searchInput = event.currentTarget.value;
     }
 
     _searchByInput () {
@@ -174,10 +178,10 @@ let SelectorMixin = (superclass) => class extends superclass {
         return (
             <InputGroup contiguous>
             <InputGroup.Section grow>
-                    <FormInput type="text" placeholder="Input tag" defaultValue={this._searchInput} onChange={this.searchFilterChange}/>
+                    <FormInput type="text" placeholder="請輸入關鍵字搜尋" defaultValue={this._searchInput} onChange={this.searchFilterChange}/>
                 </InputGroup.Section>
                 <InputGroup.Section>
-                    <Button onClick={this.searchByInput}>Filter</Button>
+                    <Button onClick={this.searchByInput}>Search</Button>
                 </InputGroup.Section>
             </InputGroup>
         );
