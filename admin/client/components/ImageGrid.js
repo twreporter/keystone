@@ -71,7 +71,7 @@ class ImageItem extends React.Component {
 
         const bt = doShowRemove ? (
           <i className="fa fa-times" onClick={this._handleRemove.bind(this)} style={btStyle} />
-        ): ( isSelected ? <i className="fa fa-check-circle-o" style={btStyle} /> : <li />);
+        ): ( isSelected ? <i className="fa fa-check-circle-o" style={btStyle} /> : <i className="fa"/>);
 
         return (
             <div onClick={this._handleSelect.bind(this)} className="imageGridItem" style={styles.imageGridItem}>
