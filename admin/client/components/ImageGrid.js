@@ -46,7 +46,6 @@ class ImageItem extends React.Component {
 
         const styles = {
             imageGridItem: objectAssign({
-                border: isSelected ? '1px solid' : '',
                 boxSizing: 'border-box',
                 display: 'inline-block',
                 padding,
@@ -65,20 +64,18 @@ class ImageItem extends React.Component {
             },
         };
 
-        const RemoveBt = doShowRemove ? (
-            <svg
-                onClick={this._handleRemove.bind(this)}
-                viewBox="0 0 24 24"
-                preserveAspectRatio="xMidYMid meet"
-                style={{fill:"white",verticalAlign:"middle",width:"32px",height:"32px",cursor:'pointer'}}
-            >
-                <g><path d="M19 6.41l-1.41-1.41-5.59 5.59-5.59-5.59-1.41 1.41 5.59 5.59-5.59 5.59 1.41 1.41 5.59-5.59 5.59 5.59 1.41-1.41-5.59-5.59z"></path></g>
-            </svg>
-        ): null;
+        let btStyle = {
+          fontSize: '2em',
+          backgroundColor: '#FFF'
+        };
+
+        const bt = doShowRemove ? (
+          <i className="fa fa-times" onClick={this._handleRemove.bind(this)} style={btStyle} />
+        ): ( isSelected ? <i className="fa fa-check-circle-o" style={btStyle} /> : <li />);
 
         return (
             <div onClick={this._handleSelect.bind(this)} className="imageGridItem" style={styles.imageGridItem}>
-                <div className="imageWrapper" style={styles.imageWrapper}>{RemoveBt}</div>
+                <div className="imageWrapper" style={styles.imageWrapper}>{bt}</div>
                 {this.props.children}
             </div>
         );
