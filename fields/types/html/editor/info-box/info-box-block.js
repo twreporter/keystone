@@ -45,6 +45,7 @@ export default class InfoBoxBlock extends AtomicBlockRendererMixin(React.Compone
               >
               <AlignedInfoBox
                   {...this.state.data}
+                  device={this.props.device}
                   >
                   {this.props.children}
               </AlignedInfoBox>

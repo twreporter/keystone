@@ -1,6 +1,7 @@
 'use strict';
-import React, { Component } from 'react';
 import { Entity } from 'draft-js';
+import _ from 'lodash';
+import React, { Component } from 'react';
 
 const getDisplayName = (WrappedComponent) => (
     WrappedComponent.displayName || WrappedComponent.name || 'Component'
@@ -33,6 +34,7 @@ export default function WrapComponent(WrappedComponent) {
                 <WrappedComponent {...this.props}
                     align={this.align}
                     alignment={this.state.alignment}
+                    device={_.get(this.props, [ 'blockProps', 'device'], 'mobile')}
                 />
             );
         }

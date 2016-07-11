@@ -4,7 +4,7 @@ import { shallowEqual } from 'react-pure-render';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
 import ENTITY from './editor/entities';
-import decorator from './editor/entity-decorator'
+import decorator from './editor/entity-decorator';
 import quoteTypes from './editor/quote/quote-types';
 import AtomicBlockSwitcher from './editor/base/atomic-block-switcher';
 import BlockModifier from './editor/modifiers/index';
@@ -258,7 +258,10 @@ module.exports = Field.create({
                     refreshEditorState: () => {
                         this.onChange(refreshEditorState(this.state.editorState));
                     },
-                    data: this._convertToApiData(this.state.editorState)
+                    data: this._convertToApiData(this.state.editorState),
+                    // render desktop layout when editor is enlarged,
+                    // otherwise render mobile layout
+                    device: this.state.isEnlarged ? 'desktop' : 'mobile'
                 }
             }
         }
@@ -266,7 +269,8 @@ module.exports = Field.create({
     },
 
 	enlargeEditor () {
-		this.setState({ isEnlarged: !this.state.isEnlarged });
+        // also set editorState to force editor to re-render
+		this.setState({ isEnlarged: !this.state.isEnlarged, editorState: refreshEditorState(this.state.editorState)});
 	},
 
 	renderField () {
