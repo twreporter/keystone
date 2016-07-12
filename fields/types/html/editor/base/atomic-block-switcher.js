@@ -4,6 +4,7 @@ import { Entity } from 'draft-js';
 import ENTITY from '../entities';
 import AnnotationBlock from '../annotation/annotation-block';
 import AudioBlock from '../audio/audio-block';
+import BlockQuoteBlock from '../quote/block-quote-block';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
 import ImageDiffBlock from '../image-diff/image-diff-block';
@@ -74,6 +75,9 @@ class AtomicBlockSwitcher extends React.Component {
                 break;
             case ENTITY.audio.type:
                 BlockComponent = AudioBlock;
+                break;
+            case ENTITY.blockQuote.type:
+                BlockComponent = BlockQuoteBlock;
                 break;
             case ENTITY.embeddedCode.type:
                 BlockComponent = EmbeddedCodeBlock;

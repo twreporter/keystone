@@ -1,5 +1,4 @@
 import { convertFromRaw, convertToRaw, ContentState, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { insertAnnotationBlock, insertAudioBlock, insertEmbeddedCodeBlock, insertImageBlock, insertImagesBlock, insertInfoBoxBlock } from './editor/modifiers/insert-atomic-block';
 import { shallowEqual } from 'react-pure-render';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
@@ -147,100 +146,60 @@ module.exports = Field.create({
         this.onChange(_editorState);
     },
 
-    toggleAnnotation(entity, value) {
-        const {text, annotation, draftRawObj} = value;
-        const _editorState = insertAnnotationBlock(this.state.editorState, ENTITY.annotation.type, text, annotation, draftRawObj);
+    _toggleAtomicBlock(entity, value) {
+        const _editorState = BlockModifier.insertAtomicBlock(this.state.editorState, entity, value);
         this.onChange(_editorState);
     },
 
-    toggleInfoBox(entity, value) {
-        const {body, title, draftRawObj} = value;
-        const _editorState = insertInfoBoxBlock(this.state.editorState, ENTITY.infobox.type, title, body, draftRawObj);
-        this.onChange(_editorState);
+    _toggleAudio(entity, value) {
+        const audio = Array.isArray(value) ? value[0] : null;
+        if (!audio) {
+            return;
+        }
+        this._toggleAtomicBlock(entity, audio);
     },
 
-    toggleLink (entity, value) {
+    _toggleLink (entity, value) {
         const {url, text} = value;
         const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || url, url: url}) : null;
         this._toggleTextWithEntity(entityKey, text || url);
     },
 
-    toggleEmbeddedCode(entity, value) {
-        if (value) {
-            const _editorState = insertEmbeddedCodeBlock(this.state.editorState, ENTITY.embeddedCode.type, value.caption, value.embeddedCode);
-            this.onChange(_editorState);
-        }
-    },
-
-    toggleAudio(entity, value) {
-        const audio = Array.isArray(value) ? value[0] : null;
-        if (!audio) {
-            return;
-        }
-        const _editorState = insertAudioBlock(this.state.editorState, ENTITY.audio.type, audio);
-        this.onChange(_editorState);
-    },
-
-    toggleImage (entity, value) {
-        const image = Array.isArray(value) ? value[0] : null;
-        if (!image) {
-            return;
-        }
-        this._insertImage(image);
-    },
-
-    toggleSlideshow (entity, value) {
+    _toggleSlideshow (entity, value) {
         const images = Array.isArray(value) && value.length > 0 ? value : null;
         if (!images) {
             return;
         }
-        this._insertSlideshow(images);
+        this._toggleAtomicBlock(entity, images);
     },
 
-    toggleImageDiff(entity, value) {
+    _toggleImageDiff(entity, value) {
         const images = Array.isArray(value) && value.length === 2 ? value : null;
         if (!images) {
             return;
         }
-        this._insertImageDiff(images);
+        this._toggleAtomicBlock(entity, images);
     },
 
     toggleEntity (entity, value) {
         switch (entity) {
             case ENTITY.audio.type:
-                return this.toggleAudio(entity, value);
+                return this._toggleAudio(entity, value);
             case ENTITY.annotation.type:
-                return this.toggleAnnotation(entity, value);
+            case ENTITY.blockQuote.type:
             case ENTITY.infobox.type:
-                return this.toggleInfoBox(entity, value);
             case ENTITY.embeddedCode.type:
-                return this.toggleEmbeddedCode(entity, value);
-            case ENTITY.link.type:
-                return this.toggleLink(entity, value);
             case ENTITY.image.type:
-                return this.toggleImage(entity, value);
+                return this._toggleAtomicBlock(entity, value);
+            case ENTITY.link.type:
+                return this._toggleLink(entity, value);
             case ENTITY.slideshow.type:
-                return this.toggleSlideshow(entity, value);
+                return this._toggleSlideshow(entity, value);
             case ENTITY.imageDiff.type:
-                return this.toggleImageDiff(entity, value);
+                return this._toggleImageDiff(entity, value);
             default:
                 return;
         }
-    },
-
-    _insertImage (image) {
-        const _editorState = insertImageBlock(this.state.editorState, ENTITY.image.type, image);
-        this.onChange(_editorState);
-    },
-
-    _insertSlideshow (images) {
-        const _editorState = insertImagesBlock(this.state.editorState, ENTITY.slideshow.type, images);
-        this.onChange(_editorState);
-    },
-
-    _insertImageDiff (images) {
-        const _editorState = insertImagesBlock(this.state.editorState, ENTITY.imageDiff.type, images);
-        this.onChange(_editorState);
     },
 
     _blockRenderer (block) {
@@ -354,7 +313,6 @@ const styleMap = {
 
 // block settings
 const BLOCK_TYPES = [
-    { label: quoteTypes.blockquote.label, style: 'blockquote', icon: 'fa-quote-right', text: ' Block' },
 	{ label: 'Code Block', style: 'code-block', icon: 'fa-code', text: '' },
 	{ label: 'H1', style: 'header-one', icon: 'fa-header', text: '1' },
 	{ label: 'H2', style: 'header-two', icon: 'fa-header', text: '2' },
