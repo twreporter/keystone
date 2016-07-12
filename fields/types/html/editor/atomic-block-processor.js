@@ -14,40 +14,16 @@ const processor = {
         const type = entity && entity.type;
         switch (type) {
             case ENTITY.annotation.type:
-                alignment = entity.data && entity.data.alignment || alignment;
-                content = [ {
-                    text: entity.data.text,
-                    annotation: entity.data.annotation,
-                    draftRawObj: entity.data.draftRawObj
-                } ];
-                break;
             case ENTITY.audio.type:
-                alignment = entity.data && entity.data.alignment || alignment;
-                content = [ _.get(entity, 'data') ];
-                break;
-            case ENTITY.infobox.type:
-                alignment = entity.data && entity.data.alignment || alignment;
-                content = [ {
-                    title: entity.data.title,
-                    body: entity.data.body,
-                    draftRawObj: entity.data.draftRawObj
-                }];
-                break;
+            case ENTITY.blockQuote.type:
             case ENTITY.embeddedCode.type:
-                alignment = entity.data && entity.data.alignment || alignment;
-                content = [ {
-                    caption: entity.data.caption,
-                    embeddedCode: entity.data.embeddedCode
-                }];
-                break;
+            case ENTITY.image.type:
+            case ENTITY.infobox.type:
             case ENTITY.slideshow.type:
             case ENTITY.imageDiff.type:
                 alignment = entity.data && entity.data.alignment || alignment;
-                content = _.get(entity, ['data', 'images'], [])
-                break;
-            case ENTITY.image.type:
-                alignment = entity.data && entity.data.alignment || alignment;
-                content = [ _.get(entity, 'data') ];
+                content = _.get(entity, 'data')
+                content = Array.isArray(content) ? content : [ content ];
                 break;
             default:
                 return;

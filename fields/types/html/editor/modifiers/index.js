@@ -1,7 +1,7 @@
 'use strict';
 
 import ENTITY from '../entities';
-import { insertImageBlock, insertImagesBlock } from './insert-atomic-block';
+import insertAtomicBlock from './insert-atomic-block';
 import { replaceAtomicBlock } from './replace-block';
 import { Entity } from 'draft-js';
 import removeBlock from './remove-block';
@@ -19,18 +19,15 @@ const handleAtomicEdit = (editorState, blockKey, valueChanged) => {
 
     switch (blockType) {
         case ENTITY.audio.type:
+        case ENTITY.blockQuote.type:
         case ENTITY.annotation.type:
         case ENTITY.embeddedCode.type:
         case ENTITY.image.type:
-        case ENTITY.infobox.type:
-            if (valueChanged) {
-                return replaceAtomicBlock(editorState, blockKey, valueChanged);
-            }
-            return removeBlock(editorState, blockKey);
         case ENTITY.imageDiff.type:
+        case ENTITY.infobox.type:
         case ENTITY.slideshow.type:
             if (valueChanged) {
-                return replaceAtomicBlock(editorState, blockKey, { images: valueChanged });
+                return replaceAtomicBlock(editorState, blockKey, valueChanged);
             }
             return removeBlock(editorState, blockKey);
         default:
@@ -39,5 +36,6 @@ const handleAtomicEdit = (editorState, blockKey, valueChanged) => {
 };
 
 export default {
+    insertAtomicBlock,
     handleAtomicEdit
 };

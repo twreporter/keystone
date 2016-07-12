@@ -4,6 +4,7 @@ import { Entity } from 'draft-js';
 import _ from 'lodash';
 import AnnotationBt from './annotation/annotation-bt';
 import AudioButton from './audio/audio-bt';
+import BlockQuoteBt from './quote/block-quote-bt'
 import EmbeddedCodeBt from './embedded-code/embedded-code-bt';
 import ENTITY from './entities';
 import ImageButton from './image/image-button';
@@ -143,7 +144,20 @@ export const EntityButtons = (props) => {
                         icon='fa-file-audio-o'
                         iconText=' Audio'
                     />
-                )
+                );
+            case ENTITY.blockQuote.type:
+                return (
+                    <BlockQuoteBt
+                        active={active}
+                        key={entity}
+                        label={entity}
+                        onToggle={onToggle.bind(null, entity)}
+                        icon='fa-quote-right'
+                        iconText=''
+                        quote={data ? data.quote: selectedText}
+                        quoteBy={data ? data.quoteBy : ''}
+                    />
+                );
             case ENTITY.infobox.type:
                 return (
                     <InfoBoxBt

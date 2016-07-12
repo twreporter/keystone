@@ -8,10 +8,6 @@ import AtomicBlockProcessor from './atomic-block-processor';
 import InlineStylesProcessor from './inline-styles-processor';
 
 let defaultBlockTagMap = {
-    'blockquote': `<blockquote class="${quoteTypes.blockquote.style}">%content%</blockquote>\n`,
-    'introquote': `<blockquote class="${quoteTypes.introquote.style}">%content%</blockquote>\n`,
-    'pumpingquote': `<blockquote class="${quoteTypes.pumpingquote.style}">%content%</blockquote>\n`,
-    'forwardquote': `<blockquote class="${quoteTypes.forwardquote.style}">%content%</blockquote>\n`,
     'code-block': `<code>%content%</code>\n`,
     'default': `<p>%content%</p>\n`,
     'header-one': `<h1>%content%</h1>\n`,
@@ -33,12 +29,13 @@ let inlineTagMap = {
 let defaultEntityTagMap = {
     annotation: ['<div><div><%= text %></div><div><%= annotation %></div>', '</div>'],
     audio: ['<div><h4><%= title %></h4><span><%= description %></span><audio src="<%= url %>" />', '</div>'],
+    blockQuote: ['<blockquote><div><%= quote %></div><div><%= quoteBy %></div>', '<blockquote>'],
     embeddedCode: ['<div><%= embeddedCode%>', '</div>'],
     infobox: ['<div><div><span><%= title %></span></div><div><span><%= body %></span></div>', '</div>'],
     link: ['<a href="<%= url %>">', '</a>'],
     image: ['<img src="<%= url %>">', '</img>'],
-    slideshow: ['<!-- slideshow component --> <ol> <% _.forEach(images, function(image) { %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
-    imageDiff: ['<!-- imageDiff component --> <ol> <% _.forEach(images, function(image, index) { if (index > 1) { return; } %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>']
+    slideshow: ['<!-- slideshow component --> <ol> <% _.forEach(this, function(image) { %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
+    imageDiff: ['<!-- imageDiff component --> <ol> <% _.forEach(this, function(image, index) { if (index > 1) { return; } %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>']
 };
 
 let nestedTagMap = {

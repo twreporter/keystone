@@ -4,6 +4,9 @@ const ENTITY = {
     annotation: {
         type: 'annotation'
     },
+    blockQuote: {
+        type: 'blockQuote'
+    },
     link: {
         type: 'link'
     },
