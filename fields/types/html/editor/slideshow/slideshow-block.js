@@ -62,6 +62,7 @@ export default class SlideshowBlock extends AtomicBlockRendererMixin(React.Compo
           >
             <Slideshow
               {...this.state.data}
+              device={this.props.device}
             >
             </Slideshow>
             { EditBt }

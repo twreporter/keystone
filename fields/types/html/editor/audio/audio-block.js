@@ -19,6 +19,7 @@ export default class AudioBlock extends AtomicBlockRendererMixin(React.Component
               >
           <Audio
             {...this.state.data}
+            device={this.props.device}
           />
   </div>
       );

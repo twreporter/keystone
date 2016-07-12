@@ -2,7 +2,6 @@
 
 import { Entity } from 'draft-js';
 import ENTITY from '../entities';
-import Alignment from './block-alignment-wrapper';
 import AnnotationBlock from '../annotation/annotation-block';
 import AudioBlock from '../audio/audio-block';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
@@ -11,6 +10,7 @@ import ImageDiffBlock from '../image-diff/image-diff-block';
 import InfoBoxBlock from '../info-box/info-box-block';
 import React from 'react';
 import SlideshowBlock from '../slideshow/slideshow-block';
+import Wrapper from './block-wrapper';
 
 class AtomicBlockSwitcher extends React.Component {
     constructor(props) {
@@ -64,7 +64,7 @@ class AtomicBlockSwitcher extends React.Component {
             </div>
         );
 
-        const { alignment } = this.props;
+        const { alignment, device } = this.props;
         let className = alignment;
         let BlockComponent;
 
@@ -102,10 +102,10 @@ class AtomicBlockSwitcher extends React.Component {
                 {...this.props}
                 className={className}
                 >
-                {Buttons}
+                {device === 'mobile' ? null : Buttons}
             </BlockComponent>
         );
     }
 }
 
-export default Alignment(AtomicBlockSwitcher);
+export default Wrapper(AtomicBlockSwitcher);
