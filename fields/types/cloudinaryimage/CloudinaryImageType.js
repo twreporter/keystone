@@ -5,8 +5,6 @@ var cloudinary = require('cloudinary');
 var utils = require('keystone-utils');
 var super_ = require('../Type');
 
-var CLOUDINARY_FIELDS = ['public_id', 'version', 'signature', 'format', 'resource_type', 'url', 'width', 'height', 'secure_url'];
-
 function getEmptyValue () {
 	return {
 		public_id: '',
@@ -325,7 +323,6 @@ cloudinaryimage.prototype.inputIsValid = function () {
  */
 cloudinaryimage.prototype.updateItem = function (item, data, callback) {
 	var field = this;
-	var paths = this.paths;
 	var value = this.getValueFromData(data);
 
 	// When the value is a string, assume it's base64 data or a remote URL and

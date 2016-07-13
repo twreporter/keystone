@@ -1,27 +1,24 @@
-import { convertFromRaw, convertToRaw, ContentState, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
+import { convertFromRaw, convertToRaw, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
 import { shallowEqual } from 'react-pure-render';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
 import ENTITY from './editor/entities';
 import decorator from './editor/entity-decorator';
-import quoteTypes from './editor/quote/quote-types';
 import AtomicBlockSwitcher from './editor/base/atomic-block-switcher';
 import BlockModifier from './editor/modifiers/index';
 import DraftConverter from './editor/draft-converter';
 import DraftEditor from './editor/draft-editor';
-import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import Field from '../Field';
 import React from 'react';
 
-let { processHTML } = DraftPasteProcessor;
 let lastId = 0;
 
 function getId () {
 	return 'keystone-html-' + lastId++;
 }
 
-function refreshEditorState(editorState) {
-    return EditorState.forceSelection(editorState, editorState.getCurrentContent().getSelectionAfter());
+function refreshEditorState (editorState) {
+	return EditorState.forceSelection(editorState, editorState.getCurrentContent().getSelectionAfter());
 }
 
 // class HtmlField extends React.Component {
@@ -32,9 +29,8 @@ module.exports = Field.create({
 
 		// convert saved editor content into the editor state
 		let editorState;
-		let isEnlarged = false;
 		try {
-			const {draft, html} = this.props.value;
+			const { draft, html } = this.props.value;
 			if (draft && html !== '') {
 				// create an EditorState from the raw Draft data
 				let contentState = convertFromRaw(draft);
@@ -50,45 +46,45 @@ module.exports = Field.create({
 		}
 
 		return {
-            editorState: editorState,
-            id: getId(),
-            valueStr: JSON.stringify(this.props.value),
+			editorState: editorState,
+			id: getId(),
+			valueStr: JSON.stringify(this.props.value),
 		};
 	},
 
-    shouldComponentUpdate (nextProps, nextState) {
-        return !shallowEqual(this.state, nextState);
-    },
+	shouldComponentUpdate (nextProps, nextState) {
+		return !shallowEqual(this.state, nextState);
+	},
 
-    _convertToApiData(editorState) {
-        const content = convertToRaw(editorState.getCurrentContent());
-        const apiData = DraftConverter.convertToApiData(content);
-        return apiData.toJS();
-    },
+	_convertToApiData (editorState) {
+		const content = convertToRaw(editorState.getCurrentContent());
+		const apiData = DraftConverter.convertToApiData(content);
+		return apiData.toJS();
+	},
 
-    onChange (editorState) {
-        const content = convertToRaw(editorState.getCurrentContent());
-        const cHtml = DraftConverter.convertToHtml(content);
-        const apiData = DraftConverter.convertToApiData(content);
+	onChange (editorState) {
+		const content = convertToRaw(editorState.getCurrentContent());
+		const cHtml = DraftConverter.convertToHtml(content);
+		const apiData = DraftConverter.convertToApiData(content);
 
-        const valueStr = JSON.stringify({
-            draft: content,
-            html: cHtml,
-            apiData
-        });
+		const valueStr = JSON.stringify({
+			draft: content,
+			html: cHtml,
+			apiData,
+		});
 
-        // update value if the content has been changed
-        if (valueStr !== this.state.valueStr) {
-            this.setState({
-                valueStr,
-                editorState
-            });
-        } else {
-            this.setState({
-                editorState
-            })
-        }
-    },
+		// update value if the content has been changed
+		if (valueStr !== this.state.valueStr) {
+			this.setState({
+				valueStr,
+				editorState,
+			});
+		} else {
+			this.setState({
+				editorState,
+			});
+		}
+	},
 
 	focus () {
 		this.refs.editor.focus();
@@ -105,10 +101,10 @@ module.exports = Field.create({
 	},
 
 	toggleBlockType (blockType) {
-        let editorState = this.state.editorState;
+		let editorState = this.state.editorState;
 		this.onChange(
 			RichUtils.toggleBlockType(
-			    editorState,
+				editorState,
 				blockType
 			)
 		);
@@ -123,113 +119,113 @@ module.exports = Field.create({
 		);
 	},
 
-    _toggleTextWithEntity(entityKey, text) {
-        const {editorState} = this.state;
-        const selection = editorState.getSelection();
-        let contentState = editorState.getCurrentContent();
+	_toggleTextWithEntity (entityKey, text) {
+		const { editorState } = this.state;
+		const selection = editorState.getSelection();
+		let contentState = editorState.getCurrentContent();
 
-        if (selection.isCollapsed()) {
-            contentState = Modifier.removeRange(
-                editorState.getCurrentContent(),
-                selection,
-                'backward'
-            );
-        }
-        contentState = Modifier.replaceText(
-            contentState,
-            selection,
-            text,
-            null,
-            entityKey
-        );
-        const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
-        this.onChange(_editorState);
-    },
+		if (selection.isCollapsed()) {
+			contentState = Modifier.removeRange(
+				editorState.getCurrentContent(),
+				selection,
+				'backward'
+			);
+		}
+		contentState = Modifier.replaceText(
+			contentState,
+			selection,
+			text,
+			null,
+			entityKey
+		);
+		const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
+		this.onChange(_editorState);
+	},
 
-    _toggleAtomicBlock(entity, value) {
-        const _editorState = BlockModifier.insertAtomicBlock(this.state.editorState, entity, value);
-        this.onChange(_editorState);
-    },
+	_toggleAtomicBlock (entity, value) {
+		const _editorState = BlockModifier.insertAtomicBlock(this.state.editorState, entity, value);
+		this.onChange(_editorState);
+	},
 
-    _toggleAudio(entity, value) {
-        const audio = Array.isArray(value) ? value[0] : null;
-        if (!audio) {
-            return;
-        }
-        this._toggleAtomicBlock(entity, audio);
-    },
+	_toggleAudio (entity, value) {
+		const audio = Array.isArray(value) ? value[0] : null;
+		if (!audio) {
+			return;
+		}
+		this._toggleAtomicBlock(entity, audio);
+	},
 
-    _toggleLink (entity, value) {
-        const {url, text} = value;
-        const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', {text: text || url, url: url}) : null;
-        this._toggleTextWithEntity(entityKey, text || url);
-    },
+	_toggleLink (entity, value) {
+		const { url, text } = value;
+		const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', { text: text || url, url: url }) : null;
+		this._toggleTextWithEntity(entityKey, text || url);
+	},
 
-    _toggleSlideshow (entity, value) {
-        const images = Array.isArray(value) && value.length > 0 ? value : null;
-        if (!images) {
-            return;
-        }
-        this._toggleAtomicBlock(entity, images);
-    },
+	_toggleSlideshow (entity, value) {
+		const images = Array.isArray(value) && value.length > 0 ? value : null;
+		if (!images) {
+			return;
+		}
+		this._toggleAtomicBlock(entity, images);
+	},
 
-    _toggleImageDiff(entity, value) {
-        const images = Array.isArray(value) && value.length === 2 ? value : null;
-        if (!images) {
-            return;
-        }
-        this._toggleAtomicBlock(entity, images);
-    },
+	_toggleImageDiff (entity, value) {
+		const images = Array.isArray(value) && value.length === 2 ? value : null;
+		if (!images) {
+			return;
+		}
+		this._toggleAtomicBlock(entity, images);
+	},
 
-    toggleEntity (entity, value) {
-        switch (entity) {
-            case ENTITY.audio.type:
-                return this._toggleAudio(entity, value);
-            case ENTITY.annotation.type:
-            case ENTITY.blockQuote.type:
-            case ENTITY.infobox.type:
-            case ENTITY.embeddedCode.type:
-            case ENTITY.image.type:
-                return this._toggleAtomicBlock(entity, value);
-            case ENTITY.link.type:
-                return this._toggleLink(entity, value);
-            case ENTITY.slideshow.type:
-                return this._toggleSlideshow(entity, value);
-            case ENTITY.imageDiff.type:
-                return this._toggleImageDiff(entity, value);
-            default:
-                return;
-        }
-    },
+	toggleEntity (entity, value) {
+		switch (entity) {
+			case ENTITY.audio.type:
+				return this._toggleAudio(entity, value);
+			case ENTITY.annotation.type:
+			case ENTITY.blockQuote.type:
+			case ENTITY.infobox.type:
+			case ENTITY.embeddedCode.type:
+			case ENTITY.image.type:
+				return this._toggleAtomicBlock(entity, value);
+			case ENTITY.link.type:
+				return this._toggleLink(entity, value);
+			case ENTITY.slideshow.type:
+				return this._toggleSlideshow(entity, value);
+			case ENTITY.imageDiff.type:
+				return this._toggleImageDiff(entity, value);
+			default:
+				return;
+		}
+	},
 
-    _blockRenderer (block) {
-        if (block.getType() === 'atomic') {
-            return {
-                component: AtomicBlockSwitcher,
-                props: {
-                    onFinishEdit: (blockKey, valueChanged) => {
-                        const _editorState = BlockModifier.handleAtomicEdit(this.state.editorState, blockKey, valueChanged);
+	_blockRenderer (block) {
+		if (block.getType() === 'atomic') {
+			return {
+				component: AtomicBlockSwitcher,
+				props: {
+					onFinishEdit: (blockKey, valueChanged) => {
+						const _editorState = BlockModifier.handleAtomicEdit(this.state.editorState, blockKey, valueChanged);
 
-                        // workaround here.
-                        // use refreshEditorState to make the Editor rerender
-                        this.onChange(refreshEditorState(_editorState));
-                    },
-                    refreshEditorState: () => {
-                        this.onChange(refreshEditorState(this.state.editorState));
-                    },
-                    data: this._convertToApiData(this.state.editorState),
-                    // render desktop layout when editor is enlarged,
-                    // otherwise render mobile layout
-                    device: this.state.isEnlarged ? 'desktop' : 'mobile'
-                }
-            }
-        }
-        return null;
-    },
+						// workaround here.
+						// use refreshEditorState to make the Editor rerender
+						this.onChange(refreshEditorState(_editorState));
+					},
+					refreshEditorState: () => {
+						this.onChange(refreshEditorState(this.state.editorState));
+					},
+					data: this._convertToApiData(this.state.editorState),
+					// render desktop layout when editor is enlarged,
+					// otherwise render mobile layout
+					device: this.state.isEnlarged ? 'desktop' : 'mobile',
+				},
+			};
+		}
+		return null;
+	},
 
 	enlargeEditor () {
-        // also set editorState to force editor to re-render
-		this.setState({ isEnlarged: !this.state.isEnlarged, editorState: refreshEditorState(this.state.editorState)});
+		// also set editorState to force editor to re-render
+		this.setState({ isEnlarged: !this.state.isEnlarged, editorState: refreshEditorState(this.state.editorState) });
 	},
 
 	renderField () {
@@ -261,36 +257,36 @@ module.exports = Field.create({
 				<div className="RichEditor-root">
 					<div className={'DraftEditor-controls' + expandBtnClass}>
 						<div className={'DraftEditor-controlsInner' + expandBtnClass}>
-                            <BlockStyleButtons
-                                buttons={BLOCK_TYPES}
-                                editorState={editorState}
-                                onToggle={this.toggleBlockType}
-                            />
-                            <InlineStyleButtons
-                                buttons={INLINE_STYLES}
-                                editorState={editorState}
-                                onToggle={this.toggleInlineStyle} />
-                            <EntityButtons
-                                entities={Object.keys(ENTITY)}
-                                editorState={editorState}
-                                onToggle={this.toggleEntity}
-                            />
-                            <Button type={'hollow-primary DraftEditor-expandButton' + expandBtnClass} onClick={this.enlargeEditor}><i className={'fa ' + expandIcon} aria-hidden="true"></i></Button>
-                        </div>
-                    </div>
-                    <div className={className + expandBtnClass} onClick={this.focus}>
-                        <DraftEditor
-                            blockRendererFn={this._blockRenderer}
-                            customStyleMap={styleMap}
-                            editorState={editorState}
-                            handleKeyCommand={this.handleKeyCommand}
-                            onChange={this.onChange}
-                            ref="editor"
-                            spellCheck={useSpellCheck}
-                        />
-                        <FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
-                    </div>
-                </div>
+							<BlockStyleButtons
+								buttons={BLOCK_TYPES}
+								editorState={editorState}
+								onToggle={this.toggleBlockType}
+							/>
+							<InlineStyleButtons
+								buttons={INLINE_STYLES}
+								editorState={editorState}
+								onToggle={this.toggleInlineStyle} />
+							<EntityButtons
+								entities={Object.keys(ENTITY)}
+								editorState={editorState}
+								onToggle={this.toggleEntity}
+							/>
+							<Button type={'hollow-primary DraftEditor-expandButton' + expandBtnClass} onClick={this.enlargeEditor}><i className={'fa ' + expandIcon} aria-hidden="true"></i></Button>
+						</div>
+					</div>
+					<div className={className + expandBtnClass} onClick={this.focus}>
+						<DraftEditor
+							blockRendererFn={this._blockRenderer}
+							customStyleMap={styleMap}
+							editorState={editorState}
+							handleKeyCommand={this.handleKeyCommand}
+							onChange={this.onChange}
+							ref="editor"
+							spellCheck={useSpellCheck}
+						/>
+						<FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
+					</div>
+				</div>
 			</div>
 		);
 	},

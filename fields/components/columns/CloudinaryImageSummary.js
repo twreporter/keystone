@@ -1,6 +1,5 @@
 import React from 'react';
 // import CloudinaryImage from 'react-cloudinary-img';
-import ItemsTableValue from '../../../admin/client/components/ItemsTableValue';
 
 const IMAGE_SIZE = 18;
 

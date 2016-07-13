@@ -8,11 +8,11 @@ var uglify = require('gulp-uglify');
 /**
  * Prepare public assets
  */
- gulp.task('copy-fontawesome', function() {
-	 // copy fontawesome's webfont file into the public folder
-   gulp.src('node_modules/font-awesome/fonts/fontawesome-*')
-     .pipe(gulp.dest('admin/public/fonts'));
- });
+gulp.task('copy-fontawesome', function () {
+	// copy fontawesome's webfont file into the public folder
+	gulp.src('node_modules/font-awesome/fonts/fontawesome-*')
+		.pipe(gulp.dest('admin/public/fonts'));
+});
 
 
 /**

@@ -51,7 +51,7 @@ const dropTarget = {
 		if (timeoutID) {
 			return;
 		}
-		let { page, getItem } = props;
+		let { page } = props;
 		const currentPage = CurrentListStore.getCurrentPage();
 		const original = CurrentListStore.getDragBase();
 

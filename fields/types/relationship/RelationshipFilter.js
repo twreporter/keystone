@@ -2,7 +2,7 @@ import async from 'async';
 import React from 'react';
 import xhr from 'xhr';
 
-import { Button, FormField, FormInput, InputGroup, SegmentedControl } from 'elemental';
+import { FormInput, FormField, SegmentedControl } from 'elemental';
 
 import PopoutList from '../../../admin/client/components/PopoutList';
 

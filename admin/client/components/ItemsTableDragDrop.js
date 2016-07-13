@@ -4,9 +4,6 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { Sortable } from './ItemsTableRow';
 import DropZone from './ItemsTableDragDropZone';
 
-import CurrentListStore from '../stores/CurrentListStore';
-import classnames from 'classnames';
-
 var ItemsTableDragDrop = React.createClass({
 	displayName: 'ItemsTableDragDrop',
 	propTypes: {
@@ -26,11 +23,11 @@ var ItemsTableDragDrop = React.createClass({
 							sortOrder={item.sortOrder || 0}
 							id={item.id}
 							item={item}
-							{ ...this.props }
+							{...this.props}
 						/>
 					);
 				})}
-				<DropZone { ...this.props } />
+				<DropZone {...this.props} />
 			</tbody>
 		);
 	},

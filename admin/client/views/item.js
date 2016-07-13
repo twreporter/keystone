@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Columns from '../columns';
 import Lists from '../stores/Lists';
 import CreateForm from '../components/CreateForm';
 import EditForm from '../components/EditForm';
@@ -11,7 +10,7 @@ import MobileNavigation from '../components/MobileNavigation';
 import PrimaryNavigation from '../components/PrimaryNavigation';
 import RelatedItemsList from '../components/RelatedItemsList';
 import SecondaryNavigation from '../components/SecondaryNavigation';
-import { Alert, Container, Spinner } from 'elemental';
+import { Container, Spinner } from 'elemental';
 
 var ItemView = React.createClass({
 	displayName: 'ItemView',

@@ -1,7 +1,6 @@
 import moment from 'moment';
 import DayPicker from 'react-day-picker';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Popout from '../../admin/client/components/Popout';
 import { FormInput } from 'elemental';
 
@@ -20,11 +19,7 @@ module.exports = React.createClass({
 	},
 	getInitialState () {
 		let id = ++lastId;
-		let month = new Date();
-		let { format, value } = this.props;
-		if (moment(value, format, true).isValid()) {
-			month = moment(value, format).toDate();
-		}
+		let { value } = this.props;
 		return {
 			value: value,
 			id: `_DateInput_${id}`,

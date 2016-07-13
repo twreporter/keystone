@@ -4,11 +4,11 @@ import { Container } from 'elemental';
 var Footer = React.createClass({
 	displayName: 'Footer',
 	propTypes: {
+		User: React.PropTypes.object, // eslint-disable-line react/jsx-sort-prop-types
 		appversion: React.PropTypes.string,
 		backUrl: React.PropTypes.string,
 		brand: React.PropTypes.string,
 		user: React.PropTypes.object,
-		User: React.PropTypes.object, // eslint-disable-line react/jsx-sort-prop-types
 		version: React.PropTypes.string,
 	},
 	renderUser () {

@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 
 import { SegmentedControl } from 'elemental';
@@ -27,9 +26,6 @@ var PasswordFilter = React.createClass({
 	},
 
 	render () {
-		let { field } = this.props;
-		let { checked } = this.state;
-
 		return this.renderToggle();
 	},
 

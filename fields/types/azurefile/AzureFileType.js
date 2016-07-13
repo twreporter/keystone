@@ -3,7 +3,6 @@
  */
 
 var _ = require('underscore');
-var moment = require('moment');
 var keystone = require('../../../');
 var util = require('util');
 var azure = require('azure');
@@ -228,7 +227,6 @@ azurefile.prototype.updateItem = function (item, data, callback) { // eslint-dis
 azurefile.prototype.uploadFile = function (item, file, update, callback) {
 
 	var field = this;
-	var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : ''; // eslint-disable-line no-unused-var
 	var filetype = file.mimetype || file.type;
 
 	if (field.options.allowedTypes && !_.contains(field.options.allowedTypes, filetype)) {

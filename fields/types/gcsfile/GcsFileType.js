@@ -61,29 +61,29 @@ gcsfile.prototype.addToSchema = function () {
 	var field = this;
 	var schema = this.list.schema;
 
-    var paths = this.paths = {
-        // fields
-        filename: this._path.append('.filename'),
-        filetype: this._path.append('.filetype'),
-        gcsBucket: this._path.append('.gcsBucket'),
-        gcsDir: this._path.append('.gcsDir'),
-        size: this._path.append('.size'),
-        url: this._path.append('.url'),
+	var paths = this.paths = {
+		// fields
+		filename: this._path.append('.filename'),
+		filetype: this._path.append('.filetype'),
+		gcsBucket: this._path.append('.gcsBucket'),
+		gcsDir: this._path.append('.gcsDir'),
+		size: this._path.append('.size'),
+		url: this._path.append('.url'),
 
-        // virtuals
-        action: this._path.append('_action'),
-        exists: this._path.append('.exists'),
-        upload: this._path.append('_upload')
-    };
+		// virtuals
+		action: this._path.append('_action'),
+		exists: this._path.append('.exists'),
+		upload: this._path.append('_upload'),
+	};
 
-    var schemaPaths = this._path.addTo({}, {
-        filename: String,
-        filetype: String,
-        gcsBucket: String,
-        gcsDir: String,
-        size: Number,
-        url: String
-    });
+	var schemaPaths = this._path.addTo({}, {
+		filename: String,
+		filetype: String,
+		gcsBucket: String,
+		gcsDir: String,
+		size: Number,
+		url: String,
+	});
 
 	schema.add(schemaPaths);
 
@@ -98,13 +98,13 @@ gcsfile.prototype.addToSchema = function () {
 
 	var reset = function (item) {
 		item.set(field.path, {
-            filename: '',
-            filetype: '',
-            gcsBucket: '',
-            gcsDir: '',
-            size: 0,
-            url: ''
-        });
+			filename: '',
+			filetype: '',
+			gcsBucket: '',
+			gcsDir: '',
+			size: 0,
+			url: '',
+		});
 	};
 
 	var schemaMethods = {
@@ -125,27 +125,27 @@ gcsfile.prototype.addToSchema = function () {
 		 * @api public
 		 */
 		delete: function () {
-            var _this = this;
-            var promise = new Promise(function(resolve, reject) {
-                var gcsConfig = field.gcsConfig;
-                var bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.gcsBucket));
-                var filename = _this.get(paths.filename);
-                if (filename && typeof filename === 'string') {
-                    bucket.deleteFiles({
-                        prefix: _this.get(paths.gcsDir) + filename
-                    }, function(err) {
-                        if (err) {
-                            return reject(err);
-                        }
-                        resolve();
-                    });
-                } else {
-                    resolve();
-                }
-            });
-            reset(this);
-            return promise;
-		}
+			var _this = this;
+			var promise = new Promise(function (resolve, reject) {
+				var gcsConfig = field.gcsConfig;
+				var bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.gcsBucket));
+				var filename = _this.get(paths.filename);
+				if (filename && typeof filename === 'string') {
+					bucket.deleteFiles({
+						prefix: _this.get(paths.gcsDir) + filename,
+					}, function (err) {
+						if (err) {
+							return reject(err);
+						}
+						resolve();
+					});
+				} else {
+					resolve();
+				}
+			});
+			reset(this);
+			return promise;
+		},
 	};
 
 	_.each(schemaMethods, function (fn, key) {
@@ -228,13 +228,12 @@ gcsfile.prototype.updateItem = function (item, data, callback) { // eslint-disab
 
 gcsfile.prototype.uploadFile = function (item, file, update, callback) {
 
-    var field = this;
-    var gcsDir = field.options.destination || '';
-    var isPublicRead = field.options.publicRead || false;
-    var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : '';
-    var filename = prefix + file.name;
-    var originalname = file.originalname;
-    var filetype = file.mimetype || file.type;
+	var field = this;
+	var gcsDir = field.options.destination || '';
+	var isPublicRead = field.options.publicRead || false;
+	var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : '';
+	var filename = prefix + file.name;
+	var filetype = file.mimetype || file.type;
 
 	if (typeof update === 'function') {
 		callback = update;
@@ -247,31 +246,31 @@ gcsfile.prototype.uploadFile = function (item, file, update, callback) {
 
 	var doUpload = function () {
 
-        var bucket = gcsHelper.initBucket(field.gcsConfig, field.options.bucket);
-        gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
-            destination: gcsDir + filename,
-            filetype: filetype,
-            isPublicRead: isPublicRead
-        }).then(function(response) {
-            var fileData = {
-                filename: filename,
-                filetype: filetype,
-                gcsBucket: field.options.bucket,
-                gcsDir: gcsDir,
-                size: file.size,
-                url: gcsHelper.getPublicUrl(field.options.bucket, gcsDir + filename),
-            };
+		var bucket = gcsHelper.initBucket(field.gcsConfig, field.options.bucket);
+		gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
+			destination: gcsDir + filename,
+			filetype: filetype,
+			isPublicRead: isPublicRead,
+		}).then(function (response) {
+			var fileData = {
+				filename: filename,
+				filetype: filetype,
+				gcsBucket: field.options.bucket,
+				gcsDir: gcsDir,
+				size: file.size,
+				url: gcsHelper.getPublicUrl(field.options.bucket, gcsDir + filename),
+			};
 
-            if (update) {
-                item.set(field.path, fileData);
-            }
-            return callback(null, fileData);
-        }).catch(function(err) {
-            return callback(err);
-        });
-    };
+			if (update) {
+				item.set(field.path, fileData);
+			}
+			return callback(null, fileData);
+		}).catch(function (err) {
+			return callback(err);
+		});
+	};
 
-    doUpload();
+	doUpload();
 };
 
 
@@ -309,23 +308,23 @@ gcsfile.prototype.getRequestHandler = function (item, req, paths, callback) {
 		}
 
 		if (req.files && req.files[paths.upload] && req.files[paths.upload].size) {
-            var fileDelete;
-            if (field.options.autoCleanup && item.get(field.paths.exists)) {
-                // capture image delete promise
-                fileDelete = field.apply(item, 'delete');
-            }
-            if (typeof fileDelete === 'undefined') {
-                field.uploadFile(item, req.files[paths.upload], true, callback);
-            } else {
-                fileDelete.then(function(result) {
-                    field.uploadFile(item, req.files[paths.upload], true, callback);
-                }, function(err) {
-                    callback(err);
-                });
-            }
-        } else {
-		    return callback();
-        }
+			var fileDelete;
+			if (field.options.autoCleanup && item.get(field.paths.exists)) {
+				// capture image delete promise
+				fileDelete = field.apply(item, 'delete');
+			}
+			if (typeof fileDelete === 'undefined') {
+				field.uploadFile(item, req.files[paths.upload], true, callback);
+			} else {
+				fileDelete.then(function (result) {
+					field.uploadFile(item, req.files[paths.upload], true, callback);
+				}, function (err) {
+					callback(err);
+				});
+			}
+		} else {
+			return callback();
+		}
 	};
 };
 
