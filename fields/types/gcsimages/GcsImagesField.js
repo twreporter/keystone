@@ -70,10 +70,9 @@ module.exports = Field.create({
 
 	getInitialState () {
 		var thumbnails = [];
-		var self = this;
 
 		_.forEach(this.props.value, function (item) {
-      thumbnails.push(item);
+			thumbnails.push(item);
 		});
 
 		return { thumbnails: thumbnails };
@@ -81,10 +80,10 @@ module.exports = Field.create({
 
 	removeThumbnail (i) {
 		var thumbs = this.state.thumbnails;
-    var thumb = _.get(thumbs , [i], {});
+		var thumb = _.get(thumbs, [i], {});
 
 		if (thumb.isQueued) {
-      thumbs.splice(i, 1);
+			thumbs.splice(i, 1);
 		} else {
 			thumb.deleted = !thumb.deleted;
 		}
@@ -93,9 +92,9 @@ module.exports = Field.create({
 	},
 
 	pushThumbnail (thumbnail) {
-    this.setState({
-      thumbnails: this.state.thumbnails.concat(thumbnail)
-    })
+		this.setState({
+			thumbnails: this.state.thumbnails.concat(thumbnail),
+		});
 	},
 
 	fileFieldNode () {
@@ -105,9 +104,9 @@ module.exports = Field.create({
 	getCount (key) {
 		var count = 0;
 
-    _.forEach(this.state.thumbnails, function (thumb) {
-      if (thumb && thumb[key]) count++;
-    });
+		_.forEach(this.state.thumbnails, function (thumb) {
+			if (thumb && thumb[key]) count++;
+		});
 
 		return count;
 	},
@@ -212,26 +211,26 @@ module.exports = Field.create({
 	},
 
 	renderContainer () {
-    var _this = this;
-    var thumbs = this.state.thumbnails;
-    var thumbBlocks = [];
-    _.forEach(thumbs, function(thumb, index) {
-		  thumb.toggleDelete = _this.removeThumbnail.bind(_this, index);
-		  thumb.shouldRenderActionButton = _this.shouldRenderField();
-      thumbBlocks.push(<Thumbnail key={index} {...thumb} />)
-    });
+		var _this = this;
+		var thumbs = this.state.thumbnails;
+		var thumbBlocks = [];
+		_.forEach(thumbs, function (thumb, index) {
+			thumb.toggleDelete = _this.removeThumbnail.bind(_this, index);
+			thumb.shouldRenderActionButton = _this.shouldRenderField();
+			thumbBlocks.push(<Thumbnail key={index} {...thumb} />);
+		});
 
 		return (
 			<div className="images-container">
-        {thumbBlocks}
+				{thumbBlocks}
 			</div>
 		);
 	},
 
 	renderFieldAction () {
-    if (!this.shouldRenderField()) {
-      return null;
-    }
+		if (!this.shouldRenderField()) {
+			return null;
+		}
 
 		var value = '';
 		var remove = [];

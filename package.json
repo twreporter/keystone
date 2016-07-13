@@ -71,6 +71,7 @@
     "multer": "0.1.8",
     "numeral": "1.5.3",
     "object-assign": "4.0.1",
+    "precommit-hook": "^3.0.0",
     "qs": "^4.0.0",
     "queryfilter": "0.0.4",
     "raf": "^3.2.0",
@@ -90,6 +91,7 @@
     "react-pure-render": "^1.0.2",
     "react-router": "2.0.0",
     "react-select": "1.0.0-beta9",
+    "react-youtube": "^7.0.1",
     "scmp": "1.0.0",
     "semver": "5.1.0",
     "serve-favicon": "2.3.0",
@@ -172,8 +174,12 @@
     "current": "updtr",
     "test-cov": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "posttest-cov": "if [ -n \"$CODECLIMATE_REPO_TOKEN\" ]; then codeclimate < coverage/lcov.info; fi",
-    "clean": "rimraf ./coverage"
+    "clean": "rimraf ./coverage",
+    "validate": "npm ls"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "engines": {
     "node": ">= 0.10.28",
     "npm": ">= 1.4.9"

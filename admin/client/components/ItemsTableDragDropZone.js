@@ -12,7 +12,7 @@ var ItemsTableDragDropZone = React.createClass({
 		list: React.PropTypes.object,
 	},
 	renderPageDrops () {
-		let { items, list } = this.props;
+		let { items } = this.props;
 		let currentPage = CurrentListStore.getCurrentPage();
 		let pageSize = CurrentListStore.getPageSize();
 

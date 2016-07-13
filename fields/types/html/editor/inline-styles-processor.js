@@ -5,7 +5,7 @@ import _ from 'lodash';
 export default function InlineStylesProcessor (inlineTagMap, entityTagMap, entityMap, block) {
 	//  exit if there is no inlineStyleRanges/entityRanges or length === 0 as well
 	if ((!block.inlineStyleRanges && !block.entityRanges)
-			|| (block.inlineStyleRanges.length === 0 && block.entityRanges.length === 0)) {
+		|| (block.inlineStyleRanges.length === 0 && block.entityRanges.length === 0)) {
 		return block.text;
 	}
 	let html = block.text;

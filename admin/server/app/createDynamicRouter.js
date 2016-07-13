@@ -58,10 +58,10 @@ module.exports = function createDynamicRouter (keystone) {
 		router.post('/api/s3/upload', require('../api/s3').upload);
 	}
 
-    if (keystone.get('gcs config')) {
-        router.get('/api/gcs/get', require('../api/gcs').get);
-        router.post('/api/gcs/upload', require('../api/gcs').upload);
-    }
+	if (keystone.get('gcs config')) {
+		router.get('/api/gcs/get', require('../api/gcs').get);
+		router.post('/api/gcs/upload', require('../api/gcs').upload);
+	}
 
 	// #5: Core Lists API
 

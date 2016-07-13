@@ -33,13 +33,13 @@ module.exports = Field.create({
 		}
 	},
 
-    getFilename () {
-        if (this.hasLocal()) {
-            return this.fileFieldNode().value.split('\\').pop();
-        } else {
-            return this.props.value.filename;
-        }
-    },
+	getFilename () {
+		if (this.hasLocal()) {
+			return this.fileFieldNode().value.split('\\').pop();
+		} else {
+			return this.props.value.filename;
+		}
+	},
 
 	undoRemove () {
 		this.fileFieldNode().value = '';
