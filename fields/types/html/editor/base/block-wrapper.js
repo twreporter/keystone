@@ -12,10 +12,16 @@ export default function WrapComponent (WrappedComponent) {
 	class Wrapper extends Component {
 		constructor (props) {
 			super(props);
-			this.align = this._align.bind(this);
+
+			const entityKey = this.props.block.getEntityAt(0);
+			let alignment;
+			if (entityKey) {
+				alignment = _.get(Entity.get(entityKey).get('data'), 'alignment', 'center');
+			}
 			this.state = {
-				alignment: props.blockProps.alignment || 'center',
+				alignment: alignment,
 			};
+			this.align = this._align.bind(this);
 		}
 
 		_align (alignment) {
@@ -30,12 +36,13 @@ export default function WrapComponent (WrappedComponent) {
 		}
 
 		render () {
+			// let clearfix = this.state.alignment !== 'center' ? true : false;
 			return (
-				<WrappedComponent {...this.props}
-					align={this.align}
-					alignment={this.state.alignment}
-					device={_.get(this.props, ['blockProps', 'device'], 'mobile')}
-				/>
+				<div>
+					<WrappedComponent {...this.props}
+						align={this.align}
+					/>
+				</div>
 			);
 		}
 	}

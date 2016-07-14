@@ -161,12 +161,12 @@ module.exports = Field.create({
 		this._toggleTextWithEntity(entityKey, text || url);
 	},
 
-	_toggleSlideshow (entity, value) {
-		const images = Array.isArray(value) && value.length > 0 ? value : null;
-		if (!images) {
+	_toggleImage (entity, value) {
+		const image = Array.isArray(value) ? value[0] : null;
+		if (!image) {
 			return;
 		}
-		this._toggleAtomicBlock(entity, images);
+		this._toggleAtomicBlock(entity, image);
 	},
 
 	_toggleImageDiff (entity, value) {
@@ -177,6 +177,15 @@ module.exports = Field.create({
 		this._toggleAtomicBlock(entity, images);
 	},
 
+	_toggleSlideshow (entity, value) {
+		const images = Array.isArray(value) && value.length > 0 ? value : null;
+		if (!images) {
+			return;
+		}
+		this._toggleAtomicBlock(entity, images);
+	},
+
+
 	toggleEntity (entity, value) {
 		switch (entity) {
 			case ENTITY.audio.type:
@@ -185,10 +194,12 @@ module.exports = Field.create({
 			case ENTITY.blockQuote.type:
 			case ENTITY.infobox.type:
 			case ENTITY.embeddedCode.type:
-			case ENTITY.image.type:
+			case ENTITY.youtube.type:
 				return this._toggleAtomicBlock(entity, value);
 			case ENTITY.link.type:
 				return this._toggleLink(entity, value);
+			case ENTITY.image.type:
+				return this._toggleImage(entity, value);
 			case ENTITY.slideshow.type:
 				return this._toggleSlideshow(entity, value);
 			case ENTITY.imageDiff.type:

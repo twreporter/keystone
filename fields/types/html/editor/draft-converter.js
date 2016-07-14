@@ -36,6 +36,7 @@ let defaultEntityTagMap = {
 	image: ['<img src="<%= url %>">', '</img>'],
 	slideshow: ['<!-- slideshow component --> <ol> <% _.forEach(this, function(image) { %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
 	imageDiff: ['<!-- imageDiff component --> <ol> <% _.forEach(this, function(image, index) { if (index > 1) { return; } %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
+	youtube: ['<iframe width="560" height="315" src="https://www.youtube.com/embed/<% youtubeId %>" frameborder="0" allowfullscreen>', '</iframe>'],
 };
 
 let nestedTagMap = {

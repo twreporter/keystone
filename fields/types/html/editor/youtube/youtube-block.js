@@ -1,12 +1,11 @@
 'use strict';
 
-import { AlignedBlockQuote } from 'react-article-components';
-import _ from 'lodash';
+import { AlignedYoutube } from 'react-article-components';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
-import BlockQuoteEditingBlock from './block-quote-editing-block';
+import YoutubeEditingBlock from './youtube-editing-block';
 import React from 'react';
 
-export default class BlockQuoteBlock extends AtomicBlockRendererMixin(React.Component) {
+export default class YoutubeBlock extends AtomicBlockRendererMixin(React.Component) {
 	constructor (props) {
 		super(props);
 		this.handleEditingBlockChange = this._handleEditingBlockChange.bind(this);
@@ -23,17 +22,16 @@ export default class BlockQuoteBlock extends AtomicBlockRendererMixin(React.Comp
 		}
 
 		let blockContent = _.get(this.state.data, ['content', 0], {});
-		let quote = blockContent.quote;
-		let quoteBy = blockContent.quoteBy;
-
+		let youtubeId = blockContent.youtubeId;
+		let description = blockContent.description;
 		const EditBlock = (
-			<BlockQuoteEditingBlock
-				label="blockquote"
+			<YoutubeEditingBlock
+				description={description}
+				label="youtube"
 				isModalOpen={this.state.editMode}
 				onToggle={this.handleEditingBlockChange}
-				quote={quote}
-				quoteBy={quoteBy}
 				toggleModal={this.toggleEditMode}
+				youtubeId={youtubeId}
 			/>
 		);
 
@@ -43,14 +41,11 @@ export default class BlockQuoteBlock extends AtomicBlockRendererMixin(React.Comp
 				onClick={this.toggleEditMode}
 				style={{ cursor: 'pointer' }}
 			>
-				<AlignedBlockQuote
+				<AlignedYoutube
 					{...this.state.data}
-					device={this.props.device}
-				>
-				{this.props.children}
-				</AlignedBlockQuote>
+				/>
 				{EditBlock}
 			</div>
 		);
 	}
-}
+};

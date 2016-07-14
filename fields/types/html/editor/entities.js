@@ -29,6 +29,9 @@ const ENTITY = {
 		type: 'slideshow',
 		slideshowSelectionLimit: 30,
 	},
+	youtube: {
+		type: 'youtube',
+	},
 };
 
 

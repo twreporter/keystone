@@ -19,6 +19,7 @@ const processor = {
 			case ENTITY.infobox.type:
 			case ENTITY.slideshow.type:
 			case ENTITY.imageDiff.type:
+			case ENTITY.youtube.type:
 				alignment = entity.data && entity.data.alignment || alignment;
 				content = _.get(entity, 'data');
 				content = Array.isArray(content) ? content : [content];
