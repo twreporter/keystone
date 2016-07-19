@@ -2,7 +2,6 @@
 
 import { Entity } from 'draft-js';
 import _ from 'lodash';
-import classNames from 'classnames';
 import ENTITY from '../entities';
 import AnnotationBlock from '../annotation/annotation-block';
 import AudioBlock from '../audio/audio-block';
@@ -15,6 +14,8 @@ import React from 'react';
 import SlideshowBlock from '../slideshow/slideshow-block';
 import YoutubeBlock from '../youtube/youtube-block';
 import Wrapper from './block-wrapper';
+import classNames from 'classnames';
+import { mobileStyle, tabletMinStyle, tabletMaxStyle, tabletFullStyle } from '../constants/layout-style';
 
 class AtomicBlockSwitcher extends React.Component {
 	constructor (props) {
@@ -71,24 +72,6 @@ class AtomicBlockSwitcher extends React.Component {
 		const device = _.get(this.props, ['blockProps', 'device'], 'mobile');
 		let BlockComponent;
 		let style;
-
-		let mobileStyle = {
-			width: '100%',
-		};
-		let tabletFullStyle = {
-			maxWidth: '100%',
-		};
-		let tabletMaxStyle = {
-			maxWidth: '644px',
-		};
-		let tabletMinStyle = {
-			width: '532px',
-		};
-		/*
-		// wait for spec
-		let descktopStyle = {
-		};
-		*/
 
 
 		switch (type) {
