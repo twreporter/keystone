@@ -10,68 +10,67 @@
 }
 
 .RichEditor-root {
-	background: #F7F7F7;
-	border: 1px solid #ddd;
-	font-size: 12px;
+  background: #F7F7F7;
+  border: 1px solid #ddd;
+  font-size: 12px;
 
-	.RichEditor-editor {
-		border-top: 1px solid #ddd;
-		cursor: text;
-		font-size: 18px;
-		margin-top: 10px;
-		overflow: hidden;
-		padding-bottom: 2rem;
+  .RichEditor-editor {
+    border-top: 1px solid #ddd;
+    cursor: text;
+    font-size: 18px;
+    margin-top: 10px;
+    overflow: hidden;
+    padding-bottom: 2rem;
 
-		.public-DraftEditorPlaceholder-root {
-			margin: 0 -15px -15px;
-			padding: 15px;
-		}
+    .public-DraftEditorPlaceholder-root {
+      margin: 0 -15px -15px;
+      padding: 15px;
+    }
 
-		.public-DraftEditor-content {
-			div[data-block='true'], h2[data-block='true'], h3[data-block='true'], .public-DraftStyleDefault-o1, .public-DraftStyleDefault-u1, .public-DraftStyleDefault-pre {
-				.default-block;
-			}
+    .public-DraftEditor-content {
+      div[data-block='true'], h2[data-block='true'], h3[data-block='true'], .public-DraftStyleDefault-o1, .public-DraftStyleDefault-u1, .public-DraftStyleDefault-pre {
+        .default-block;
+      }
 
-			div[data-block='true'] {
-				line-height: 1.7;
-			}
-			
-			.public-DraftStyleDefault-pre {
-				background-color: rgba(0, 0, 0, 0.05);
-				font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
-				font-size: 16px;
-				padding: 20px;
-			}
+      div[data-block='true'] {
+        line-height: 1.7;
+      }
 
-			figure[data-block='true'] {
-				margin: 0 0 40px 0;
-			}
+      .public-DraftStyleDefault-pre {
+        background-color: rgba(0, 0, 0, 0.05);
+        font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
+        font-size: 16px;
+        padding: 20px;
+      }
 
-			min-height: 100px;
-		}
+      figure[data-block='true'] {
+        margin: 0 0 40px 0;
+      }
 
-		&.expanded {
-			border-top: 0;
-			padding-top: 2.5em !important;
+      min-height: 100px;
+    }
 
-			div[data-block='true'], h2[data-block='true'], .public-DraftStyleDefault-ol, .public-DraftStyleDefault-ul, .public-DraftStyleDefault-pre {
-				.default-expand-block;	
-			}
+    &.expanded {
+      border-top: 0;
+      padding-top: 2.5em !important;
 
-			figure[data-block='true'] {
-				margin-bottom: 40px;
-			}
-		}
+      div[data-block='true'], h2[data-block='true'], .public-DraftStyleDefault-ol, .public-DraftStyleDefault-ul, .public-DraftStyleDefault-pre {
+        .default-expand-block;	
+      }
 
-	}
+      figure[data-block='true'] {
+        margin-bottom: 40px;
+      }
+    }
+  }
 
-	.RichEditor-hidePlaceholder{
-		.public-DraftEditorPlaceholder-root {
-			display: none;
-		}
-	}
+  .RichEditor-hidePlaceholder{
+    .public-DraftEditorPlaceholder-root {
+      display: none;
+    }
+  }
 
-	.RichEditor-activeButton {
-		color: #5890ff;
-	}
+  .RichEditor-activeButton {
+    color: #5890ff;
+  }
 }
