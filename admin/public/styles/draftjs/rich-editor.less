@@ -1,72 +1,76 @@
 @import "./editor.less";
 
+.default-block {
+	margin: 0 24px 40px 24px;
+}
+
+.default-expand-block {
+	max-width: 492px;
+	margin: 0 auto 40px auto;
+}
+
 .RichEditor-root {
-  background: #fff;
+  background: #F7F7F7;
   border: 1px solid #ddd;
-  font-family: 'Georgia', serif;
-  font-size: 14px;
-  padding: 15px;
-}
+  font-size: 12px;
 
-.RichEditor-editor {
-  border-top: 1px solid #ddd;
-  cursor: text;
-  font-size: 16px;
-  margin-top: 10px;
-  overflow: hidden;
-  padding-bottom: 2rem;
-}
+  .RichEditor-editor {
+    border-top: 1px solid #ddd;
+    cursor: text;
+    font-size: 18px;
+    margin-top: 10px;
+    overflow: hidden;
+    padding-bottom: 2rem;
 
-/* reset figure style */
-.RichEditor-editor figure {
-    margin: 0px;
-}
+    .public-DraftEditorPlaceholder-root {
+      margin: 0 -15px -15px;
+      padding: 15px;
+    }
 
-.RichEditor-editor .public-DraftEditorPlaceholder-root,
-.RichEditor-editor .public-DraftEditor-content {
-  margin: 0 -15px -15px;
-  padding: 15px;
-}
+    .public-DraftEditor-content {
+      div[data-block='true'], h2[data-block='true'], h3[data-block='true'], .public-DraftStyleDefault-o1, .public-DraftStyleDefault-u1, .public-DraftStyleDefault-pre {
+        .default-block;
+      }
 
-.RichEditor-editor .public-DraftEditor-content {
-  min-height: 100px;
-}
+      div[data-block='true'] {
+        line-height: 1.7;
+      }
 
-.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
-  display: none;
-}
+      .public-DraftStyleDefault-pre {
+        background-color: rgba(0, 0, 0, 0.05);
+        font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
+        font-size: 16px;
+        padding: 20px;
+      }
 
-.RichEditor-editor .RichEditor-blockquote {
-  border-left: 5px solid #eee;
-  color: #666;
-  font-family: 'Hoefler Text', 'Georgia', serif;
-  font-style: italic;
-  margin: 16px 0;
-  padding: 10px 20px;
-}
+      figure[data-block='true'] {
+        margin: 0 0 40px 0;
+      }
 
-.RichEditor-editor .public-DraftStyleDefault-pre {
-  background-color: rgba(0, 0, 0, 0.05);
-  font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
-  font-size: 16px;
-  padding: 20px;
-}
+      min-height: 100px;
+    }
 
-.RichEditor-controls {
-  font-family: 'Helvetica', sans-serif;
-  font-size: 14px;
-  margin-bottom: 5px;
-  user-select: none;
-}
+    &.expanded {
+      border-top: 0;
+      padding-top: 2.5em !important;
 
-.RichEditor-styleButton {
-  color: #999;
-  cursor: pointer;
-  margin-right: 16px;
-  padding: 2px 0;
-}
+      div[data-block='true'], h2[data-block='true'], .public-DraftStyleDefault-ol, .public-DraftStyleDefault-ul, .public-DraftStyleDefault-pre {
+        .default-expand-block;	
+      }
 
-.RichEditor-activeButton {
-  color: #5890ff;
-}
+      figure[data-block='true'] {
+        margin-bottom: 40px;
+      }
+    }
+  }
 
+  .RichEditor-hidePlaceholder{
+    .public-DraftEditorPlaceholder-root {
+      display: none;
+    }
+  }
+
+  .RichEditor-activeButton {
+    color: #5890ff;
+  }
+}

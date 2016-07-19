@@ -11,6 +11,7 @@ import ImageButton from './image/image-button';
 import InfoBoxBt from './info-box/info-box-bt';
 import LinkButton from './link/link-button';
 import React from 'react';
+import YoutubeBt from './youtube/youtube-bt';
 
 class StyleButton extends React.Component {
 	constructor () {
@@ -193,7 +194,7 @@ export const EntityButtons = (props) => {
 						label={entity}
 						onToggle={onToggle}
 						icon="fa-photo"
-						iconText=" Image"
+						iconText=" Img"
 					/>
 				);
 			case ENTITY.slideshow.type:
@@ -231,7 +232,20 @@ export const EntityButtons = (props) => {
 						onToggle={onToggle}
 						caption={data ? data.caption : ''}
 						embeddedCode={data ? data.embeddedCode : ''}
-						iconText=" Embedded"
+						iconText=" Embed"
+					/>
+				);
+			case ENTITY.youtube.type:
+				return (
+					<YoutubeBt
+						active={active}
+						description={data ? data.description : ''}
+						key={entity}
+						label={entity}
+						onToggle={onToggle}
+						icon="fa-youtube fa-2"
+						iconText=""
+						youtubeId={data ? data.youtubeId : ''}
 					/>
 				);
 			default:

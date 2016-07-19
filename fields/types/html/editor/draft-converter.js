@@ -27,15 +27,16 @@ let inlineTagMap = {
 };
 
 let defaultEntityTagMap = {
-	annotation: ['<div><div><%= text %></div><div><%= annotation %></div>', '</div>'],
-	audio: ['<div><h4><%= title %></h4><span><%= description %></span><audio src="<%= url %>" />', '</div>'],
-	blockQuote: ['<blockquote><div><%= quote %></div><div><%= quoteBy %></div>', '<blockquote>'],
-	embeddedCode: ['<div><%= embeddedCode%>', '</div>'],
-	infobox: ['<div><div><span><%= title %></span></div><div><span><%= body %></span></div>', '</div>'],
-	link: ['<a href="<%= url %>">', '</a>'],
-	image: ['<img src="<%= url %>">', '</img>'],
-	slideshow: ['<!-- slideshow component --> <ol> <% _.forEach(this, function(image) { %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
-	imageDiff: ['<!-- imageDiff component --> <ol> <% _.forEach(this, function(image, index) { if (index > 1) { return; } %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
+	annotation: ['<div><div><%= data.text %></div><div><%= data.annotation %></div>', '</div>'],
+	audio: ['<div><h4><%= data.title %></h4><span><%= data.description %></span><audio src="<%= data.url %>" />', '</div>'],
+	blockQuote: ['<blockquote><div><%= data.quote %></div><div><%= data.quoteBy %></div>', '<blockquote>'],
+	embeddedCode: ['<div><%= data.embeddedCode%>', '</div>'],
+	infobox: ['<div><div><span><%= data.title %></span></div><div><span><%= data.body %></span></div>', '</div>'],
+	link: ['<a href="<%= data.url %>">', '</a>'],
+	image: ['<img src="<%= data.url %>">', '</img>'],
+	slideshow: ['<!-- slideshow component --> <ol> <%  _.forEach(data, function(image) { %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
+	imageDiff: ['<!-- imageDiff component --> <ol> <% _.forEach(data, function(image, index) { if (index > 1) { return; } %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
+	youtube: ['<iframe width="560" height="315" src="https://www.youtube.com/embed/<% youtubeId %>" frameborder="0" allowfullscreen>', '</iframe>'],
 };
 
 let nestedTagMap = {

@@ -37,8 +37,8 @@ export default function InlineStylesProcessor (inlineTagMap, entityTagMap, entit
 		let entity = entityMap[range.key];
 		let tag = entityTagMap[entity.type];
 
-		let compiledTag0 = _.template(tag[0])(entity.data);
-		let compiledTag1 = _.template(tag[1])(entity.data);
+		let compiledTag0 = _.template(tag[0], { variable: 'data' })(entity.data);
+		let compiledTag1 = _.template(tag[1], { variable: 'data' })(entity.data);
 
 		if (!tagInsertMap[range.offset]) {
 			tagInsertMap[range.offset] = [];

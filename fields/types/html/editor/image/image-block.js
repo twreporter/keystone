@@ -47,6 +47,7 @@ export default class ImageBlock extends AtomicBlockRendererMixin(React.Component
 			>
 				<AlignedImage
 					{...this.state.data}
+					device={this.props.device}
 				>
 					{this.props.children}
 				</AlignedImage>

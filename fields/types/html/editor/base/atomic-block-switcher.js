@@ -1,6 +1,7 @@
 'use strict';
 
 import { Entity } from 'draft-js';
+import _ from 'lodash';
 import ENTITY from '../entities';
 import AnnotationBlock from '../annotation/annotation-block';
 import AudioBlock from '../audio/audio-block';
@@ -11,7 +12,10 @@ import ImageDiffBlock from '../image-diff/image-diff-block';
 import InfoBoxBlock from '../info-box/info-box-block';
 import React from 'react';
 import SlideshowBlock from '../slideshow/slideshow-block';
+import YoutubeBlock from '../youtube/youtube-block';
 import Wrapper from './block-wrapper';
+import classNames from 'classnames';
+import { mobileStyle, tabletMinStyle, tabletMaxStyle, tabletFullStyle } from '../constants/layout-style';
 
 class AtomicBlockSwitcher extends React.Component {
 	constructor (props) {
@@ -65,34 +69,83 @@ class AtomicBlockSwitcher extends React.Component {
 			</div>
 		);
 
-		const { alignment, device } = this.props;
-		let className = alignment;
+		const device = _.get(this.props, ['blockProps', 'device'], 'mobile');
 		let BlockComponent;
+		let style;
+
 
 		switch (type) {
 			case ENTITY.annotation.type:
 				BlockComponent = AnnotationBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletMinStyle;
+				}
 				break;
 			case ENTITY.audio.type:
 				BlockComponent = AudioBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletMinStyle;
+				}
 				break;
 			case ENTITY.blockQuote.type:
 				BlockComponent = BlockQuoteBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletMinStyle;
+				}
 				break;
 			case ENTITY.embeddedCode.type:
 				BlockComponent = EmbeddedCodeBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletMinStyle;
+				}
 				break;
 			case ENTITY.infobox.type:
 				BlockComponent = InfoBoxBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletMinStyle;
+				}
 				break;
 			case ENTITY.image.type:
 				BlockComponent = ImageBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletMaxStyle;
+				}
 				break;
 			case ENTITY.slideshow.type:
 				BlockComponent = SlideshowBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletMaxStyle;
+				}
 				break;
 			case ENTITY.imageDiff.type:
 				BlockComponent = ImageDiffBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletMaxStyle;
+				}
+				break;
+			case ENTITY.youtube.type:
+				BlockComponent = YoutubeBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletFullStyle;
+				}
 				break;
 			default:
 				return null;
@@ -102,12 +155,14 @@ class AtomicBlockSwitcher extends React.Component {
 		}
 
 		return (
-			<BlockComponent
-				{...this.props}
-				className={className}
-			>
-				{device === 'mobile' ? null : Buttons}
-			</BlockComponent>
+			<div className={classNames('center-block')} style={style}>
+				<BlockComponent
+					{...this.props}
+					device={device}
+				>
+				{device !== 'mobile' ? Buttons : null}
+				</BlockComponent>
+			</div>
 		);
 	}
 }
