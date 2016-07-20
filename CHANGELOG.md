@@ -1,3 +1,7 @@
+### 0.4.16 2016/07/20
+- Fix bug. Fix the problem we cannot change the images in the Slideshow component.
+- Make ImageDiff component editable.
+
 ### 0.4.15 
 - Integrate Youtube and BlockQuote component of react-article-components
 - Draft editor style tunning
