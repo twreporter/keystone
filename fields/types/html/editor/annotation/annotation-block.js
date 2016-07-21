@@ -7,12 +7,6 @@ import React from 'react';
 export default class AnnotationBlock extends AtomicBlockRendererMixin(React.Component) {
 	constructor (props) {
 		super(props);
-		this.handleEditingBlockChange = this._handleEditingBlockChange.bind(this);
-	}
-
-	_handleEditingBlockChange (value) {
-		this.onValueChange(value);
-		this.toggleEditMode();
 	}
 
 	render () {

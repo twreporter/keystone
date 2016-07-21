@@ -2,8 +2,9 @@
 
 import { Slideshow } from 'react-article-components';
 import _ from 'lodash';
-import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import ENTITY from '../entities';
+import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
+import EditingBt from '../base/editing-bt';
 import ImageSelector from '../../../../../admin/client/components/ImageSelector';
 import React from 'react';
 
@@ -24,24 +25,6 @@ export default class SlideshowBlock extends AtomicBlockRendererMixin(React.Compo
 		}
 
 		let images = _.get(this.state.data, 'content', []);
-
-		const EditBt = (
-			<i className="fa fa-pencil-square-o" onClick={this.toggleEditMode} style={{
-				position: 'absolute',
-				fontSize: '50px',
-				top: 0,
-				bottom: 0,
-				left: 0,
-				right: 0,
-				width: '55px',
-				height: '50px',
-				margin: 'auto',
-				backgroundColor: '#FFF',
-				borderRadius: '5px',
-				textAlign: 'center',
-				cursor: 'pointer',
-			}}/>
-		);
 
 		const EditBlock = this.state.editMode ? this._renderImageSelector({
 			apiPath: 'images',
@@ -64,7 +47,9 @@ export default class SlideshowBlock extends AtomicBlockRendererMixin(React.Compo
 					{...this.state.data}
 					device={this.props.device}
 				/>
-				{EditBt}
+				<EditingBt
+					onClick={this.toggleEditMode}
+				/>
 				{EditBlock}
 			</div>
 		);
