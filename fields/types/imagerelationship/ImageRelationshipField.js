@@ -156,7 +156,7 @@ module.exports = Field.create({
 			btValue = selectedImages[0] ? 'Change Photo' : 'Select Photo';
 			imageNode = selectedImages[0] ? (
 				<span>
-					<img src={selectedImages[0].src} width="150" />
+					<img src={selectedImages[0].url} width="150" />
 				</span>
 			) : null;
 
