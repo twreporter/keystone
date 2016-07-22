@@ -2,18 +2,13 @@
 
 import { AlignedYoutube } from 'react-article-components';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
-import YoutubeEditingBlock from './youtube-editing-block';
+import EditingBt from '../base/editing-bt';
 import React from 'react';
+import YoutubeEditingBlock from './youtube-editing-block';
 
 export default class YoutubeBlock extends AtomicBlockRendererMixin(React.Component) {
 	constructor (props) {
 		super(props);
-		this.handleEditingBlockChange = this._handleEditingBlockChange.bind(this);
-	}
-
-	_handleEditingBlockChange (value) {
-		this.onValueChange(value);
-		this.toggleEditMode();
 	}
 
 	render () {
@@ -38,11 +33,16 @@ export default class YoutubeBlock extends AtomicBlockRendererMixin(React.Compone
 		return (
 			<div
 				contentEditable={false}
-				onClick={this.toggleEditMode}
-				style={{ cursor: 'pointer' }}
+				calssName="youtube-container"
+				style={{
+					position: 'relative',
+				}}
 			>
 				<AlignedYoutube
 					{...this.state.data}
+				/>
+				<EditingBt
+					onClick={this.toggleEditMode}
 				/>
 				{EditBlock}
 			</div>

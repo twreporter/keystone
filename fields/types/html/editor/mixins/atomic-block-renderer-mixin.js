@@ -11,6 +11,7 @@ let AtomicBlockRendererMixin = (superclass) => class extends superclass {
 		this.value = null;
 		this.toggleEditMode = this._toggleEditMode.bind(this);
 		this.onValueChange = this._onValueChange.bind(this);
+		this.handleEditingBlockChange = this._handleEditingBlockChange.bind(this);
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -48,6 +49,11 @@ let AtomicBlockRendererMixin = (superclass) => class extends superclass {
 	_onValueChange (value) {
 		this.value = value;
 		this.props.blockProps.onFinishEdit(this.props.block.getKey(), this.value);
+	}
+
+	_handleEditingBlockChange (value) {
+		this.onValueChange(value);
+		this.toggleEditMode();
 	}
 };
 
