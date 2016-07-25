@@ -2,10 +2,9 @@
 
 'use strict';
 import { List } from 'immutable';
-import quoteTypes from './quote/quote-types';
 import ApiDataInstance from './api-data-instance';
 import AtomicBlockProcessor from './atomic-block-processor';
-import InlineStylesProcessor from './inline-styles-processor';
+import * as InlineStylesProcessor from './inline-styles-processor';
 
 let defaultBlockTagMap = {
 	'code-block': `<code>%content%</code>\n`,
@@ -47,10 +46,10 @@ let nestedTagMap = {
 function _convertInlineStyle (block, entityMap, blockTagMap, entityTagMap) {
 	return blockTagMap[block.type] ? blockTagMap[block.type].replace(
 		'%content%',
-		InlineStylesProcessor(inlineTagMap, entityTagMap, entityMap, block)
+		InlineStylesProcessor.convertToHtml(inlineTagMap, entityTagMap, entityMap, block)
 	) : blockTagMap.default.replace(
 		'%content%',
-		InlineStylesProcessor(inlineTagMap, block)
+		InlineStylesProcessor.convertToHtml(inlineTagMap, block)
 	);
 }
 
@@ -97,17 +96,12 @@ function convertBlocksToApiData (blocks, entityMap) {
 
 			if (block.type.startsWith('atomic') || block.type.startsWith('media')) {
 				apiDataArr = apiDataArr.push(AtomicBlockProcessor.convertBlock(entityMap, block));
-			} else if (quoteTypes.hasOwnProperty(block.type)) {
-				let style = quoteTypes[block.type].style;
-				let converted = InlineStylesProcessor(inlineTagMap, defaultEntityTagMap, entityMap, block);
-				// set type as blockquote for easy understanding
-				apiDataArr = apiDataArr.push(new ApiDataInstance({ id: block.key, type: 'blockquote', content: [converted], styles: [style] }));
 			} else {
-				let converted = InlineStylesProcessor(inlineTagMap, defaultEntityTagMap, entityMap, block);
+				let converted = InlineStylesProcessor.convertToHtml(inlineTagMap, defaultEntityTagMap, entityMap, block);
 				apiDataArr = apiDataArr.push(new ApiDataInstance({ id: block.key, type: block.type, content: [converted] }));
 			}
 		} else {
-			let converted = InlineStylesProcessor(inlineTagMap, defaultEntityTagMap, entityMap, block);
+			let converted = InlineStylesProcessor.convertToHtml(inlineTagMap, defaultEntityTagMap, entityMap, block);
 
 			// previous block is not an item-list block
 			if (nestLevel.length === 0) {
