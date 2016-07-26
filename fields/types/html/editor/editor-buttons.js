@@ -125,13 +125,14 @@ export const EntityButtons = (props) => {
 				return (
 					<AnnotationBt
 						active={active}
+						annotation={data ? data.annotation : ''}
+						draftRawObj={data ? data.draftRawObj : null}
+						icon="fa-pencil-square-o"
+						iconText=""
 						key={entity}
 						label={entity}
 						onToggle={onToggle}
 						text={data ? data.text : selectedText}
-						annotation={data ? data.annotation : ''}
-						icon="fa-pencil-square-o"
-						iconText=""
 					/>
 				);
 			case ENTITY.audio.type:

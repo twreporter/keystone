@@ -6,6 +6,8 @@ import ApiDataInstance from './api-data-instance';
 import AtomicBlockProcessor from './atomic-block-processor';
 import * as InlineStylesProcessor from './inline-styles-processor';
 
+const annotationIndicatorPrefix = '__ANNOTATION__=';
+
 let defaultBlockTagMap = {
 	'code-block': `<code>%content%</code>\n`,
 	'default': `<p>%content%</p>\n`,
@@ -26,7 +28,7 @@ let inlineTagMap = {
 };
 
 let defaultEntityTagMap = {
-	annotation: ['<div><div><%= data.text %></div><div><%= data.annotation %></div>', '</div>'],
+	annotation: ['<abbr title="<%= data.pureAnnotationText %>"><%= data.text %>', '</abbr>'],
 	audio: ['<div><h4><%= data.title %></h4><span><%= data.description %></span><audio src="<%= data.url %>" />', '</div>'],
 	blockQuote: ['<blockquote><div><%= data.quote %></div><div><%= data.quoteBy %></div>', '<blockquote>'],
 	embeddedCode: ['<div><%= data.embeddedCode%>', '</div>'],
@@ -80,7 +82,7 @@ function _convertBlocksToHtml (blocks, entityMap, blockTagMap, entityTagMap) {
 	return html;
 }
 
-function convertBlocksToApiData (blocks, entityMap) {
+function convertBlocksToApiData (blocks, entityMap, entityTagMap) {
 	let apiDataArr = List();
 	let content = [];
 	let nestLevel = [];
@@ -97,11 +99,18 @@ function convertBlocksToApiData (blocks, entityMap) {
 			if (block.type.startsWith('atomic') || block.type.startsWith('media')) {
 				apiDataArr = apiDataArr.push(AtomicBlockProcessor.convertBlock(entityMap, block));
 			} else {
-				let converted = InlineStylesProcessor.convertToHtml(inlineTagMap, defaultEntityTagMap, entityMap, block);
-				apiDataArr = apiDataArr.push(new ApiDataInstance({ id: block.key, type: block.type, content: [converted] }));
+				let converted = InlineStylesProcessor.convertToHtml(inlineTagMap, entityTagMap, entityMap, block);
+				let type = block.type;
+
+				// special case for block containing annotation entity
+				// set this block type as annotation
+				if (converted.indexOf(annotationIndicatorPrefix) > -1) {
+					type = 'annotation';
+				}
+				apiDataArr = apiDataArr.push(new ApiDataInstance({ id: block.key, type: type, content: [converted] }));
 			}
 		} else {
-			let converted = InlineStylesProcessor.convertToHtml(inlineTagMap, defaultEntityTagMap, entityMap, block);
+			let converted = InlineStylesProcessor.convertToHtml(inlineTagMap, entityTagMap, entityMap, block);
 
 			// previous block is not an item-list block
 			if (nestLevel.length === 0) {
@@ -144,7 +153,13 @@ function convertRawToApiData (raw) {
 	raw = raw || {};
 	const blocks = Array.isArray(raw.blocks) ? raw.blocks : [];
 	const entityMap = typeof raw.entityMap === 'object' ? raw.entityMap : {};
-	apiData = convertBlocksToApiData(blocks, entityMap);
+	let entityTagMap = _.merge({}, defaultEntityTagMap, {
+
+		// special handling for annotation entity
+		// annotation entity data will be included in the speical comment.
+		annotation: [`<!--${annotationIndicatorPrefix}<%= JSON.stringify(data) %>`, '-->'],
+	});
+	apiData = convertBlocksToApiData(blocks, entityMap, entityTagMap);
 	return apiData;
 }
 

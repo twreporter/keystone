@@ -30,6 +30,7 @@ let EntityEditingBlock = (superclass) => class extends Component {
 		this._editingFields = this.composeEditingFields(nextProps);
 		this.setState({
 			editingFields: this._editingFields,
+			editorState: this._initEditorState(nextProps.draftRawObj),
 		});
 	}
 

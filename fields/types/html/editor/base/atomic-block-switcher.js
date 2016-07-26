@@ -3,7 +3,6 @@
 import { Entity } from 'draft-js';
 import _ from 'lodash';
 import ENTITY from '../entities';
-import AnnotationBlock from '../annotation/annotation-block';
 import AudioBlock from '../audio/audio-block';
 import BlockQuoteBlock from '../quote/block-quote-block';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
@@ -75,14 +74,6 @@ class AtomicBlockSwitcher extends React.Component {
 
 
 		switch (type) {
-			case ENTITY.annotation.type:
-				BlockComponent = AnnotationBlock;
-				if (device === 'mobile') {
-					style = mobileStyle;
-				} else {
-					style = tabletMinStyle;
-				}
-				break;
 			case ENTITY.audio.type:
 				BlockComponent = AudioBlock;
 				if (device === 'mobile') {

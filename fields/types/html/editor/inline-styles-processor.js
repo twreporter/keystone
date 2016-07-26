@@ -25,10 +25,10 @@ function _fullfilIntersection (block) {
 			// <strong></strong>  is inline style
 			if (nextEntityOffset >= inlineOffset && nextEntityOffset < (inlineOffset + inlineLength) && (nextEntityOffset + nextEntityLength) > (inlineOffset + inlineLength) // <a><strong></a></strong>
 				&& entityOffset < inlineOffset && (entityOffset + entityLength) > inlineOffset && (entityOffset + entityLength) <= (inlineOffset + inlineLength)) { // <strong><abbr></strong></abbr>
-					// situation: <a><strong></a><abbr></strong></abbr>
-					// should be: <a><strong></strong></a><strong></strong><abbr><strong></strong></abbr>
+				// situation: <a><strong></a><abbr></strong></abbr>
+				// should be: <a><strong></strong></a><strong></strong><abbr><strong></strong></abbr>
 
-					// skip next entity checking
+				// skip next entity checking
 				i = i + 1;
 
 				splitedISInline.push({
@@ -118,9 +118,15 @@ function _entityTag (entityTagMap, entityMap, entityRanges, tagInsertMap = {}) {
 	_.forEach(entityRanges, (range) => {
 		let entity = entityMap[range.key];
 		let tag = entityTagMap[entity.type];
+		let data = entity.data;
 
-		let compiledTag0 = _.template(tag[0], { variable: 'data' })(entity.data);
-		let compiledTag1 = _.template(tag[1], { variable: 'data' })(entity.data);
+		// special case
+		if (entity.type === 'annotation') {
+			data = _.pick(data, 'text', 'annotation', 'pureAnnotationText');
+		}
+
+		let compiledTag0 = _.template(tag[0], { variable: 'data' })(data);
+		let compiledTag1 = _.template(tag[1], { variable: 'data' })(data);
 
 		if (!tagInsertMap[range.offset]) {
 			tagInsertMap[range.offset] = [];
@@ -179,62 +185,6 @@ function convertToHtml (inlineTagMap, entityTagMap, entityMap, block) {
 	return html;
 }
 
-/*
-function convertToApiData (inlineTagMap, entityTagMap, entityMap, block) {
-	if ((!block.inlineStyleRanges && !block.entityRanges)
-		|| (block.inlineStyleRanges.length === 0 && block.entityRanges.length === 0)) {
-		return block.text;
-	}
-	let text = block.text;
-	let entityRanges = block.entityRanges;
-	let splitByEntity = [];
-
-	if (entityRanges.length === 0) {
-		splitByEntity = [{
-			offset: 0,
-			length: text.length,
-			text: text,
-		}];
-	} else {
-		_.forEach(entityRanges, (entityRange) => {
-			let offset = entityRange.offset;
-			let length = entityRange.length;
-
-		});
-	}
-
-	let inlineStyleRanges = _fullfilIntersection(block);
-	tagInsertMap = _inlineTag(inlineTagMap, inlineStyleRanges, tagInsertMap);
-	// sort on position, as we'll need to keep track of offset
-	let orderedKeys = Object.keys(tagInsertMap).sort(function (a, b) {
-		a = Number(a);
-		b = Number(b);
-		if (a > b) {
-			return 1;
-		}
-		if (a < b) {
-			return -1;
-		}
-		return 0;
-	});
-	// insert tags into string, keep track of offset caused by our text insertions
-	let contents = [];
-	let offset = 0;
-	orderedKeys.forEach(function (pos) {
-		let index = Number(pos);
-		tagInsertMap[pos].forEach(function (tag) {
-			contents.push();
-			html = html.substr(0, offset + index)
-				+ tag + html.substr(offset + index);
-			offset += tag.length;
-		});
-	});
-
-	return html;
-}
-*/
-
 export {
-	// convertToApiData,
 	convertToHtml,
 };
