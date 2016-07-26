@@ -16,11 +16,39 @@ function _fullfilIntersection (block) {
 			let inlineLength = _.get(sortedISRanges, [j, 'length'], 0);
 			let inlineOffset = _.get(sortedISRanges, [j, 'offset'], 0);
 			let inlineStyle = _.get(sortedISRanges, [j, 'style'], '');
+			let nextEntityOffset = _.get(sortedEntityRanges, [i + 1, 'offset'], 0);
+			let nextEntityLength = _.get(sortedEntityRanges, [i + 1, 'length'], 0);
 
 			// handle intersections of inline style and entity
 			// <a></a> is entity
+			// <abbr></abbr> is next entity
 			// <strong></strong>  is inline style
-			if (entityOffset >= inlineOffset && entityOffset < (inlineOffset + inlineLength) && (entityOffset + entityLength) > (inlineOffset + inlineLength)) {
+			if (nextEntityOffset >= inlineOffset && nextEntityOffset < (inlineOffset + inlineLength) && (nextEntityOffset + nextEntityLength) > (inlineOffset + inlineLength) // <a><strong></a></strong>
+				&& entityOffset < inlineOffset && (entityOffset + entityLength) > inlineOffset && (entityOffset + entityLength) <= (inlineOffset + inlineLength)) { // <strong><abbr></strong></abbr>
+					// situation: <a><strong></a><abbr></strong></abbr>
+					// should be: <a><strong></strong></a><strong></strong><abbr><strong></strong></abbr>
+
+					// skip next entity checking
+				i = i + 1;
+
+				splitedISInline.push({
+					index: j,
+					replace: [{
+						length: entityOffset + entityLength - inlineOffset,
+						offset: inlineOffset,
+						style: inlineStyle,
+					}, {
+						length: nextEntityOffset - (entityOffset + entityLength),
+						offset: entityOffset + entityLength,
+						style: inlineStyle,
+					}, {
+						length: inlineOffset + inlineLength - nextEntityOffset,
+						offset: nextEntityOffset,
+						style: inlineStyle,
+					}],
+				});
+
+			} else if (entityOffset >= inlineOffset && entityOffset < (inlineOffset + inlineLength) && (entityOffset + entityLength) > (inlineOffset + inlineLength)) {
 				// situation: <strong><a></strong></a>
 				// should be: <strong></strong><a><strong></strong></a>
 				splitedISInline.push({
@@ -55,8 +83,7 @@ function _fullfilIntersection (block) {
 	}
 
 	_.forEachRight(splitedISInline, (ele) => {
-		sortedISRanges.splice(ele.index, 1);
-		sortedISRanges = sortedISRanges.concat(ele.replace);
+		sortedISRanges.splice(ele.index, 1, ...ele.replace);
 	});
 
 	return sortedISRanges;
@@ -148,7 +175,6 @@ function convertToHtml (inlineTagMap, entityTagMap, entityMap, block) {
 			offset += tag.length;
 		});
 	});
-	console.log('html: ', html);
 
 	return html;
 }
@@ -159,10 +185,26 @@ function convertToApiData (inlineTagMap, entityTagMap, entityMap, block) {
 		|| (block.inlineStyleRanges.length === 0 && block.entityRanges.length === 0)) {
 		return block.text;
 	}
-	let html = block.text;
+	let text = block.text;
+	let entityRanges = block.entityRanges;
+	let splitByEntity = [];
 
-	let tagInsertMap = _createTagInsertMap(inlineTagMap, entityTagMap, entityMap, block)
+	if (entityRanges.length === 0) {
+		splitByEntity = [{
+			offset: 0,
+			length: text.length,
+			text: text,
+		}];
+	} else {
+		_.forEach(entityRanges, (entityRange) => {
+			let offset = entityRange.offset;
+			let length = entityRange.length;
 
+		});
+	}
+
+	let inlineStyleRanges = _fullfilIntersection(block);
+	tagInsertMap = _inlineTag(inlineTagMap, inlineStyleRanges, tagInsertMap);
 	// sort on position, as we'll need to keep track of offset
 	let orderedKeys = Object.keys(tagInsertMap).sort(function (a, b) {
 		a = Number(a);
@@ -175,12 +217,13 @@ function convertToApiData (inlineTagMap, entityTagMap, entityMap, block) {
 		}
 		return 0;
 	});
-
 	// insert tags into string, keep track of offset caused by our text insertions
+	let contents = [];
 	let offset = 0;
 	orderedKeys.forEach(function (pos) {
 		let index = Number(pos);
 		tagInsertMap[pos].forEach(function (tag) {
+			contents.push();
 			html = html.substr(0, offset + index)
 				+ tag + html.substr(offset + index);
 			offset += tag.length;
@@ -188,8 +231,8 @@ function convertToApiData (inlineTagMap, entityTagMap, entityMap, block) {
 	});
 
 	return html;
-	}
-	*/
+}
+*/
 
 export {
 	// convertToApiData,
