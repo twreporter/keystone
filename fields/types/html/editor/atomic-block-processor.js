@@ -11,7 +11,6 @@ const processor = {
 		const entity = entityMap[entityRange.key];
 		const type = entity && entity.type;
 		switch (type) {
-			case ENTITY.annotation.type:
 			case ENTITY.audio.type:
 			case ENTITY.blockQuote.type:
 			case ENTITY.embeddedCode.type:

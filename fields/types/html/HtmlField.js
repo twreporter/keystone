@@ -155,10 +155,9 @@ module.exports = Field.create({
 		this._toggleAtomicBlock(entity, audio);
 	},
 
-	_toggleLink (entity, value) {
-		const { url, text } = value;
-		const entityKey = url !== '' ? Entity.create(entity, 'IMMUTABLE', { text: text || url, url: url }) : null;
-		this._toggleTextWithEntity(entityKey, text || url);
+	_toggleInlineEntity (entity, value) {
+		const entityKey = Entity.create(entity, 'IMMUTABLE', value);
+		this._toggleTextWithEntity(entityKey, _.get(value, 'text'));
 	},
 
 	_toggleImage (entity, value) {
@@ -190,14 +189,14 @@ module.exports = Field.create({
 		switch (entity) {
 			case ENTITY.audio.type:
 				return this._toggleAudio(entity, value);
-			case ENTITY.annotation.type:
 			case ENTITY.blockQuote.type:
 			case ENTITY.infobox.type:
 			case ENTITY.embeddedCode.type:
 			case ENTITY.youtube.type:
 				return this._toggleAtomicBlock(entity, value);
+			case ENTITY.annotation.type:
 			case ENTITY.link.type:
-				return this._toggleLink(entity, value);
+				return this._toggleInlineEntity(entity, value);
 			case ENTITY.image.type:
 				return this._toggleImage(entity, value);
 			case ENTITY.slideshow.type:

@@ -28,10 +28,12 @@ class AnnotationEditingBlock extends EntityEditingBlockMixin(React.Component) {
 	_decomposeEditingFields (fields) {
 		let { editorState } = this.state;
 		const content = convertToRaw(editorState.getCurrentContent());
-		const cHtml = DraftConverter.convertToHtml(content);
+		const cHtml = DraftConverter.convertToHtml(content, { unstyled: `<div>%content%</div>` });
 		return {
+			// annotated text
 			text: fields.text.value,
 			annotation: cHtml,
+			pureAnnotationText: _.get(content, ['blocks', 0, 'text'], ''),
 			draftRawObj: content,
 		};
 	}

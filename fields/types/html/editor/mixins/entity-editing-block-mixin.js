@@ -3,7 +3,6 @@ import { Button, FormField, FormInput, Modal } from 'elemental';
 import { convertFromRaw, EditorState, Entity, Modifier, RichUtils } from 'draft-js';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from '../editor-buttons';
 import decorator from '../entity-decorator';
-import quoteTypes from '../quote/quote-types';
 import DraftEditor from '../draft-editor';
 import ENTITY from '../entities';
 import React, { Component } from 'react';
@@ -30,6 +29,7 @@ let EntityEditingBlock = (superclass) => class extends Component {
 		this._editingFields = this.composeEditingFields(nextProps);
 		this.setState({
 			editingFields: this._editingFields,
+			editorState: this._initEditorState(nextProps.draftRawObj),
 		});
 	}
 
@@ -230,9 +230,8 @@ let EntityEditingBlock = (superclass) => class extends Component {
 
 // block settings
 const BLOCK_TYPES = [
-	{ label: quoteTypes.blockquote.label, style: 'blockquote', icon: 'fa-quote-right', text: ' Block' },
-	{ label: 'H1', style: 'header-one', icon: 'fa-header', text: '1' },
-	{ label: 'H2', style: 'header-two', icon: 'fa-header', text: '2' },
+	{ label: 'H3', style: 'header-three', icon: 'fa-header', text: '3' },
+	{ label: 'H4', style: 'header-four', icon: 'fa-header', text: '4' },
 	{ label: 'OL', style: 'ordered-list-item', icon: 'fa-list-ol', text: '' },
 	{ label: 'UL', style: 'unordered-list-item', icon: 'fa-list-ul', text: '' },
 ];
