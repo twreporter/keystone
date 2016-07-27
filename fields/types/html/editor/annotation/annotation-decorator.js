@@ -13,24 +13,25 @@ class Annotation extends React.Component {
 	}
 
 	_handleExpand (e) {
+		e.stopPropagation();
 		this.setState({
 			isExpanded: !this.state.isExpanded,
 		});
 	}
 
 	render () {
-		const { annotation, pureAnnotationText, text } = Entity.get(this.props.entityKey).getData();
+		const { annotation, pureAnnotationText } = Entity.get(this.props.entityKey).getData();
 		return (
 			<abbr
 				className="annotation"
 				title={pureAnnotationText}
-				onClick={this.handleExpand}
 				style={{ cursor: 'pointer', borderBottom: 0 }}
 			>
 				<span
+					onClick={this.handleExpand}
 					style={{ color: 'red' }}
 				>
-					{text}
+					{this.props.children}
 					<span className={classNames(this.state.isExpanded ? 'up' : '', 'indicator')}/>
 				</span>
 				<span
@@ -50,7 +51,7 @@ class Annotation extends React.Component {
 
 }
 
-function findLinkEntities (contentBlock, callback) {
+function findAnnotationEntities (contentBlock, callback) {
 	contentBlock.findEntityRanges(
 		(character) => {
 			const entityKey = character.getEntity();
@@ -63,4 +64,4 @@ function findLinkEntities (contentBlock, callback) {
 	);
 }
 
-export default { strategy: findLinkEntities, component: Annotation };
+export default { strategy: findAnnotationEntities, component: Annotation };
