@@ -9,14 +9,18 @@ import * as InlineStylesProcessor from './inline-styles-processor';
 const annotationIndicatorPrefix = '__ANNOTATION__=';
 
 let defaultBlockTagMap = {
-	'code-block': `<code>%content%</code>\n`,
-	'default': `<p>%content%</p>\n`,
-	'header-one': `<h1>%content%</h1>\n`,
-	'header-two': `<h1>%content%</h1>\n`,
-	'ordered-list-item': `<li>%content%</li>\n`,
-	'unordered-list-item': `<li>%content%</li>\n`,
-	'atomic': `<div>%content%</div>\n`,
-	'unstyled': `<p>%content%</p>\n`,
+	'code-block': `<code>%content%</code>`,
+	'default': `<p>%content%</p>`,
+	'header-one': `<h1>%content%</h1>`,
+	'header-two': `<h2>%content%</h2>`,
+	'header-three': `<h3>%content%</h3>`,
+	'header-four': `<h4>%content%</h4>`,
+	'header-five': `<h5>%content%</h5>`,
+	'header-six': `<h6>%content%</h6>`,
+	'ordered-list-item': `<li>%content%</li>`,
+	'unordered-list-item': `<li>%content%</li>`,
+	'atomic': `<div>%content%</div>`,
+	'unstyled': `<p>%content%</p>`,
 };
 
 let inlineTagMap = {
@@ -138,7 +142,7 @@ function convertBlocksToApiData (blocks, entityMap, entityTagMap) {
 }
 
 function convertRawToHtml (raw, blockTagMap, entityTagMap) {
-	blockTagMap = blockTagMap || defaultBlockTagMap;
+	blockTagMap = _.merge({}, defaultBlockTagMap, blockTagMap);
 	entityTagMap = entityTagMap || defaultEntityTagMap;
 	let html = '';
 	raw = raw || {};
@@ -154,10 +158,9 @@ function convertRawToApiData (raw) {
 	const blocks = Array.isArray(raw.blocks) ? raw.blocks : [];
 	const entityMap = typeof raw.entityMap === 'object' ? raw.entityMap : {};
 	let entityTagMap = _.merge({}, defaultEntityTagMap, {
-
 		// special handling for annotation entity
 		// annotation entity data will be included in the speical comment.
-		annotation: [`<!--${annotationIndicatorPrefix}<%= JSON.stringify(data) %>`, '-->'],
+		annotation: [`<!--${annotationIndicatorPrefix}<%= JSON.stringify(data) %>--><!--`, '-->'],
 	});
 	apiData = convertBlocksToApiData(blocks, entityMap, entityTagMap);
 	return apiData;

@@ -28,7 +28,7 @@ class AnnotationEditingBlock extends EntityEditingBlockMixin(React.Component) {
 	_decomposeEditingFields (fields) {
 		let { editorState } = this.state;
 		const content = convertToRaw(editorState.getCurrentContent());
-		const cHtml = DraftConverter.convertToHtml(content);
+		const cHtml = DraftConverter.convertToHtml(content, { unstyled: `<div>%content%</div>` });
 		return {
 			// annotated text
 			text: fields.text.value,

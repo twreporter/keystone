@@ -1,32 +1,49 @@
+'use strict';
 import { Entity } from 'draft-js';
 import ENTITY from '../entities';
 import React from 'react';
+import classNames from 'classnames';
 class Annotation extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			expanded: false,
+			isExpanded: false,
 		};
 		this.handleExpand = this._handleExpand.bind(this);
 	}
 
 	_handleExpand (e) {
 		this.setState({
-			expanded: !this.state.expanded,
+			isExpanded: !this.state.isExpanded,
 		});
 	}
 
 	render () {
-		// TBD Use react-article-components to render annotation component
 		const { annotation, pureAnnotationText, text } = Entity.get(this.props.entityKey).getData();
 		return (
-			<abbr title={pureAnnotationText} onClick={this.handleExpand}>
-				<span>
+			<abbr
+				className="annotation"
+				title={pureAnnotationText}
+				onClick={this.handleExpand}
+				style={{ cursor: 'pointer', borderBottom: 0 }}
+			>
+				<span
+					style={{ color: 'red' }}
+				>
 					{text}
+					<span className={classNames(this.state.isExpanded ? 'up' : '', 'indicator')}/>
 				</span>
-				<span dangerouslySetInnerHTML={{ __html: annotation }} style={{
-					display: this.state.expanded ? 'block' : 'none',
-				}} />
+				<span
+					className="annotation-html"
+					dangerouslySetInnerHTML={{ __html: annotation }}
+					style={{
+						display: this.state.isExpanded ? 'block' : 'none',
+						backgroundColor: 'white',
+						padding: '16px',
+						fontSize: '15px',
+						lineHeight: 1.5,
+					}}
+				/>
 			</abbr>
 		);
 	}
