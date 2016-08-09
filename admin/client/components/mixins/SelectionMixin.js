@@ -1,5 +1,4 @@
 'use strict';
-import { shallowEqual } from 'react-pure-render';
 import React from 'react'; // eslint-disable-line no-unused-vars
 
 const SelectionMixin = (superclass) => class extends superclass {
@@ -18,15 +17,6 @@ const SelectionMixin = (superclass) => class extends superclass {
 			items: nextProps.items,
 			selectedItems: nextProps.selectedItems,
 		});
-	}
-
-	shouldComponentUpdate (nextProps, nextState) {
-		let shouldUpdate = false;
-		if (this.props.updateSelection !== nextProps.updateSelection
-			|| this.props.selectionLimit !== nextProps.selectionLimit) {
-			shouldUpdate = true;
-		}
-		return shouldUpdate || !shallowEqual(this.state, nextState);
 	}
 
 	_handleSelect (item) {
