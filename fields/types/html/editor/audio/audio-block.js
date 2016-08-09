@@ -1,5 +1,5 @@
 'use strict';
-import { Audio } from 'react-article-components';
+import { Audio } from 'twreporter-react/lib/components/article/index';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import React from 'react';
 

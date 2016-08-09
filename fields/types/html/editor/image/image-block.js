@@ -1,6 +1,6 @@
 'use strict';
 
-import { AlignedImage } from 'react-article-components';
+import { AlignedImage } from 'twreporter-react/lib/components/article/index';
 import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import ImageSelector from '../../../../../admin/client/components/ImageSelector';
