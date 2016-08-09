@@ -1,6 +1,6 @@
 {
   "name": "twreporter-keystone",
-  "version": "0.4.21",
+  "version": "0.5.0",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
@@ -50,7 +50,7 @@
     "gcloud": "^0.28.0",
     "gm": "^1.21.1",
     "grappling-hook": "3.0.0",
-    "history": "2.0.0",
+    "history": "^2.1.2",
     "i": "0.3.4",
     "image-size": "^0.5.0",
     "immutable": "^3.7.6",
@@ -113,7 +113,7 @@
     "mocha": "2.4.5",
     "must": "0.13.1",
     "nightwatch": "^0.8.16",
-    "react-engine": "3.1.0",
+    "react-engine": "4.0.0",
     "rimraf": "2.5.2",
     "sinon": "1.17.3",
     "supertest": "1.2.0",
