@@ -1,4 +1,4 @@
-### 0.4.17 2016/08/03
+### 0.4.18 2016/08/03
 - Replace pkg react-article-components by twreporter-react
 
 ### 0.4.16 2016/07/20

@@ -1,6 +1,6 @@
 'use strict';
 import { shallowEqual } from 'react-pure-render';
-import { Audio } from 'react-article-components';
+import { Audio } from 'twreporter-react/lib/components/article/index';
 import _ from 'lodash';
 import raf from 'raf'; // requestAnimationFrame polyfill
 import React from 'react';
