@@ -116,7 +116,7 @@ var DateFilter = React.createClass({
 		);
 	},
 	selectDay (e, day, modifiers) {
-		if (modifiers.indexOf('disabled') > -1) return;
+		if (modifiers.disabled === true) return;
 		this.updateFilter({ value: day });
 	},
 	showCurrentDate () {

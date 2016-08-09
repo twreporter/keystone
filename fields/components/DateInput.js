@@ -49,7 +49,7 @@ module.exports = React.createClass({
 		this.setState({ value, month }, this.showCurrentDate);
 	},
 	handleDaySelect (e, day, modifiers) {
-		if (modifiers.indexOf('disabled') > -1) {
+		if (modifiers.selected === true) {
 			return;
 		}
 		this.setState({
