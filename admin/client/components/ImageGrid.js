@@ -1,5 +1,4 @@
 'use strict';
-import { shallowEqual } from 'react-pure-render';
 import objectAssign from 'object-assign';
 import React from 'react';
 
@@ -15,17 +14,6 @@ class ImageItem extends React.Component {
 		this.setState({
 			isSelected: nextProps.isSelected,
 		});
-	}
-
-	shouldComponentUpdate (nextProps, nextState) {
-		let shouldUpdate = false;
-		Object.keys(this.props).forEach((prop) => {
-			if (prop === 'onRemove' || prop === 'onSelect') {
-				// do nothing
-			}
-			shouldUpdate = this.props[prop] === nextProps[prop] ? false : true;
-		});
-		return !shallowEqual(this.state, nextState) || shouldUpdate;
 	}
 
 	_handleSelect (e) {
@@ -113,10 +101,7 @@ class ImageGrid extends React.Component {
 			selectedImages: nextProps.selectedImages,
 		});
 	}
-	shouldComponentUpdate (nextProps, nextState) {
-		return !shallowEqual(this.props, nextProps)
-			|| !shallowEqual(this.state, nextState);
-	}
+
 	_handleSelect (image) {
 		this.props.onSelect(image);
 	}

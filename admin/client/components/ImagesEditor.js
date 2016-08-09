@@ -1,5 +1,4 @@
 'use strict';
-import { shallowEqual } from 'react-pure-render';
 import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import { ImageItem } from './ImageGrid';
 import { FormField, FormInput } from 'elemental';
@@ -205,10 +204,6 @@ class ImagesEditor extends Component {
 		this.setState({
 			images: nextProps.images,
 		});
-	}
-
-	shouldComponentUpdate (nextProps, nextState) {
-		return !shallowEqual(this.state, nextState);
 	}
 
 	_handleRemove (imageToRemove) {

@@ -1,5 +1,4 @@
 import { convertFromRaw, convertToRaw, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { shallowEqual } from 'react-pure-render';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
 import ENTITY from './editor/entities';
@@ -52,9 +51,6 @@ module.exports = Field.create({
 		};
 	},
 
-	shouldComponentUpdate (nextProps, nextState) {
-		return !shallowEqual(this.state, nextState);
-	},
 
 	_convertToApiData (editorState) {
 		const content = convertToRaw(editorState.getCurrentContent());

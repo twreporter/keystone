@@ -1,5 +1,4 @@
 'use strict';
-import { shallowEqual } from 'react-pure-render';
 import React from 'react';
 
 class EntityStyleButton extends React.Component {
@@ -14,10 +13,6 @@ class EntityStyleButton extends React.Component {
 		this.setState({
 			active: nextProps.active,
 		});
-	}
-
-	shouldComponentUpdate (nextProps, nextState) {
-		return this.props.label !== nextProps.label || !shallowEqual(this.state, nextState);
 	}
 
 	render () {
