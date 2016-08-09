@@ -1,5 +1,4 @@
 import { convertFromRaw, convertToRaw, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
-import { shallowEqual } from 'react-pure-render';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
 import ENTITY from './editor/entities';
@@ -52,9 +51,6 @@ module.exports = Field.create({
 		};
 	},
 
-	shouldComponentUpdate (nextProps, nextState) {
-		return !shallowEqual(this.state, nextState);
-	},
 
 	_convertToApiData (editorState) {
 		const content = convertToRaw(editorState.getCurrentContent());
@@ -322,6 +318,10 @@ const BLOCK_TYPES = [
 	{ label: 'Code Block', style: 'code-block', icon: 'fa-code', text: '' },
 	{ label: 'H1', style: 'header-one', icon: 'fa-header', text: '1' },
 	{ label: 'H2', style: 'header-two', icon: 'fa-header', text: '2' },
+	{ label: 'H3', style: 'header-three', icon: 'fa-header', text: '3' },
+	{ label: 'H4', style: 'header-four', icon: 'fa-header', text: '4' },
+	{ label: 'H5', style: 'header-five', icon: 'fa-header', text: '5' },
+	{ label: 'H6', style: 'header-six', icon: 'fa-header', text: '6' },
 	{ label: 'OL', style: 'ordered-list-item', icon: 'fa-list-ol', text: '' },
 	{ label: 'UL', style: 'unordered-list-item', icon: 'fa-list-ul', text: '' },
 ];

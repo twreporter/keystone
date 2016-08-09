@@ -1,6 +1,6 @@
 'use strict';
 
-import { Slideshow } from 'react-article-components';
+import { Slideshow } from 'twreporter-react/lib/components/article/index';
 import _ from 'lodash';
 import ENTITY from '../entities';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';

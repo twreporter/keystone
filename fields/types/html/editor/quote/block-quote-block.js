@@ -1,6 +1,6 @@
 'use strict';
 
-import { AlignedBlockQuote } from 'react-article-components';
+import { AlignedBlockQuote } from 'twreporter-react/lib/components/article/index';
 import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import BlockQuoteEditingBlock from './block-quote-editing-block';

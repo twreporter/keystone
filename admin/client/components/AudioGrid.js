@@ -1,6 +1,5 @@
 'use strict';
-import { shallowEqual } from 'react-pure-render';
-import { Audio } from 'react-article-components';
+import { Audio } from 'twreporter-react/lib/components/article/index';
 import _ from 'lodash';
 import raf from 'raf'; // requestAnimationFrame polyfill
 import React from 'react';
@@ -131,11 +130,6 @@ class AudioGrid extends React.Component {
 			selectedAudios: nextProps.selectedAudios,
 		});
 	}
-	shouldComponentUpdate (nextProps, nextState) {
-		return !shallowEqual(this.props, nextProps)
-			|| !shallowEqual(this.state, nextState);
-	}
-
 	_handleSelect (audio) {
 		this.props.onSelect(audio);
 	}

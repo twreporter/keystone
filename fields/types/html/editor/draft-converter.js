@@ -9,6 +9,7 @@ import * as InlineStylesProcessor from './inline-styles-processor';
 const annotationIndicatorPrefix = '__ANNOTATION__=';
 
 let defaultBlockTagMap = {
+	'atomic': `<div>%content%</div>`,
 	'code-block': `<code>%content%</code>`,
 	'default': `<p>%content%</p>`,
 	'header-one': `<h1>%content%</h1>`,
@@ -18,9 +19,9 @@ let defaultBlockTagMap = {
 	'header-five': `<h5>%content%</h5>`,
 	'header-six': `<h6>%content%</h6>`,
 	'ordered-list-item': `<li>%content%</li>`,
+	'paragraph': `<p>%content%</p>`,
 	'unordered-list-item': `<li>%content%</li>`,
-	'atomic': `<div>%content%</div>`,
-	'unstyled': `<p>%content%</p>`,
+	'unstyled': `<div>%content%</div>`,
 };
 
 let inlineTagMap = {
