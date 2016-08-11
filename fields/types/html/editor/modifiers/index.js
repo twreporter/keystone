@@ -26,6 +26,7 @@ const handleAtomicEdit = (editorState, blockKey, valueChanged) => {
 		case ENTITY.imageDiff.type:
 		case ENTITY.infobox.type:
 		case ENTITY.slideshow.type:
+		case ENTITY.youtube.type:
 			if (valueChanged) {
 				return replaceAtomicBlock(editorState, blockKey, valueChanged);
 			}
