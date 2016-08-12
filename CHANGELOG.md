@@ -1,3 +1,6 @@
+### 0.5.1 2016/08/12
+- Delete local temporary files after uploding images
+
 ### 0.5.0 2016/08/03
 - Replace pkg react-article-components by twreporter-react
 - Upgrade React to 15
