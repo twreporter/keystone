@@ -320,6 +320,16 @@ gcsimages.prototype.uploadFiles = function (item, files, update, callback) {
 				asyncCallback(err);
 			});
 	}, function (err) {
+		// delete local files
+		_.forEach(files, function (file) {
+			console.log('DELETE LOCAL FILE:', file.path);
+			fs.unlink(file.path, function (err) {
+				if (err) {
+					console.error('DELETE LOCAL FILE ERROR:', err);
+				}
+			});
+		});
+
 		if (err) {
 			console.log('err:', err);
 			return callback(err);
