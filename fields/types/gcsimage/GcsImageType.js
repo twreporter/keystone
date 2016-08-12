@@ -239,7 +239,6 @@ gcsimage.prototype.updateItem = function (item, data, callback) { // eslint-disa
 	 */
 
 gcsimage.prototype.uploadFile = function (item, file, update, callback) {
-
 	var _this = this;
 	var gcsDir = this.options.destination ? this.options.destination : '';
 	var isPublicRead = _this.options.publicRead ? _this.options.publicRead : false;
@@ -268,7 +267,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 		}
 
 		var bucket = gcsHelper.initBucket(_this.gcsConfig, _this.options.bucket);
-		gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
+		return gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
 			destination: gcsDir + filename,
 			filetype: filetype,
 			isPublicRead: isPublicRead,
@@ -370,7 +369,15 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 		});
 	};
 
-	doUpload();
+	doUpload().then(() => {
+		// delete local file
+		console.log('DELETE LOCAL FILE:', file.path);
+		fs.unlink(file.path, function (err) {
+			if (err) {
+				console.error('DELETE LOCAL FILE ERROR:', err);
+			}
+		});
+	});
 };
 
 
