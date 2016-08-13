@@ -1,3 +1,7 @@
+### 0.5.2 2016/0813
+- Delete local temporary files synchronously
+- render image-collection listing page efficiently
+
 ### 0.5.1 2016/08/12
 - Delete local temporary files after uploding images
 
