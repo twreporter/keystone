@@ -2,35 +2,35 @@
 
 const ENTITY = {
 	annotation: {
-		type: 'annotation',
+		type: 'ANNOTATION',
 	},
 	blockQuote: {
-		type: 'blockQuote',
+		type: 'BLOCKQUOTE',
 	},
 	link: {
-		type: 'link',
+		type: 'LINK',
 	},
 	infobox: {
-		type: 'infobox',
+		type: 'INFOBOX',
 	},
 	embeddedCode: {
-		type: 'embeddedCode',
+		type: 'EMBEDDED',
 	},
 	audio: {
-		type: 'audio',
+		type: 'AUDIO',
 	},
 	image: {
-		type: 'image',
+		type: 'IMAGE',
 	},
 	imageDiff: {
-		type: 'imageDiff',
+		type: 'IMAGEDIFF',
 	},
 	slideshow: {
-		type: 'slideshow',
+		type: 'SLIDESHOW',
 		slideshowSelectionLimit: 30,
 	},
 	youtube: {
-		type: 'youtube',
+		type: 'YOUTUBE',
 	},
 };
 

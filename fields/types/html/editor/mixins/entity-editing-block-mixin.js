@@ -1,11 +1,11 @@
 'use strict';
 import { Button, FormField, FormInput, Modal } from 'elemental';
-import { convertFromRaw, EditorState, Entity, Modifier, RichUtils } from 'draft-js';
+import { Editor, EditorState, Entity, Modifier, RichUtils, convertFromRaw } from 'draft-js';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from '../editor-buttons';
-import decorator from '../entity-decorator';
-import DraftEditor from '../draft-editor';
 import ENTITY from '../entities';
 import React, { Component } from 'react';
+import blockStyleFn from '../base/block-style-fn';
+import decorator from '../entity-decorator';
 
 let EntityEditingBlock = (superclass) => class extends Component {
 	constructor (props) {
@@ -14,10 +14,11 @@ let EntityEditingBlock = (superclass) => class extends Component {
 		this.handleSave = this._handleSave.bind(this);
 		this.composeEditingFields = this._composeEditingFields.bind(this);
 		this.focus = this._focus.bind(this);
-		this.handleEditorStateChange = this._handleEditorStateChange.bind(this);
-		this.toggleBlockType = this._toggleBlockStyle.bind(this);
-		this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
-		this.toggleEntity = this._toggleEntity.bind(this);
+		this._handleEditorStateChange = this._handleEditorStateChange.bind(this);
+		this._handleKeyCommand = this._handleKeyCommand.bind(this);
+		this._toggleBlockType = this._toggleBlockStyle.bind(this);
+		this._toggleInlineStyle = this._toggleInlineStyle.bind(this);
+		this._toggleEntity = this._toggleEntity.bind(this);
 		this._editingFields = this.composeEditingFields(props);
 		this.state = {
 			editingFields: this._editingFields,
@@ -55,6 +56,15 @@ let EntityEditingBlock = (superclass) => class extends Component {
 		});
 	}
 
+	_handleKeyCommand (command) {
+		const { editorState } = this.state;
+		const newState = RichUtils.handleKeyCommand(editorState, command);
+		if (newState) {
+			this._handleEditorStateChange(newState);
+			return true;
+		}
+		return false;
+	}
 
 	// this function should be overwritten by children
 	_composeEditingFields (props) {
@@ -77,16 +87,6 @@ let EntityEditingBlock = (superclass) => class extends Component {
 		this._editingFields[field].value = e.target.value;
 	}
 
-	_handleKeyCommand (command) {
-		const { editorState } = this.state;
-		const newState = RichUtils.handleKeyCommand(editorState, command);
-		if (newState) {
-			this.handleEditorStateChange(newState);
-			return true;
-		}
-		return false;
-	}
-
 	_handleSave () {
 		this.setState({
 			editingFields: this._editingFields,
@@ -104,24 +104,26 @@ let EntityEditingBlock = (superclass) => class extends Component {
 						<BlockStyleButtons
 							buttons={BLOCK_TYPES}
 							editorState={editorState}
-							onToggle={this.toggleBlockType}
+							onToggle={this._toggleBlockType}
 						/>
 						<InlineStyleButtons
 							buttons={INLINE_STYLES}
 							editorState={editorState}
-							onToggle={this.toggleInlineStyle} />
+							onToggle={this._toggleInlineStyle} />
 						<EntityButtons
 							entities={['link']}
 							editorState={editorState}
-							onToggle={this.toggleEntity}
+							onToggle={this._toggleEntity}
 						/>
 					</div>
 				</div>
 				<div className={'RichEditor-editor'} onClick={this.focus}>
-					<DraftEditor
-						editorState={editorState}
+					<Editor
+						blockStyleFn={blockStyleFn}
 						handleKeyCommand={this._handleKeyCommand}
-						onChange={this.handleEditorStateChange}
+						editorState={editorState}
+						onChange={this._handleEditorStateChange}
+						placeholder="Enter HTML Here..."
 						ref="editor"
 						spellCheck
 					/>
@@ -152,7 +154,7 @@ let EntityEditingBlock = (superclass) => class extends Component {
 	}
 
 	_toggleBlockStyle (blockType) {
-		this.handleEditorStateChange(
+		this._handleEditorStateChange(
 			RichUtils.toggleBlockType(
 				this.state.editorState,
 				blockType
@@ -170,7 +172,7 @@ let EntityEditingBlock = (superclass) => class extends Component {
 	}
 
 	_toggleInlineStyle (inlineStyle) {
-		this.handleEditorStateChange(
+		this._handleEditorStateChange(
 			RichUtils.toggleInlineStyle(
 				this.state.editorState,
 				inlineStyle
@@ -208,7 +210,7 @@ let EntityEditingBlock = (superclass) => class extends Component {
 			entityKey
 		);
 		const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
-		this.handleEditorStateChange(_editorState);
+		this._handleEditorStateChange(_editorState);
 	}
 
 
@@ -230,8 +232,7 @@ let EntityEditingBlock = (superclass) => class extends Component {
 
 // block settings
 const BLOCK_TYPES = [
-	{ label: 'H3', style: 'header-three', icon: 'fa-header', text: '3' },
-	{ label: 'H4', style: 'header-four', icon: 'fa-header', text: '4' },
+	{ label: 'H2', style: 'header-three', icon: 'fa-header', text: '3' },
 	{ label: 'OL', style: 'ordered-list-item', icon: 'fa-list-ol', text: '' },
 	{ label: 'UL', style: 'unordered-list-item', icon: 'fa-list-ul', text: '' },
 ];

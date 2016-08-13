@@ -1,14 +1,14 @@
-import { convertFromRaw, convertToRaw, EditorState, Modifier, Entity, RichUtils } from 'draft-js';
+import { BlockMapBuilder, Editor, EditorState, Modifier, Entity, RichUtils, convertFromHTML, convertFromRaw, convertToRaw } from 'draft-js';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
 import ENTITY from './editor/entities';
-import decorator from './editor/entity-decorator';
 import AtomicBlockSwitcher from './editor/base/atomic-block-switcher';
 import BlockModifier from './editor/modifiers/index';
 import DraftConverter from './editor/draft-converter';
-import DraftEditor from './editor/draft-editor';
 import Field from '../Field';
 import React from 'react';
+import blockStyleFn from './editor/base/block-style-fn';
+import decorator from './editor/entity-decorator';
 
 let lastId = 0;
 
@@ -234,6 +234,35 @@ module.exports = Field.create({
 		this.setState({ isEnlarged: !this.state.isEnlarged, editorState: refreshEditorState(this.state.editorState) });
 	},
 
+	handlePastedText (text, html) {
+		function insertFragment (editorState, fragment) {
+			let newContent = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), fragment);
+			return EditorState.push(editorState, newContent, 'insert-fragment');
+		}
+
+		if (html) {
+			// remove meta tag
+			html = html.replace(/<meta (.+?)>/g, '');
+			// replace p, h2 by div.
+			// TODO need to find out how many block tags we need to replace
+			// currently, just handle p, h1, h2, ..., h6 tag
+			// NOTE: I don't know why header style can not be parsed into ContentBlock,
+			// so I replace it by div temporarily
+			html = html.replace(/<p|<h1|<h2|<h3|<h4|<h5|<h6/g, '<div').replace(/<\/p|<\/h1|<\/h2|<\/h3|<\/h4|<\/h5|<\/h6/g, '</div');
+
+			let editorState = this.state.editorState;
+			var htmlFragment = convertFromHTML(html);
+			if (htmlFragment) {
+				var htmlMap = BlockMapBuilder.createFromArray(htmlFragment);
+				this.onChange(insertFragment(editorState, htmlMap));
+				// prevent the default paste behavior.
+				return true;
+			}
+		}
+		// use default paste behavior
+		return false;
+	},
+
 	renderField () {
 		const { editorState } = this.state;
 		const useSpellCheck = true;
@@ -273,7 +302,9 @@ module.exports = Field.create({
 								editorState={editorState}
 								onToggle={this.toggleInlineStyle} />
 							<EntityButtons
-								entities={Object.keys(ENTITY)}
+								entities={Object.keys(ENTITY).map((entity) => {
+									return entity.toUpperCase();
+								})}
 								editorState={editorState}
 								onToggle={this.toggleEntity}
 							/>
@@ -281,12 +312,15 @@ module.exports = Field.create({
 						</div>
 					</div>
 					<div className={className + expandBtnClass} onClick={this.focus}>
-						<DraftEditor
+						<Editor
 							blockRendererFn={this._blockRenderer}
+							blockStyleFn={blockStyleFn}
 							customStyleMap={styleMap}
 							editorState={editorState}
 							handleKeyCommand={this.handleKeyCommand}
+							handlePastedText={this.handlePastedText}
 							onChange={this.onChange}
+							placeholder="Enter HTML Here..."
 							ref="editor"
 							spellCheck={useSpellCheck}
 						/>
