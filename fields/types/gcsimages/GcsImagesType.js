@@ -322,12 +322,12 @@ gcsimages.prototype.uploadFiles = function (item, files, update, callback) {
 	}, function (err) {
 		// delete local files
 		_.forEach(files, function (file) {
-			console.log('DELETE LOCAL FILE:', file.path);
-			fs.unlink(file.path, function (err) {
-				if (err) {
-					console.error('DELETE LOCAL FILE ERROR:', err);
-				}
-			});
+			try {
+				console.log('DELETE LOCAL FILE:', file.path);
+				fs.unlinkSync(file.path);
+			} catch (err) {
+				console.log('FAIL TO DELETE LOCAL FILE:', err);
+			}
 		});
 
 		if (err) {
