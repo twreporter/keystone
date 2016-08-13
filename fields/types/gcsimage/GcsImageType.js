@@ -293,6 +293,14 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 						}));
 					}
 					return Promise.all(promises).then(function (values) {
+						// delete local file
+						console.log('DELETE LOCAL FILE:', file.path);
+						try {
+							fs.unlinkSync(file.path);
+						} catch (err) {
+							console.error('DELETE LOCAL FILE ERROR:', err);
+						};
+
 						return targets;
 					});
 				} else {
@@ -341,6 +349,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 				url: gcsHelper.getPublicUrl(_this.options.bucket, gcsDir + filename),
 				width: dimensions.width || 0,
 			};
+
 			if (typeof _this.options.extractIPTC === 'function') {
 				return _this.options.extractIPTC(file.path)
 						.then(function (meta) {
@@ -369,15 +378,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 		});
 	};
 
-	doUpload().then(() => {
-		// delete local file
-		console.log('DELETE LOCAL FILE:', file.path);
-		fs.unlink(file.path, function (err) {
-			if (err) {
-				console.error('DELETE LOCAL FILE ERROR:', err);
-			}
-		});
-	});
+	doUpload();
 };
 
 
