@@ -34,14 +34,14 @@ let inlineTagMap = {
 
 let defaultEntityTagMap = {
 	ANNOTATION: ['<abbr title="<%= data.pureAnnotationText %>"><%= data.text %>', '</abbr>'],
-	AUDIO: ['<div><h4><%= data.title %></h4><span><%= data.description %></span><audio src="<%= data.url %>" />', '</div>'],
+	AUDIO: ['<div class="audio-container"><div class="audio-title"><%= data.title %></div><div class="audio-desc"><%= data.description %></div><audio src="<%= data.url %>" />', '</div>'],
 	BLOCKQUOTE: ['<blockquote><div><%= data.quote %></div><div><%= data.quoteBy %></div>', '<blockquote>'],
 	EMBEDDED: ['<div><%= data.embeddedCode%>', '</div>'],
-	INFOBOX: ['<div><div><span><%= data.title %></span></div><div><span><%= data.body %></span></div>', '</div>'],
+	INFOBOX: ['<div class="info-box-container"><div class="info-box-title"><%= data.title %></div><div class="info-box-body"><%= data.body %></div>', '</div>'],
 	LINK: ['<a href="<%= data.url %>">', '</a>'],
-	IMAGE: ['<img src="<%= data.url %>">', '</img>'],
-	SLIDESHOW: ['<!-- slideshow component --> <ol> <%  _.forEach(data, function(image) { %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
-	IMAGEDIFF: ['<!-- imageDiff component --> <ol> <% _.forEach(data, function(image, index) { if (index > 1) { return; } %><li><img src="<%- image.url %>" /></li><% }); %>', '</ol>'],
+	IMAGE: ['<img alt="<%= data.description %>" src="<%= data.url %>">', '</img>'],
+	SLIDESHOW: ['<!-- slideshow component start --> <ol class="slideshow-container"> <%  _.forEach(data, function(image) { %><li class="slideshow-slide"><img src="<%- image.url %>" /></li><% }); %>', '</ol><!-- slideshow component end -->'],
+	IMAGEDIFF: ['<!-- imageDiff component start --> <ol class="image-diff-container"> <% _.forEach(data, function(image, index) { if (index > 1) { return; } %><li class="image-diff-item"><img src="<%- image.url %>" /></li><% }); %>', '</ol><!-- imageDiff component end-->'],
 	YOUTUBE: ['<iframe width="560" height="315" src="https://www.youtube.com/embed/<%= data.youtubeId %>" frameborder="0" allowfullscreen>', '</iframe>'],
 };
 
