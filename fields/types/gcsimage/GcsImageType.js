@@ -293,14 +293,6 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 						}));
 					}
 					return Promise.all(promises).then(function (values) {
-						// delete local file
-						console.log('DELETE LOCAL FILE:', file.path);
-						try {
-							fs.unlinkSync(file.path);
-						} catch (err) {
-							console.error('DELETE LOCAL FILE ERROR:', err);
-						};
-
 						return targets;
 					});
 				} else {
@@ -375,6 +367,14 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 				}
 				callback(err);
 			});
+		}).then(function () {
+			// delete local file
+			console.log('DELETE LOCAL FILE:', file.path);
+			try {
+				fs.unlinkSync(file.path);
+			} catch (err) {
+				console.error('DELETE LOCAL FILE ERROR:', err);
+			};
 		});
 	};
 
