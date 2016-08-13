@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import CloudinaryImageSummary from '../../components/columns/CloudinaryImageSummary';
 import ItemsTableCell from '../../../admin/client/components/ItemsTableCell';
@@ -19,6 +20,7 @@ var CloudinaryImagesColumn = React.createClass({
 		let items = [];
 		for (let i = 0; i < 3; i++) {
 			if (!value[i]) break;
+			_.set(value, [i, 'url'], _.get(value, [i, 'resizedTargets', 'tiny', 'url']));
 			items.push(<CloudinaryImageSummary key={'image' + i} image={value[i]} />);
 		}
 		if (value.length > 3) {
@@ -29,6 +31,7 @@ var CloudinaryImagesColumn = React.createClass({
 	renderValue (value) {
 		if (!value || !Object.keys(value).length) return;
 
+		_.set(value, ['url'], _.get(value, ['resizedTargets', 'tiny', 'url']));
 		return <CloudinaryImageSummary image={value} />;
 
 	},
