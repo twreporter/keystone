@@ -1,3 +1,7 @@
+### 0.5.4 2016/08/14
+- Handle pasted text
+- take off h3 to h6 of the Draft Editor
+
 ### 0.5.3 2016/08/13
 - Fix image uploading bug.
 
