@@ -1,3 +1,6 @@
+### 0.5.3 2016/08/13
+- Fix image uploading bug.
+
 ### 0.5.2 2016/0813
 - Delete local temporary files synchronously
 - render image-collection listing page efficiently
