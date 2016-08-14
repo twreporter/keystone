@@ -1,35 +1,35 @@
 'use strict';
 
 const ENTITY = {
-	annotation: {
+	ANNOTATION: {
 		type: 'ANNOTATION',
 	},
-	blockQuote: {
+	BLOCKQUOTE: {
 		type: 'BLOCKQUOTE',
 	},
-	link: {
+	LINK: {
 		type: 'LINK',
 	},
-	infobox: {
+	INFOBOX: {
 		type: 'INFOBOX',
 	},
-	embeddedCode: {
-		type: 'EMBEDDED',
+	EMBEDDEDCODE: {
+		type: 'EMBEDDEDCODE',
 	},
-	audio: {
+	AUDIO: {
 		type: 'AUDIO',
 	},
-	image: {
+	IMAGE: {
 		type: 'IMAGE',
 	},
-	imageDiff: {
+	IMAGEDIFF: {
 		type: 'IMAGEDIFF',
 	},
-	slideshow: {
+	SLIDESHOW: {
 		type: 'SLIDESHOW',
 		slideshowSelectionLimit: 30,
 	},
-	youtube: {
+	YOUTUBE: {
 		type: 'YOUTUBE',
 	},
 };

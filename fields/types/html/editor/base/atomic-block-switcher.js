@@ -41,7 +41,9 @@ class AtomicBlockSwitcher extends React.Component {
 
 	render () {
 		const entityKey = this.props.block.getEntityAt(0);
-		const type = entityKey ? Entity.get(entityKey).getType() : null;
+		let type = entityKey ? Entity.get(entityKey).getType() : '';
+		// backward compatible. Old data type is lower case
+		type = type && type.toUpperCase();
 
 		const Buttons = (
 			<div style={{ textAlign: 'center' }}>
@@ -74,7 +76,7 @@ class AtomicBlockSwitcher extends React.Component {
 
 
 		switch (type) {
-			case ENTITY.audio.type:
+			case ENTITY.AUDIO.type:
 				BlockComponent = AudioBlock;
 				if (device === 'mobile') {
 					style = mobileStyle;
@@ -82,7 +84,7 @@ class AtomicBlockSwitcher extends React.Component {
 					style = tabletMinStyle;
 				}
 				break;
-			case ENTITY.blockQuote.type:
+			case ENTITY.BLOCKQUOTE.type:
 				BlockComponent = BlockQuoteBlock;
 				if (device === 'mobile') {
 					style = mobileStyle;
@@ -90,7 +92,7 @@ class AtomicBlockSwitcher extends React.Component {
 					style = tabletMinStyle;
 				}
 				break;
-			case ENTITY.embeddedCode.type:
+			case ENTITY.EMBEDDEDCODE.type:
 				BlockComponent = EmbeddedCodeBlock;
 				if (device === 'mobile') {
 					style = mobileStyle;
@@ -98,7 +100,7 @@ class AtomicBlockSwitcher extends React.Component {
 					style = tabletMinStyle;
 				}
 				break;
-			case ENTITY.infobox.type:
+			case ENTITY.INFOBOX.type:
 				BlockComponent = InfoBoxBlock;
 				if (device === 'mobile') {
 					style = mobileStyle;
@@ -106,7 +108,7 @@ class AtomicBlockSwitcher extends React.Component {
 					style = tabletMinStyle;
 				}
 				break;
-			case ENTITY.image.type:
+			case ENTITY.IMAGE.type:
 				BlockComponent = ImageBlock;
 				if (device === 'mobile') {
 					style = mobileStyle;
@@ -114,7 +116,7 @@ class AtomicBlockSwitcher extends React.Component {
 					style = tabletMaxStyle;
 				}
 				break;
-			case ENTITY.slideshow.type:
+			case ENTITY.SLIDESHOW.type:
 				BlockComponent = SlideshowBlock;
 				if (device === 'mobile') {
 					style = mobileStyle;
@@ -122,7 +124,7 @@ class AtomicBlockSwitcher extends React.Component {
 					style = tabletMaxStyle;
 				}
 				break;
-			case ENTITY.imageDiff.type:
+			case ENTITY.IMAGEDIFF.type:
 				BlockComponent = ImageDiffBlock;
 				if (device === 'mobile') {
 					style = mobileStyle;
@@ -130,7 +132,7 @@ class AtomicBlockSwitcher extends React.Component {
 					style = tabletMaxStyle;
 				}
 				break;
-			case ENTITY.youtube.type:
+			case ENTITY.YOUTUBE.type:
 				BlockComponent = YoutubeBlock;
 				if (device === 'mobile') {
 					style = mobileStyle;

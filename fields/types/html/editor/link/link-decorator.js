@@ -22,10 +22,12 @@ function findLinkEntities (contentBlock, callback) {
 	contentBlock.findEntityRanges(
 		(character) => {
 			const entityKey = character.getEntity();
-			return (
-				entityKey !== null
-				&& Entity.get(entityKey).getType() === ENTITY.link.type
-			);
+			if (entityKey !== null) {
+				let type = Entity.get(entityKey).getType();
+				type = type && type.toUpperCase();
+				return type === ENTITY.LINK.type;
+			}
+			return false;
 		},
 		callback
 	);

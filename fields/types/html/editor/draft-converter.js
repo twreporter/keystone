@@ -36,7 +36,7 @@ let defaultEntityTagMap = {
 	ANNOTATION: ['<abbr title="<%= data.pureAnnotationText %>"><%= data.text %>', '</abbr>'],
 	AUDIO: ['<div class="audio-container"><div class="audio-title"><%= data.title %></div><div class="audio-desc"><%= data.description %></div><audio src="<%= data.url %>" />', '</div>'],
 	BLOCKQUOTE: ['<blockquote><div><%= data.quote %></div><div><%= data.quoteBy %></div>', '<blockquote>'],
-	EMBEDDED: ['<div><%= data.embeddedCode%>', '</div>'],
+	EMBEDDEDCODE: ['<div><%= data.embeddedCode%>', '</div>'],
 	INFOBOX: ['<div class="info-box-container"><div class="info-box-title"><%= data.title %></div><div class="info-box-body"><%= data.body %></div>', '</div>'],
 	LINK: ['<a href="<%= data.url %>">', '</a>'],
 	IMAGE: ['<img alt="<%= data.description %>" src="<%= data.url %>">', '</img>'],

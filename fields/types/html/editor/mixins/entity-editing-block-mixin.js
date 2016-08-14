@@ -164,7 +164,7 @@ let EntityEditingBlock = (superclass) => class extends Component {
 
 	_toggleEntity (entity, value) {
 		switch (entity) {
-			case ENTITY.link.type:
+			case ENTITY.LINK.type:
 				return this._toggleLink(entity, value);
 			default:
 				return;

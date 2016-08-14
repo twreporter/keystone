@@ -32,7 +32,7 @@ export default class SlideshowBlock extends AtomicBlockRendererMixin(React.Compo
 			onChange: this.onValueChange,
 			onFinish: this.toggleEditMode,
 			selectedImages: images,
-			selectionLimit: ENTITY.slideshow.slideshowSelectionLimit,
+			selectionLimit: ENTITY.SLIDESHOW.slideshowSelectionLimit,
 		}) : null;
 
 		return (

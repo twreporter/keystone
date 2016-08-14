@@ -55,10 +55,12 @@ function findAnnotationEntities (contentBlock, callback) {
 	contentBlock.findEntityRanges(
 		(character) => {
 			const entityKey = character.getEntity();
-			return (
-				entityKey !== null
-				&& Entity.get(entityKey).getType() === ENTITY.annotation.type
-			);
+			if (entityKey !== null) {
+				let type = Entity.get(entityKey).getType();
+				type = type && type.toUpperCase();
+				return type === ENTITY.ANNOTATION.type;
+			}
+			return false;
 		},
 		callback
 	);
