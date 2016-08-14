@@ -9,16 +9,19 @@ const processor = {
 		let content;
 		let entityRange = block.entityRanges[0];
 		const entity = entityMap[entityRange.key];
-		const type = entity && entity.type;
-		switch (type) {
-			case ENTITY.audio.type:
-			case ENTITY.blockQuote.type:
-			case ENTITY.embeddedCode.type:
-			case ENTITY.image.type:
-			case ENTITY.infobox.type:
-			case ENTITY.slideshow.type:
-			case ENTITY.imageDiff.type:
-			case ENTITY.youtube.type:
+
+		let type = _.get(entity, 'type', '');
+
+		// backward compatible. Old entity type might be lower case
+		switch (type && type.toUpperCase()) {
+			case ENTITY.AUDIO.type:
+			case ENTITY.BLOCKQUOTE.type:
+			case ENTITY.EMBEDDEDCODE.type:
+			case ENTITY.IMAGE.type:
+			case ENTITY.INFOBOX.type:
+			case ENTITY.SLIDESHOW.type:
+			case ENTITY.IMAGEDIFF.type:
+			case ENTITY.YOUTUBE.type:
 				alignment = entity.data && entity.data.alignment || alignment;
 				content = _.get(entity, 'data');
 				content = Array.isArray(content) ? content : [content];
@@ -26,7 +29,9 @@ const processor = {
 			default:
 				return;
 		}
-		return new ApiDataInstance({ id: block.key, alignment, type, content });
+
+		// block type of api data should be lower case
+		return new ApiDataInstance({ id: block.key, alignment, type: type && type.toLowerCase(), content });
 	},
 };
 

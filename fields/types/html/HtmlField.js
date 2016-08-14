@@ -183,21 +183,21 @@ module.exports = Field.create({
 
 	toggleEntity (entity, value) {
 		switch (entity) {
-			case ENTITY.audio.type:
+			case ENTITY.AUDIO.type:
 				return this._toggleAudio(entity, value);
-			case ENTITY.blockQuote.type:
-			case ENTITY.infobox.type:
-			case ENTITY.embeddedCode.type:
-			case ENTITY.youtube.type:
+			case ENTITY.BLOCKQUOTE.type:
+			case ENTITY.INFOBOX.type:
+			case ENTITY.EMBEDDEDCODE.type:
+			case ENTITY.YOUTUBE.type:
 				return this._toggleAtomicBlock(entity, value);
-			case ENTITY.annotation.type:
-			case ENTITY.link.type:
+			case ENTITY.ANNOTATION.type:
+			case ENTITY.LINK.type:
 				return this._toggleInlineEntity(entity, value);
-			case ENTITY.image.type:
+			case ENTITY.IMAGE.type:
 				return this._toggleImage(entity, value);
-			case ENTITY.slideshow.type:
+			case ENTITY.SLIDESHOW.type:
 				return this._toggleSlideshow(entity, value);
-			case ENTITY.imageDiff.type:
+			case ENTITY.IMAGEDIFF.type:
 				return this._toggleImageDiff(entity, value);
 			default:
 				return;
@@ -302,9 +302,7 @@ module.exports = Field.create({
 								editorState={editorState}
 								onToggle={this.toggleInlineStyle} />
 							<EntityButtons
-								entities={Object.keys(ENTITY).map((entity) => {
-									return entity.toUpperCase();
-								})}
+								entities={Object.keys(ENTITY)}
 								editorState={editorState}
 								onToggle={this.toggleEntity}
 							/>

@@ -121,7 +121,7 @@ export const EntityButtons = (props) => {
 		let active = entityInstance ? entityInstance.getType() === entity : false;
 		let onToggle = _onToggle.bind(null, entity);
 		switch (entity) {
-			case ENTITY.annotation.type:
+			case ENTITY.ANNOTATION.type:
 				return (
 					<AnnotationBt
 						active={active}
@@ -135,7 +135,7 @@ export const EntityButtons = (props) => {
 						text={data ? data.text : selectedText}
 					/>
 				);
-			case ENTITY.audio.type:
+			case ENTITY.AUDIO.type:
 				return (
 					<AudioButton
 						active={active}
@@ -147,7 +147,7 @@ export const EntityButtons = (props) => {
 						iconText=" Audio"
 					/>
 				);
-			case ENTITY.blockQuote.type:
+			case ENTITY.BLOCKQUOTE.type:
 				return (
 					<BlockQuoteBt
 						active={active}
@@ -160,7 +160,7 @@ export const EntityButtons = (props) => {
 						quoteBy={data ? data.quoteBy : ''}
 					/>
 				);
-			case ENTITY.infobox.type:
+			case ENTITY.INFOBOX.type:
 				return (
 					<InfoBoxBt
 						active={active}
@@ -173,7 +173,7 @@ export const EntityButtons = (props) => {
 						iconText="infobox"
 					/>
 				);
-			case ENTITY.link.type:
+			case ENTITY.LINK.type:
 				return (
 					<LinkButton
 						active={active}
@@ -186,7 +186,7 @@ export const EntityButtons = (props) => {
 						iconText=""
 					/>
 				);
-			case ENTITY.image.type:
+			case ENTITY.IMAGE.type:
 				return (
 					<ImageButton
 						active={active}
@@ -198,7 +198,7 @@ export const EntityButtons = (props) => {
 						iconText=" Img"
 					/>
 				);
-			case ENTITY.slideshow.type:
+			case ENTITY.SLIDESHOW.type:
 				return (
 					<ImageButton
 						active={active}
@@ -206,12 +206,12 @@ export const EntityButtons = (props) => {
 						key={entity}
 						label={entity}
 						onToggle={onToggle}
-						selectionLimit={ENTITY.slideshow.slideshowSelectionLimit}
+						selectionLimit={ENTITY.SLIDESHOW.slideshowSelectionLimit}
 						icon="fa-slideshare"
 						iconText=" Slideshow"
 					/>
 				);
-			case ENTITY.imageDiff.type:
+			case ENTITY.IMAGEDIFF.type:
 				return (
 					<ImageButton
 						active={active}
@@ -224,7 +224,7 @@ export const EntityButtons = (props) => {
 						iconText=" Diff"
 					/>
 				);
-			case ENTITY.embeddedCode.type:
+			case ENTITY.EMBEDDEDCODE.type:
 				return (
 					<EmbeddedCodeBt
 						active={active}
@@ -236,7 +236,7 @@ export const EntityButtons = (props) => {
 						iconText=" Embed"
 					/>
 				);
-			case ENTITY.youtube.type:
+			case ENTITY.YOUTUBE.type:
 				return (
 					<YoutubeBt
 						active={active}

@@ -1,6 +1,7 @@
 // Modified from https://github.com/dburrows/draft-js-basic-html-editor/blob/master/src/utils/processInlineStylesAndEntities.js
 
 import _ from 'lodash';
+import ENTITY from './entities';
 
 function _fullfilIntersection (block) {
 	// SORT BEFORE PROCESSING
@@ -117,11 +118,12 @@ function _inlineTag (inlineTagMap, inlineStyleRanges, tagInsertMap = {}) {
 function _entityTag (entityTagMap, entityMap, entityRanges, tagInsertMap = {}) {
 	_.forEach(entityRanges, (range) => {
 		let entity = entityMap[range.key];
-		let tag = entityTagMap[entity.type];
+		let type = entity.type && entity.type.toUpperCase();
+		let tag = entityTagMap[type];
 		let data = entity.data;
 
 		// special case
-		if (entity.type === 'annotation') {
+		if (entity.type === ENTITY.ANNOTATION.type) {
 			data = _.pick(data, 'text', 'annotation', 'pureAnnotationText');
 		}
 
