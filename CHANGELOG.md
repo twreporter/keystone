@@ -1,3 +1,6 @@
+### 0.5.5 2016/08/14
+- Back compatible with old data whose entity type might be lower case
+
 ### 0.5.4 2016/08/14
 - Handle pasted text
 - take off h3 to h6 of the Draft Editor
