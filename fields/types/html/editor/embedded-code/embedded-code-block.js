@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'lodash';
 import { AlignedEmbedded } from 'twreporter-react/lib/components/article/index';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import EditingBt from '../base/editing-bt';
@@ -33,7 +34,7 @@ export default class EmbeddedCodeBlock extends AtomicBlockRendererMixin(React.Co
 		return (
 			<div
 				contentEditable={false}
-				calssName="embedded-container"
+				className="embedded-container"
 				style={{
 					position: 'relative',
 				}}
