@@ -186,6 +186,7 @@ module.exports = Field.create({
 			case ENTITY.AUDIO.type:
 				return this._toggleAudio(entity, value);
 			case ENTITY.BLOCKQUOTE.type:
+			case ENTITY.IMAGELINK.type:
 			case ENTITY.INFOBOX.type:
 			case ENTITY.EMBEDDEDCODE.type:
 			case ENTITY.YOUTUBE.type:

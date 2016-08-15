@@ -26,6 +26,17 @@ const processor = {
 				content = _.get(entity, 'data');
 				content = Array.isArray(content) ? content : [content];
 				break;
+			case ENTITY.IMAGELINK.type:
+				// use Embedded component to dangerouslySetInnerHTML
+				type = ENTITY.EMBEDDEDCODE.type;
+				let description = _.get(entity, ['data', 'description'], '');
+				let url = _.get(entity, ['data', 'url'], '');
+				content = [{
+					caption: description,
+					embeddedCode: `<img alt="${description}" src="${url}" class="img-responsive"/>`,
+					url: url,
+				}];
+				break;
 			default:
 				return;
 		}

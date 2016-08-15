@@ -40,6 +40,7 @@ let defaultEntityTagMap = {
 	INFOBOX: ['<div class="info-box-container"><div class="info-box-title"><%= data.title %></div><div class="info-box-body"><%= data.body %></div>', '</div>'],
 	LINK: ['<a href="<%= data.url %>">', '</a>'],
 	IMAGE: ['<img alt="<%= data.description %>" src="<%= data.url %>">', '</img>'],
+	IMAGELINK: ['<img alt="<%= data.description %>" src="<%= data.url %>">', '</img>'],
 	SLIDESHOW: ['<!-- slideshow component start --> <ol class="slideshow-container"> <%  _.forEach(data, function(image) { %><li class="slideshow-slide"><img src="<%- image.url %>" /></li><% }); %>', '</ol><!-- slideshow component end -->'],
 	IMAGEDIFF: ['<!-- imageDiff component start --> <ol class="image-diff-container"> <% _.forEach(data, function(image, index) { if (index > 1) { return; } %><li class="image-diff-item"><img src="<%- image.url %>" /></li><% }); %>', '</ol><!-- imageDiff component end-->'],
 	YOUTUBE: ['<iframe width="560" height="315" src="https://www.youtube.com/embed/<%= data.youtubeId %>" frameborder="0" allowfullscreen>', '</iframe>'],

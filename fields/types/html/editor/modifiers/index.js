@@ -1,6 +1,5 @@
 'use strict';
 
-import ENTITY from '../entities';
 import insertAtomicBlock from './insert-atomic-block';
 import { replaceAtomicBlock } from './replace-block';
 import { Entity } from 'draft-js';
@@ -20,23 +19,10 @@ const handleAtomicEdit = (editorState, blockKey, valueChanged) => {
 	// backward compatible. Old block type is lower case
 	blockType = blockType && blockType.toUpperCase();
 
-	switch (blockType) {
-		case ENTITY.ANNOTATION.type:
-		case ENTITY.AUDIO.type:
-		case ENTITY.BLOCKQUOTE.type:
-		case ENTITY.EMBEDDEDCODE.type:
-		case ENTITY.IMAGE.type:
-		case ENTITY.IMAGEDIFF.type:
-		case ENTITY.INFOBOX.type:
-		case ENTITY.SLIDESHOW.type:
-		case ENTITY.YOUTUBE.type:
-			if (valueChanged) {
-				return replaceAtomicBlock(editorState, blockKey, valueChanged);
-			}
-			return removeBlock(editorState, blockKey);
-		default:
-			return editorState;
+	if (valueChanged) {
+		return replaceAtomicBlock(editorState, blockKey, valueChanged);
 	}
+	return removeBlock(editorState, blockKey);
 };
 
 export default {

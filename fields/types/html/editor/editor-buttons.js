@@ -8,6 +8,7 @@ import BlockQuoteBt from './quote/block-quote-bt';
 import EmbeddedCodeBt from './embedded-code/embedded-code-bt';
 import ENTITY from './entities';
 import ImageButton from './image/image-button';
+import ImageLinkButton from './image-link/image-link-bt';
 import InfoBoxBt from './info-box/info-box-bt';
 import LinkButton from './link/link-button';
 import React from 'react';
@@ -222,6 +223,19 @@ export const EntityButtons = (props) => {
 						selectionLimit={2}
 						icon="fa-object-ungroup"
 						iconText=" Diff"
+					/>
+				);
+			case ENTITY.IMAGELINK.type:
+				return (
+					<ImageLinkButton
+						active={active}
+						desc={data ? data.desc : ''}
+						key={entity}
+						label={entity}
+						onToggle={onToggle}
+						url={data ? data.url : ''}
+						icon="fa-external-link"
+						iconText=" ImgLink"
 					/>
 				);
 			case ENTITY.EMBEDDEDCODE.type:
