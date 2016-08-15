@@ -1,3 +1,6 @@
+### 0.5.6 2016/08/15
+- Add ImageLink component, which makes editor input image url and get image html tag output
+
 ### 0.5.5 2016/08/14
 - Back compatible with old data whose entity type might be lower case
 
