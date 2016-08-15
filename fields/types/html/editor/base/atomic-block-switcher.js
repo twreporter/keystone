@@ -7,6 +7,7 @@ import AudioBlock from '../audio/audio-block';
 import BlockQuoteBlock from '../quote/block-quote-block';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
+import ImageLinkBlock from '../image-link/image-link-block';
 import ImageDiffBlock from '../image-diff/image-diff-block';
 import InfoBoxBlock from '../info-box/info-box-block';
 import React from 'react';
@@ -110,6 +111,14 @@ class AtomicBlockSwitcher extends React.Component {
 				break;
 			case ENTITY.IMAGE.type:
 				BlockComponent = ImageBlock;
+				if (device === 'mobile') {
+					style = mobileStyle;
+				} else {
+					style = tabletMaxStyle;
+				}
+				break;
+			case ENTITY.IMAGELINK.type:
+				BlockComponent = ImageLinkBlock;
 				if (device === 'mobile') {
 					style = mobileStyle;
 				} else {

@@ -25,6 +25,9 @@ const ENTITY = {
 	IMAGEDIFF: {
 		type: 'IMAGEDIFF',
 	},
+	IMAGELINK: {
+		type: 'IMAGELINK',
+	},
 	SLIDESHOW: {
 		type: 'SLIDESHOW',
 		slideshowSelectionLimit: 30,
