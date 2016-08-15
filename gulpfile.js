@@ -14,6 +14,18 @@ gulp.task('copy-fontawesome', function () {
 		.pipe(gulp.dest('admin/public/fonts'));
 });
 
+/**
+ * Prepare public assets
+ */
+gulp.task('copy-css', function () {
+	// copy twreporter-react css into the public folder
+	gulp.src('node_modules/twreporter-react/lib/styles/main.css')
+		.pipe(gulp.dest('admin/public/styles/twreporter-react'));
+
+	gulp.src('node_modules/font-awesome/less/*.less')
+		.pipe(gulp.dest('admin/public/styles/font-awesome'));
+});
+
 
 /**
  * Build Tasks
@@ -21,6 +33,7 @@ gulp.task('copy-fontawesome', function () {
 
 gulp.task('build-packages', function () {
 	gulp.start('copy-fontawesome');
+	gulp.start('copy-css');
 
 	var packages = require('./admin/client/packages');
 	var b = browserify();
