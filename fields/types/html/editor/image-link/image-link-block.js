@@ -1,6 +1,7 @@
 'use strict';
 
 import { AlignedEmbedded } from 'twreporter-react/dist/components/article/index';
+import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import EditingBt from '../base/editing-bt';
 import ImageLinkEditingBlock from './image-link-editing-block';

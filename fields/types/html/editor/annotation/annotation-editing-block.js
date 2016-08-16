@@ -1,5 +1,6 @@
 'use strict';
 import { convertToRaw } from 'draft-js';
+import _ from 'lodash';
 import DraftConverter from '../draft-converter';
 import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';

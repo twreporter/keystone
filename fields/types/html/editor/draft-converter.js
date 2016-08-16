@@ -2,9 +2,10 @@
 
 'use strict';
 import { List } from 'immutable';
+import _ from 'lodash';
+import * as InlineStylesProcessor from './inline-styles-processor';
 import ApiDataInstance from './api-data-instance';
 import AtomicBlockProcessor from './atomic-block-processor';
-import * as InlineStylesProcessor from './inline-styles-processor';
 
 const annotationIndicatorPrefix = '__ANNOTATION__=';
 
