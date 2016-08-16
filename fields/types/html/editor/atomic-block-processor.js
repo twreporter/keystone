@@ -45,7 +45,7 @@ const processor = {
 				let scriptTagStart = false;
 				let parser = new htmlparser.Parser({
 					onopentag: (name, attribs) => {
-						if (name === 'script' && attribs.type === 'text/javascript') {
+						if (name === 'script') {
 							scriptTagStart = true;
 							script.attribs = attribs;
 						}
@@ -68,7 +68,7 @@ const processor = {
 				content = [{
 					caption,
 					embeddedCode,
-					embeddedCodeWithoutScript: embeddedCode.replace(/<script(.+?)text\/javascript(.+?)\/script>/g, ''),
+					embeddedCodeWithoutScript: embeddedCode.replace(/<script(.+?)\/script>/g, ''),
 					scripts,
 				}];
 
