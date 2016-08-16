@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import AnnotationEditingBlock from './annotation-editing-block';
 import React from 'react';
