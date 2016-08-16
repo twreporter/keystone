@@ -19,7 +19,7 @@ gulp.task('copy-fontawesome', function () {
  */
 gulp.task('copy-css', function () {
 	// copy twreporter-react css into the public folder
-	gulp.src('node_modules/twreporter-react/lib/styles/main.css')
+	gulp.src('node_modules/twreporter-react/dist/styles/main.css')
 		.pipe(gulp.dest('admin/public/styles/twreporter-react'));
 
 	gulp.src('node_modules/font-awesome/less/*.less')
