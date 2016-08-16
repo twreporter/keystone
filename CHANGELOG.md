@@ -1,3 +1,6 @@
+### 0.5.11 2016/08/17
+- Bug fix. Import lodash.
+
 ### 0.5.10 2016/08/16
 - Bug fix. Import twreporter-react pkg in the right path.
 
