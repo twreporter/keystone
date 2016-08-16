@@ -1,5 +1,5 @@
 'use strict';
-import { Audio } from 'twreporter-react/lib/components/article/index';
+import { Audio } from 'twreporter-react/dist/components/article/index';
 import _ from 'lodash';
 import raf from 'raf'; // requestAnimationFrame polyfill
 import React from 'react';
