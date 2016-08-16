@@ -2,6 +2,7 @@ import _ from 'lodash';
 // import sizeOf from 'image-size';
 import ApiDataInstance from './api-data-instance';
 import ENTITY from './entities';
+import htmlparser from 'htmlparser2';
 
 const processor = {
 	convertBlock (entityMap, block) {
@@ -16,7 +17,6 @@ const processor = {
 		switch (type && type.toUpperCase()) {
 			case ENTITY.AUDIO.type:
 			case ENTITY.BLOCKQUOTE.type:
-			case ENTITY.EMBEDDEDCODE.type:
 			case ENTITY.IMAGE.type:
 			case ENTITY.INFOBOX.type:
 			case ENTITY.SLIDESHOW.type:
@@ -36,6 +36,42 @@ const processor = {
 					embeddedCode: `<img alt="${description}" src="${url}" class="img-responsive"/>`,
 					url: url,
 				}];
+				break;
+			case ENTITY.EMBEDDEDCODE.type:
+				let caption = _.get(entity, ['data', 'caption'], '');
+				let embeddedCode = _.get(entity, ['data', 'embeddedCode'], '');
+				let script = {};
+				let scripts = [];
+				let scriptTagStart = false;
+				let parser = new htmlparser.Parser({
+					onopentag: (name, attribs) => {
+						if (name === 'script' && attribs.type === 'text/javascript') {
+							scriptTagStart = true;
+							script.attribs = attribs;
+						}
+					},
+					ontext: (text) => {
+						if (scriptTagStart) {
+							script.text = text;
+						}
+					},
+					onclosetag: (tagname) => {
+						if (tagname === 'script' && scriptTagStart) {
+							scriptTagStart = false;
+							scripts.push(script);
+						}
+					},
+				});
+				parser.write(embeddedCode);
+				parser.end();
+
+				content = [{
+					caption,
+					embeddedCode,
+					embeddedCodeWithoutScript: embeddedCode.replace(/<script(.+?)text\/javascript(.+?)\/script>/g, ''),
+					scripts,
+				}];
+
 				break;
 			default:
 				return;
