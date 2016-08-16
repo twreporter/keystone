@@ -1,3 +1,6 @@
+### 0.5.10 2016/08/16
+- Bug fix. Import twreporter-react pkg in the right path.
+
 ### 0.5.9 2016/08/16
 - Add default blockquote block type of draftjs back
 
