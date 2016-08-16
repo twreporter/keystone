@@ -1,3 +1,6 @@
+### 0.5.7 2016/08/16
+- Fix Infogram embedded script bug, also handle embedded code with script tags.
+
 ### 0.5.6 2016/08/15
 - Add ImageLink component, which makes editor input image url and get image html tag output
 
