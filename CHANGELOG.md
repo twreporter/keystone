@@ -1,3 +1,6 @@
+### 0.5.8 2016/08/16
+- Add default blockquote block type of draftjs back
+
 ### 0.5.7 2016/08/16
 - Fix Infogram embedded script bug, also handle embedded code with script tags.
 
