@@ -10,6 +10,7 @@ const annotationIndicatorPrefix = '__ANNOTATION__=';
 
 let defaultBlockTagMap = {
 	'atomic': `<div>%content%</div>`,
+	'blockquote': `<blockquote>%content%</blockquote>`,
 	'code-block': `<code>%content%</code>`,
 	'default': `<p>%content%</p>`,
 	'header-one': `<h1>%content%</h1>`,

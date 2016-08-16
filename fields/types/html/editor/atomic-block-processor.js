@@ -15,8 +15,15 @@ const processor = {
 
 		// backward compatible. Old entity type might be lower case
 		switch (type && type.toUpperCase()) {
-			case ENTITY.AUDIO.type:
 			case ENTITY.BLOCKQUOTE.type:
+				// this is different from default blockquote of draftjs
+				// so we name our specific blockquote as 'quoteby'
+				type = 'quoteby';
+				alignment = entity.data && entity.data.alignment || alignment;
+				content = _.get(entity, 'data');
+				content = Array.isArray(content) ? content : [content];
+				break;
+			case ENTITY.AUDIO.type:
 			case ENTITY.IMAGE.type:
 			case ENTITY.INFOBOX.type:
 			case ENTITY.SLIDESHOW.type:

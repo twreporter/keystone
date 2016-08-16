@@ -5,10 +5,10 @@ let tabletFullStyle = {
 	maxWidth: '100%',
 };
 let tabletMaxStyle = {
-	maxWidth: '644px',
+	maxWidth: '833px',
 };
 let tabletMinStyle = {
-	width: '532px',
+	width: '644px',
 };
 /*
 // wait for spec

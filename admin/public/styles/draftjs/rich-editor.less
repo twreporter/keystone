@@ -5,7 +5,7 @@
 }
 
 .default-expand-block {
-	max-width: 492px;
+	max-width: 664px;
 	margin: 0 auto 40px auto;
 }
 
@@ -90,6 +90,19 @@
       min-height: 100px;
     }
 
+    .RichEditor-blockquote {
+      &:extend(.default-block);
+      max-width: 664px;
+      font-style: italic;
+      padding-left: 17px;
+      border-left: 1px solid rgba(74, 74, 74, 0.25);
+      font-size: 17px;
+      line-height: 1.85;
+      font-weight: 400;
+      white-space: normal;
+      color: #808080;
+    }
+
     &.expanded {
       border-top: 0;
       padding-top: 2.5em !important;
@@ -100,6 +113,9 @@
 
       figure[data-block='true'] {
         margin-bottom: 40px;
+      }
+      .RichEditor-blockquote {
+        &:extend(.default-expand-block);
       }
     }
   }
@@ -113,4 +129,5 @@
   .RichEditor-activeButton {
     color: #5890ff;
   }
+
 }

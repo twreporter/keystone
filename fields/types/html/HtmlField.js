@@ -348,6 +348,7 @@ const styleMap = {
 
 // block settings
 const BLOCK_TYPES = [
+	{ label: 'Blockquote', style: 'blockquote', icon: 'fa-quote-left', text: '' },
 	{ label: 'Code Block', style: 'code-block', icon: 'fa-code', text: '' },
 	{ label: 'H1', style: 'header-one', icon: 'fa-header', text: '1' },
 	{ label: 'H2', style: 'header-two', icon: 'fa-header', text: '2' },

@@ -15,7 +15,7 @@ import SlideshowBlock from '../slideshow/slideshow-block';
 import YoutubeBlock from '../youtube/youtube-block';
 import Wrapper from './block-wrapper';
 import classNames from 'classnames';
-import { mobileStyle, tabletMinStyle, tabletMaxStyle, tabletFullStyle } from '../constants/layout-style';
+import { mobileStyle, tabletMinStyle, tabletMaxStyle } from '../constants/layout-style';
 
 class AtomicBlockSwitcher extends React.Component {
 	constructor (props) {
@@ -146,7 +146,7 @@ class AtomicBlockSwitcher extends React.Component {
 				if (device === 'mobile') {
 					style = mobileStyle;
 				} else {
-					style = tabletFullStyle;
+					style = tabletMaxStyle;
 				}
 				break;
 			default:
