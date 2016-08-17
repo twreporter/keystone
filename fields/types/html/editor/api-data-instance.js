@@ -6,7 +6,7 @@ const ApiDataInstanceRecord = Record({
 	type: 'paragraph',
 	alignment: 'center',
 	content: [],
-	styles: [],
+	styles: {},
 });
 
 class ApiDataInstance extends ApiDataInstanceRecord {

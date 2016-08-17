@@ -9,6 +9,7 @@ const processor = {
 		let alignment = 'center';
 		let content;
 		let entityRange = block.entityRanges[0];
+		let styles = {};
 		const entity = entityMap[entityRange.key];
 
 		let type = _.get(entity, 'type', '');
@@ -40,7 +41,7 @@ const processor = {
 				let url = _.get(entity, ['data', 'url'], '');
 				content = [{
 					caption: description,
-					embeddedCode: `<img alt="${description}" src="${url}" class="img-responsive"/>`,
+					embeddedCodeWithoutScript: `<img alt="${description}" src="${url}" class="img-responsive"/>`,
 					url: url,
 				}];
 				break;
@@ -85,7 +86,7 @@ const processor = {
 		}
 
 		// block type of api data should be lower case
-		return new ApiDataInstance({ id: block.key, alignment, type: type && type.toLowerCase(), content });
+		return new ApiDataInstance({ id: block.key, alignment, type: type && type.toLowerCase(), content, styles });
 	},
 };
 
