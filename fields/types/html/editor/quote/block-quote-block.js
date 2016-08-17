@@ -1,6 +1,6 @@
 'use strict';
 
-import { AlignedBlockQuote } from 'twreporter-react/dist/components/article/index';
+import { AlignedQuoteBy } from 'twreporter-react/dist/components/article/index';
 import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import BlockQuoteEditingBlock from './block-quote-editing-block';
@@ -37,12 +37,12 @@ export default class BlockQuoteBlock extends AtomicBlockRendererMixin(React.Comp
 				onClick={this.toggleEditMode}
 				style={{ cursor: 'pointer' }}
 			>
-				<AlignedBlockQuote
+				<AlignedQuoteBy
 					{...this.state.data}
 					device={this.props.device}
 				>
 				{this.props.children}
-				</AlignedBlockQuote>
+				</AlignedQuoteBy>
 				{EditBlock}
 			</div>
 		);
