@@ -1,4 +1,4 @@
-### 0.5.12 2016/08/17
+### 0.5.13 2016/08/17
 - Bug fix. Render ImageLink by Embedded Component.
 - Add target="_blank" attribute when converting LINK entity into a tag
 
