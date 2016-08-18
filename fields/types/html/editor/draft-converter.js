@@ -6,6 +6,7 @@ import _ from 'lodash';
 import * as InlineStylesProcessor from './inline-styles-processor';
 import ApiDataInstance from './api-data-instance';
 import AtomicBlockProcessor from './atomic-block-processor';
+import ENTITY from './entities';
 
 const annotationIndicatorPrefix = '__ANNOTATION__=';
 
@@ -35,17 +36,17 @@ let inlineTagMap = {
 };
 
 let defaultEntityTagMap = {
-	ANNOTATION: ['<abbr title="<%= data.pureAnnotationText %>"><%= data.text %>', '</abbr>'],
-	AUDIO: ['<div class="audio-container"><div class="audio-title"><%= data.title %></div><div class="audio-desc"><%= data.description %></div><audio src="<%= data.url %>" />', '</div>'],
-	BLOCKQUOTE: ['<blockquote><div><%= data.quote %></div><div><%= data.quoteBy %></div>', '<blockquote>'],
-	EMBEDDEDCODE: ['<div><%= data.embeddedCode%>', '</div>'],
-	INFOBOX: ['<div class="info-box-container"><div class="info-box-title"><%= data.title %></div><div class="info-box-body"><%= data.body %></div>', '</div>'],
-	LINK: ['<a target="_blank" href="<%= data.url %>">', '</a>'],
-	IMAGE: ['<img alt="<%= data.description %>" src="<%= data.url %>">', '</img>'],
-	IMAGELINK: ['<img alt="<%= data.description %>" src="<%= data.url %>">', '</img>'],
-	SLIDESHOW: ['<!-- slideshow component start --> <ol class="slideshow-container"> <%  _.forEach(data, function(image) { %><li class="slideshow-slide"><img src="<%- image.url %>" /></li><% }); %>', '</ol><!-- slideshow component end -->'],
-	IMAGEDIFF: ['<!-- imageDiff component start --> <ol class="image-diff-container"> <% _.forEach(data, function(image, index) { if (index > 1) { return; } %><li class="image-diff-item"><img src="<%- image.url %>" /></li><% }); %>', '</ol><!-- imageDiff component end-->'],
-	YOUTUBE: ['<iframe width="560" height="315" src="https://www.youtube.com/embed/<%= data.youtubeId %>" frameborder="0" allowfullscreen>', '</iframe>'],
+	[ENTITY.ANNOTATION.type]: ['<abbr title="<%= data.pureAnnotationText %>"><%= data.text %>', '</abbr>'],
+	[ENTITY.AUDIO.type]: ['<div class="audio-container"><div class="audio-title"><%= data.title %></div><div class="audio-desc"><%= data.description %></div><audio src="<%= data.url %>" />', '</div>'],
+	[ENTITY.BLOCKQUOTE.type]: ['<blockquote><div><%= data.quote %></div><div><%= data.quoteBy %></div>', '<blockquote>'],
+	[ENTITY.EMBEDDEDCODE.type]: ['<div><%= data.embeddedCode%>', '</div>'],
+	[ENTITY.INFOBOX.type]: ['<div class="info-box-container"><div class="info-box-title"><%= data.title %></div><div class="info-box-body"><%= data.body %></div>', '</div>'],
+	[ENTITY.LINK.type]: ['<a target="_blank" href="<%= data.url %>">', '</a>'],
+	[ENTITY.IMAGE.type]: ['<img alt="<%= data.description %>" src="<%= data.url %>">', '</img>'],
+	[ENTITY.IMAGELINK.type]: ['<img alt="<%= data.description %>" src="<%= data.url %>">', '</img>'],
+	[ENTITY.SLIDESHOW.type]: ['<!-- slideshow component start --> <ol class="slideshow-container"> <%  _.forEach(data, function(image) { %><li class="slideshow-slide"><img src="<%- image.url %>" /></li><% }); %>', '</ol><!-- slideshow component end -->'],
+	[ENTITY.IMAGEDIFF.type]: ['<!-- imageDiff component start --> <ol class="image-diff-container"> <% _.forEach(data, function(image, index) { if (index > 1) { return; } %><li class="image-diff-item"><img src="<%- image.url %>" /></li><% }); %>', '</ol><!-- imageDiff component end-->'],
+	[ENTITY.YOUTUBE.type]: ['<iframe width="560" height="315" src="https://www.youtube.com/embed/<%= data.youtubeId %>" frameborder="0" allowfullscreen>', '</iframe>'],
 };
 
 let nestedTagMap = {
@@ -113,7 +114,7 @@ function convertBlocksToApiData (blocks, entityMap, entityTagMap) {
 				// special case for block containing annotation entity
 				// set this block type as annotation
 				if (converted.indexOf(annotationIndicatorPrefix) > -1) {
-					type = 'annotation';
+					type = ENTITY.ANNOTATION.type.toLowerCase();
 				}
 				apiDataArr = apiDataArr.push(new ApiDataInstance({ id: block.key, type: type, content: [converted] }));
 			}
@@ -164,7 +165,7 @@ function convertRawToApiData (raw) {
 	let entityTagMap = _.merge({}, defaultEntityTagMap, {
 		// special handling for annotation entity
 		// annotation entity data will be included in the speical comment.
-		annotation: [`<!--${annotationIndicatorPrefix}<%= JSON.stringify(data) %>--><!--`, '-->'],
+		[ENTITY.ANNOTATION.type]: [`<!--${annotationIndicatorPrefix}<%= JSON.stringify(data) %>--><!--`, '-->'],
 	});
 	apiData = convertBlocksToApiData(blocks, entityMap, entityTagMap);
 	return apiData;

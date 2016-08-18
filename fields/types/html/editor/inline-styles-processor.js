@@ -123,7 +123,7 @@ function _entityTag (entityTagMap, entityMap, entityRanges, tagInsertMap = {}) {
 		let data = entity.data;
 
 		// special case
-		if (entity.type === ENTITY.ANNOTATION.type) {
+		if (type === ENTITY.ANNOTATION.type) {
 			data = _.pick(data, 'text', 'annotation', 'pureAnnotationText');
 		}
 
