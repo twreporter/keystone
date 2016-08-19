@@ -145,7 +145,9 @@ module.exports = Field.create({
 	valueChanged (value) {
 		this.props.onChange({
 			path: this.props.path,
-			value: value,
+			// TODO Here is a bug when value is undefined, '' or null
+			// the item won't be deleted if value is undefined, '' or null
+			value: value ? value : ' ',
 		});
 	},
 
