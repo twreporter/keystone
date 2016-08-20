@@ -1,3 +1,8 @@
+### 0.5.15 2016/08/19
+- Use wordaround to delete the last item of relationship field
+- Make Embedded and ImageLink component alignable
+- Put Link button back to the editor of InfoBox and Annotation
+
 ### 0.5.14 2016/08/18
 - Fix bug. Annotation works abnormally
 
