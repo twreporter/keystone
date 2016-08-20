@@ -111,7 +111,7 @@ let EntityEditingBlock = (superclass) => class extends Component {
 							editorState={editorState}
 							onToggle={this._toggleInlineStyle} />
 						<EntityButtons
-							entities={['link']}
+							entities={[ENTITY.LINK.type]}
 							editorState={editorState}
 							onToggle={this._toggleEntity}
 						/>
