@@ -41,7 +41,10 @@ export default class EmbeddedCodeBlock extends AtomicBlockRendererMixin(React.Co
 			>
 				<AlignedEmbedded
 					{...this.state.data}
-				/>
+					device={this.props.device}
+				>
+					{this.props.children}
+				</AlignedEmbedded>
 				<EditingBt
 					onClick={this.toggleEditMode}
 				/>

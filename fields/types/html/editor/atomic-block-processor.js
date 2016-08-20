@@ -37,6 +37,7 @@ const processor = {
 			case ENTITY.IMAGELINK.type:
 				// use Embedded component to dangerouslySetInnerHTML
 				type = ENTITY.EMBEDDEDCODE.type;
+				alignment = entity.data && entity.data.alignment || alignment;
 				let description = _.get(entity, ['data', 'description'], '');
 				let url = _.get(entity, ['data', 'url'], '');
 				content = [{
@@ -46,6 +47,7 @@ const processor = {
 				}];
 				break;
 			case ENTITY.EMBEDDEDCODE.type:
+				alignment = entity.data && entity.data.alignment || alignment;
 				let caption = _.get(entity, ['data', 'caption'], '');
 				let embeddedCode = _.get(entity, ['data', 'embeddedCode'], '');
 				let script = {};
