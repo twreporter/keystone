@@ -32,7 +32,7 @@ module.exports = Field.create({
 
 	moment (value) {
 		var m = moment(value);
-		if (this.props.isUTC) m.utc();
+		if (this.props.isUTC) m.utcOffset(8);
 		return m;
 	},
 
