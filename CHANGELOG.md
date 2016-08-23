@@ -1,3 +1,7 @@
+### 0.5.16 2016/08/23
+- Render Embedded Component well while embedded code is iframe
+- Get height and width of iframe if provided for Embedded component
+
 ### 0.5.15 2016/08/19
 - Use wordaround to delete the last item of relationship field
 - Make Embedded and ImageLink component alignable
