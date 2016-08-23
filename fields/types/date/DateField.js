@@ -9,7 +9,7 @@ TODO: Implement yearRange Prop, or deprecate for max / min values (better)
 */
 
 const DEFAULT_INPUT_FORMAT = 'YYYY-MM-DD';
-const DEFAULT_FORMAT_STRING = 'Do MMM YYYY';
+const DEFAULT_FORMAT_STRING = 'YYYY-MM-DD';
 
 module.exports = Field.create({
 
@@ -63,7 +63,7 @@ module.exports = Field.create({
 
 	renderField () {
 		let value = this.moment(this.props.value);
-		value = this.props.value && value.isValid() ? value.format(this.props.formatString) : this.props.value;
+		value = this.props.value && value.isValid() ? value.format(this.props.inputFormat) : this.props.value;
 		return (
 			<InputGroup>
 				<InputGroup.Section grow>
