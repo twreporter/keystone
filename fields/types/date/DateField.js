@@ -63,7 +63,8 @@ module.exports = Field.create({
 
 	renderField () {
 		let value = this.moment(this.props.value);
-		value = this.props.value && value.isValid() ? value.format(this.props.inputFormat) : this.props.value;
+		// 480 / 60 = 8 (GMT+8)
+		value = value.isValid() ? value.utcOffset(480).format(this.props.inputFormat) : this.props.value;
 		return (
 			<InputGroup>
 				<InputGroup.Section grow>
