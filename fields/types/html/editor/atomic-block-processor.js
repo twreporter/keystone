@@ -53,11 +53,16 @@ const processor = {
 				let script = {};
 				let scripts = [];
 				let scriptTagStart = false;
+				let height;
+				let width;
 				let parser = new htmlparser.Parser({
 					onopentag: (name, attribs) => {
 						if (name === 'script') {
 							scriptTagStart = true;
 							script.attribs = attribs;
+						} else if (name === 'iframe') {
+							height = _.get(attribs, 'height', 0);
+							width = _.get(attribs, 'width', 0);
 						}
 					},
 					ontext: (text) => {
@@ -79,7 +84,9 @@ const processor = {
 					caption,
 					embeddedCode,
 					embeddedCodeWithoutScript: embeddedCode.replace(/<script(.+?)\/script>/g, ''),
+					height,
 					scripts,
+					width,
 				}];
 
 				break;
