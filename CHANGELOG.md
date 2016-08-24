@@ -1,3 +1,6 @@
+### 0.5.18 2016/08/24
+- Insert soft new line by typing `ctrl` or `shift` and `enter` keys
+
 ### 0.5.17 2016/08/23
 - Fix Datetime and Date issue. 
 
