@@ -1,4 +1,4 @@
-import { BlockMapBuilder, Editor, EditorState, Modifier, Entity, RichUtils, convertFromHTML, convertFromRaw, convertToRaw } from 'draft-js';
+import { BlockMapBuilder, Editor, EditorState, KeyBindingUtil, Modifier, Entity, RichUtils, convertFromHTML, convertFromRaw, convertToRaw, getDefaultKeyBinding } from 'draft-js';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
 import ENTITY from './editor/entities';
@@ -9,6 +9,7 @@ import Field from '../Field';
 import React from 'react';
 import blockStyleFn from './editor/base/block-style-fn';
 import decorator from './editor/entity-decorator';
+const { isCtrlKeyCommand } = KeyBindingUtil;
 
 let lastId = 0;
 
@@ -88,12 +89,29 @@ module.exports = Field.create({
 
 	handleKeyCommand (command) {
 		const { editorState } = this.state;
-		const newState = RichUtils.handleKeyCommand(editorState, command);
+		let newState;
+		switch (command) {
+			case 'insert-soft-newline':
+				newState = RichUtils.insertSoftNewline(editorState);
+				break;
+			default:
+				newState = RichUtils.handleKeyCommand(editorState, command);
+		}
 		if (newState) {
 			this.onChange(newState);
 			return true;
 		}
 		return false;
+	},
+
+	keyBindingFn (e) {
+		//
+		if (e.keyCode === 13 /* `enter` key */) {
+			if (isCtrlKeyCommand(e) || e.shiftKey) {
+				return 'insert-soft-newline';
+			}
+		}
+		return getDefaultKeyBinding(e);
 	},
 
 	toggleBlockType (blockType) {
@@ -318,6 +336,7 @@ module.exports = Field.create({
 							editorState={editorState}
 							handleKeyCommand={this.handleKeyCommand}
 							handlePastedText={this.handlePastedText}
+							keyBindingFn={this.keyBindingFn}
 							onChange={this.onChange}
 							placeholder="Enter HTML Here..."
 							ref="editor"
