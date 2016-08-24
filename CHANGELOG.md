@@ -1,3 +1,7 @@
+### 0.5.19 2016/08/24
+- Enable to copy & paste HTML on the editor of entity editing block.
+- Enable to insert soft newline on the editor of entity editing block.
+
 ### 0.5.18 2016/08/24
 - Insert soft new line by typing `ctrl` or `shift` and `enter` keys
 
