@@ -1,3 +1,6 @@
+### 0.5.17 2016/08/23
+- Fix Datetime and Date issue. 
+
 ### 0.5.16 2016/08/23
 - Render Embedded Component well while embedded code is iframe
 - Get height and width of iframe if provided for Embedded component
