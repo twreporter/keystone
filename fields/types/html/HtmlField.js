@@ -105,7 +105,6 @@ module.exports = Field.create({
 	},
 
 	keyBindingFn (e) {
-		//
 		if (e.keyCode === 13 /* `enter` key */) {
 			if (isCtrlKeyCommand(e) || e.shiftKey) {
 				return 'insert-soft-newline';

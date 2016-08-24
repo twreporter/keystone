@@ -1,11 +1,13 @@
 'use strict';
 import { Button, FormField, FormInput, Modal } from 'elemental';
-import { Editor, EditorState, Entity, Modifier, RichUtils, convertFromRaw } from 'draft-js';
+import { BlockMapBuilder, Editor, EditorState, Entity, KeyBindingUtil, Modifier, RichUtils, convertFromHTML, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from '../editor-buttons';
 import ENTITY from '../entities';
 import React, { Component } from 'react';
 import blockStyleFn from '../base/block-style-fn';
 import decorator from '../entity-decorator';
+
+const { isCtrlKeyCommand } = KeyBindingUtil;
 
 let EntityEditingBlock = (superclass) => class extends Component {
 	constructor (props) {
@@ -16,6 +18,7 @@ let EntityEditingBlock = (superclass) => class extends Component {
 		this.focus = this._focus.bind(this);
 		this._handleEditorStateChange = this._handleEditorStateChange.bind(this);
 		this._handleKeyCommand = this._handleKeyCommand.bind(this);
+		this._handlePastedText = this._handlePastedText.bind(this);
 		this._toggleBlockType = this._toggleBlockStyle.bind(this);
 		this._toggleInlineStyle = this._toggleInlineStyle.bind(this);
 		this._toggleEntity = this._toggleEntity.bind(this);
@@ -58,12 +61,58 @@ let EntityEditingBlock = (superclass) => class extends Component {
 
 	_handleKeyCommand (command) {
 		const { editorState } = this.state;
-		const newState = RichUtils.handleKeyCommand(editorState, command);
+		let newState;
+		switch (command) {
+			case 'insert-soft-newline':
+				newState = RichUtils.insertSoftNewline(editorState);
+				break;
+			default:
+				newState = RichUtils.handleKeyCommand(editorState, command);
+		}
 		if (newState) {
 			this._handleEditorStateChange(newState);
 			return true;
 		}
 		return false;
+	}
+
+	_handlePastedText (text, html) {
+		function insertFragment (editorState, fragment) {
+			let newContent = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), fragment);
+			return EditorState.push(editorState, newContent, 'insert-fragment');
+		}
+
+		if (html) {
+			// remove meta tag
+			html = html.replace(/<meta (.+?)>/g, '');
+			// replace p, h2 by div.
+			// TODO need to find out how many block tags we need to replace
+			// currently, just handle p, h1, h2, ..., h6 tag
+			// NOTE: I don't know why header style can not be parsed into ContentBlock,
+			// so I replace it by div temporarily
+			html = html.replace(/<p|<h1|<h2|<h3|<h4|<h5|<h6/g, '<div').replace(/<\/p|<\/h1|<\/h2|<\/h3|<\/h4|<\/h5|<\/h6/g, '</div');
+
+			let editorState = this.state.editorState;
+			var htmlFragment = convertFromHTML(html);
+			if (htmlFragment) {
+				var htmlMap = BlockMapBuilder.createFromArray(htmlFragment);
+				this._handleEditorStateChange(insertFragment(editorState, htmlMap));
+				// prevent the default paste behavior.
+				return true;
+			}
+		}
+		// use default paste behavior
+		return false;
+	}
+
+
+	_keyBindingFn (e) {
+		if (e.keyCode === 13 /* `enter` key */) {
+			if (isCtrlKeyCommand(e) || e.shiftKey) {
+				return 'insert-soft-newline';
+			}
+		}
+		return getDefaultKeyBinding(e);
 	}
 
 	// this function should be overwritten by children
@@ -121,6 +170,8 @@ let EntityEditingBlock = (superclass) => class extends Component {
 					<Editor
 						blockStyleFn={blockStyleFn}
 						handleKeyCommand={this._handleKeyCommand}
+						handlePastedText={this._handlePastedText}
+						keyBindingFn={this._keyBindingFn}
 						editorState={editorState}
 						onChange={this._handleEditorStateChange}
 						placeholder="Enter HTML Here..."
