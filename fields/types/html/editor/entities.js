@@ -30,7 +30,7 @@ const ENTITY = {
 	},
 	SLIDESHOW: {
 		type: 'SLIDESHOW',
-		slideshowSelectionLimit: 30,
+		slideshowSelectionLimit: 50,
 	},
 	YOUTUBE: {
 		type: 'YOUTUBE',
