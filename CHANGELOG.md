@@ -1,3 +1,6 @@
+### 0.5.20 2016/08/29
+- Increase slide limitation of Slideshow
+
 ### 0.5.19 2016/08/24
 - Enable to copy & paste HTML on the editor of entity editing block.
 - Enable to insert soft newline on the editor of entity editing block.
