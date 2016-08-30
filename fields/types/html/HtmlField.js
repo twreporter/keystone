@@ -21,6 +21,12 @@ function refreshEditorState (editorState) {
 	return EditorState.forceSelection(editorState, editorState.getCurrentContent().getSelectionAfter());
 }
 
+// workaround here for using twreporter-react pkg
+if (window) {
+	// set __DEVELOPMENT__ as true to get image and audio from google stroage
+	window.__DEVELOPMENT__ = true;
+}
+
 // class HtmlField extends React.Component {
 module.exports = Field.create({
 	displayName: 'HtmlField',
