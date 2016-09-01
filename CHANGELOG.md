@@ -1,3 +1,6 @@
+### 0.5.22 2016/09/01
+- Bug fix. Store ordered-list and unordered-list in the right way 
+
 ### 0.5.21 2016/08/30
 - Workaround for using twreporter-react pkg without error
 
