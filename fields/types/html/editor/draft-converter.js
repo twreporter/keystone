@@ -100,7 +100,7 @@ function convertBlocksToApiData (blocks, entityMap, entityTagMap) {
 		if (!nestedTagMap[block.type]) {
 			// if previous block is a list-item
 			if (content.length > 0 && nestLevel.length > 0) {
-				apiDataArr = apiDataArr.push(new ApiDataInstance({ type: nestLevel[0], content: [content] }));
+				apiDataArr = apiDataArr.push(new ApiDataInstance({ type: nestLevel[0], content: content }));
 				content = [];
 				nestLevel.shift();
 			}
@@ -130,7 +130,7 @@ function convertBlocksToApiData (blocks, entityMap, entityTagMap) {
 				content.push(converted);
 			} else if (nestLevel[0] !== block.type) {
 				// previous block is a different item-list.
-				apiDataArr = apiDataArr.push(new ApiDataInstance({ id: block.key, type: nestLevel[0], content: [content] }));
+				apiDataArr = apiDataArr.push(new ApiDataInstance({ id: block.key, type: nestLevel[0], content: content }));
 				content = [converted];
 				nestLevel[0] = block.type;
 			}

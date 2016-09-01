@@ -1,3 +1,6 @@
+### 0.5.21 2016/08/30
+- Workaround for using twreporter-react pkg without error
+
 ### 0.5.20 2016/08/29
 - Increase slide limitation of Slideshow
 
