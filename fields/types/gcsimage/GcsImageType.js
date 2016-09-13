@@ -240,6 +240,7 @@ gcsimage.prototype.updateItem = function (item, data, callback) { // eslint-disa
 
 gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 	var _this = this;
+	var ONE_WEEK = 60 * 60 * 24 * 7;
 	var gcsDir = this.options.destination ? this.options.destination : '';
 	var isPublicRead = _this.options.publicRead ? _this.options.publicRead : false;
 	var prefix = _this.options.datePrefix ? moment().format(_this.options.datePrefix) + '-' : '';
@@ -271,6 +272,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 			destination: gcsDir + filename,
 			filetype: filetype,
 			isPublicRead: isPublicRead,
+			cacheControl: 'public, max-age=' + ONE_WEEK,
 		}).then(function (apiResponse) {
 				// resizing image and upload resized images
 			if (typeof _this.options.resize === 'function') {
@@ -290,6 +292,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
 							destination: gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
 							filetype: filetype,
 							isPublicRead: isPublicRead,
+							cacheControl: 'public, max-age=' + ONE_WEEK,
 						}));
 					}
 					return Promise.all(promises).then(function (values) {
