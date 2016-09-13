@@ -228,6 +228,7 @@ gcsfile.prototype.updateItem = function (item, data, callback) { // eslint-disab
 
 gcsfile.prototype.uploadFile = function (item, file, update, callback) {
 
+	var ONE_WEEK = 60 * 60 * 24 * 7;
 	var field = this;
 	var gcsDir = field.options.destination || '';
 	var isPublicRead = field.options.publicRead || false;
@@ -251,6 +252,7 @@ gcsfile.prototype.uploadFile = function (item, file, update, callback) {
 			destination: gcsDir + filename,
 			filetype: filetype,
 			isPublicRead: isPublicRead,
+			cacheControl: 'public, max-age=' + ONE_WEEK,
 		}).then(function (response) {
 			var fileData = {
 				filename: filename,

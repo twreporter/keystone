@@ -182,6 +182,7 @@ gcsimages.prototype.updateItem = function (item, data, callback) { // eslint-dis
 };
 
 gcsimages.prototype.uploadFile = function (file) {
+	var ONE_WEEK = 60 * 60 * 24 * 7;
 	var gcsDir = this.options.destination ? this.options.destination : '';
 	var isPublicRead = this.options.publicRead ? this.options.publicRead : false;
 	var bucket = gcsHelper.initBucket(this.gcsConfig, this.options.bucket);
@@ -199,6 +200,7 @@ gcsimages.prototype.uploadFile = function (file) {
 		destination: gcsDir + filename,
 		filetype: filetype,
 		isPublicRead: isPublicRead,
+		cacheControl: 'public, max-age=' + ONE_WEEK,
 	}).then(function (response) {
 		return new Promise(function (resolve, reject) {
 			// resizing image and upload resized images
@@ -220,6 +222,7 @@ gcsimages.prototype.uploadFile = function (file) {
 						destination: gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
 						filetype: filetype,
 						isPublicRead: isPublicRead,
+						cacheControl: 'public, max-age=' + ONE_WEEK,
 					}).then(function (result) {
 						asyncCallback();
 					}, function (err) {
