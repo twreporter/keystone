@@ -1,3 +1,6 @@
+### 0.5.23 2016/09/13
+- Add Cache-Control for uploading images and audios onto GCS(a week)  
+
 ### 0.5.22 2016/09/01
 - Bug fix. Store ordered-list and unordered-list in the right way 
 
