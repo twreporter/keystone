@@ -1,5 +1,6 @@
 var bodyParser = require('body-parser');
 var express = require('express');
+var httpProxy = require('http-proxy');
 var multer = require('multer');
 
 module.exports = function createDynamicRouter (keystone) {
@@ -40,6 +41,34 @@ module.exports = function createDynamicRouter (keystone) {
 		router.all('/signin', require('../routes/signin'));
 		router.all('/signout', require('../routes/signout'));
 		router.use(keystone.session.keystoneAuth);
+
+		var previewConfig = keystone.get('preview config') || {};
+		var protocol = previewConfig.protocol || 'http';
+		var host = previewConfig.host || '127.0.0.1';
+		var port = previewConfig.port || 3000;
+		var targetUrl = protocol + '://' + host + ':' + port;
+		// create a proxy server to serve the API requests
+		var proxy = httpProxy.createProxyServer({
+			target: targetUrl,
+		});
+		// proxy to the API server
+		router.use('/preview', (req, res) => {
+			proxy.web(req, res);
+		});
+
+		// added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
+		proxy.on('error', (error, req, res) => {
+			var json;
+			if (error.code !== 'ECONNRESET') {
+				console.error('proxy error', error);
+			}
+			if (!res.headersSent) {
+				res.writeHead(500, { 'content-type': 'application/json' });
+			}
+			json = { error: 'proxy_error', reason: error.message };
+			res.end(JSON.stringify(json));
+		});
+
 	} else if (typeof keystone.get('auth') === 'function') {
 		router.use(keystone.get('auth'));
 	}
