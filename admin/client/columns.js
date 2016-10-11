@@ -25,6 +25,7 @@ var Columns = {
 	number: require('../../fields/types/number/NumberColumn'),
 	numberarray: require('../../fields/types/numberarray/NumberArrayColumn'),
 	password: require('../../fields/types/password/PasswordColumn'),
+	preview: require('../../fields/types/preview/PreviewColumn'),
 	relationship: require('../../fields/types/relationship/RelationshipColumn'),
 	imagerelationship: require('../../fields/types/imagerelationship/ImageRelationshipColumn'),
 	s3file: require('../../fields/types/s3file/S3FileColumn'),
