@@ -1,3 +1,6 @@
+### 0.5.25 2016/10/11
+- [Add] Preview button and preview column for linking to preview page
+
 ### 0.5.24 2016/10/7
 - [Add] use http-proxy to proxy preview article page request to other server
 
