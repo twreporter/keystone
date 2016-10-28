@@ -1,3 +1,6 @@
+### 0.5.26 2016/10/28
+- [Update] Set max-age of cache-control header to one year for uploading images and files onto google cloud storage
+
 ### 0.5.25 2016/10/11
 - [Add] Preview button and preview column for linking to preview page
 
