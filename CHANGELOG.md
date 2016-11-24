@@ -1,3 +1,6 @@
+### 0.5.29 2016/11/24
+- [Update] Use http://keystone-preview.twreporter.org to render preview article page
+
 ### 0.5.27 2016/11/24
 - [Update] Use keystone-preview.twreporter.org to render preview article page
 
