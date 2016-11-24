@@ -1,6 +1,6 @@
 {
   "name": "twreporter-keystone",
-  "version": "0.5.27",
+  "version": "0.5.28",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
@@ -176,7 +176,6 @@
     "validate": "npm ls"
   },
   "pre-commit": [
-    "lint"
   ],
   "engines": {
     "node": ">= 0.10.28",
