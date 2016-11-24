@@ -1,3 +1,6 @@
+### 0.5.27 2016/11/24
+- [Update] Use keystone-preview.twreporter.org to render preview article page
+
 ### 0.5.26 2016/10/28
 - [Update] Set max-age of cache-control header to one year for uploading images and files onto google cloud storage
 
