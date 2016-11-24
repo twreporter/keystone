@@ -11,7 +11,7 @@ var PreviewColumn = React.createClass({
 	renderValue () {
 		return (
 			<ItemsTableValue truncate={false} field={this.props.col.type}>
-				<a style={{ textDecoration: 'underline' }} href={`/keystone/preview/a/${this.props.data.slug}`} target="_blank" >{this.props.col.label}</a>
+        <a style={{ textDecoration: 'underline' }} href={`https://keystone-preview.twreporter.org/a/${this.props.data.slug}`} target="_blank" >{this.props.col.label}</a>
 			</ItemsTableValue>
 		);
 	},
