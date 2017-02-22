@@ -1,6 +1,6 @@
 'use strict';
 
-import { AlignedInfoBox } from 'twreporter-react/dist/components/article/index';
+import { AlignedInfoBox } from 'twreporter-react-components/dist/components/article/index';
 import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import InfoBoxEditingBlock from './info-box-editing-block';

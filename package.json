@@ -1,6 +1,6 @@
 {
   "name": "twreporter-keystone",
-  "version": "0.5.29",
+  "version": "0.5.30",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
@@ -95,7 +95,6 @@
     "shortid": "^2.2.6",
     "store-prototype": "1.1.1",
     "superagent": "1.7.2",
-    "twreporter-react": "^1.0.5",
     "underscore": "1.8.3",
     "vkey": "1.0.0",
     "watchify": "3.7.0",
