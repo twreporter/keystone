@@ -1,5 +1,5 @@
 'use strict';
-import { AlignedImageDiff } from 'twreporter-react/dist/components/article/index';
+import { AlignedImageDiff } from 'twreporter-react-components/dist/components/article/index';
 import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import EditingBt from '../base/editing-bt';
