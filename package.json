@@ -95,6 +95,7 @@
     "shortid": "^2.2.6",
     "store-prototype": "1.1.1",
     "superagent": "1.7.2",
+    "twreporter-react-components": "^0.1.0",
     "underscore": "1.8.3",
     "vkey": "1.0.0",
     "watchify": "3.7.0",
@@ -174,8 +175,7 @@
     "clean": "rimraf ./coverage",
     "validate": "npm ls"
   },
-  "pre-commit": [
-  ],
+  "pre-commit": [],
   "engines": {
     "node": ">= 0.10.28",
     "npm": ">= 1.4.9"

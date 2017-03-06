@@ -59,7 +59,7 @@ module.exports = Field.create({
 	},
 
 	handlePickerChange (color) {
-		var newValue = '#' + color.hex;
+		var newValue = color.hex;
 
 		if (newValue === this.props.value) return;
 
