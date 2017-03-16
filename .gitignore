@@ -30,3 +30,10 @@ admin/public/styles/auth.css
 admin/public/styles/auth.min.css
 admin/public/styles/keystone.css
 admin/public/styles/keystone.min.css
+admin/public/js/packages.js
+admin/public/fonts/fontawesome-webfont.eot
+admin/public/fonts/fontawesome-webfont.svg
+admin/public/fonts/fontawesome-webfont.ttf
+admin/public/fonts/fontawesome-webfont.woff
+admin/public/fonts/fontawesome-webfont.woff2
+admin/public/styles/font-awesome/*

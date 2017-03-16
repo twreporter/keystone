@@ -1,3 +1,7 @@
+### Unreleased 2017/03/16
+
+- [Update] Add relatedsForamt and titlePosition types for multiple styles of topics
+
 ### 0.5.29 2016/11/24
 - [Update] Use http://keystone-preview.twreporter.org to render preview article page
 
@@ -17,7 +21,7 @@
 - Add Cache-Control for uploading images and audios onto GCS(a week)  
 
 ### 0.5.22 2016/09/01
-- Bug fix. Store ordered-list and unordered-list in the right way 
+- Bug fix. Store ordered-list and unordered-list in the right way
 
 ### 0.5.21 2016/08/30
 - Workaround for using twreporter-react pkg without error
@@ -33,7 +37,7 @@
 - Insert soft new line by typing `ctrl` or `shift` and `enter` keys
 
 ### 0.5.17 2016/08/23
-- Fix Datetime and Date issue. 
+- Fix Datetime and Date issue.
 
 ### 0.5.16 2016/08/23
 - Render Embedded Component well while embedded code is iframe
@@ -91,13 +95,13 @@
 - Fix bug. Fix the problem we cannot change the images in the Slideshow component.
 - Make ImageDiff component editable.
 
-### 0.4.15 
+### 0.4.15
 - Integrate Youtube and BlockQuote component of react-article-components
 - Draft editor style tunning
 
-### 0.4.14 
+### 0.4.14
 - Integrate slideshow component of react-article-components
 
-### 0.4.13 
+### 0.4.13
 - Bug fix; search images by keyword
 - Style change; add select icon and remove icon
