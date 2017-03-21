@@ -1,6 +1,5 @@
 ### Unreleased 2017/03/16
-### 0.5.31 2017/03/20
-- [Add] Add yarn.lock
+### 0.5.32 2017/03/20
 - [Update] Add relatedsForamt and titlePosition types for multiple styles of topics
 
 ### 0.5.29 2016/11/24
