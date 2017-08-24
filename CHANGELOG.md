@@ -1,4 +1,7 @@
 ### Unreleased 2017/03/16
+### 0.5.33 2017/08/24
+- Multiline for input of image description 
+
 ### 0.5.32 2017/03/20
 - [Update] Add relatedsForamt and titlePosition types for multiple styles of topics
 
