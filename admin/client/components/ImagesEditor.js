@@ -1,7 +1,7 @@
 'use strict';
 import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import { ImageItem } from './ImageGrid';
-import { FormField, FormInput } from 'elemental';
+import { FormField, FormInput  } from 'elemental';
 import React, { PropTypes, Component } from 'react';
 import update from 'react/lib/update';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -161,7 +161,7 @@ class DnDContainer extends Component {
 						style={{ border: '1px solid gainsboro' }}
 					>
 						<FormField key={image.id} label="" htmlFor="image-caption-input" style={{ paddingTop: '5px' }}>
-							<FormInput key={image.id} placeholder="input caption here" defaultValue={image.description} name="image-caption-input" onChange={this._handleInputChange.bind(this, image)} />
+							<FormInput key={image.id} placeholder="input caption here" multiline defaultValue={image.description} name="image-caption-input" onChange={this._handleInputChange.bind(this, image)} />
 						</FormField>
 					</ImageItem>
 				</ImageDnDItem>
