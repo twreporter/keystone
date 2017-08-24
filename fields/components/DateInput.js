@@ -47,13 +47,15 @@ module.exports = React.createClass({
 			month = moment(value, this.props.format).toDate();
 		}
 		this.setState({ value, month }, this.showCurrentDate);
+        this.props.onChange(value)
 	},
 	handleDaySelect (e, day, modifiers) {
 		if (modifiers.selected === true) {
 			return;
-		}
-		this.setState({
-			value: moment(day).format(this.props.format),
+        }
+        const value = moment(day).format(this.props.format);
+        this.setState({
+			value: value,
 			month: day,
 		}, () => {
 			setTimeout(() => {
@@ -62,6 +64,7 @@ module.exports = React.createClass({
 				});
 			}, 200);
 		});
+        this.props.onChange(value)
 	},
 	showPicker () {
 		this.setState({ pickerIsOpen: true }, this.showCurrentDate);
