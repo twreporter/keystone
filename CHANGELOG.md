@@ -1,4 +1,7 @@
 ### Unreleased 2017/03/16
+### 0.5.35 2017/08/25
+- Rebuild the package
+
 ### 0.5.34 2017/08/24
 - Bug fix. Date will turn back to the first value after modifying other fields
 
