@@ -218,6 +218,8 @@ gcsimages.prototype.uploadFile = function (file) {
 						width: resizeOpt.width,
 						height: resizeOpt.height,
 					};
+
+                    _.set(resizeOpt, 'options.filetype', filetype)
 					gcsHelper.uploadFileToBucket(bucket, resizeFunc(file.path, resizeOpt.width, resizeOpt.height, resizeOpt.options), {
 						destination: gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
 						filetype: filetype,

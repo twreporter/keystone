@@ -1,4 +1,7 @@
 ### Unreleased 2017/03/16
+### 0.5.36 2017/09/21
+- Pass filetype and filename to resize function while resizing gcsimage and gcsimages
+
 ### 0.5.35 2017/08/25
 - Rebuild the package
 
