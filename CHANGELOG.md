@@ -1,4 +1,7 @@
 ### Unreleased 2017/03/16
+### 0.5.37 2017/10/02
+- Add two more position between title and leading image 
+
 ### 0.5.36 2017/09/21
 - Pass filetype and filename to resize function while resizing gcsimage and gcsimages
 
