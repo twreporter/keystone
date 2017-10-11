@@ -1,4 +1,8 @@
 ### Unreleased 2017/03/16
+
+### 0.6.0 2017/10/11
+- Use npm-scope. Rename twreporter-keystone to @twreporter/keystone
+
 ### 0.5.37 2017/10/02
 - Add two more position between title and leading image 
 
