@@ -23,6 +23,7 @@ class AtomicBlockSwitcher extends React.Component {
 		this.alignLeft = this._alignLeft.bind(this);
 		this.alignCenter = this._alignCenter.bind(this);
 		this.alignRight = this._alignRight.bind(this);
+        this.alignCenterSmall = this._alignCenterSmall.bind(this);
 	}
 
 	_alignLeft (e) {
@@ -40,6 +41,11 @@ class AtomicBlockSwitcher extends React.Component {
 		this.props.align('right');
 	}
 
+    _alignCenterSmall (e) {
+        e.stopPropagation()
+        this.props.align('center-small')
+    }
+
 	render () {
 		const entityKey = this.props.block.getEntityAt(0);
 		let type = entityKey ? Entity.get(entityKey).getType() : '';
@@ -51,22 +57,29 @@ class AtomicBlockSwitcher extends React.Component {
 				<span className="alignmentButton"
 					onClick={this.alignLeft}
 					style={{ marginLeft: '-2.4em' }}
-					role="button" key={'left'}
+					role="button" key="left"
 				>
 					L
 				</span>
 				<span className="alignmentButton"
 					onClick={this.alignCenter}
-					role="button" key={'center'}
+					role="button" key="center"
 				>
 					C
 				</span>
 				<span className="alignmentButton"
 					onClick={this.alignRight}
 					style={{ marginLeft: '0.9em' }}
-					role="button" key={'right'}
+					role="button" key="right"
 				>
 					R
+				</span>
+				<span className="alignmentButton"
+					onClick={this.alignCenterSmall}
+					style={{ marginLeft: '2.6em' }}
+					role="button" key="center-small"
+				>
+					S
 				</span>
 			</div>
 		);

@@ -1,5 +1,8 @@
 ### Unreleased 2017/03/16
 
+### 0.6.1 2017/10/23 
+- Replace twreporter-react-components by @twreporter/react-article-components
+
 ### 0.6.0 2017/10/11
 - Use npm-scope. Rename twreporter-keystone to @twreporter/keystone
 

@@ -18,9 +18,9 @@ gulp.task('copy-fontawesome', function () {
  * Prepare public assets
  */
 gulp.task('copy-css', function () {
-	// copy twreporter-react-components css into the public folder
-	gulp.src('node_modules/twreporter-react-components/dist/styles/main.css')
-		.pipe(gulp.dest('admin/public/styles/twreporter-react-components'));
+	// copy @twreporter/react-article-components css into the public folder
+	gulp.src('node_modules/@twreporter/react-article-components/dist/styles/main.css')
+		.pipe(gulp.dest('admin/public/styles/@twreporter/react-article-components'));
 
 	gulp.src('node_modules/font-awesome/less/*.less')
 		.pipe(gulp.dest('admin/public/styles/font-awesome'));

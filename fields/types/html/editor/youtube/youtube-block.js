@@ -1,6 +1,6 @@
 'use strict';
 
-import { AlignedYoutube } from 'twreporter-react-components/dist/components/article/index';
+import { AlignedYoutube } from '@twreporter/react-article-components/dist/components/article/index';
 import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import EditingBt from '../base/editing-bt';
