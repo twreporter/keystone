@@ -1,6 +1,6 @@
 'use strict';
 
-import { AlignedEmbedded } from 'twreporter-react-components/dist/components/article/index';
+import { AlignedEmbedded } from '@twreporter/react-article-components/dist/components/article/index';
 import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import EditingBt from '../base/editing-bt';
@@ -23,7 +23,7 @@ export default class ImageLinkBlock extends AtomicBlockRendererMixin(React.Compo
 		const EditBlock = (
 			<ImageLinkEditingBlock
 				description={caption}
-				label="infobox"
+				label="image-link"
 				isModalOpen={this.state.editMode}
 				onToggle={this.handleEditingBlockChange}
 				url={url}
