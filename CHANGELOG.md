@@ -1,4 +1,8 @@
-### Unreleased 2017/03/16
+### Unreleased
+
+### 0.6.2 2017/12/13
+- Update .gitignore
+- Add two-step verification to signin
 
 ### 0.6.1 2017/10/23 
 - Replace twreporter-react-components by @twreporter/react-article-components

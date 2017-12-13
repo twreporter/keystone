@@ -14,6 +14,7 @@ var SigninView = React.createClass({
 		return {
 			email: '',
 			password: '',
+			securitycode: '',
 			isAnimating: false,
 			isInvalid: false,
 			invalidMessage: '',
@@ -38,12 +39,36 @@ var SigninView = React.createClass({
 		if (!this.state.email || !this.state.password) {
 			return this.displayError('Please enter an email address and password to sign in.');
 		}
+		if (!this.state.securitycode) {
+			return this.displayError('Please enter the security code on your mobile to sign in.');
+		}
 		SessionStore.signin({
 			email: this.state.email,
 			password: this.state.password,
+			securitycode: this.state.securitycode,
 		}, (err, data) => {
-			if (err || data && data.error) {
-				this.displayError('The email and password you entered are not valid.');
+			if (err) {
+				const error = err.error;
+				switch (error.clientMessageType) {
+					case 'SECURITY_CODE_NOT_ENABLED':
+						this.displayError('The security code of your account is not enabled yet. Please contact the system manager.');
+						break;
+					case 'INVALID_SECURITY_CODE':
+						this.displayError('The security code you entered is invalid. Please try it again.');
+						break;
+					case 'NO_EMAIL_OR_PASSWORD':
+						this.displayError('Please enter an email address and password to sign in.');
+						break;
+					case 'NO_SECURITY_CODE':
+						this.displayError('Please enter the security code on your mobile to sign in.');
+						break;
+					case 'INVALID_PASSWORD':
+					default:
+						this.displayError('The password and security code you entered are not valid.');
+						break;
+				}
+			} else if (data && data.error) {
+				this.displayError('The password and security code you entered are not valid.');
 			} else {
 				top.location.href = this.props.from ? Keystone.adminPath + this.props.from : Keystone.adminPath;
 			}
@@ -120,6 +145,9 @@ var SigninView = React.createClass({
 					</FormField>
 					<FormField label="Password" htmlFor="password">
 						<FormInput type="password" name="password" onChange={this.handleInputChange} value={this.state.password} ref="password" />
+					</FormField>
+					<FormField label="Security Code" htmlFor="securitycode">
+						<FormInput autoComplete="off" type="text" name="securitycode" onChange={this.handleInputChange} value={this.state.securitycode} ref="securitycode" />
 					</FormField>
 					<Button disabled={this.state.animating} type="primary" submit>Sign In</Button>
 					{/* <Button disabled={this.state.animating} type="link-text">Forgot Password?</Button> */}
