@@ -1,5 +1,8 @@
 ### Unreleased
 
+### 0.6.3 2017/12/30
+- Show all the user avators when they are editing the same page
+
 ### 0.6.2 2017/12/13
 - Update .gitignore
 - Add two-step verification to signin
