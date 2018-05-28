@@ -8,7 +8,7 @@ var fs = require('fs-extra');
 var gcsHelper = require('../../../lib/gcsHelper');
 var keystone = require('../../../');
 var moment = require('moment');
-var sizeOf = require('image-size');
+var sizeOf = require('probe-image-size');
 var super_ = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
@@ -242,7 +242,7 @@ gcsimages.prototype.uploadFile = function (file) {
 		});
 	}).then(function (targets) {
 		return new Promise(function (resolve, reject) {
-			var dimensions = sizeOf(file.path);
+			var dimensions = sizeOf.sync(fs.readFileSync(file.path));
 			if (targets) {
 				// calculate width and height of resized images
 				try {
