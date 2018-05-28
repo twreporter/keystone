@@ -1,5 +1,8 @@
 ### Unreleased
 
+### 0.6.4 2018/05/28
+- Replace `image-size` by `probe-image-size` because of [this issue](https://github.com/image-size/image-size/issues/96)
+
 ### 0.6.3 2017/12/30
 - Show all the user avators when they are editing the same page
 
