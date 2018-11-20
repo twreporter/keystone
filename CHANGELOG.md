@@ -1,5 +1,10 @@
 ### Unreleased
 
+### 0.7.0 2018/11/20
+- Update dependencies
+  - Repalce gcloud by @google-cloud/storage
+  - Add dependency har-validator@5.1.0, whose node dependency is >=4
+
 ### 0.6.4 2018/05/28
 - Replace `image-size` by `probe-image-size` because of [this issue](https://github.com/image-size/image-size/issues/96)
 

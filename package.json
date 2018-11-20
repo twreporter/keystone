@@ -1,6 +1,6 @@
 {
   "name": "@twreporter/keystone",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
@@ -8,6 +8,7 @@
     "url": "https://github.com/twreporter/keystone.git"
   },
   "dependencies": {
+    "@google-cloud/storage": "~1.7.0",
     "@twreporter/react-article-components": "^0.1.0",
     "async": "1.5.2",
     "asyncdi": "1.1.0",
@@ -48,9 +49,9 @@
     "expression-match": "0.0.17",
     "font-awesome": "^4.6.1",
     "fs-extra": "0.26.5",
-    "gcloud": "^0.28.0",
     "gm": "^1.21.1",
     "grappling-hook": "3.0.0",
+    "har-validator": "5.1.0",
     "history": "^2.1.2",
     "htmlparser2": "^3.9.1",
     "http-proxy": "^1.15.1",
