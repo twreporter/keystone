@@ -1,9 +1,13 @@
 'use strict';
 import { convertToRaw } from 'draft-js';
-import _ from 'lodash';
 import DraftConverter from '../draft-converter';
 import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 class AnnotationEditingBlock extends EntityEditingBlockMixin(React.Component) {
 	constructor (props) {

@@ -1,9 +1,13 @@
 'use strict';
 
-import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import AnnotationEditingBlock from './annotation-editing-block';
 import React from 'react';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 export default class AnnotationBlock extends AtomicBlockRendererMixin(React.Component) {
 	constructor (props) {

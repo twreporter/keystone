@@ -1,12 +1,16 @@
 'use strict';
 
 import { Slideshow } from '@twreporter/react-article-components/dist/components/article/index';
-import _ from 'lodash';
 import ENTITY from '../entities';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import EditingBt from '../base/editing-bt';
 import ImageSelector from '../../../../../admin/client/components/ImageSelector';
 import React from 'react';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 export default class SlideshowBlock extends AtomicBlockRendererMixin(React.Component) {
 	constructor (props) {

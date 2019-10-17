@@ -1,8 +1,6 @@
 /*!
  * Module dependencies.
  */
-
-var _ = require('lodash');
 var fs = require('fs');
 var gcsHelper = require('../../../lib/gcsHelper');
 var keystone = require('../../../');
@@ -11,6 +9,17 @@ var super_ = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
 var sizeOf = require('probe-image-size');
+
+// lodash
+var forEach = require('lodash/forEach');
+var indexOf = require('lodash/indexOf')
+var set = require('lodash/set')
+
+const _ = {
+  forEach,
+  indexOf,
+  set,
+}
 
 /**
  *  FieldType Constructor

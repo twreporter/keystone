@@ -1,8 +1,16 @@
-import _ from 'lodash';
 import React from 'react';
 import CloudinaryImageSummary from '../../components/columns/CloudinaryImageSummary';
 import ItemsTableCell from '../../../admin/client/components/ItemsTableCell';
 import ItemsTableValue from '../../../admin/client/components/ItemsTableValue';
+
+// lodash
+import get from 'lodash/get';
+import set from 'lodash/set';
+
+const _ = {
+  get,
+  set,
+}
 
 const moreIndicatorStyle = {
 	color: '#888',

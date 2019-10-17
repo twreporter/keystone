@@ -1,8 +1,12 @@
-import _ from 'lodash';
 // import sizeOf from 'image-size';
 import ApiDataInstance from './api-data-instance';
 import ENTITY from './entities';
 import htmlparser from 'htmlparser2';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 const processor = {
 	convertBlock (entityMap, block) {

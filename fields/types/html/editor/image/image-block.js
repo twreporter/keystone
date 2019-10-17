@@ -1,10 +1,14 @@
 'use strict';
 
 import { AlignedImage } from '@twreporter/react-article-components/dist/components/article/index';
-import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import ImageSelector from '../../../../../admin/client/components/ImageSelector';
 import React from 'react';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 export default class ImageBlock extends AtomicBlockRendererMixin(React.Component) {
 	constructor (props) {

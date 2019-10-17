@@ -1,11 +1,15 @@
 'use strict';
 import { Button, Modal, Pagination } from 'elemental';
-import _ from 'lodash';
 import { parseImageAPIResponse } from '../../../lib/parseAPIResponse';
 import ImagesEditor from './ImagesEditor';
 import ImageSelection from './ImageSelection';
 import SelectorMixin from './mixins/SelectorMixin';
 import React from 'react';
+import merge from 'lodash/merge';
+
+const _ = {
+  merge,
+}
 
 const PAGINATION_LIMIT = 10;
 

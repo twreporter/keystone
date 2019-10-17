@@ -1,7 +1,6 @@
 'use strict';
 import { Button, ButtonGroup } from 'elemental';
 import { Entity } from 'draft-js';
-import _ from 'lodash';
 import AnnotationBt from './annotation/annotation-bt';
 import AudioButton from './audio/audio-bt';
 import BlockQuoteBt from './quote/block-quote-bt';
@@ -13,6 +12,11 @@ import InfoBoxBt from './info-box/info-box-bt';
 import LinkButton from './link/link-button';
 import React from 'react';
 import YoutubeBt from './youtube/youtube-bt';
+import map from 'lodash/map';
+
+const _ = {
+  map,
+}
 
 class StyleButton extends React.Component {
 	constructor () {
