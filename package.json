@@ -181,5 +181,13 @@
   "engines": {
     "node": ">= 0.10.28",
     "npm": ">= 1.4.9"
-  }
+  },
+  "files": [
+    "admin",
+    "fields",
+    "lib",
+    "server",
+    "templates",
+    "index.js"
+  ]
 }
