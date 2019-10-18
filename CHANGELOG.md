@@ -14,15 +14,15 @@
   - import only needed lodash functions without importing all
 
 ### Commits
-- [[8e91581](https://github.com/twreporter/keystone/pull/141/commits/8e91581c2066fe4bbb3b36b1ab200e09a44af8fa)] - add package.json#files and rm .npmignore(nickhsine)
-- [[d2d8ebf](https://github.com/twreporter/keystone/pull/141/commits/d2d8ebff19b36c49d1b5fa7a0a0267c084e0bbf2)] - remove gulp release task(nickhsine)
-- [[7998b87](https://github.com/twreporter/keystone/pull/141/commits/7998b87ca1175b07523b1cecfcd6608f3575f407)] - bug fix: can not create Keystone global object on client side(nickhsine)
-- [[4aee2e5](https://github.com/twreporter/keystone/pull/141/commits/4aee2e51eddad2eb2d3790f2e646629947380445)] - import lodash functions separately without importing all(nickhsine)
-- [[63ed57a](https://github.com/twreporter/keystone/pull/141/commits/63ed57a756e3b0313b4eed0aa62c5d304fce5f13)] - update yarn.lock(nickhsine)
-- [[c53651e](https://github.com/twreporter/keystone/pull/141/commits/c53651e84193f2f23d01e220e0a108673b97ca19)] - update dep @twreporter/react-article-components(nickhsine)
-- [[5611b66](https://github.com/twreporter/keystone/pull/141/commits/5611b667c930c5e9788c3d04f94831ac0deeb727)] - upgrade dep watchify(nickhsine)
-- [[846c74a](https://github.com/twreporter/keystone/pull/141/commits/846c74a792319a02eae0bd5aab7d9372cc2b3b47)] - update yarn.lock(nickhsine)
-- [[985e53d](https://github.com/twreporter/keystone/pull/141/commits/985e53d4db046e73e67e2602acfe9567e1f55db2)] - update package.json#version to 0.7.1(nickhsine)
+- [[8e91581](https://github.com/twreporter/keystone/commit/8e91581c2066fe4bbb3b36b1ab200e09a44af8fa)] - add package.json#files and rm .npmignore(nickhsine)
+- [[d2d8ebf](https://github.com/twreporter/keystone/commit/d2d8ebff19b36c49d1b5fa7a0a0267c084e0bbf2)] - remove gulp release task(nickhsine)
+- [[7998b87](https://github.com/twreporter/keystone/commit/7998b87ca1175b07523b1cecfcd6608f3575f407)] - bug fix: can not create Keystone global object on client side(nickhsine)
+- [[4aee2e5](https://github.com/twreporter/keystone/commit/4aee2e51eddad2eb2d3790f2e646629947380445)] - import lodash functions separately without importing all(nickhsine)
+- [[63ed57a](https://github.com/twreporter/keystone/commit/63ed57a756e3b0313b4eed0aa62c5d304fce5f13)] - update yarn.lock(nickhsine)
+- [[c53651e](https://github.com/twreporter/keystone/commit/c53651e84193f2f23d01e220e0a108673b97ca19)] - update dep @twreporter/react-article-components(nickhsine)
+- [[5611b66](https://github.com/twreporter/keystone/commit/5611b667c930c5e9788c3d04f94831ac0deeb727)] - upgrade dep watchify(nickhsine)
+- [[846c74a](https://github.com/twreporter/keystone/commit/846c74a792319a02eae0bd5aab7d9372cc2b3b47)] - update yarn.lock(nickhsine)
+- [[985e53d](https://github.com/twreporter/keystone/commit/985e53d4db046e73e67e2602acfe9567e1f55db2)] - update package.json#version to 0.7.1(nickhsine)
 - 
 
 ## 0.7.0 2018/11/20
