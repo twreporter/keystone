@@ -1,11 +1,15 @@
 'use strict';
 
 import { AlignedEmbedded } from '@twreporter/react-article-components/dist/components/article/index';
-import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import EditingBt from '../base/editing-bt';
 import ImageLinkEditingBlock from './image-link-editing-block';
 import React from 'react';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 export default class ImageLinkBlock extends AtomicBlockRendererMixin(React.Component) {
 	constructor (props) {

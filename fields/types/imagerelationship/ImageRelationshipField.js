@@ -1,10 +1,14 @@
 import { Button, FormInput } from 'elemental';
-import _ from 'lodash';
 import { parseImageAPIResponse } from '../../../lib/parseAPIResponse';
 import xhr from 'xhr';
 import Field from '../Field';
 import ImageSelector from '../../../admin/client/components/ImageSelector';
 import React from 'react';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 const API = '/api/';
 

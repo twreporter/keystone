@@ -1,21 +1,25 @@
 'use strict';
 
-import { Entity } from 'draft-js';
-import _ from 'lodash';
-import ENTITY from '../entities';
 import AudioBlock from '../audio/audio-block';
 import BlockQuoteBlock from '../quote/block-quote-block';
+import ENTITY from '../entities';
 import EmbeddedCodeBlock from '../embedded-code/embedded-code-block';
 import ImageBlock from '../image/image-block';
-import ImageLinkBlock from '../image-link/image-link-block';
 import ImageDiffBlock from '../image-diff/image-diff-block';
+import ImageLinkBlock from '../image-link/image-link-block';
 import InfoBoxBlock from '../info-box/info-box-block';
 import React from 'react';
 import SlideshowBlock from '../slideshow/slideshow-block';
-import YoutubeBlock from '../youtube/youtube-block';
 import Wrapper from './block-wrapper';
+import YoutubeBlock from '../youtube/youtube-block';
 import classNames from 'classnames';
+import get from 'lodash/get';
+import { Entity } from 'draft-js';
 import { mobileStyle, tabletMinStyle, tabletMaxStyle } from '../constants/layout-style';
+
+const _ = {
+  get,
+}
 
 class AtomicBlockSwitcher extends React.Component {
 	constructor (props) {

@@ -1,11 +1,15 @@
 'use strict';
 
 import { AlignedYoutube } from '@twreporter/react-article-components/dist/components/article/index';
-import _ from 'lodash';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import EditingBt from '../base/editing-bt';
 import React from 'react';
 import YoutubeEditingBlock from './youtube-editing-block';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 export default class YoutubeBlock extends AtomicBlockRendererMixin(React.Component) {
 	constructor (props) {

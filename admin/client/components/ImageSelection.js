@@ -1,8 +1,12 @@
 'use strict';
 import { ImageGrid } from './ImageGrid';
-import _ from 'lodash';
 import SelectionMixin from './mixins/SelectionMixin';
 import React from 'react';
+import merge from 'lodash/merge';
+
+const _ = {
+  merge,
+}
 
 class ImageSelection extends SelectionMixin(React.Component) {
 	constructor (props) {

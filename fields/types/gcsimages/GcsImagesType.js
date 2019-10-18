@@ -1,8 +1,6 @@
 /*!
  * Module dependencies.
  */
-
-var _ = require('lodash');
 var async = require('async');
 var fs = require('fs-extra');
 var gcsHelper = require('../../../lib/gcsHelper');
@@ -12,6 +10,19 @@ var sizeOf = require('probe-image-size');
 var super_ = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
+
+// lodash
+var filter = require('lodash/filter');
+var forEach = require('lodash/forEach');
+var indexOf = require('lodash/indexOf');
+var set = require('lodash/set');
+
+const _ = {
+  filter,
+  forEach,
+  indexOf,
+  set,
+}
 
 var PARALLEL_LIMIT = 1;
 

@@ -1,9 +1,19 @@
-import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Field from '../Field';
 import { Button, FormField, FormInput, FormNote } from 'elemental';
 import classnames from 'classnames';
+
+// lodash
+import forEach from 'lodash/forEach'
+import get from 'lodash/get';
+import indexOf from 'lodash/indexOf'
+
+const _ = {
+  forEach,
+  get,
+  indexOf,
+}
 
 const SUPPORTED_TYPES = ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/x-icon', 'application/pdf', 'image/x-tiff', 'image/x-tiff', 'application/postscript', 'image/vnd.adobe.photoshop', 'image/svg+xml'];
 

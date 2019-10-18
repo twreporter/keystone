@@ -2,7 +2,7 @@ script.
 	var Keystone = {};
 	Keystone.adminPath = !{JSON.stringify(adminPath)};
 	Keystone.backUrl = !{JSON.stringify(backUrl)};
-	Keystone.user = !{JSON.stringify(user)};
+	Keystone.user = !{JSON.stringify(user)||JSON.stringify({})};
 	Keystone.version = !{JSON.stringify(version)};
 	Keystone.devMode = !{process.env.KEYSTONE_DEV ? 'true' : 'false'};
 	
@@ -10,7 +10,7 @@ script.
 	Keystone.nav = !{JSON.stringify(nav)};
 	Keystone.nav.currentSection = !{JSON.stringify(section)};
 	Keystone.messages = !{JSON.stringify(messages)};
-	Keystone.signoutUrl = !{JSON.stringify(signout)};
+	Keystone.signoutUrl = !{JSON.stringify(signoutUrl)||'""'};
 	Keystone.csrf = function(obj) {
 		obj['#{csrf_token_key}'] = "#{csrf_token_value}";
 		return obj;

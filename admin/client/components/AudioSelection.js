@@ -1,8 +1,12 @@
 'use strict';
-import _ from 'lodash';
 import { AudioGrid } from './AudioGrid';
 import SelectionMixin from './mixins/SelectionMixin';
 import React, { Component } from 'react';
+import merge from 'lodash/merge';
+
+const _ = {
+  merge,
+}
 
 class AudioSelection extends SelectionMixin(Component) {
 	constructor (props) {

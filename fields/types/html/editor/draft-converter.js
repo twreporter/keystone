@@ -2,11 +2,15 @@
 
 'use strict';
 import { List } from 'immutable';
-import _ from 'lodash';
 import * as InlineStylesProcessor from './inline-styles-processor';
 import ApiDataInstance from './api-data-instance';
 import AtomicBlockProcessor from './atomic-block-processor';
 import ENTITY from './entities';
+import merge from 'lodash/merge';
+
+const _ = {
+  merge,
+}
 
 const annotationIndicatorPrefix = '__ANNOTATION__=';
 

@@ -1,12 +1,24 @@
 'use strict';
 import { parseAudioAPIResponse, parseImageAPIResponse } from '../../../lib/parseAPIResponse';
 import { Button, Modal, Pagination } from 'elemental';
-import _ from 'lodash';
 import qs from 'qs';
 import xhr from 'xhr';
 import AudioSelection from './AudioSelection';
 import SelectorMixin from './mixins/SelectorMixin';
 import React from 'react';
+
+// lodash
+import forEach from 'lodash/forEach'
+import get from 'lodash/get';
+import merge from 'lodash/merge';
+import set from 'lodash/set';
+
+const _ = {
+  forEach,
+  get,
+  merge,
+  set,
+}
 
 const PAGINATION_LIMIT = 10;
 

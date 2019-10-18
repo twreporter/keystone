@@ -1,8 +1,12 @@
 'use strict';
 import { Audio } from '@twreporter/react-article-components/dist/components/article/index';
-import _ from 'lodash';
 import raf from 'raf'; // requestAnimationFrame polyfill
 import React from 'react';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 class AudioItem extends React.Component {
 	constructor (props) {

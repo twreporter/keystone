@@ -1,11 +1,17 @@
 'use strict';
 
-import _ from 'lodash';
 import { AlignedEmbedded } from '@twreporter/react-article-components/dist/components/article/index';
 import AtomicBlockRendererMixin from '../mixins/atomic-block-renderer-mixin';
 import EditingBt from '../base/editing-bt';
 import EmbeddedEditingBlock from './embedded-code-editing-block';
 import React from 'react';
+import get from 'lodash/get';
+import merge from 'lodash/merge';
+
+const _ = {
+  get,
+  merge,
+}
 
 export default class EmbeddedCodeBlock extends AtomicBlockRendererMixin(React.Component) {
 	constructor (props) {

@@ -1,5 +1,9 @@
 var React = require('react');
-var _ = require('lodash');
+var get = require('lodash/get');
+
+const _ = {
+  get,
+}
 
 var GcsImageColumn = React.createClass({
 	render: function () {

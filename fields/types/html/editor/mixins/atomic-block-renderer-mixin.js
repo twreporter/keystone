@@ -1,5 +1,11 @@
 'use strict';
-import _ from 'lodash';
+import get from 'lodash/get';
+import merge from 'lodash/merge';
+
+const _ = {
+  get,
+  merge,
+}
 
 let AtomicBlockRendererMixin = (superclass) => class extends superclass {
 	constructor (props) {

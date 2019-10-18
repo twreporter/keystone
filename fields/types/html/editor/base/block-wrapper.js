@@ -1,7 +1,11 @@
 'use strict';
 import { Entity } from 'draft-js';
-import _ from 'lodash';
 import React, { Component } from 'react';
+import get from 'lodash/get';
+
+const _ = {
+  get,
+}
 
 const getDisplayName = (WrappedComponent) => (
 	WrappedComponent.displayName || WrappedComponent.name || 'Component'
