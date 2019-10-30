@@ -1,6 +1,6 @@
 # Released
 
-## 0.7.2(Current), 2019/11/30
+## 0.7.2(Current), 2019/10/30
 ### Notable Changes
 - bug fix:
   - update draft-converter.js: `_.forEach` is not a function when converting draft blocks to html
@@ -8,7 +8,7 @@
 ### Commits
 - [[b32e23a](https://github.com/twreporter/keystone/commit/b32e23ad0a7d6487cc1829bb120d342447a60b20)] - bug fix: `_.forEach` is not a function when converting draft blocks to html(nickhsine)
 
-## 0.7.1, 2019/11/18
+## 0.7.1, 2019/10/18
 ### Notable Changes
 - build:
   - remove gulp release task
