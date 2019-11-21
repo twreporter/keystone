@@ -1,4 +1,19 @@
-# Released
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.7.3](https://github.com/twreporter/keystone/compare/v0.7.2...v0.7.3) (2019-11-21)
+
+
+### Bug Fixes
+
+* set keystone.user_name cookie in prod also ([42bf0d7](https://github.com/twreporter/keystone/commit/42bf0d7e1faa447a48d2823e3e6630d64e824475))
+
+
+### Chores
+
+* add commitlint ([f38f1a6](https://github.com/twreporter/keystone/commit/f38f1a6774eb297e89b8bb1605836cd084b41d9b))
+* add standard-version ([80aeabe](https://github.com/twreporter/keystone/commit/80aeabe7e890f1341102920b02fbff367f9c87de))
 
 ## 0.7.2(Current), 2019/10/30
 ### Notable Changes

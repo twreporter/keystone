@@ -1,6 +1,6 @@
 {
   "name": "@twreporter/keystone",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
@@ -186,7 +186,7 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }  
+    }
   },
   "files": [
     "admin",
