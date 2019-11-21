@@ -119,6 +119,7 @@
     "react-engine": "4.0.0",
     "rimraf": "2.5.2",
     "sinon": "1.17.3",
+    "standard-version": "^7.0.1",
     "supertest": "1.2.0",
     "updtr": "0.1.7",
     "vinyl-source-stream": "1.1.0",
@@ -160,7 +161,7 @@
   "scripts": {
     "build": "NODE_ENV=production gulp build-packages",
     "build-dev": "gulp build-packages",
-    "release": "gulp release",
+    "release": "standard-version",
     "pretest": "npm run lint",
     "test": "mocha",
     "test-all": "npm test && npm run test-e2e",
