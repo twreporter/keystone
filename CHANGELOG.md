@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-rc.0](https://github.com/twreporter/keystone/compare/v0.7.3...v0.8.0-rc.0) (2019-11-24)
+
+
+### Bug Fixes
+
+* change keystone-plugin path ([b2596c5](https://github.com/twreporter/keystone/commit/b2596c5743beb5d354e32f83d06317a19e0d5395))
+
+
+### Chores
+
+* add husky ([#146](https://github.com/twreporter/keystone/issues/146)) ([48257ba](https://github.com/twreporter/keystone/commit/48257badf70ca7b444855a81e19424a98a1de776))
+
 ### [0.7.3](https://github.com/twreporter/keystone/compare/v0.7.2...v0.7.3) (2019-11-21)
 
 
