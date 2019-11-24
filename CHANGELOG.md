@@ -27,7 +27,7 @@ All notable changes to this project will be documented in this file. See [standa
 * add commitlint ([f38f1a6](https://github.com/twreporter/keystone/commit/f38f1a6774eb297e89b8bb1605836cd084b41d9b))
 * add standard-version ([80aeabe](https://github.com/twreporter/keystone/commit/80aeabe7e890f1341102920b02fbff367f9c87de))
 
-## 0.7.2(Current), 2019/10/30
+## 0.7.2, 2019/10/30
 ### Notable Changes
 - bug fix:
   - update draft-converter.js: `_.forEach` is not a function when converting draft blocks to html
