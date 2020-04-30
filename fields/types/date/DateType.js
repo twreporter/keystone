@@ -12,12 +12,11 @@ function date (list, path, options) {
 	this._nativeType = Date;
 	this._underscoreMethods = ['format', 'moment', 'parse'];
 	this._fixedSize = 'medium';
-	this._properties = ['formatString', 'yearRange', 'isUTC', 'inputFormat'];
-	this.parseFormatString = options.inputFormat || 'YYYY-MM-DD';
+	this._properties = ['formatString', 'yearRange', 'inputFormat'];
+	this.parseFormatString = options.inputFormat || 'YYYY-MM-DD ZZ';
 	this.formatString = (options.format === false) ? false : (options.format || 'Do MMM YYYY');
 
 	this.yearRange = options.yearRange;
-	this.isUTC = options.utc || false;
 	if (this.formatString && typeof this.formatString !== 'string') {
 		throw new Error('FieldType.Date: options.format must be a string.');
 	}
@@ -88,7 +87,6 @@ date.prototype.format = function (item, format) {
  */
 date.prototype.moment = function (item) {
 	var m = moment(item.get(this.path));
-	if (this.isUTC) m.utc();
 	return m;
 };
 
@@ -96,7 +94,7 @@ date.prototype.moment = function (item) {
  * Parses input using moment, sets the value, and returns the moment object.
  */
 date.prototype.parse = function (item) {
-	var m = this.isUTC ? moment.utc : moment;
+	var m = moment;
 	var newValue = m.apply(m, Array.prototype.slice.call(arguments, 1));
 	item.set(this.path, (newValue && newValue.isValid()) ? newValue.toDate() : null);
 	return newValue;
@@ -125,7 +123,7 @@ date.prototype.updateItem = function (item, data, callback) {
 	if (!(this.path in data)) {
 		return process.nextTick(callback);
 	}
-	var m = this.isUTC ? moment.utc : moment;
+	var m = moment;
 	var newValue = m(data[this.path], this.parseFormatString);
 	if (newValue.isValid()) {
 		if (!item.get(this.path) || !newValue.isSame(item.get(this.path))) {

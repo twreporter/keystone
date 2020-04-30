@@ -8,8 +8,8 @@ import { Button, InputGroup, FormInput } from 'elemental';
 TODO: Implement yearRange Prop, or deprecate for max / min values (better)
 */
 
-const DEFAULT_INPUT_FORMAT = 'YYYY-MM-DD';
-const DEFAULT_FORMAT_STRING = 'YYYY-MM-DD';
+const DEFAULT_INPUT_FORMAT = 'YYYY-MM-DD ZZ';
+const DEFAULT_FORMAT_STRING = 'YYYY-MM-DD ZZ';
 
 module.exports = Field.create({
 
@@ -41,7 +41,6 @@ module.exports = Field.create({
 
 	moment (value) {
 		var m = moment(value);
-		if (this.props.isUTC) m.utcOffset(8);
 		return m;
 	},
 
