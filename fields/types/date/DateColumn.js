@@ -13,7 +13,7 @@ var DateColumn = React.createClass({
 		let value = this.props.data.fields[this.props.col.path];
 		if (!value) return null;
 
-		let format = (this.props.col.type === 'datetime') ? 'MMMM Do YYYY, h:mm:ss a' : 'MMMM Do YYYY';
+		let format = (this.props.col.type === 'datetime') ? 'MMMM Do YYYY, h:mm:ss a' : 'YYYY-MM-DD';
 		let formattedValue = moment(value).format(format);
 
 		return (
