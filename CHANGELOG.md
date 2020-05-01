@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+
+## 0.8.0-rc.1
+### Commits
+* [[`6d4200eeb2`](https://github.com/twreporter/keystone/commit/6d4200eeb2)] - chore(release): 0.8.0-rc.1 (nickhsine)
+* [[`2320784a56`](https://github.com/twreporter/keystone/commit/2320784a56)] - **refactor**: change date output format for DateColumn.js (nickhsine)
+* [[`b67266ecbb`](https://github.com/twreporter/keystone/commit/b67266ecbb)] - **fix**: parse date string at the right utc offset (nickhsine)
+
 ## [0.8.0-rc.0](https://github.com/twreporter/keystone/compare/v0.7.3...v0.8.0-rc.0) (2019-11-24)
 
 
