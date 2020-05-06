@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.8.0-rc.2
+### Commits
+* [[`c101d61e7e`](https://github.com/twreporter/keystone/commit/c101d61e7e)] - **fix**: catch fatal error while updating HtmlType value (nickhsine)
+* [[`56c4123b32`](https://github.com/twreporter/keystone/commit/56c4123b32)] - **fix**: increase form-data field size from 1MB to 8 MB (nickhsine)
 
 ## 0.8.0-rc.1
 ### Commits
