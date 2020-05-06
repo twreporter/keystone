@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.8.0-rc.3
+### Commits
+* [[`385991a92d`](https://github.com/twreporter/keystone/commit/385991a92d)] - **fix**: downgrade multer to 0.1.8 (nickhsine)
+
 ## 0.8.0-rc.2
 ### Commits
 * [[`c101d61e7e`](https://github.com/twreporter/keystone/commit/c101d61e7e)] - **fix**: catch fatal error while updating HtmlType value (nickhsine)
