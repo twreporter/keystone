@@ -54,14 +54,15 @@ const processor = {
 				alignment = entity.data && entity.data.alignment || alignment;
 				let caption = _.get(entity, ['data', 'caption'], '');
 				let embeddedCode = _.get(entity, ['data', 'embeddedCode'], '');
-				let script = {};
+				let script;
 				let scripts = [];
 				let scriptTagStart = false;
 				let height;
 				let width;
 				let parser = new htmlparser.Parser({
 					onopentag: (name, attribs) => {
-						if (name === 'script') {
+            if (name === 'script') {
+              script = {};
 							scriptTagStart = true;
 							script.attribs = attribs;
 						} else if (name === 'iframe') {
