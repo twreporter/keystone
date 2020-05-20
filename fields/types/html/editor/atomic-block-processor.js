@@ -1,11 +1,13 @@
 // import sizeOf from 'image-size';
 import ApiDataInstance from './api-data-instance';
 import ENTITY from './entities';
-import htmlparser from 'htmlparser2';
 import get from 'lodash/get';
+import htmlparser from 'htmlparser2';
+import merge from 'lodash/merge';
 
 const _ = {
   get,
+  merge
 }
 
 const processor = {
@@ -54,7 +56,7 @@ const processor = {
 				alignment = entity.data && entity.data.alignment || alignment;
 				let caption = _.get(entity, ['data', 'caption'], '');
 				let embeddedCode = _.get(entity, ['data', 'embeddedCode'], '');
-				let script;
+				let script = {};
 				let scripts = [];
 				let scriptTagStart = false;
 				let height;
@@ -62,7 +64,6 @@ const processor = {
 				let parser = new htmlparser.Parser({
 					onopentag: (name, attribs) => {
             if (name === 'script') {
-              script = {};
 							scriptTagStart = true;
 							script.attribs = attribs;
 						} else if (name === 'iframe') {
@@ -78,7 +79,8 @@ const processor = {
 					onclosetag: (tagname) => {
 						if (tagname === 'script' && scriptTagStart) {
 							scriptTagStart = false;
-							scripts.push(script);
+              scripts.push(_.merge({}, script));
+              script = {};
 						}
 					},
 				});
