@@ -16,7 +16,7 @@ module.exports = function createDynamicRouter (keystone) {
 	// Use bodyParser and multer to parse request bodies and file uploads
 	router.use(bodyParser.json({}));
 	router.use(bodyParser.urlencoded({ extended: true }));
-	router.use(multer({ includeEmptyFields: true }));
+	router.use(multer({ limits: { fieldSize: 8 * 1024 * 1024 }, includeEmptyFields: true }));
 
 	// #1: Session API
 	// TODO: this should respect keystone auth options

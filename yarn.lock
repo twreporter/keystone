@@ -1964,6 +1964,7 @@ builtins@0.0.3:
 busboy@~0.2.9:
   version "0.2.14"
   resolved "https://registry.yarnpkg.com/busboy/-/busboy-0.2.14.tgz#6c2a622efcf47c57bbbe1e2a9c37ad36c7925453"
+  integrity sha1-bCpiLvz0fFe7vh4qnDetNseSVFM=
   dependencies:
     dicer "0.2.5"
     readable-stream "1.1.x"
@@ -6934,6 +6935,7 @@ mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5, mkdirp@~0
 mkdirp@~0.3.5:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.3.5.tgz#de3e5f8961c88c787ee1368df849ac4413eca8d7"
+  integrity sha1-3j5fiWHIjHh+4TaN+EmsRBPsqNc=
 
 mkpath@>=0.1.0:
   version "1.0.0"
@@ -7120,6 +7122,7 @@ ms@^2.1.1:
 multer@0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/multer/-/multer-0.1.8.tgz#551b8a6015093701bcacc964916b1ae06578f37b"
+  integrity sha1-VRuKYBUJNwG8rMlkkWsa4GV483s=
   dependencies:
     busboy "~0.2.9"
     mkdirp "~0.3.5"
@@ -10180,6 +10183,7 @@ type-fest@^0.6.0:
 type-is@~1.5.2:
   version "1.5.7"
   resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.5.7.tgz#b9368a593cc6ef7d0645e78b2f4c64cbecd05e90"
+  integrity sha1-uTaKWTzG730GReeLL0xky+zQXpA=
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.0.9"

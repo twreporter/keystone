@@ -98,7 +98,12 @@ html.prototype.isModified = function (item) {
 html.prototype.updateItem = function (item, data, callback) {
 	var value = this.getValueFromData(data);
 	if (value && value !== '') {
-		var dObj = JSON.parse(value);
+                var dObj = {}
+                try {
+                        dObj = JSON.parse(value);
+                } catch (err) {
+                        console.error('Error to JSON.parse:', err)
+                }
 		if (dObj.draft) {
 			item.set(this.paths.draft, dObj.draft);
 			item.set(this.paths.html, dObj.html);
