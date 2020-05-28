@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.8.0-rc.4
+### Commits
+* [[`d657d505f4`](https://github.com/twreporter/keystone/commit/d657d505f4)] - **fix**: fix indentation (Taylor Fang)
+* [[`f9c7b7e3cd`](https://github.com/twreporter/keystone/commit/f9c7b7e3cd)] - **fix**: address review comment (Taylor Fang)
+* [[`71d705b4a4`](https://github.com/twreporter/keystone/commit/71d705b4a4)] - **fix**: create a new object for each script tag (Taylor Fang)
+
 ## 0.8.0-rc.3
 ### Commits
 * [[`385991a92d`](https://github.com/twreporter/keystone/commit/385991a92d)] - **fix**: downgrade multer to 0.1.8 (nickhsine)
