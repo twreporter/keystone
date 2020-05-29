@@ -90,7 +90,7 @@ const processor = {
         content = [{
           caption,
           embeddedCode,
-          embeddedCodeWithoutScript: embeddedCode.replace(/<script(.+?)\/script>/g, ''),
+          embeddedCodeWithoutScript: embeddedCode.replace(/<script([\s\S]+?)\/script>/g, ''),
           height,
           scripts,
           width,
