@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.8.0-rc.5
+* [[`a08f5b60a8`](https://github.com/twreporter/keystone/commit/a08f5b60a8)] - **fix**: wrong script parsing of embedded code (yucj)
+
 ## 0.8.0-rc.4
 ### Commits
 * [[`d657d505f4`](https://github.com/twreporter/keystone/commit/d657d505f4)] - **fix**: fix indentation (Taylor Fang)
