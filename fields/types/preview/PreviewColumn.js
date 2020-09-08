@@ -9,9 +9,10 @@ var PreviewColumn = React.createClass({
 		data: React.PropTypes.object,
 	},
 	renderValue () {
+    const previewOrigin = Keystone.previewOrigin || 'https://keystone-preview.twreporter.org'
 		return (
 			<ItemsTableValue truncate={false} field={this.props.col.type}>
-        <a style={{ textDecoration: 'underline' }} href={`http://keystone-preview.twreporter.org/a/${this.props.data.slug}`} target="_blank" >{this.props.col.label}</a>
+        <a style={{ textDecoration: 'underline' }} href={`${previewOrigin}/a/${this.props.data.slug}`} target="_blank" >{this.props.col.label}</a>
 			</ItemsTableValue>
 		);
 	},
