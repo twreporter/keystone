@@ -2,54 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.8.0-rc.5
-* [[`a08f5b60a8`](https://github.com/twreporter/keystone/commit/a08f5b60a8)] - **fix**: wrong script parsing of embedded code (yucj)
+## 0.8.0, 2020/09/09
 
-## 0.8.0-rc.4
+### Notable Changes
+
+- bug fix:
+	- [fatal error makes server crash while updating post](https://github.com/twreporter/keystone/pull/148)
+	- [parse date string at the right utc offset](https://github.com/twreporter/keystone/pull/148)
+  - [empty script object when encountering close tag](https://github.com/twreporter/keystone/pull/150)
+
+- refactor:
+	- [change preview origin on demand](https://github.com/twreporter/keystone/pull/153)
+
+- feature:
+	- [disable autoIndex in production](https://github.com/twreporter/keystone/pull/152)
+
 ### Commits
+* [[`d039cb6d24`](https://github.com/twreporter/keystone/commit/d039cb6d24)] - **refactor**: fix indentation (nickhsine)
+* [[`39d5a7ed76`](https://github.com/twreporter/keystone/commit/39d5a7ed76)] - **refactor**: load preview origin from config (nickhsine)
+* [[`9e8c6bc4e3`](https://github.com/twreporter/keystone/commit/9e8c6bc4e3)] - **refactor**: delete preview route (unused) (nickhsine)
+* [[`84fa6fc85d`](https://github.com/twreporter/keystone/commit/84fa6fc85d)] - Merge pull request #152 from babygoat/master (babygoat)
+* [[`7c90a5036e`](https://github.com/twreporter/keystone/commit/7c90a5036e)] - **feat**: disable autoIndex in production (Ching-Yang, Tseng)
+* [[`c062ee4de2`](https://github.com/twreporter/keystone/commit/c062ee4de2)] - Merge pull request #151 from YuCJ/master (yucj)
+* [[`76d5412605`](https://github.com/twreporter/keystone/commit/76d5412605)] - chore(release): bump version to v0.8.0-rc.5 (yucj)
+* [[`a08f5b60a8`](https://github.com/twreporter/keystone/commit/a08f5b60a8)] - **fix**: wrong script parsing of embedded code (yucj)
+* [[`b49f68cc5a`](https://github.com/twreporter/keystone/commit/b49f68cc5a)] - Merge pull request #150 from taylrj/fix-multi-scripts (Tai-Jiun Fang)
+* [[`83728336a6`](https://github.com/twreporter/keystone/commit/83728336a6)] - chore(release): bump version to v0.8.0-rc.4 (Taylor Fang)
 * [[`d657d505f4`](https://github.com/twreporter/keystone/commit/d657d505f4)] - **fix**: fix indentation (Taylor Fang)
 * [[`f9c7b7e3cd`](https://github.com/twreporter/keystone/commit/f9c7b7e3cd)] - **fix**: address review comment (Taylor Fang)
 * [[`71d705b4a4`](https://github.com/twreporter/keystone/commit/71d705b4a4)] - **fix**: create a new object for each script tag (Taylor Fang)
-
-## 0.8.0-rc.3
-### Commits
+* [[`6d9d17e094`](https://github.com/twreporter/keystone/commit/6d9d17e094)] - Merge pull request #149 from nickhsine/master (Tai-Jiun Fang)
+* [[`74db4e6bce`](https://github.com/twreporter/keystone/commit/74db4e6bce)] - chore(release): 0.8.0-rc.3 (nickhsine)
 * [[`385991a92d`](https://github.com/twreporter/keystone/commit/385991a92d)] - **fix**: downgrade multer to 0.1.8 (nickhsine)
-
-## 0.8.0-rc.2
-### Commits
+* [[`9b680e2a88`](https://github.com/twreporter/keystone/commit/9b680e2a88)] - **chore**: update to 0.8.0-rc.2 (nickhsine)
 * [[`c101d61e7e`](https://github.com/twreporter/keystone/commit/c101d61e7e)] - **fix**: catch fatal error while updating HtmlType value (nickhsine)
 * [[`56c4123b32`](https://github.com/twreporter/keystone/commit/56c4123b32)] - **fix**: increase form-data field size from 1MB to 8 MB (nickhsine)
-
-## 0.8.0-rc.1
-### Commits
+* [[`bcb2514101`](https://github.com/twreporter/keystone/commit/bcb2514101)] - Merge pull request #148 from nickhsine/master (nick)
+* [[`8c62c2c27c`](https://github.com/twreporter/keystone/commit/8c62c2c27c)] - **docs**: update CHANGELOG.md (nickhsine)
 * [[`6d4200eeb2`](https://github.com/twreporter/keystone/commit/6d4200eeb2)] - chore(release): 0.8.0-rc.1 (nickhsine)
 * [[`2320784a56`](https://github.com/twreporter/keystone/commit/2320784a56)] - **refactor**: change date output format for DateColumn.js (nickhsine)
 * [[`b67266ecbb`](https://github.com/twreporter/keystone/commit/b67266ecbb)] - **fix**: parse date string at the right utc offset (nickhsine)
-
-## [0.8.0-rc.0](https://github.com/twreporter/keystone/compare/v0.7.3...v0.8.0-rc.0) (2019-11-24)
-
-
-### Bug Fixes
-
-* change keystone-plugin path ([b2596c5](https://github.com/twreporter/keystone/commit/b2596c5743beb5d354e32f83d06317a19e0d5395))
-
-
-### Chores
-
-* add husky ([#146](https://github.com/twreporter/keystone/issues/146)) ([48257ba](https://github.com/twreporter/keystone/commit/48257badf70ca7b444855a81e19424a98a1de776))
-
-### [0.7.3](https://github.com/twreporter/keystone/compare/v0.7.2...v0.7.3) (2019-11-21)
-
-
-### Bug Fixes
-
-* set keystone.user_name cookie in prod also ([42bf0d7](https://github.com/twreporter/keystone/commit/42bf0d7e1faa447a48d2823e3e6630d64e824475))
-
-
-### Chores
-
-* add commitlint ([f38f1a6](https://github.com/twreporter/keystone/commit/f38f1a6774eb297e89b8bb1605836cd084b41d9b))
-* add standard-version ([80aeabe](https://github.com/twreporter/keystone/commit/80aeabe7e890f1341102920b02fbff367f9c87de))
+* [[`672d22aebc`](https://github.com/twreporter/keystone/commit/672d22aebc)] - Update CHANGELOG.md (Yu Chung-Jen)
 
 ## 0.7.2, 2019/10/30
 ### Notable Changes
