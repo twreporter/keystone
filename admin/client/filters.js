@@ -13,7 +13,6 @@ module.exports = {
 	// geopoint: require('../../fields/types/geopoint/GeoPointFilter'),
 	gcsfile: require('../../fields/types/gcsfile/GcsFileFilter'),
 	gcsimage: require('../../fields/types/gcsimage/GcsImageFilter'),
-	gcsimages: require('../../fields/types/gcsimages/GcsImagesFilter'),
 	html: require('../../fields/types/html/HtmlFilter'),
 	key: require('../../fields/types/key/KeyFilter'),
 	localfile: require('../../fields/types/localfile/LocalFileFilter'),
