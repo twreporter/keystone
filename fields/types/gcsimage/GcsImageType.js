@@ -79,7 +79,6 @@ gcsimage.prototype.addToSchema = function () {
     iptc: this._path.append('.iptc'),
     resizedTargets: this._path.append('.resizedTargets'),
     size: this._path.append('.size'),
-    url: this._path.append('.url'),
     width: this._path.append('.width'),
 
     // virtuals
@@ -97,14 +96,13 @@ gcsimage.prototype.addToSchema = function () {
     iptc: Object,
     resizedTargets: Object,
     size: Number,
-    url: String,
     width: Number,
   });
 
   schema.add(schemaPaths);
 
   var exists = function (item) {
-    return (item.get(paths.url) ? true : false);
+    return (item.get(paths.filename) ? true : false);
   };
 
   // The .exists virtual indicates whether a file is stored
@@ -122,7 +120,6 @@ gcsimage.prototype.addToSchema = function () {
       iptc: {},
       resizedTargets: {},
       size: 0,
-      url: '',
       width: 0,
     });
   };
@@ -192,7 +189,7 @@ gcsimage.prototype.format = function (item) {
   if (this.hasFormatter()) {
     return this.options.format(item, item[this.path]);
   }
-  return item.get(this.paths.url);
+  return item.get(this.paths.filename);
 };
 
 
@@ -214,7 +211,7 @@ gcsimage.prototype.hasFormatter = function () {
  */
 
 gcsimage.prototype.isModified = function (item) {
-  return item.isModified(this.paths.url);
+  return item.isModified(this.paths.filename);
 };
 
 
@@ -251,7 +248,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
   var _this = this;
   var ONE_YEAR = 60 * 60 * 24 * 365;
   var gcsDir = this.options.destination ? this.options.destination : '';
-  var isPublicRead = _this.options.publicRead ? _this.options.publicRead : false;
+  var publicRead = _this.options.publicRead ? _this.options.publicRead : false;
   var prefix = _this.options.datePrefix ? moment().format(_this.options.datePrefix) + '-' : '';
   var filename = prefix + file.name;
   var split = filename.split('.');
@@ -280,92 +277,32 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
     return gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
       destination: gcsDir + filename,
       filetype: filetype,
-      isPublicRead: isPublicRead,
+      publicRead: publicRead,
       cacheControl: 'public, max-age=' + ONE_YEAR,
-    }).then(function (apiResponse) {
-      // resizing image and upload resized images
-      if (typeof _this.options.resize === 'function') {
-        var resizeFunc = _this.options.resize;
-        if (Array.isArray(_this.options.resizeOpts) && _this.options.resizeOpts.length > 0) {
-          var promises = [];
-          var targets = {};
-          var resizeOpts = _this.options.resizeOpts;
-          for (var i = 0; i < resizeOpts.length; i++) {
-            var resizeOpt = resizeOpts[i] || {};
-            targets[resizeOpt.target] = {
-              url: gcsHelper.getPublicUrl(_this.options.bucket, gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext),
-              width: resizeOpt.width,
-              height: resizeOpt.height,
-            };
+    }).then(function () {
+      const dimensions = sizeOf.sync(fs.readFileSync(file.path));
 
-            _.set(resizeOpt, 'options.filetype', filetype)
-
-            promises.push(gcsHelper.uploadFileToBucket(bucket, resizeFunc(file.path, resizeOpt.width, resizeOpt.height, resizeOpt.options), {
-              destination: gcsDir + filenameWithoutExt + '-' + resizeOpt.target + '.' + ext,
-              filetype: filetype,
-              isPublicRead: isPublicRead,
-              cacheControl: 'public, max-age=' + ONE_YEAR,
-            }));
-          }
-          return Promise.all(promises).then(function (values) {
-            return targets;
-          });
-        } else {
-          // skip resizing
-          return;
-        }
-      } else {
-        // skip resizing
-        return;
-      }
-    }).then(function (targets) {
-      var dimensions = sizeOf.sync(fs.readFileSync(file.path));
-
-      if (targets) {
-        try {
-          _.forEach(targets, function (target) {
-            if (typeof target.width === 'number' && !target.height) {
-              if (target.width < dimensions.width) {
-                target.height = Math.round((target.width / dimensions.width) * dimensions.height);
-              } else {
-                target.width = dimensions.width;
-                target.height = dimensions.height;
-              }
-            } else if (typeof target.height === 'number' && !target.width) {
-              if (target.height < dimensions.height) {
-                target.width = Math.round((target.height / dimensions.height) * dimensions.width);
-              } else {
-                target.width = dimensions.width;
-                target.height = dimensions.height;
-              }
-            }
-          });
-        } catch (e) {
-          console.warn('Calculating width and height of resized image occurs error ', e);
-        }
-      }
       var imageData = {
+        filepath: file.path,
         filename: filename,
         filetype: filetype,
         gcsBucket: _this.options.bucket,
         gcsDir: gcsDir,
-        height: dimensions.height || 0,
-        iptc: {},
-        resizedTargets: targets || {},
+        height: dimensions.height,
         size: file.size,
-        url: gcsHelper.getPublicUrl(_this.options.bucket, gcsDir + filename),
-        width: dimensions.width || 0,
+        width: dimensions.width,
+        resizedTargets: {},
+        iptc: {},
       };
 
-      if (typeof _this.options.extractIPTC === 'function') {
-        return _this.options.extractIPTC(file.path)
-          .then(function (meta) {
-            imageData.iptc = meta;
+      if (_this.options.hooks && typeof _this.options.hooks.postUpload === 'function') {
+        return _this.options.hooks.postUpload(imageData)
+          .then((postUploadData) => {
             if (update) {
-              item.set(_this.path, imageData);
+              item.set(_this.path, postUploadData);
             }
-            return callback(null, imageData);
-          });
+            return callback(null, postUploadData);
+          })
       } else {
         if (update) {
           item.set(_this.path, imageData);
@@ -373,7 +310,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
         callback(null, imageData);
       }
     }).catch(function (err) {
-      console.error('UPLOADING ERROR:', err);
+      console.error(err);
       bucket.deleteFiles({
         prefix: gcsDir + filenameWithoutExt,
       }, function (deleteErr) {
@@ -382,7 +319,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
         }
         callback(err);
       });
-    }).then(function () {
+    }).finally(function () {
       // delete local file
       console.log('DELETE LOCAL FILE:', file.path);
       try {
@@ -392,7 +329,8 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
       };
     });
   };
-	doUpload();
+
+  doUpload();
 };
 
 
