@@ -6,9 +6,9 @@ const _ = {
 }
 
 var GcsImageColumn = React.createClass({
-	render: function () {
-		var value = this.props.data.fields[this.props.col.path] || {};
-		const thumbnail = _.get(value, ['resizedTargets', 'mobile', 'url']);
+  render: function () {
+    var value = this.props.data.fields[this.props.col.path] || {};
+    const thumbnail = _.get(value, ['resizedTargets', 'mobile', 'url']);
     const gcsDir = _.get(value, 'gcsDir', '');
     const gcsBucket = _.get(value, 'gcsBucket', '');
     const filename = _.get(value, 'filename', '');
@@ -24,14 +24,14 @@ var GcsImageColumn = React.createClass({
       </p>
     )
 
-		return (
+    return (
       <td className="ItemList__col">
         <div className="ItemList__value ItemList__value--gcs-image">
           {displayJsx}
         </div>
       </td>
-		);
-	},
+    );
+  },
 });
 
 module.exports = GcsImageColumn;
