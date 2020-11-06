@@ -27,7 +27,7 @@ module.exports = Field.create({
     const filename = _.get(this.props, 'value.filename', '');
 
     if (gcsBucket && gcsDir && filename) {
-      if (typeof gcsDir === 'string' && gcsDir.slice(-1) === '/') {
+      if (typeof gcsDir === 'string' && gcsDir.endsWith('/')) {
         return `gs://${gcsBucket}/${gcsDir}${filename}`;
       }
       return `gs://${gcsBucket}/${gcsDir}/${filename}`;

@@ -12,7 +12,16 @@ var GcsImageColumn = React.createClass({
     const gcsDir = _.get(value, 'gcsDir', '');
     const gcsBucket = _.get(value, 'gcsBucket', '');
     const filename = _.get(value, 'filename', '');
-    const location = gcsDir ? `gs://${gcsBucket}/${gcsDir}/${filename}` : `gs://${gcsBucket}/${filename}`;
+    let location = ''
+
+    if (gcsBucket && gcsDir && filename) {
+      if (typeof gcsDir === 'string' && gcsDir.endsWith('/')) {
+        location = `gs://${gcsBucket}/${gcsDir}${filename}`;
+      }
+      location = `gs://${gcsBucket}/${gcsDir}/${filename}`;
+    } else if (gcsBucket && filename) {
+      location = `gs://${gcsBucket}/${filename}`;
+    }
 
     const displayJsx = thumbnail ? (
       <a href={thumbnail} target="_blank">
