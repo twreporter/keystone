@@ -16,7 +16,7 @@ var GcsImageColumn = React.createClass({
 
     const displayJsx = thumbnail ? (
       <a href={thumbnail} target="_blank">
-        <img src={thumbnail} height="150" width="150" />
+        <img src={thumbnail} height="100" width="100"  style={{objectFit: 'cover'}}/>
       </a>
     ) : (
       <p>
