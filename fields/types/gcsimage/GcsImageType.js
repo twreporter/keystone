@@ -247,7 +247,6 @@ gcsimage.prototype.updateItem = function (item, data, callback) { // eslint-disa
 gcsimage.prototype.uploadFile = function (item, file, update, callback) {
   var _this = this;
   var ONE_YEAR = 60 * 60 * 24 * 365;
-  var gcsDir = this.options.destination ? this.options.destination : '';
   var publicRead = _this.options.publicRead ? _this.options.publicRead : false;
   var prefix = _this.options.datePrefix ? moment().format(_this.options.datePrefix) + '-' : '';
   var filename = prefix + file.name;
@@ -256,6 +255,15 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
   var ext = split[1] || '';
   var originalname = file.originalname;
   var filetype = file.mimetype || file.type;
+  let gcsDir = this.options.destination ? this.options.destination : '';
+
+  if (typeof gcsDir === 'string' && gcsDir !== '') {
+    if (gcsDir === '/') {
+      gcsDir = '';
+    } else if (gcsDir.slice(-1) !== '/') {
+      gcsDir += '/';
+    }
+  }
 
   if (typeof update === 'function') {
     callback = update;
