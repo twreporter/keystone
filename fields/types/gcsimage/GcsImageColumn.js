@@ -6,15 +6,41 @@ const _ = {
 }
 
 var GcsImageColumn = React.createClass({
-	render: function () {
-		var value = this.props.data.fields[this.props.col.path] || {};
-		var isVal = _.get(value, ['resizedTargets', 'mobile', 'url'], value.url);
-		return (
-			<td className="ItemList__col">
-				<div className="ItemList__value ItemList__value--gcs-image"><a href={isVal} target="_blank"><img src={isVal} height="150" width="150"/></a></div>
-			</td>
-		);
-	},
+  render: function () {
+    var value = this.props.data.fields[this.props.col.path] || {};
+    const thumbnail = _.get(value, ['resizedTargets', 'mobile', 'url']);
+    const gcsDir = _.get(value, 'gcsDir', '');
+    const gcsBucket = _.get(value, 'gcsBucket', '');
+    const filename = _.get(value, 'filename', '');
+    let location = ''
+
+    if (gcsBucket && gcsDir && filename) {
+      if (typeof gcsDir === 'string' && gcsDir.endsWith('/')) {
+        location = `gs://${gcsBucket}/${gcsDir}${filename}`;
+      }
+      location = `gs://${gcsBucket}/${gcsDir}/${filename}`;
+    } else if (gcsBucket && filename) {
+      location = `gs://${gcsBucket}/${filename}`;
+    }
+
+    const displayJsx = thumbnail ? (
+      <a href={thumbnail} target="_blank">
+        <img src={thumbnail} height="100" width="100"  style={{objectFit: 'cover'}}/>
+      </a>
+    ) : (
+      <p>
+        {location}
+      </p>
+    )
+
+    return (
+      <td className="ItemList__col">
+        <div className="ItemList__value ItemList__value--gcs-image">
+          {displayJsx}
+        </div>
+      </td>
+    );
+  },
 });
 
 module.exports = GcsImageColumn;

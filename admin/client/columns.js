@@ -13,7 +13,6 @@ var Columns = {
 	geopoint: require('../../fields/types/geopoint/GeoPointColumn'),
 	gcsfile: require('../../fields/types/gcsfile/GcsFileColumn'),
 	gcsimage: require('../../fields/types/gcsimage/GcsImageColumn'),
-	gcsimages: require('../../fields/types/gcsimages/GcsImagesColumn'),
 	html: require('../../fields/types/html/HtmlColumn'),
 	key: require('../../fields/types/key/KeyColumn'),
 	localfile: require('../../fields/types/localfile/LocalFileColumn'),
