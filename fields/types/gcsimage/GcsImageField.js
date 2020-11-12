@@ -3,10 +3,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import get from 'lodash/get';
+import keys from 'lodash/keys'
 import { Button, FormField, FormInput, FormNote } from 'elemental';
+import { replaceGCSUrlOrigin } from '@twreporter/core/lib/utils/storage-url-processor'
 
 const _ = {
   get,
+  keys,
 };
 
 // TODO (nick):
@@ -97,19 +100,36 @@ module.exports = Field.create({
         }
       }
 
+      const resizedTargets = _.get(this.props, 'value.resizedTargets', {})
+      const resizedJsx = _.keys(resizedTargets)
+        .map(resolution => {
+          const url = replaceGCSUrlOrigin(_.get(resizedTargets, [resolution, 'url'], ''), true)
+          return (
+            <p key={`${resolution}-img-url`}>{resolution}: {url}</p>
+          )
+        })
+
       return (
         <div key={this.props.path + '_details'} className="image-details">
           <div className="image-values">
             <FormInput noedit multiline>
-              <h6>檔案位址</h6>
-              <p>{this.getLocation()}</p>
-              <h6>長寬比</h6>
+              {
+                resizedJsx ? (
+                  <div>
+                    <h6>壓縮大小後的照片位址</h6>
+                    {resizedJsx}
+                  </div>
+                ) : null
+              }
+              <h6>長x寬</h6>
               <p>{this.props.value.width} x {this.props.value.height}</p>
               <h6>IPTC Core</h6>
               <p>描述: {iptc.caption}</p>
               <p>製作程式: {iptc.byline}</p>
               <p>關鍵字: {Array.isArray(iptc.keywords) ? iptc.keywords.join(';') : iptc.keywords}</p>
               <p>製作日期: {iptc.created_date} {createdTime}</p>
+              <h6>原始照片檔案位址</h6>
+              <p>{this.getLocation()}</p>
             </FormInput>
           </div>
         </div>
