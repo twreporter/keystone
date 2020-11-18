@@ -159,7 +159,6 @@ module.exports = Field.create({
       var files = event.target.files;
       Array.prototype.forEach.call(files, function (f) {
         if (supportTypes.indexOf(f.type) === -1) {
-          self.removeImage();
           alert('Unsupported file type. Supported formats are: GIF, PNG, JPG, TIFF, SVG, BMP');
           return false;
         }
