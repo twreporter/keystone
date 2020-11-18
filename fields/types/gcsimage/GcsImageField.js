@@ -12,9 +12,7 @@ const _ = {
   keys,
 };
 
-// TODO (nick):
-// Confirm image support type with photographers.
-const supportTypes = ['image/gif', 'image/png', 'image/jpeg', 'image/x-tiff', 'image/svg+xml'];
+const supportTypes = ['image/gif', 'image/png', 'image/jpeg', 'image/x-tiff', 'image/svg+xml', 'image/bmp'];
 
 module.exports = Field.create({
 
@@ -162,7 +160,7 @@ module.exports = Field.create({
       Array.prototype.forEach.call(files, function (f) {
         if (supportTypes.indexOf(f.type) === -1) {
           self.removeImage();
-          alert('Unsupported file type. Supported formats are: GIF, PNG, JPG, TIFF, SVG');
+          alert('Unsupported file type. Supported formats are: GIF, PNG, JPG, TIFF, SVG, BMP');
           return false;
         }
 
