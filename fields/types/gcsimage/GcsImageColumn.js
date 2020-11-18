@@ -23,7 +23,7 @@ var GcsImageColumn = React.createClass({
       location = `gs://${gcsBucket}/${filename}`;
     }
 
-    const displayJsx = thumbnail ? (
+    const thumbnailJsx = thumbnail ? (
       <a href={thumbnail} target="_blank">
         <img src={thumbnail} height="100" width="100"  style={{objectFit: 'cover'}}/>
       </a>
@@ -33,10 +33,34 @@ var GcsImageColumn = React.createClass({
       </p>
     )
 
+    const iptc = _.get(value, ['iptc'], {})
+    const { byline, caption, created_time, keywords } = iptc
+
+    let createdTime = created_time
+    if (typeof createdTime === 'string' && createdTime !== '') {
+      const hour = createdTime.slice(0, 2);
+      const minute = createdTime.slice(2, 4);
+      const second = createdTime.slice(4, 6);
+
+      if (hour < 12) {
+        createdTime = `上午${hour}:${minute}:${second}`
+      } else {
+        createdTime = `下午${hour}:${minute}:${second}`
+      }
+    }
+
     return (
       <td className="ItemList__col">
-        <div className="ItemList__value ItemList__value--gcs-image">
-          {displayJsx}
+        <div className="ItemList__value ItemList__value--gcsimage">
+          <div>
+            {thumbnailJsx}
+          </div>
+          <div>
+            <p>描述：{caption}</p>
+            <p>製作程式：{byline}</p>
+            <p>關鍵字：{Array.isArray(iptc.keywords) ? iptc.keywords.join(';') : iptc.keywords}</p>
+            <p>製作日期: {iptc.created_date} {createdTime}</p>
+          </div>
         </div>
       </td>
     );
