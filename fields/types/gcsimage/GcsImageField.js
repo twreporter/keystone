@@ -194,8 +194,18 @@ module.exports = Field.create({
   },
 
   renderNote () {
-    if (!this.props.note) return null;
-    return <FormNote note={this.props.note} />;
+    const defaultNoteJsx = (
+      <FormNote note="系統支援的圖片檔案格式為 GIF, PNG, JPG, TIFF, SVG, BMP。" />
+    );
+    if (!this.props.note) {
+      return defaultNoteJsx;
+    }
+    return (
+      <div>
+        {defaultNoteJsx}
+        <FormNote note={this.props.note} />
+      </div>
+    );
   },
 
   renderUI () {
