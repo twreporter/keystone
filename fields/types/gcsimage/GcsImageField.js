@@ -159,7 +159,7 @@ module.exports = Field.create({
       var files = event.target.files;
       Array.prototype.forEach.call(files, function (f) {
         if (supportTypes.indexOf(f.type) === -1) {
-          alert('Unsupported file type. Supported formats are: GIF, PNG, JPG, TIFF, SVG, BMP');
+          alert(`系統不支援您上傳的檔案格式。系統支援的檔案格式為 GIF, PNG, JPG, TIFF, SVG, BMP。`);
           return false;
         }
 
