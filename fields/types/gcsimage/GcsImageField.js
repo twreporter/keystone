@@ -193,6 +193,11 @@ module.exports = Field.create({
     );
   },
 
+  renderNote () {
+    if (!this.props.note) return null;
+    return <FormNote note={this.props.note} />;
+  },
+
   renderUI () {
     const fileLocation = this.getLocation();
     const fileInputJsx = fileLocation ? null : (
@@ -216,6 +221,7 @@ module.exports = Field.create({
         {fileInputJsx}
         {previewAndDetailJsx}
         {toolbarJsx}
+        {this.renderNote()}
       </FormField>
     );
   },
