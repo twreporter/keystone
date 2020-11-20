@@ -407,6 +407,46 @@ gcsimage.prototype.handleRequest = function (item, req, paths, callback) {
   this.getRequestHandler(item, req, paths, callback)();
 };
 
+/**
+ * Add filters to a query
+ */
+gcsimage.prototype.addFilterToQuery = function (filter, query) {
+  query = query || {};
+  let value = utils.escapeRegExp(filter.value);
+  value = new RegExp(value, 'i');
+
+  switch(filter.mode) {
+    case 'keywords_contains': {
+      query['$or'] = [{
+          keywords: value,
+        },{
+          [`${this.path}.iptc.keywords`]: value,
+        }
+      ]
+      break;
+    }
+    case 'byline_contains': {
+      query[`${this.path}.iptc.byline`] = value;
+      break;
+    }
+    case 'created_date_contains': {
+      query[`${this.path}.iptc.created_date`] = value;
+      break;
+    }
+    case 'caption_contains':
+    default: {
+      query['$or'] = [{
+          description: value,
+        },{
+          [`${this.path}.iptc.caption`]: value,
+        }
+      ]
+      break;
+    }
+  }
+  return query;
+};
+
 
 /*!
  * Export class
