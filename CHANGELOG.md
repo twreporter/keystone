@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.0, 2020/11/25
+
+### Notable Changes
+
+- [refactor: update gcsimage](https://github.com/twreporter/keystone/pull/156)
+- [refactor: update GcsImageField.js. render resized public image URLs](https://github.com/twreporter/keystone/pull/155)
+- [feat: update gcsimage](https://github.com/twreporter/keystone/pull/154)
+
+### Commits
+* [[`d5d4d2820e`](https://github.com/twreporter/keystone/commit/d5d4d2820e)] - Merge pull request #156 from nickhsine/update-gcsimage (nick)
+* [[`5f1f494bfa`](https://github.com/twreporter/keystone/commit/5f1f494bfa)] - **refactor**: update GcsImageColumn.js (nickhsine)
+* [[`9c27e72633`](https://github.com/twreporter/keystone/commit/9c27e72633)] - **feat**: search gcsimage by iptc metadata (nickhsine)
+* [[`4f0bcff618`](https://github.com/twreporter/keystone/commit/4f0bcff618)] - **refactor**: update GcsImageColumn.js. render iptc metadata (nickhsine)
+* [[`9ff43a1cd1`](https://github.com/twreporter/keystone/commit/9ff43a1cd1)] - **refactor**: update GcsImageField.js. add default note (nickhsine)
+* [[`87576817df`](https://github.com/twreporter/keystone/commit/87576817df)] - **refactor**: update GcsImageField.js. add slack channel notice (nickhsine)
+* [[`97f42241ed`](https://github.com/twreporter/keystone/commit/97f42241ed)] - **refactor**: update GcsImageField.js. update unsupport file type alert (nickhsine)
+* [[`60dcdae55f`](https://github.com/twreporter/keystone/commit/60dcdae55f)] - **fix**: update GcsImageField.js. resolve undefined function (nickhsine)
+* [[`9eab59dab5`](https://github.com/twreporter/keystone/commit/9eab59dab5)] - **refactor**: update GcsImageField.js. support `image/bmp` (nickhsine)
+* [[`2ec86eb691`](https://github.com/twreporter/keystone/commit/2ec86eb691)] - Merge pull request #155 from nickhsine/master (nick)
+* [[`b5f2862fe3`](https://github.com/twreporter/keystone/commit/b5f2862fe3)] - **refactor**: update lib/parseAPIResponse.js (nickhsine)
+* [[`b0b7149c47`](https://github.com/twreporter/keystone/commit/b0b7149c47)] - **chore**: add @twreporter/core (nickhsine)
+* [[`f75726e123`](https://github.com/twreporter/keystone/commit/f75726e123)] - **refactor**: update GcsImageField.js. render resized public image URLs (nickhsine)
+* [[`0d0c706145`](https://github.com/twreporter/keystone/commit/0d0c706145)] - Merge pull request #154 from nickhsine/drop-resize (nick)
+* [[`3070cded12`](https://github.com/twreporter/keystone/commit/3070cded12)] - **refactor**: handle gs location properly (nickhsine)
+* [[`513bc06ad0`](https://github.com/twreporter/keystone/commit/513bc06ad0)] - **refactor**: update GcsImageType.js (nickhsine)
+* [[`d0d8803bfa`](https://github.com/twreporter/keystone/commit/d0d8803bfa)] - **style**: update GcsImageColumn.js (nickhsine)
+* [[`b51d57e1e5`](https://github.com/twreporter/keystone/commit/b51d57e1e5)] - **refactor**: update GcsImageFilter.js (nickhsine)
+* [[`743fc3ba1e`](https://github.com/twreporter/keystone/commit/743fc3ba1e)] - **refactor**: update GcsImageColumn.js. fix indent (nickhsine)
+* [[`9bdcc96417`](https://github.com/twreporter/keystone/commit/9bdcc96417)] - **refactor**: update GcsImageColumn.js (nickhsine)
+* [[`4556af2c15`](https://github.com/twreporter/keystone/commit/4556af2c15)] - **refactor**: update lib/gcsHelper.js (nickhsine)
+* [[`03110e9fd9`](https://github.com/twreporter/keystone/commit/03110e9fd9)] - **refactor**: update less: cloudinaryimage -\> gcsimage (nickhsine)
+* [[`d280cfa5d0`](https://github.com/twreporter/keystone/commit/d280cfa5d0)] - **fix**: remove `makePublic` after uploading files onto GCS (nickhsine)
+* [[`d3a7d8f092`](https://github.com/twreporter/keystone/commit/d3a7d8f092)] - **feat**: update GcsImageType and GcsImageField (nickhsine)
+* [[`2fa2119515`](https://github.com/twreporter/keystone/commit/2fa2119515)] - **feat**: remove gcsimages field type (nickhsine)
+* [[`1ceaa8255c`](https://github.com/twreporter/keystone/commit/1ceaa8255c)] - **refactor**: update lib/gcsHelper.js. exports `getAuthenticatedUrl` (nickhsine)
+* [[`0ff7d32e38`](https://github.com/twreporter/keystone/commit/0ff7d32e38)] - **refactor**: indent lib/gcsHelper.js properly (nickhsine)
+* [[`efff7319a1`](https://github.com/twreporter/keystone/commit/efff7319a1)] - **refactor**: indent GcsImageType.js properly (nickhsine)
+* [[`57c54cbe2b`](https://github.com/twreporter/keystone/commit/57c54cbe2b)] - **chore**: yarn remove http-proxy dependency (nickhsine)
+* [[`c829411dc3`](https://github.com/twreporter/keystone/commit/c829411dc3)] - Merge pull request #153 from nickhsine/preview-origin (nick)
+
 ## 0.8.0, 2020/09/09
 
 ### Notable Changes
