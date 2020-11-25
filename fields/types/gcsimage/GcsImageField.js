@@ -12,9 +12,7 @@ const _ = {
   keys,
 };
 
-// TODO (nick):
-// Confirm image support type with photographers.
-const supportTypes = ['image/gif', 'image/png', 'image/jpeg', 'image/x-tiff', 'image/svg+xml'];
+const supportTypes = ['image/gif', 'image/png', 'image/jpeg', 'image/x-tiff', 'image/svg+xml', 'image/bmp'];
 
 module.exports = Field.create({
 
@@ -161,8 +159,7 @@ module.exports = Field.create({
       var files = event.target.files;
       Array.prototype.forEach.call(files, function (f) {
         if (supportTypes.indexOf(f.type) === -1) {
-          self.removeImage();
-          alert('Unsupported file type. Supported formats are: GIF, PNG, JPG, TIFF, SVG');
+          alert(`系統不支援您上傳的檔案格式。系統支援的檔案格式為 GIF, PNG, JPG, TIFF, SVG, BMP。`);
           return false;
         }
 
@@ -196,6 +193,21 @@ module.exports = Field.create({
     );
   },
 
+  renderNote () {
+    const defaultNoteJsx = (
+      <FormNote note="系統支援的圖片檔案格式為 GIF, PNG, JPG, TIFF, SVG, BMP。" />
+    );
+    if (!this.props.note) {
+      return defaultNoteJsx;
+    }
+    return (
+      <div>
+        {defaultNoteJsx}
+        <FormNote note={this.props.note} />
+      </div>
+    );
+  },
+
   renderUI () {
     const fileLocation = this.getLocation();
     const fileInputJsx = fileLocation ? null : (
@@ -219,6 +231,7 @@ module.exports = Field.create({
         {fileInputJsx}
         {previewAndDetailJsx}
         {toolbarJsx}
+        {this.renderNote()}
       </FormField>
     );
   },
