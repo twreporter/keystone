@@ -90,12 +90,8 @@ module.exports = Field.create({
         const hour = createdTime.slice(0, 2);
         const minute = createdTime.slice(2, 4);
         const second = createdTime.slice(4, 6);
-
-        if (hour < 12) {
-          createdTime = `上午${hour}:${minute}:${second}`
-        } else {
-          createdTime = `下午${hour}:${minute}:${second}`
-        }
+        const timezone = createdTime.slice(6)
+        createdTime = `${hour}:${minute}:${second}${timezone}`
       }
 
       const resizedTargets = _.get(this.props, 'value.resizedTargets', {})
