@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.1, 2020/11/25
+
+### Commits
+
+* [[`43e77621b4`](https://github.com/twreporter/keystone/commit/43e77621b4)] - Merge pull request #158 from nickhsine/0.9.1 (nick)
+* [[`e0c84d5139`](https://github.com/twreporter/keystone/commit/e0c84d5139)] - Merge pull request #157 from nickhsine/master (nick)
+
 ## 0.9.0, 2020/11/25
 
 ### Notable Changes
