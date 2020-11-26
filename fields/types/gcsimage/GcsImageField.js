@@ -5,7 +5,21 @@ import classnames from 'classnames';
 import get from 'lodash/get';
 import keys from 'lodash/keys'
 import { Button, FormField, FormInput, FormNote } from 'elemental';
-import { replaceGCSUrlOrigin } from '@twreporter/core/lib/utils/storage-url-processor'
+
+const storage = {
+  google: {
+    schema: 'https',
+    hostname: 'storage.googleapis.com',
+    bucket: 'twreporter-multimedia',
+  },
+}
+
+function replaceGCSUrlOrigin (url='') {
+  const { schema, hostname, bucket } = storage.google
+  const toReplace = 'https://www.twreporter.org'
+  const toBeReplaced = `${schema}://${hostname}/${bucket}`
+  return url.replace(toBeReplaced, toReplace)
+}
 
 const _ = {
   get,
@@ -97,7 +111,7 @@ module.exports = Field.create({
       const resizedTargets = _.get(this.props, 'value.resizedTargets', {})
       const resizedJsx = _.keys(resizedTargets)
         .map(resolution => {
-          const url = replaceGCSUrlOrigin(_.get(resizedTargets, [resolution, 'url'], ''), true)
+          const url = replaceGCSUrlOrigin(_.get(resizedTargets, [resolution, 'url'], ''))
           return (
             <p key={`${resolution}-img-url`}>{resolution}: {url}</p>
           )
