@@ -15,26 +15,23 @@
     <meta property="og:site_name" content="KeystoneJS">
     <meta property="og:type" content="article">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,300italic,400,500,700" rel="stylesheet">
-    <link href="/styles/site.min.css" rel="stylesheet">
-    <link href="/styles/prism.css" rel="stylesheet">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link href="styles/site.min.css" rel="stylesheet">
+    <link href="styles/prism.css" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <base href="https://twreporter.github.io/keystone/" target="_blank">
   </head>
   <body>
-    <div class="language-switcher">
-      <div class="container"><a href="/zh/docs" class="language-switcher-option">中文 (Chinese)</a><a href="/docs" class="active language-switcher-option">English</a></div>
-    </div>
     <header role="banner" class="docs-header">
       <div class="container">
         <button type="button" data-toggle="collapse" data-target=".docs-nav__collapse" class="navbar-toggle navbar-toggle-menu"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-        </button><a href="/" title="KeystoneJS" class="keystone-logo"><img src="/images/logo.svg" alt="KeystoneJS" width="207" height="70"></a>
+        </button><a href="." title="KeystoneJS" class="keystone-logo"><img src="images/logo.svg" alt="KeystoneJS" width="207" height="70"></a>
         <nav class="docs-nav">
           <div class="docs-nav__collapse collapse">
             <ul class="docs-nav__nav">
-              <li><a href="/">Home</a></li>
-              <li><a href="/getting-started">Getting Started</a></li>
-              <li class="active"><a href="/docs">Documentation</a></li>
-              <li><a href="/examples">Examples</a></li>
+              <li><a href=".">Home</a></li>
+              <li><a href="getting-started">Getting Started</a></li>
+              <li class="active"><a href="docs">Documentation</a></li>
+              <li><a href="examples">Examples</a></li>
             </ul>
           </div>
         </nav>
@@ -52,17 +49,17 @@
           <div class="col-sm-3">
             <div class="visible-xs">
               <ul class="nav-toggle">
-                <li><a href="/docs_getting-started" class="nav-heading">Starting</a></li>
-                <li class="active"><a href="/docs_configuration" class="nav-heading">Config</a></li>
-                <li><a href="/docs_database" class="nav-heading">Data</a></li>
+                <li><a href="docs_getting-started" class="nav-heading">Starting</a></li>
+                <li class="active"><a href="docs_configuration" class="nav-heading">Config</a></li>
+                <li><a href="docs_database" class="nav-heading">Data</a></li>
               </ul>
             </div>
             <nav class="docs-sidebar hidden-xs">
               <ul class="sidebar-nav">
-                <li><a href="/docs" class="nav-heading">Welcome</a></li>
-                <li><a href="/docs_getting-started" class="nav-heading">Getting Started</a></li>
-                <li class="active"><a href="/docs_configuration" class="nav-heading">Configuration</a></li>
-                <li><a href="/docs_database" class="nav-heading">Database</a></li>
+                <li><a href="docs" class="nav-heading">Welcome</a></li>
+                <li><a href="docs_getting-started" class="nav-heading">Getting Started</a></li>
+                <li class="active"><a href="docs_configuration" class="nav-heading">Configuration</a></li>
+                <li><a href="docs_database" class="nav-heading">Database</a></li>
               </ul>
               <hr/>
               <ul class="sidebar-nav">
@@ -196,7 +193,7 @@
                   <td><code>views</code> <code class="data-type">String</code></td>
                   <td>
                     <p>The path to your application's <strong>view templates</strong>. This is required for using the <code>keystone.View</code> Class, and will also be set on the express app.</p>
-                    <p>If you're following the <a href="/guide#start_structure">recommended project structure</a>, this should be set to <code class="default-value">"/templates/views"</code>.</p>
+                    <p>If you're following the <a href="guide#start_structure">recommended project structure</a>, this should be set to <code class="default-value">"/templates/views"</code>.</p>
                   </td>
                 </tr>
                 <tr>
@@ -231,7 +228,7 @@
                   <td><code>static</code> <code class="data-type">String</code> or <code class="data-type">Array</code></td>
                   <td>
                     <p>One or more paths to your application's static files. Setting this will include the <code>serve-static</code> middleware.</p>
-                    <p>If you're following the <a href="/guide#start_structure">recommended project structure</a>, this should be set to <code class="default-value">'public'</code>.</p>
+                    <p>If you're following the <a href="guide#start_structure">recommended project structure</a>, this should be set to <code class="default-value">'public'</code>.</p>
                   </td>
                 </tr>
                 <tr>
@@ -271,7 +268,7 @@
                   <td><code>favicon</code> <code class="data-type">String</code></td>
                   <td>
                     <p>The path to your application's <strong>favicon</strong>. Setting this will include the <code>serve-favicon</code> middleware. Should be relative to your project's root.</p>
-                    <p>If you're following the <a href="/guide#start_structure">recommended project structure</a>, this should be set to <code class="default-value">"/public/favicon.ico"</code>.</p>
+                    <p>If you're following the <a href="guide#start_structure">recommended project structure</a>, this should be set to <code class="default-value">"/public/favicon.ico"</code>.</p>
                   </td>
                 </tr>
                 <tr>
@@ -517,7 +514,7 @@ keystone.init({
                   </td>
                 </tr>
               </table>
-              <p>For more information about setting up and using database models with Keystone, see the <a href="/docs/database">database guide</a>.</p><a name="options-ui"></a>
+              <p>For more information about setting up and using database models with Keystone, see the <a href="docs/database">database guide</a>.</p><a name="options-ui"></a>
               <h3>Admin UI Options</h3>
               <p>The following options control some ui options for the Admin backend:</p>
               <table class="table">
@@ -622,7 +619,7 @@ keystone.init({
               </table>
               <p class="note">Note if you only want to include Google Analytics tracking in the front-end of your project, you should use different variable names from those above.</p><a name="services-google-maps"></a>
               <h3>Google Maps</h3>
-              <p>Keystone's <a href="/docs/database#field_location">Location field type</a> supports integration with the <a href="https://www.morethanamap.com" target="_blank">Google Maps API</a> to auto-improve values (including discovering latitude and longitude) via the <a href="https://developers.google.com/places/documentation/autocomplete" target="_blank"> Places Autocomplete API</a>.</p>
+              <p>Keystone's <a href="docs/database#field_location">Location field type</a> supports integration with the <a href="https://www.morethanamap.com" target="_blank">Google Maps API</a> to auto-improve values (including discovering latitude and longitude) via the <a href="https://developers.google.com/places/documentation/autocomplete" target="_blank"> Places Autocomplete API</a>.</p>
               <p>To enable these features, <a href="https://code.google.com/apis/console/" target"_blank">obtain an API Key from Google</a> and enable the Google Maps v3 and Google Places APIs for it, then set the following options:</p>
               <table class="table">
                 <col width="270">
@@ -656,7 +653,7 @@ keystone.set('default region', 'au'); // optional, will limit autocomplete resul
               <p class="note">Note that the use of the Places Geocoding API is subject to a query limit of 2,500 geolocation requests per day, except with an enterprise license.</p>
               <p class="note">The Places Geocoding API may only be used in conjunction with a Google map; geocoding results without displaying them on a map is prohibited. Please make sure your Keystone app complies with the Google Maps API License.</p><a name="services-amazons3"></a>
               <h3>Amazon S3</h3>
-              <p>KeystoneJS supports <a href="https://aws.amazon.com/s3/" target="_blank">Amazon S3</a> for file upload and hosting, with the <a href="/docs/database#field_s3file">S3File</a> field type.</p>
+              <p>KeystoneJS supports <a href="https://aws.amazon.com/s3/" target="_blank">Amazon S3</a> for file upload and hosting, with the <a href="docs/database#field_s3file">S3File</a> field type.</p>
               <p>To use the S3File field in your app, <a href="https://portal.aws.amazon.com/gp/aws/developer/subscription/index.html?productCode=AmazonS3" target="_blank">sign up for an account</a>, create an <strong>S3 bucket</strong>, and get your <strong>key</strong> and <strong>secret</strong>.</p>
               <p>Then set the <code>s3 config</code> option to an object containing your configuration (see example below).</p>
               <p>Alternatively, set the <code class="default-value">S3_BUCKET</code>, <code class="default-value">S3_KEY</code> and <code class="default-value">S3_SECRET</code> environment variables.</p>
@@ -673,14 +670,14 @@ keystone.set('default region', 'au'); // optional, will limit autocomplete resul
 
 </code></pre><a name="services-azure"></a>
               <h3>Windows Azure Storage</h3>
-              <p>KeystoneJS supports <a href="https://www.windowsazure.com/" target="_blank">Windows Azure Storage</a> for file upload and hosting, with the <a href="/docs/database#field_azurefile">AzureFile</a> field type.</p>
+              <p>KeystoneJS supports <a href="https://www.windowsazure.com/" target="_blank">Windows Azure Storage</a> for file upload and hosting, with the <a href="docs/database#field_azurefile">AzureFile</a> field type.</p>
               <p>To use the AzureFile field in your app, <a href="https://www.windowsazure.com/pricing/free-trial/" target="_blank">sign up for an account</a>, enter into <a href="https://manage.windowsazure.com/">Azure Management Portal</a>. Create a storage account with new(button), data services, storage. In storage account page get the access (account name, key (valid primary or secondary key)) with the button "manage access key".</p>
               <p>Then set the <code>azurefile config</code> option to an object containing your configuration (see example below).</p>
               <p>Alternatively, set the <code class="default-value">AZURE_STORAGE_ACCOUNT</code> and <code class="default-value">AZURE_STORAGE_ACCESS_KEY</code> environment variables.</p>
               <p>Note that the <strong>account</strong> property should be set to your <strong>storage account</strong>, <em>not your user account</em>.</p>
               <pre><code class="language-javascript">keystone.set('azurefile config', { account: 'my storage account', key: 'secret api key' });</code></pre><a name="services-cloudinary"></a>
               <h3>Cloudinary</h3>
-              <p><a href="https://cloudinary.com" target="_blank">Cloudinary</a> is an image upload / resizing / hosting service that makes it easy to implement image management in your KeystoneJS app using the <a href="/docs/database#field_cloudinaryimage">CloudinaryImage</a> and <a href="/docs/database#field_cloudinaryimages">CloudinaryImages</a> field types.</p>
+              <p><a href="https://cloudinary.com" target="_blank">Cloudinary</a> is an image upload / resizing / hosting service that makes it easy to implement image management in your KeystoneJS app using the <a href="docs/database#field_cloudinaryimage">CloudinaryImage</a> and <a href="docs/database#field_cloudinaryimages">CloudinaryImages</a> field types.</p>
               <p>To use the Cloudinary Image fields in your app, <a href="https://cloudinary.com/users/register/free" target="_blank">sign up for an account</a> (Cloudinary offers a free tier with up to 500MB storage, 50,000 images and 1GB data transfer) and get your <strong>cloud name</strong>, <strong>api key</strong> and <strong>api secret</strong>.</p>
               <p>Then set the <code>cloudinary config</code> option to
                 <ul>
@@ -706,7 +703,7 @@ keystone.set('default region', 'au'); // optional, will limit autocomplete resul
               </p>
               <p class="note">
                  
-                You may override the default Cloudinary folder by setting the <code class="default-value">folder</code> option directly on a <code>CloudinaryImage</code> field (see <a href="/docs/database#fieldtypes-cloudinaryimage">CloudinaryImage</a> options) or a <code>CloudinaryImages</code> field (see <a href="/docs/database#fieldtypes-cloudinaryimages">CloudinaryImages</a> options).<br><br>If you want Cloudinary to automatically create folders when the <code>cloudinary folders</code> option is set to <code class="default-value">true</code>, make sure you enable "Auto-create folders" in your Cloudinary account "Upload Settings".
+                You may override the default Cloudinary folder by setting the <code class="default-value">folder</code> option directly on a <code>CloudinaryImage</code> field (see <a href="docs/database#fieldtypes-cloudinaryimage">CloudinaryImage</a> options) or a <code>CloudinaryImages</code> field (see <a href="docs/database#fieldtypes-cloudinaryimages">CloudinaryImages</a> options).<br><br>If you want Cloudinary to automatically create folders when the <code>cloudinary folders</code> option is set to <code class="default-value">true</code>, make sure you enable "Auto-create folders" in your Cloudinary account "Upload Settings".
               </p>
               <p>If you are serving over HTTPS and want to ensure that cloudinary images are also serverd over HTTPS, set the <code>cloudinary secure</code> option to <code class="default-value">true</code>.</p>
               <pre><code class="language-javascript">keystone.set('cloudinary config', { cloud_name: 'my-cloud', api_key: 'abc', api_secret: '123' });
@@ -723,7 +720,7 @@ keystone.set('cloudinary folders', true);
 keystone.set('cloudinary secure', true);</code></pre><a name="services-embedly"></a>
               <h3>Embed.ly</h3>
               <p><a href="https://embed.ly" target="_blank">Embed.ly</a> is a service that will parse a url (e.g. Youtube embed link) and return a whole lot of useful information, like the provider name, summary metadata, width and height of videos, as well as a clean link to use for embedding media in your views. They offer a free plan for up to 5,000 urls per month.</p>
-              <p>The <a href="/docs/database#field_embedly">Embedly field type</a> is an easy way to integrate their API with your KeystoneJS app.</p>
+              <p>The <a href="docs/database#field_embedly">Embedly field type</a> is an easy way to integrate their API with your KeystoneJS app.</p>
               <p>To configure KeystoneJS to support the Embed.ly API, simply <a href="https://app.embed.ly/signup">sign up for an account</a>, get your api key, and set the <code>embedly api key</code> option.</p>
               <p>This option will default to the <code class="default-value">EMBEDLY_API_KEY</code> environment variable if it is set.</p>
               <pre><code class="language-javascript">keystone.set('embedly api key', 'your-key');</code></pre><a name="services-mandrill"></a>
@@ -768,12 +765,12 @@ exports = module.exports = function(done) {
       <div class="container">
         <p>Created by <a href="https://twitter.com/jedwatson" target="_blank">@jedwatson</a>, <a href="https://twitter.com/bladey" target="_blank">@bladey</a> and <a href="https://twitter.com/jossmackison" target="_blank">@jossmackison</a> at <a href="https://www.thinkmill.com.au" target="_blank">Thinkmill</a>, and other <a href="https://github.com/keystonejs/keystone/contributors" target="_blank">contributors</a> under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a></p>
         <ul class="list-inline">
-          <li><a href="/getting-started" title="KeystoneJS Getting Started">Getting Started</a></li>
-          <li><a href="/docs" title="KeystoneJS Documentation">Documentation</a></li>
+          <li><a href="getting-started" title="KeystoneJS Getting Started">Getting Started</a></li>
+          <li><a href="docs" title="KeystoneJS Documentation">Documentation</a></li>
           <li><a href="https://groups.google.com/forum/#!forum/keystonejs" target="_blank" title="KeystoneJS Google Group">Google Group</a></li>
           <li><a href="https://github.com/keystonejs/keystone" target="_blank" title="Github Project (new window)">Github Project</a></li>
           <li><a href="https://demo.keystonejs.com" target="_blank" title="Demo Website (new window)">Demo Website</a></li>
-          <li><a href="/examples" title="KeystoneJS Database">Examples</a></li>
+          <li><a href="examples" title="KeystoneJS Database">Examples</a></li>
         </ul>
       </div>
     </div>
@@ -787,10 +784,10 @@ exports = module.exports = function(done) {
         </div>
       </div>
     </div>
-    <script src="/js/lib/jquery/jquery-1.10.2.min.js"></script>
-    <script src="/js/lib/bootstrap/collapse.js"></script>
-    <script src="/js/lib/prism/prism.min.js"></script>
-    <script src="/js/anchor-links.js"></script>
+    <script src="js/lib/jquery/jquery-1.10.2.min.js"></script>
+    <script src="js/lib/bootstrap/collapse.js"></script>
+    <script src="js/lib/prism/prism.min.js"></script>
+    <script src="js/anchor-links.js"></script>
     <script>
       !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
       

@@ -15,26 +15,23 @@
     <meta property="og:site_name" content="KeystoneJS">
     <meta property="og:type" content="article">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,300italic,400,500,700" rel="stylesheet">
-    <link href="/styles/site.min.css" rel="stylesheet">
-    <link href="/styles/prism.css" rel="stylesheet">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link href="styles/site.min.css" rel="stylesheet">
+    <link href="styles/prism.css" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <base href="https://twreporter.github.io/keystone/" target="_blank">
   </head>
   <body>
-    <div class="language-switcher">
-      <div class="container"><a href="/zh/docs" class="language-switcher-option">中文 (Chinese)</a><a href="/docs" class="active language-switcher-option">English</a></div>
-    </div>
     <header role="banner" class="docs-header">
       <div class="container">
         <button type="button" data-toggle="collapse" data-target=".docs-nav__collapse" class="navbar-toggle navbar-toggle-menu"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-        </button><a href="/" title="KeystoneJS" class="keystone-logo"><img src="/images/logo.svg" alt="KeystoneJS" width="207" height="70"></a>
+        </button><a href="." title="KeystoneJS" class="keystone-logo"><img src="images/logo.svg" alt="KeystoneJS" width="207" height="70"></a>
         <nav class="docs-nav">
           <div class="docs-nav__collapse collapse">
             <ul class="docs-nav__nav">
-              <li><a href="/">Home</a></li>
-              <li><a href="/getting-started">Getting Started</a></li>
-              <li class="active"><a href="/docs">Documentation</a></li>
-              <li><a href="/examples">Examples</a></li>
+              <li><a href=".">Home</a></li>
+              <li><a href="getting-started">Getting Started</a></li>
+              <li class="active"><a href="docs">Documentation</a></li>
+              <li><a href="examples">Examples</a></li>
             </ul>
           </div>
         </nav>
@@ -52,17 +49,17 @@
           <div class="col-sm-3">
             <div class="visible-xs">
               <ul class="nav-toggle">
-                <li><a href="/docs_getting-started" class="nav-heading">Starting</a></li>
-                <li><a href="/docs_configuration" class="nav-heading">Config</a></li>
-                <li class="active"><a href="/docs_database" class="nav-heading">Data</a></li>
+                <li><a href="docs_getting-started" class="nav-heading">Starting</a></li>
+                <li><a href="docs_configuration" class="nav-heading">Config</a></li>
+                <li class="active"><a href="docs_database" class="nav-heading">Data</a></li>
               </ul>
             </div>
             <nav class="docs-sidebar hidden-xs">
               <ul class="sidebar-nav">
-                <li><a href="/docs" class="nav-heading">Welcome</a></li>
-                <li><a href="/docs_getting-started" class="nav-heading">Getting Started</a></li>
-                <li><a href="/docs_configuration" class="nav-heading">Configuration</a></li>
-                <li class="active"><a href="/docs_database" class="nav-heading">Database</a></li>
+                <li><a href="docs" class="nav-heading">Welcome</a></li>
+                <li><a href="docs_getting-started" class="nav-heading">Getting Started</a></li>
+                <li><a href="docs_configuration" class="nav-heading">Configuration</a></li>
+                <li class="active"><a href="docs_database" class="nav-heading">Database</a></li>
               </ul>
               <hr/>
               <ul class="sidebar-nav">
@@ -167,7 +164,7 @@ Post.defaultColumns = 'title, state|20%, author, publishedAt|15%'
 Post.register();</code></pre>
               <p class="note">This example implements the optional <code>map</code>, <code>autokey</code> and <code>defaultSort</code> options, described below.</p>
               <p class="note">It also specifies <code>title</code>, <code>state</code>, <code>author</code> and <code>publishedAt</code> as the default columns to display in the Admin UI, with state and publishedAt being given column widths.</p>
-              <p class="note">The <code>author</code> field is a relationship with the <code>User</code> model, as described in the <a href="/guide#models_users">getting started guide</a>.</p><a name="lists-options"></a>
+              <p class="note">The <code>author</code> field is a relationship with the <code>User</code> model, as described in the <a href="guide#models_users">getting started guide</a>.</p><a name="lists-options"></a>
               <h3>Options</h3>
               <p>Lists support the following options:</p>
               <table class="table">
@@ -747,10 +744,10 @@ item._.email.gravatarUrl(200,'mm','r'); // "//www.gravatar.com/avatar/74a0071e5f
               <pre><code class="language-javascript">{ type: Types.Html, wysiwyg: true }</code></pre>
               <div class="options">
                 <h5>Options</h5>
-                <p><code>wysiwyg</code> <code class="data-type">Boolean</code> - whether to display a WYSIWYG editor in the Admin UI  - for customizations of the editor see the <a href="/docs/configuration/#options-ui">Admin UI Options</a>.</p>
+                <p><code>wysiwyg</code> <code class="data-type">Boolean</code> - whether to display a WYSIWYG editor in the Admin UI  - for customizations of the editor see the <a href="docs/configuration/#options-ui">Admin UI Options</a>.</p>
                 <p><code>height</code> <code class="data-type">Number</code> - the height of the field (in pixels)</p>
               </div>
-              <p>See the <a href="/docs/configuration#options-ui">Admin UI Options</a> for global configuration options that can be used to customise the WYSIWYG editor.</p><a name="fieldtypes-key"></a>
+              <p>See the <a href="docs/configuration#options-ui">Admin UI Options</a> for global configuration options that can be used to customise the WYSIWYG editor.</p><a name="fieldtypes-key"></a>
               <h3><code>Key</code></h3>
               <h4><code class="data-type">String</code> &mdash; Displayed as a text field in the Admin UI</h4>
               <p>Automatically converts input to a valid key (no spaces or special characters). White space is replaced with a separator.</p>
@@ -763,7 +760,7 @@ item._.email.gravatarUrl(200,'mm','r'); // "//www.gravatar.com/avatar/74a0071e5f
               <h4><code class="data-type">Object</code> &mdash; Displayed as a combination of fields in the Admin UI</h4>
               <p>Contains a standard set of strings for storing an address, and a longitude / latitude point with a <code class="data-type">2dsphere</code> index.</p>
               <p>Also provides autocomplete functionality using Google's Places API (requires a Google Maps API Key to be provided, must only be used in accordance with Google's terms of service).</p>
-              <p>Google Places integration requires the <code>google api key</code> option to be set for Keystone. See the <a href="/docs/configuration#services-google">Google configuration documentation</a> for details.</p>
+              <p>Google Places integration requires the <code>google api key</code> option to be set for Keystone. See the <a href="docs/configuration#services-google">Google configuration documentation</a> for details.</p>
               <pre><code class="language-javascript">{ type: Types.Location, defaults: { country: 'Australia' } }</code></pre>
               <p class="note">Note: the schema paths are based on Australian address formats, and should be updated to be more appropriate for other international formats. If you have feedback on how the structure should be internationalised, please open a ticket.</p>
               <div class="options">
@@ -981,7 +978,7 @@ item._.url.format(); // "keystonejs.com"</code></pre>
               <h3><code>CloudinaryImage</code></h3>
               <h4><code class="data-type">Object</code> &mdash; Displayed as an image upload field in the Admin UI</h4>
               <p>Automatically manages images stored in <a href="https://cloudinary.com" target="_blank">Cloudinary</a>, including uploading, resizing and deleting.</p>
-              <p>See the <a href="/docs/configuration#services-cloudinary">Cloudinary configuration documentation</a> for details on how to set up Cloudinary in KeystoneJS.</p>
+              <p>See the <a href="docs/configuration#services-cloudinary">Cloudinary configuration documentation</a> for details on how to set up Cloudinary in KeystoneJS.</p>
               <pre><code class="language-javascript">{ type: Types.CloudinaryImage }</code></pre>
               <div class="options">
                 <h5>Options</h5>
@@ -1039,7 +1036,7 @@ item._.url.format(); // "keystonejs.com"</code></pre>
               <p>Automatically retrieves data from the <a href="https://embed.ly" target="_blank">Embedly</a> API about the value of another field (specified with the <code>from</code> option).</p>
               <p>It stores the retrieved data (which includes the provider, media type, full URL, HTML embed code, width, height, thumbnail picture and more).</p>
               <p>The api call to retrieve the data is implemented as a pre-save hook, and is only triggered if the <strong>from path</strong> value has changed.</p>
-              <p>See the <a href="/docs/configuration#services-embedly">Embed.ly configuration documentation</a> for details on how to set up Embed.ly in KeystoneJS.</p>
+              <p>See the <a href="docs/configuration#services-embedly">Embed.ly configuration documentation</a> for details on how to set up Embed.ly in KeystoneJS.</p>
               <pre><code class="language-javascript">{ type: Types.Embedly, from: 'path' }</code></pre>
               <div class="options">
                 <h5>Options</h5>
@@ -1195,7 +1192,7 @@ item._.url.format(); // "keystonejs.com"</code></pre>
                 </ul>
               </div>
               <h2>More examples</h2>
-              <p>See the <a href="/examples">Examples</a> page for projects that demonstrate real-world usage of the various list options and field types.</p>
+              <p>See the <a href="examples">Examples</a> page for projects that demonstrate real-world usage of the various list options and field types.</p>
             </div>
           </div>
         </div>
@@ -1205,12 +1202,12 @@ item._.url.format(); // "keystonejs.com"</code></pre>
       <div class="container">
         <p>Created by <a href="https://twitter.com/jedwatson" target="_blank">@jedwatson</a>, <a href="https://twitter.com/bladey" target="_blank">@bladey</a> and <a href="https://twitter.com/jossmackison" target="_blank">@jossmackison</a> at <a href="https://www.thinkmill.com.au" target="_blank">Thinkmill</a>, and other <a href="https://github.com/keystonejs/keystone/contributors" target="_blank">contributors</a> under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a></p>
         <ul class="list-inline">
-          <li><a href="/getting-started" title="KeystoneJS Getting Started">Getting Started</a></li>
-          <li><a href="/docs" title="KeystoneJS Documentation">Documentation</a></li>
+          <li><a href="getting-started" title="KeystoneJS Getting Started">Getting Started</a></li>
+          <li><a href="docs" title="KeystoneJS Documentation">Documentation</a></li>
           <li><a href="https://groups.google.com/forum/#!forum/keystonejs" target="_blank" title="KeystoneJS Google Group">Google Group</a></li>
           <li><a href="https://github.com/keystonejs/keystone" target="_blank" title="Github Project (new window)">Github Project</a></li>
           <li><a href="https://demo.keystonejs.com" target="_blank" title="Demo Website (new window)">Demo Website</a></li>
-          <li><a href="/examples" title="KeystoneJS Database">Examples</a></li>
+          <li><a href="examples" title="KeystoneJS Database">Examples</a></li>
         </ul>
       </div>
     </div>
@@ -1224,10 +1221,10 @@ item._.url.format(); // "keystonejs.com"</code></pre>
         </div>
       </div>
     </div>
-    <script src="/js/lib/jquery/jquery-1.10.2.min.js"></script>
-    <script src="/js/lib/bootstrap/collapse.js"></script>
-    <script src="/js/lib/prism/prism.min.js"></script>
-    <script src="/js/anchor-links.js"></script>
+    <script src="js/lib/jquery/jquery-1.10.2.min.js"></script>
+    <script src="js/lib/bootstrap/collapse.js"></script>
+    <script src="js/lib/prism/prism.min.js"></script>
+    <script src="js/anchor-links.js"></script>
     <script>
       !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
       
