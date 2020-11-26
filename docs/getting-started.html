@@ -15,26 +15,23 @@
     <meta property="og:site_name" content="KeystoneJS">
     <meta property="og:type" content="article">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,300italic,400,500,700" rel="stylesheet">
-    <link href="/styles/site.min.css" rel="stylesheet">
-    <link href="/styles/prism.css" rel="stylesheet">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link href="styles/site.min.css" rel="stylesheet">
+    <link href="styles/prism.css" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <base href="https://twreporter.github.io/keystone/" target="_blank">
   </head>
   <body>
-    <div class="language-switcher">
-      <div class="container"><a href="/zh/getting-started" class="language-switcher-option">中文 (Chinese)</a><a href="/getting-started" class="active language-switcher-option">English</a></div>
-    </div>
     <header role="banner" class="docs-header">
       <div class="container">
         <button type="button" data-toggle="collapse" data-target=".docs-nav__collapse" class="navbar-toggle navbar-toggle-menu"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-        </button><a href="/" title="KeystoneJS" class="keystone-logo"><img src="/images/logo.svg" alt="KeystoneJS" width="207" height="70"></a>
+        </button><a href="." title="KeystoneJS" class="keystone-logo"><img src="images/logo.svg" alt="KeystoneJS" width="207" height="70"></a>
         <nav class="docs-nav">
           <div class="docs-nav__collapse collapse">
             <ul class="docs-nav__nav">
-              <li><a href="/">Home</a></li>
-              <li class="active"><a href="/getting-started">Getting Started</a></li>
-              <li><a href="/docs">Documentation</a></li>
-              <li><a href="/examples">Examples</a></li>
+              <li><a href=".">Home</a></li>
+              <li class="active"><a href="getting-started">Getting Started</a></li>
+              <li><a href="docs">Documentation</a></li>
+              <li><a href="examples">Examples</a></li>
             </ul>
           </div>
         </nav>
@@ -43,7 +40,7 @@
     <div class="page-header">
       <div class="container">
         <h1>Get Started</h1>
-        <p class="lead">The fastest way to create a Node.js website. For a deep dive, <a href="/docs/getting-started">check out the docs.</a></p>
+        <p class="lead">The fastest way to create a Node.js website. For a deep dive, <a href="docs/getting-started">check out the docs.</a></p>
       </div>
     </div>
     <div class="docs-body">
@@ -63,9 +60,9 @@
         </div>
         <div class="gs-guide-figure gs-guide-figure--prerequisites hidden-xs">
           <div class="column nodejs"><a href="https://nodejs.org/download/" target="_blank">
-              <div class="logo"><img src="/images/getting-started/nodejs-logo.png" alt="Node.js logo" width="245" height="66"></div><span class="prerequisite">Download and install the Node.js binaries for your platform from the Node.js download page.</span></a></div>
+              <div class="logo"><img src="images/getting-started/nodejs-logo.png" alt="Node.js logo" width="245" height="66"></div><span class="prerequisite">Download and install the Node.js binaries for your platform from the Node.js download page.</span></a></div>
           <div class="column mongodb"><a href="https://docs.mongodb.org/manual/installation/" target="_blank">
-              <div class="logo"><img src="/images/getting-started/mongodb-logo.png" alt="MongoDB logo" width="294" height="84"></div><span class="prerequisite">See the MongoDB installation guide for how to install MongoDB on your operating system.</span></a></div>
+              <div class="logo"><img src="images/getting-started/mongodb-logo.png" alt="MongoDB logo" width="294" height="84"></div><span class="prerequisite">See the MongoDB installation guide for how to install MongoDB on your operating system.</span></a></div>
         </div>
         <div class="gs-guide-section">
           <div class="container-sm">
@@ -89,9 +86,9 @@
           </div>
         </div>
         <div class="gs-guide-figure gs-guide-figure--commands hidden-xs">
-          <div class="window safari"><img src="/images/getting-started/commands-safari.png" alt="Safari window" width="942" height="616"></div>
+          <div class="window safari"><img src="images/getting-started/commands-safari.png" alt="Safari window" width="942" height="616"></div>
           <div class="window terminal">
-            <div class="terminal-cursor"></div><img src="/images/getting-started/commands-terminal.png" alt="Terminal window" width="650" height="437">
+            <div class="terminal-cursor"></div><img src="images/getting-started/commands-terminal.png" alt="Terminal window" width="650" height="437">
           </div>
           <div class="figure-shadow"></div>
         </div>
@@ -106,11 +103,11 @@
               <pre class="command-line">node keystone</pre>
               <p class="gs-guide__subtitle">Then open <a href="https://localhost:3000" target="_blank">http://localhost:3000</a> to view it in your browser.</p>
               <p class="gs-guide__subtitle">If you want to see what the generator actually did take a look at our getting started guide, it'll walk you through the manual setup process. This is particularly helpful if you're new to Node.js.</p>
-              <p class="gs-guide__subtitle"><a href="/docs/getting-started">View the getting started guide &rarr;</a></p>
+              <p class="gs-guide__subtitle"><a href="docs/getting-started">View the getting started guide &rarr;</a></p>
             </div>
           </div>
         </div>
-        <div class="gs-guide-figure gs-guide-figure--finished wow-much-find hidden-xs"><img src="/images/getting-started/commands-safari.png" alt="Safari window" width="1680" height="600" class="sr-only"></div>
+        <div class="gs-guide-figure gs-guide-figure--finished wow-much-find hidden-xs"><img src="images/getting-started/commands-safari.png" alt="Safari window" width="1680" height="600" class="sr-only"></div>
         <div class="gs-guide-section">
           <div class="container-sm">
             <div class="gs-guide__header">
@@ -144,12 +141,12 @@ sudo chown -R $USER /usr/lib/node_modules/</pre>
       <div class="container">
         <p>Created by <a href="https://twitter.com/jedwatson" target="_blank">@jedwatson</a>, <a href="https://twitter.com/bladey" target="_blank">@bladey</a> and <a href="https://twitter.com/jossmackison" target="_blank">@jossmackison</a> at <a href="https://www.thinkmill.com.au" target="_blank">Thinkmill</a>, and other <a href="https://github.com/keystonejs/keystone/contributors" target="_blank">contributors</a> under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a></p>
         <ul class="list-inline">
-          <li><a href="/getting-started" title="KeystoneJS Getting Started">Getting Started</a></li>
-          <li><a href="/docs" title="KeystoneJS Documentation">Documentation</a></li>
+          <li><a href="getting-started" title="KeystoneJS Getting Started">Getting Started</a></li>
+          <li><a href="docs" title="KeystoneJS Documentation">Documentation</a></li>
           <li><a href="https://groups.google.com/forum/#!forum/keystonejs" target="_blank" title="KeystoneJS Google Group">Google Group</a></li>
           <li><a href="https://github.com/keystonejs/keystone" target="_blank" title="Github Project (new window)">Github Project</a></li>
           <li><a href="https://demo.keystonejs.com" target="_blank" title="Demo Website (new window)">Demo Website</a></li>
-          <li><a href="/examples" title="KeystoneJS Database">Examples</a></li>
+          <li><a href="examples" title="KeystoneJS Database">Examples</a></li>
         </ul>
       </div>
     </div>
@@ -163,10 +160,10 @@ sudo chown -R $USER /usr/lib/node_modules/</pre>
         </div>
       </div>
     </div>
-    <script src="/js/lib/jquery/jquery-1.10.2.min.js"></script>
-    <script src="/js/lib/bootstrap/collapse.js"></script>
-    <script src="/js/lib/prism/prism.min.js"></script>
-    <script src="/js/anchor-links.js"></script>
+    <script src="js/lib/jquery/jquery-1.10.2.min.js"></script>
+    <script src="js/lib/bootstrap/collapse.js"></script>
+    <script src="js/lib/prism/prism.min.js"></script>
+    <script src="js/anchor-links.js"></script>
     <script>
       !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
       
