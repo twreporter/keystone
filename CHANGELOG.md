@@ -2,12 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.2, 2020/11/27
+
+### Notable Changes
+
+- docs: add keystone@0.3 documentation
+- [refactor: yarn remove @twreporter/core](https://github.com/twreporter/keystone/pull/164)
+
+### Commits
+* [[`cf64aaca72`](https://github.com/twreporter/keystone/commit/cf64aaca72)] - Merge pull request #164 from nickhsine/remove-core (nick)
+* [[`8f05f41535`](https://github.com/twreporter/keystone/commit/8f05f41535)] - **refactor**: yarn remove @twreporter/core (nickhsine)
+* [[`fe4e7d0fbe`](https://github.com/twreporter/keystone/commit/fe4e7d0fbe)] - Merge pull request #163 from nickhsine/docs (nick)
+* [[`540eb015a5`](https://github.com/twreporter/keystone/commit/540eb015a5)] - **docs**: remove unused files (nickhsine)
+* [[`caa800f160`](https://github.com/twreporter/keystone/commit/caa800f160)] - **docs**: fix url path (nickhsine)
+* [[`05a0b2639d`](https://github.com/twreporter/keystone/commit/05a0b2639d)] - Merge pull request #162 from nickhsine/docs (nick)
+* [[`3eccf0e1db`](https://github.com/twreporter/keystone/commit/3eccf0e1db)] - **docs**: add \<base\> to fix documentation link error (nickhsine)
+* [[`85487b0ba0`](https://github.com/twreporter/keystone/commit/85487b0ba0)] - **docs**: delete unused docs (nickhsine)
+* [[`ff06ace593`](https://github.com/twreporter/keystone/commit/ff06ace593)] - Merge pull request #161 from nickhsine/docs (nick)
+* [[`d4c8aabc1f`](https://github.com/twreporter/keystone/commit/d4c8aabc1f)] - **chore**: mv website to docs (nickhsine)
+* [[`53c818d1d8`](https://github.com/twreporter/keystone/commit/53c818d1d8)] - Merge pull request #160 from nickhsine/docs (nick)
+* [[`a976cdf19b`](https://github.com/twreporter/keystone/commit/a976cdf19b)] - **docs**: keystone documentation (nickhsine)
+* [[`3ad703e7bd`](https://github.com/twreporter/keystone/commit/3ad703e7bd)] - Merge pull request #159 from nickhsine/master (nick)
+
 ## 0.9.1, 2020/11/25
 
 ### Commits
 
 * [[`43e77621b4`](https://github.com/twreporter/keystone/commit/43e77621b4)] - Merge pull request #158 from nickhsine/0.9.1 (nick)
 * [[`e0c84d5139`](https://github.com/twreporter/keystone/commit/e0c84d5139)] - Merge pull request #157 from nickhsine/master (nick)
+* [[`8ce7b127de`](https://github.com/twreporter/keystone/commit/8ce7b127de)] - **refactor**: update GcsImageField.js (nickhsine)
 
 ## 0.9.0, 2020/11/25
 
