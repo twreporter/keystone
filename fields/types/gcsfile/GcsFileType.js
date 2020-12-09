@@ -231,7 +231,7 @@ gcsfile.prototype.uploadFile = function (item, file, update, callback) {
 	var ONE_YEAR = 60 * 60 * 24 * 365;
 	var field = this;
 	var gcsDir = field.options.destination || '';
-	var isPublicRead = field.options.publicRead || false;
+	var publicRead = field.options.publicRead || false;
 	var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : '';
 	var filename = prefix + file.name;
 	var filetype = file.mimetype || file.type;
@@ -251,7 +251,7 @@ gcsfile.prototype.uploadFile = function (item, file, update, callback) {
 		gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
 			destination: gcsDir + filename,
 			filetype: filetype,
-			isPublicRead: isPublicRead,
+			publicRead: publicRead,
 			cacheControl: 'public, max-age=' + ONE_YEAR,
 		}).then(function (response) {
 			var fileData = {
