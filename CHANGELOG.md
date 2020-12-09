@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.3-rc.0
+
+### Notable Changes
+
+- fix: set file to public if needed when the upload is complete
+
+### Commits
+* [[`6a5c6aa9f7`](https://github.com/twreporter/keystone/commit/6a5c6aa9f7)] - Merge pull request #166 from taylrj/publicRead (Tai-Jiun Fang)
+* [[`3cf2985696`](https://github.com/twreporter/keystone/commit/3cf2985696)] - **fix**: set file to public if needed when the upload is complete (Taylor Fang)
+* [[`7760ab3c22`](https://github.com/twreporter/keystone/commit/7760ab3c22)] - **fix**: update attribute typo (Taylor Fang)
+* [[`f42597240c`](https://github.com/twreporter/keystone/commit/f42597240c)] - Merge pull request #165 from nickhsine/master (nick)
+
 ## 0.9.2, 2020/11/27
 
 ### Notable Changes
