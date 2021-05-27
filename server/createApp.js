@@ -18,7 +18,7 @@ module.exports = function createApp (keystone, express) {
 	var app = keystone.app;
 
 	keystone.initDatabase();
-	keystone.initExpressSession();
+	keystone.initExpressSession(keystone.mongoose);
 
 	require('./initTrustProxy')(keystone, app);
 	require('./initViewEngine')(keystone, app);
