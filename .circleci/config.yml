@@ -52,9 +52,9 @@ workflows:
   build-and-publish:
     jobs:
       - build:
-        filters:
-          tags:
-            only: /^v\d+\.\d+\.\d+(-rc\.\d+)?$/
+          filters:
+            tags:
+              only: /^v\d+\.\d+\.\d+(-rc\.\d+)?$/
       - publish:
           context: twreporter
           requires:
