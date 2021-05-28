@@ -51,7 +51,10 @@ workflows:
   version: 2.1
   build-and-publish:
     jobs:
-      - build
+      - build:
+        filters:
+          tags:
+            only: /^v\d+\.\d+\.\d+(-rc\.\d+)?$/
       - publish:
           context: twreporter
           requires:
