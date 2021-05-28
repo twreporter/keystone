@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.4-rc.1
+
+## Notable Changes
+- fix: enable mocha test([#170](https://github.com/twreporter/keystone/pull/170))
+
+- refactor:
+  - change `cookie signin` option([#169](https://github.com/twreporter/keystone/pull/169))
+  - use mongoose as session storage driver([#171](https://github.com/twreporter/keystone/pull/171))
+
+- ci
+  - add circleci to publish @twreporter/keystone([#172](https://github.com/twreporter/keystone/pull/172), [#173](https://github.com/twreporter/keystone/pull/173))
+
+### Commits
+* [[`d9d1f2098f`](https://github.com/twreporter/keystone/commit/d9d1f2098f)] - **ci**: fix .npmrc path and incorrect publish trigger (Ching-Yang, Tseng)
+* [[`63ee015aa5`](https://github.com/twreporter/keystone/commit/63ee015aa5)] - **ci**: add circleci to build and publish the package (Ching-Yang, Tseng)
+* [[`a981a8116b`](https://github.com/twreporter/keystone/commit/a981a8116b)] - **fix**: utilize mongoose as session driver (Ching-Yang, Tseng)
+* [[`4b1739ad9b`](https://github.com/twreporter/keystone/commit/4b1739ad9b)] - **fix**: enable mocha test (Ching-Yang, Tseng)
+* [[`18aa6ed4c0`](https://github.com/twreporter/keystone/commit/18aa6ed4c0)] - **refactor**: change the `cookie signin` option (Ching-Yang, Tseng)
+
 ## 0.9.3, 2020/12/09
 
 ### Notable Changes
@@ -144,7 +163,7 @@ All notable changes to this project will be documented in this file. See [standa
 - bug fix:
   - can not create Keystone global object on client side
 
-- miscellaneous: 
+- miscellaneous:
   - import only needed lodash functions without importing all
 
 ### Commits
@@ -157,7 +176,7 @@ All notable changes to this project will be documented in this file. See [standa
 - [[5611b66](https://github.com/twreporter/keystone/commit/5611b667c930c5e9788c3d04f94831ac0deeb727)] - upgrade dep watchify(nickhsine)
 - [[846c74a](https://github.com/twreporter/keystone/commit/846c74a792319a02eae0bd5aab7d9372cc2b3b47)] - update yarn.lock(nickhsine)
 - [[985e53d](https://github.com/twreporter/keystone/commit/985e53d4db046e73e67e2602acfe9567e1f55db2)] - update package.json#version to 0.7.1(nickhsine)
-- 
+-
 
 ## 0.7.0 2018/11/20
 - Update dependencies
@@ -174,14 +193,14 @@ All notable changes to this project will be documented in this file. See [standa
 - Update .gitignore
 - Add two-step verification to signin
 
-## 0.6.1 2017/10/23 
+## 0.6.1 2017/10/23
 - Replace twreporter-react-components by @twreporter/react-article-components
 
 ## 0.6.0 2017/10/11
 - Use npm-scope. Rename twreporter-keystone to @twreporter/keystone
 
 ## 0.5.37 2017/10/02
-- Add two more position between title and leading image 
+- Add two more position between title and leading image
 
 ## 0.5.36 2017/09/21
 - Pass filetype and filename to resize function while resizing gcsimage and gcsimages
@@ -193,7 +212,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Bug fix. Date will turn back to the first value after modifying other fields
 
 ## 0.5.33 2017/08/24
-- Multiline for input of image description 
+- Multiline for input of image description
 
 ## 0.5.32 2017/03/20
 - [Update] Add relatedsForamt and titlePosition types for multiple styles of topics
@@ -214,7 +233,7 @@ All notable changes to this project will be documented in this file. See [standa
 - [Add] use http-proxy to proxy preview article page request to other server
 
 ## 0.5.23 2016/09/13
-- Add Cache-Control for uploading images and audios onto GCS(a week)  
+- Add Cache-Control for uploading images and audios onto GCS(a week)
 
 ## 0.5.22 2016/09/01
 - Bug fix. Store ordered-list and unordered-list in the right way
