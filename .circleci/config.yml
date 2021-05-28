@@ -1,0 +1,60 @@
+version: 2.1
+executors:
+  node-executor:
+    docker:
+      - image: circleci/node:10.15
+    working_directory: ~/keystone
+
+commands:
+  set-npm-auth:
+    description: "Set NPM authentication"
+    steps:
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+
+  install-deps:
+    description: "Install build dependencies"
+    steps:
+      - restore_cache:
+          keys:
+            - v1-dependencies-build-{{ checksum "yarn.lock" }}
+      - run: yarn install --forzen-lockfile
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-build-{{ checksum "yarn.lcok" }}
+
+jobs:
+  build:
+     executor: node-executor
+     steps:
+       - checkout
+       - install-deps
+       - run: yarn build
+       - persist_to_workspace:
+          root: ~/keystone
+          paths:
+            - ./*
+  publish:
+    executor: node-executor
+    working_directory: ~/keystone
+    steps:
+      - attach_workspace:
+          at: .
+      - set-npm-auth
+      - run: npm publish
+
+workflows:
+  version: 2.1
+  build-and-publish:
+    jobs:
+      - build
+      - publish:
+          context: twreporter
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v\d+\.\d+\.\d+(-rc\.\d+)?$/
+            branches:
+              only:
+                - master

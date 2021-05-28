@@ -1,7 +1,6 @@
 ![KeystoneJS](http://keystonejs.com/images/logo.svg)
 ===================================
-
-[![Build Status](https://travis-ci.org/keystonejs/keystone.svg?branch=master)](https://travis-ci.org/keystonejs/keystone)
+[![CircleCI](https://circleci.com/gh/twreporter/keystone/tree/master.svg?style=shield)](https://circleci.com/gh/twreporter/keystone/tree/master)
 
 [KeystoneJS](http://keystonejs.com) is a powerful Node.js content management system and web app framework built on [express](http://expressjs.com) and [mongoose](http://mongoosejs.com). Keystone makes it easy to create sophisticated web sites and apps, and comes with a beautiful auto-generated Admin UI.
 
@@ -168,7 +167,7 @@ Keystone's field types include:
 *	[Text](http://keystonejs.com/docs/database/#fieldtypes-text)
 *	[Textarea](http://keystonejs.com/docs/database/#fieldtypes-textarea)
 *	[Url](http://keystonejs.com/docs/database/#fieldtypes-url)
-*	[Azure File](http://keystonejs.com/docs/database/#fieldtypes-azurefile)  
+*	[Azure File](http://keystonejs.com/docs/database/#fieldtypes-azurefile)
 *	[CloudinaryImage](http://keystonejs.com/docs/database/#fieldtypes-cloudinaryimage)
 *	[CloudinaryImages](http://keystonejs.com/docs/database/#fieldtypes-cloudinaryimages)
 *	[Embedly](http://keystonejs.com/docs/database/#fieldtypes-embedly)
