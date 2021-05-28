@@ -1,15 +1,20 @@
 version: 2.1
+parameters:
+  working-directory:
+    type: string
+    default: "~/keystone"
+
 executors:
   node-executor:
     docker:
       - image: circleci/node:10.15
-    working_directory: ~/keystone
+    working_directory: << pipeline.parameters.working-directory >>
 
 commands:
   set-npm-auth:
     description: "Set NPM authentication"
     steps:
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
 
   install-deps:
     description: "Install build dependencies"
@@ -21,7 +26,7 @@ commands:
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-build-{{ checksum "yarn.lcok" }}
+          key: v1-dependencies-build-{{ checksum "yarn.lock" }}
 
 jobs:
   build:
@@ -31,12 +36,11 @@ jobs:
        - install-deps
        - run: yarn build
        - persist_to_workspace:
-          root: ~/keystone
+          root: << pipeline.parameters.working-directory >>
           paths:
             - ./*
   publish:
     executor: node-executor
-    working_directory: ~/keystone
     steps:
       - attach_workspace:
           at: .
@@ -56,5 +60,4 @@ workflows:
             tags:
               only: /^v\d+\.\d+\.\d+(-rc\.\d+)?$/
             branches:
-              only:
-                - master
+              ignore: /.*/
