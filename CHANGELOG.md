@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file. See [standa
 ## 0.9.4-rc.1
 
 ## Notable Changes
+
+- ci
+  - fix tag trigger build([#175](https://github.com/twreporter/keystone/pull/175))
+
+### Commits
+* [[`5de56eaeec`](https://github.com/twreporter/keystone/commit/5de56eaeec)] - **ci**: fix tag trigger build (Ching-Yang, Tseng)
+
+## 0.9.4-rc.0
+
+## Notable Changes
 - fix: enable mocha test([#170](https://github.com/twreporter/keystone/pull/170))
 
 - refactor:
