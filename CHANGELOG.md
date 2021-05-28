@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.4-rc.2
+
+## Notable Changes
+
+- ci
+  - fix the identation of filters field([#177](https://github.com/twreporter/keystone/pull/177))
+
+### Commits
+* [[`e4ae84bf8f`](https://github.com/twreporter/keystone/commit/e4ae84bf8f)] - **ci**: fix the identation of filters field (Ching-Yang, Tseng)
+
 ## 0.9.4-rc.1
 
 ## Notable Changes
