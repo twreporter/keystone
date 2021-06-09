@@ -1,6 +1,6 @@
 'use strict';
 import { Button, FormField, FormInput, Modal } from 'elemental';
-import { BlockMapBuilder, Editor, EditorState, KeyBindingUtil, Modifier, RichUtils, convertFromHTML, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
+import { BlockMapBuilder, Editor, EditorState, KeyBindingUtil, Modifier, RichUtils, convertFromHTML, convertFromRaw, getDefaultKeyBinding } from '@twreporter/draft-js';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from '../editor-buttons';
 import ENTITY from '../entities';
 import React, { Component } from 'react';

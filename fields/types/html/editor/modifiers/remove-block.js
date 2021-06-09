@@ -1,6 +1,6 @@
 'use strict';
 
-import { EditorState, Modifier, SelectionState } from 'draft-js';
+import { EditorState, Modifier, SelectionState } from '@twreporter/draft-js';
 
 export default (editorState, blockKey) => {
 	var content = editorState.getCurrentContent();

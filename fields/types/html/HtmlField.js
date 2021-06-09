@@ -1,4 +1,4 @@
-import { BlockMapBuilder, Editor, EditorState, KeyBindingUtil, Modifier, RichUtils, convertFromHTML, convertFromRaw, convertToRaw, getDefaultKeyBinding } from 'draft-js';
+import { BlockMapBuilder, Editor, EditorState, KeyBindingUtil, Modifier, RichUtils, convertFromHTML, convertFromRaw, convertToRaw, getDefaultKeyBinding } from '@twreporter/draft-js';
 import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
 import ENTITY from './editor/entities';

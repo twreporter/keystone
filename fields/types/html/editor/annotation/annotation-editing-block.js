@@ -1,5 +1,5 @@
 'use strict';
-import { convertToRaw } from 'draft-js';
+import { convertToRaw } from '@twreporter/draft-js';
 import DraftConverter from '../draft-converter';
 import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';

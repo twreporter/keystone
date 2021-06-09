@@ -2,7 +2,7 @@
 
 import {
   AtomicBlockUtils,
-} from 'draft-js';
+} from '@twreporter/draft-js';
 
 export default function insertAtomicBlock (editorState, type, value) {
   const contentState = editorState.getCurrentContent();
