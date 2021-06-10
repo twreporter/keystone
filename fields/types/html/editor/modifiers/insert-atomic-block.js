@@ -1,16 +1,13 @@
 'use strict';
 
 import {
-	AtomicBlockUtils,
-	Entity,
+  AtomicBlockUtils,
 } from 'draft-js';
 
 export default function insertAtomicBlock (editorState, type, value) {
-	const entityKey = Entity.create(
-		type,
-		'IMMUTABLE',
-		value
-	);
+  const contentState = editorState.getCurrentContent();
+  const contentStateWithEntity = contentState.createEntity(type, 'IMMUTABLE', value);
+  const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
 	return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
 }
