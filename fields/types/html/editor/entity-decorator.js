@@ -6,6 +6,10 @@ import annotationDecorator from './annotation/annotation-decorator';
 import linkDecorator from './link/link-decorator';
 import quoteDecorator from './quote/quote-decorator';
 
-const decorator = new CompositeDecorator([annotationDecorator, linkDecorator, quoteDecorator]);
+const decorator = new CompositeDecorator([
+	annotationDecorator,
+	linkDecorator,
+	quoteDecorator,
+]);
 
 export default decorator;

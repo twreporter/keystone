@@ -14,11 +14,11 @@ import YoutubeBt from './youtube/youtube-bt';
 import map from 'lodash/map';
 
 const _ = {
-  map,
-}
+	map,
+};
 
 class StyleButton extends React.Component {
-	constructor () {
+	constructor() {
 		super();
 		this.onToggle = (e) => {
 			e.preventDefault();
@@ -26,7 +26,7 @@ class StyleButton extends React.Component {
 		};
 	}
 
-	render () {
+	render() {
 		let className = '';
 		if (this.props.active) {
 			className += ' RichEditor-activeButton';
@@ -37,7 +37,8 @@ class StyleButton extends React.Component {
 				type="default"
 				className={className + ' tooltip-box'}
 				onMouseDown={this.onToggle}
-				data-tooltip={this.props.label}>
+				data-tooltip={this.props.label}
+			>
 				<i className={'fa ' + this.props.icon}></i>
 				<span>{this.props.text}</span>
 			</Button>
@@ -54,7 +55,7 @@ export const BlockStyleButtons = (props) => {
 		.getType();
 	return (
 		<ButtonGroup>
-			{_.map(buttons, (button) =>
+			{_.map(buttons, (button) => (
 				<StyleButton
 					key={button.label}
 					active={button.style === blockType}
@@ -64,18 +65,17 @@ export const BlockStyleButtons = (props) => {
 					icon={button.icon}
 					text={button.text}
 				/>
-			)}
+			))}
 		</ButtonGroup>
 	);
 };
-
 
 export const InlineStyleButtons = (props) => {
 	const { editorState, buttons, onToggle } = props;
 	let currentStyle = editorState.getCurrentInlineStyle();
 	return (
 		<ButtonGroup>
-			{_.map(buttons, (button) =>
+			{_.map(buttons, (button) => (
 				<StyleButton
 					key={button.label}
 					active={currentStyle.has(button.style)}
@@ -85,7 +85,7 @@ export const InlineStyleButtons = (props) => {
 					icon={button.icon}
 					text={button.text}
 				/>
-			)}
+			))}
 		</ButtonGroup>
 	);
 };
@@ -95,8 +95,7 @@ export const EntityButtons = (props) => {
 	const selection = editorState.getSelection();
 	const startOffset = selection.getStartOffset();
 	const contentState = editorState.getCurrentContent();
-	const startBlock = contentState 
-		.getBlockForKey(selection.getStartKey());
+	const startBlock = contentState.getBlockForKey(selection.getStartKey());
 
 	const endOffset = selection.getEndOffset();
 	let data;
@@ -113,15 +112,15 @@ export const EntityButtons = (props) => {
 	}
 
 	if (entityKey !== null) {
-    entityInstance = contentState.getEntity(entityKey)
+		entityInstance = contentState.getEntity(entityKey);
 		data = entityInstance.getData();
 	}
 
-	function _onToggle (entity, changedValue) {
+	function _onToggle(entity, changedValue) {
 		props.onToggle(entity, changedValue);
 	}
 
-	function chooseButton (entity) {
+	function chooseButton(entity) {
 		let active = entityInstance ? entityInstance.getType() === entity : false;
 		let onToggle = _onToggle.bind(null, entity);
 		switch (entity) {
@@ -273,7 +272,7 @@ export const EntityButtons = (props) => {
 
 	return (
 		<ButtonGroup>
-			{_.map(entities, entity => chooseButton(entity))}
+			{_.map(entities, (entity) => chooseButton(entity))}
 		</ButtonGroup>
 	);
 };

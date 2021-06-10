@@ -3,23 +3,26 @@ import React, { Component } from 'react';
 import get from 'lodash/get';
 
 const _ = {
-  get,
-}
+	get,
+};
 
-const getDisplayName = (WrappedComponent) => (
-	WrappedComponent.displayName || WrappedComponent.name || 'Component'
-);
+const getDisplayName = (WrappedComponent) =>
+	WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
 // Export
-export default function WrapComponent (WrappedComponent) {
+export default function WrapComponent(WrappedComponent) {
 	class Wrapper extends Component {
-		constructor (props) {
+		constructor(props) {
 			super(props);
 
 			const entityKey = this.props.block.getEntityAt(0);
 			let alignment;
-      if (entityKey) {
-				alignment = _.get(this.props.contentState.getEntity(entityKey).get('data'), 'alignment', 'center');
+			if (entityKey) {
+				alignment = _.get(
+					this.props.contentState.getEntity(entityKey).get('data'),
+					'alignment',
+					'center'
+				);
 			}
 			this.state = {
 				alignment: alignment,
@@ -27,10 +30,10 @@ export default function WrapComponent (WrappedComponent) {
 			this.align = this._align.bind(this);
 		}
 
-		_align (alignment) {
+		_align(alignment) {
 			const entityKey = this.props.block.getEntityAt(0);
-      if (entityKey) {
-        this.props.contentState.mergeEntityData(entityKey, { alignment });
+			if (entityKey) {
+				this.props.contentState.mergeEntityData(entityKey, { alignment });
 				this.setState({ alignment });
 
 				// Force refresh
@@ -38,13 +41,11 @@ export default function WrapComponent (WrappedComponent) {
 			}
 		}
 
-		render () {
+		render() {
 			// let clearfix = this.state.alignment !== 'center' ? true : false;
 			return (
 				<div>
-					<WrappedComponent {...this.props}
-						align={this.align}
-					/>
+					<WrappedComponent {...this.props} align={this.align} />
 				</div>
 			);
 		}

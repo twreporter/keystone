@@ -14,73 +14,87 @@ import Wrapper from './block-wrapper';
 import YoutubeBlock from '../youtube/youtube-block';
 import classNames from 'classnames';
 import get from 'lodash/get';
-import { mobileStyle, tabletMinStyle, tabletMaxStyle } from '../constants/layout-style';
+import {
+	mobileStyle,
+	tabletMinStyle,
+	tabletMaxStyle,
+} from '../constants/layout-style';
 
 const _ = {
-  get,
-}
+	get,
+};
 
 class AtomicBlockSwitcher extends React.Component {
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.alignLeft = this._alignLeft.bind(this);
 		this.alignCenter = this._alignCenter.bind(this);
 		this.alignRight = this._alignRight.bind(this);
-        this.alignCenterSmall = this._alignCenterSmall.bind(this);
+		this.alignCenterSmall = this._alignCenterSmall.bind(this);
 	}
 
-	_alignLeft (e) {
+	_alignLeft(e) {
 		e.stopPropagation();
 		this.props.align('left');
 	}
 
-	_alignCenter (e) {
+	_alignCenter(e) {
 		e.stopPropagation();
 		this.props.align('center');
 	}
 
-	_alignRight (e) {
+	_alignRight(e) {
 		e.stopPropagation();
 		this.props.align('right');
 	}
 
-    _alignCenterSmall (e) {
-        e.stopPropagation()
-        this.props.align('center-small')
-    }
+	_alignCenterSmall(e) {
+		e.stopPropagation();
+		this.props.align('center-small');
+	}
 
-  render () {
-    const entityKey = this.props.block.getEntityAt(0);
-		let type = entityKey ? this.props.contentState.getEntity(entityKey).getType() : '';
+	render() {
+		const entityKey = this.props.block.getEntityAt(0);
+		let type = entityKey
+			? this.props.contentState.getEntity(entityKey).getType()
+			: '';
 		// backward compatible. Old data type is lower case
 		type = type && type.toUpperCase();
 
 		const Buttons = (
 			<div style={{ textAlign: 'center' }}>
-				<span className="alignmentButton"
+				<span
+					className="alignmentButton"
 					onClick={this.alignLeft}
 					style={{ marginLeft: '-2.4em' }}
-					role="button" key="left"
+					role="button"
+					key="left"
 				>
 					L
 				</span>
-				<span className="alignmentButton"
+				<span
+					className="alignmentButton"
 					onClick={this.alignCenter}
-					role="button" key="center"
+					role="button"
+					key="center"
 				>
 					C
 				</span>
-				<span className="alignmentButton"
+				<span
+					className="alignmentButton"
 					onClick={this.alignRight}
 					style={{ marginLeft: '0.9em' }}
-					role="button" key="right"
+					role="button"
+					key="right"
 				>
 					R
 				</span>
-				<span className="alignmentButton"
+				<span
+					className="alignmentButton"
 					onClick={this.alignCenterSmall}
 					style={{ marginLeft: '2.6em' }}
-					role="button" key="center-small"
+					role="button"
+					key="center-small"
 				>
 					S
 				</span>
@@ -90,7 +104,6 @@ class AtomicBlockSwitcher extends React.Component {
 		const device = _.get(this.props, ['blockProps', 'device'], 'mobile');
 		let BlockComponent;
 		let style;
-
 
 		switch (type) {
 			case ENTITY.AUDIO.type:
@@ -174,11 +187,8 @@ class AtomicBlockSwitcher extends React.Component {
 
 		return (
 			<div className={classNames('center-block')} style={style}>
-				<BlockComponent
-					{...this.props}
-					device={device}
-				>
-				{device !== 'mobile' ? Buttons : null}
+				<BlockComponent {...this.props} device={device}>
+					{device !== 'mobile' ? Buttons : null}
 				</BlockComponent>
 			</div>
 		);

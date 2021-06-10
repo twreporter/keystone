@@ -1,5 +1,20 @@
-import { BlockMapBuilder, Editor, EditorState, KeyBindingUtil, Modifier, RichUtils, convertFromHTML, convertFromRaw, convertToRaw, getDefaultKeyBinding } from '@twreporter/draft-js';
-import { BlockStyleButtons, EntityButtons, InlineStyleButtons } from './editor/editor-buttons';
+import {
+	BlockMapBuilder,
+	Editor,
+	EditorState,
+	KeyBindingUtil,
+	Modifier,
+	RichUtils,
+	convertFromHTML,
+	convertFromRaw,
+	convertToRaw,
+	getDefaultKeyBinding,
+} from '@twreporter/draft-js';
+import {
+	BlockStyleButtons,
+	EntityButtons,
+	InlineStyleButtons,
+} from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
 import ENTITY from './editor/entities';
 import AtomicBlockSwitcher from './editor/base/atomic-block-switcher';
@@ -13,12 +28,15 @@ const { isCtrlKeyCommand } = KeyBindingUtil;
 
 let lastId = 0;
 
-function getId () {
+function getId() {
 	return 'keystone-html-' + lastId++;
 }
 
-function refreshEditorState (editorState) {
-	return EditorState.forceSelection(editorState, editorState.getCurrentContent().getSelectionAfter());
+function refreshEditorState(editorState) {
+	return EditorState.forceSelection(
+		editorState,
+		editorState.getCurrentContent().getSelectionAfter()
+	);
 }
 
 // workaround here for using @twreporter/react-article-components pkg
@@ -31,8 +49,7 @@ if (window) {
 module.exports = Field.create({
 	displayName: 'HtmlField',
 
-	getInitialState () {
-
+	getInitialState() {
 		// convert saved editor content into the editor state
 		let editorState;
 		try {
@@ -45,8 +62,7 @@ module.exports = Field.create({
 				// create empty draft object
 				editorState = EditorState.createEmpty(decorator);
 			}
-		}
-		catch (error) {
+		} catch (error) {
 			// create empty EditorState
 			editorState = EditorState.createEmpty(decorator);
 		}
@@ -58,14 +74,13 @@ module.exports = Field.create({
 		};
 	},
 
-
-	_convertToApiData (editorState) {
+	_convertToApiData(editorState) {
 		const content = convertToRaw(editorState.getCurrentContent());
 		const apiData = DraftConverter.convertToApiData(content);
 		return apiData.toJS();
 	},
 
-	onChange (editorState) {
+	onChange(editorState) {
 		const content = convertToRaw(editorState.getCurrentContent());
 		const cHtml = DraftConverter.convertToHtml(content);
 		const apiData = DraftConverter.convertToApiData(content);
@@ -89,11 +104,11 @@ module.exports = Field.create({
 		}
 	},
 
-	focus () {
+	focus() {
 		this.refs.editor.focus();
 	},
 
-	handleKeyCommand (command) {
+	handleKeyCommand(command) {
 		const { editorState } = this.state;
 		let newState;
 		switch (command) {
@@ -110,7 +125,7 @@ module.exports = Field.create({
 		return false;
 	},
 
-	keyBindingFn (e) {
+	keyBindingFn(e) {
 		if (e.keyCode === 13 /* `enter` key */) {
 			if (isCtrlKeyCommand(e) || e.shiftKey) {
 				return 'insert-soft-newline';
@@ -119,26 +134,18 @@ module.exports = Field.create({
 		return getDefaultKeyBinding(e);
 	},
 
-	toggleBlockType (blockType) {
+	toggleBlockType(blockType) {
 		let editorState = this.state.editorState;
+		this.onChange(RichUtils.toggleBlockType(editorState, blockType));
+	},
+
+	toggleInlineStyle(inlineStyle) {
 		this.onChange(
-			RichUtils.toggleBlockType(
-				editorState,
-				blockType
-			)
+			RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
 		);
 	},
 
-	toggleInlineStyle (inlineStyle) {
-		this.onChange(
-			RichUtils.toggleInlineStyle(
-				this.state.editorState,
-				inlineStyle
-			)
-		);
-	},
-
-	_toggleTextWithEntity (entityKey, text) {
+	_toggleTextWithEntity(entityKey, text) {
 		const { editorState } = this.state;
 		const selection = editorState.getSelection();
 		let contentState = editorState.getCurrentContent();
@@ -157,16 +164,24 @@ module.exports = Field.create({
 			null,
 			entityKey
 		);
-		const _editorState = EditorState.push(editorState, contentState, editorState.getLastChangeType());
+		const _editorState = EditorState.push(
+			editorState,
+			contentState,
+			editorState.getLastChangeType()
+		);
 		this.onChange(_editorState);
 	},
 
-	_toggleAtomicBlock (entity, value) {
-		const _editorState = BlockModifier.insertAtomicBlock(this.state.editorState, entity, value);
+	_toggleAtomicBlock(entity, value) {
+		const _editorState = BlockModifier.insertAtomicBlock(
+			this.state.editorState,
+			entity,
+			value
+		);
 		this.onChange(_editorState);
 	},
 
-	_toggleAudio (entity, value) {
+	_toggleAudio(entity, value) {
 		const audio = Array.isArray(value) ? value[0] : null;
 		if (!audio) {
 			return;
@@ -174,14 +189,18 @@ module.exports = Field.create({
 		this._toggleAtomicBlock(entity, audio);
 	},
 
-	_toggleInlineEntity (entity, value) {
+	_toggleInlineEntity(entity, value) {
 		let contentState = this.state.editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity(entity, 'IMMUTABLE', value);
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+		const contentStateWithEntity = contentState.createEntity(
+			entity,
+			'IMMUTABLE',
+			value
+		);
+		const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 		this._toggleTextWithEntity(entityKey, _.get(value, 'text'));
 	},
 
-	_toggleImage (entity, value) {
+	_toggleImage(entity, value) {
 		const image = Array.isArray(value) ? value[0] : null;
 		if (!image) {
 			return;
@@ -189,7 +208,7 @@ module.exports = Field.create({
 		this._toggleAtomicBlock(entity, image);
 	},
 
-	_toggleImageDiff (entity, value) {
+	_toggleImageDiff(entity, value) {
 		const images = Array.isArray(value) && value.length === 2 ? value : null;
 		if (!images) {
 			return;
@@ -197,7 +216,7 @@ module.exports = Field.create({
 		this._toggleAtomicBlock(entity, images);
 	},
 
-	_toggleSlideshow (entity, value) {
+	_toggleSlideshow(entity, value) {
 		const images = Array.isArray(value) && value.length > 0 ? value : null;
 		if (!images) {
 			return;
@@ -205,8 +224,7 @@ module.exports = Field.create({
 		this._toggleAtomicBlock(entity, images);
 	},
 
-
-	toggleEntity (entity, value) {
+	toggleEntity(entity, value) {
 		switch (entity) {
 			case ENTITY.AUDIO.type:
 				return this._toggleAudio(entity, value);
@@ -230,13 +248,17 @@ module.exports = Field.create({
 		}
 	},
 
-	_blockRenderer (block) {
+	_blockRenderer(block) {
 		if (block.getType() === 'atomic') {
 			return {
 				component: AtomicBlockSwitcher,
 				props: {
 					onFinishEdit: (blockKey, valueChanged) => {
-						const _editorState = BlockModifier.handleAtomicEdit(this.state.editorState, blockKey, valueChanged);
+						const _editorState = BlockModifier.handleAtomicEdit(
+							this.state.editorState,
+							blockKey,
+							valueChanged
+						);
 
 						// workaround here.
 						// use refreshEditorState to make the Editor rerender
@@ -248,21 +270,28 @@ module.exports = Field.create({
 					data: this._convertToApiData(this.state.editorState),
 					// render desktop layout when editor is enlarged,
 					// otherwise render mobile layout
-          device: this.state.isEnlarged ? 'desktop' : 'mobile',
+					device: this.state.isEnlarged ? 'desktop' : 'mobile',
 				},
 			};
 		}
 		return null;
 	},
 
-	enlargeEditor () {
+	enlargeEditor() {
 		// also set editorState to force editor to re-render
-		this.setState({ isEnlarged: !this.state.isEnlarged, editorState: refreshEditorState(this.state.editorState) });
+		this.setState({
+			isEnlarged: !this.state.isEnlarged,
+			editorState: refreshEditorState(this.state.editorState),
+		});
 	},
 
-	handlePastedText (text, html) {
-		function insertFragment (editorState, fragment) {
-			let newContent = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), fragment);
+	handlePastedText(text, html) {
+		function insertFragment(editorState, fragment) {
+			let newContent = Modifier.replaceWithFragment(
+				editorState.getCurrentContent(),
+				editorState.getSelection(),
+				fragment
+			);
 			return EditorState.push(editorState, newContent, 'insert-fragment');
 		}
 
@@ -274,13 +303,15 @@ module.exports = Field.create({
 			// currently, just handle p, h1, h2, ..., h6 tag
 			// NOTE: I don't know why header style can not be parsed into ContentBlock,
 			// so I replace it by div temporarily
-			html = html.replace(/<p|<h1|<h2|<h3|<h4|<h5|<h6/g, '<div').replace(/<\/p|<\/h1|<\/h2|<\/h3|<\/h4|<\/h5|<\/h6/g, '</div');
+			html = html
+				.replace(/<p|<h1|<h2|<h3|<h4|<h5|<h6/g, '<div')
+				.replace(/<\/p|<\/h1|<\/h2|<\/h3|<\/h4|<\/h5|<\/h6/g, '</div');
 
 			let editorState = this.state.editorState;
-      const htmlFragment = convertFromHTML(html);
-      if (htmlFragment) {
-        const { contentBlocks, entityMap } = htmlFragment;
-        const htmlMap = BlockMapBuilder.createFromArray(contentBlocks);
+			const htmlFragment = convertFromHTML(html);
+			if (htmlFragment) {
+				const { contentBlocks, entityMap } = htmlFragment;
+				const htmlMap = BlockMapBuilder.createFromArray(contentBlocks);
 				this.onChange(insertFragment(editorState, htmlMap));
 				// prevent the default paste behavior.
 				return true;
@@ -290,7 +321,7 @@ module.exports = Field.create({
 		return false;
 	},
 
-	renderField () {
+	renderField() {
 		const { editorState } = this.state;
 		const useSpellCheck = true;
 
@@ -327,13 +358,21 @@ module.exports = Field.create({
 							<InlineStyleButtons
 								buttons={INLINE_STYLES}
 								editorState={editorState}
-								onToggle={this.toggleInlineStyle} />
+								onToggle={this.toggleInlineStyle}
+							/>
 							<EntityButtons
 								entities={Object.keys(ENTITY)}
 								editorState={editorState}
 								onToggle={this.toggleEntity}
 							/>
-							<Button type={'hollow-primary DraftEditor-expandButton' + expandBtnClass} onClick={this.enlargeEditor}><i className={'fa ' + expandIcon} aria-hidden="true"></i></Button>
+							<Button
+								type={
+									'hollow-primary DraftEditor-expandButton' + expandBtnClass
+								}
+								onClick={this.enlargeEditor}
+							>
+								<i className={'fa ' + expandIcon} aria-hidden="true"></i>
+							</Button>
 						</div>
 					</div>
 					<div className={className + expandBtnClass} onClick={this.focus}>
@@ -350,15 +389,21 @@ module.exports = Field.create({
 							ref="editor"
 							spellCheck={useSpellCheck}
 						/>
-						<FormInput type="hidden" name={this.props.path} value={this.state.valueStr} />
+						<FormInput
+							type="hidden"
+							name={this.props.path}
+							value={this.state.valueStr}
+						/>
 					</div>
 				</div>
 			</div>
 		);
 	},
 
-	renderValue () {
-		return <FormInput multiline noedit value={JSON.stringify(this.props.value)} />;
+	renderValue() {
+		return (
+			<FormInput multiline noedit value={JSON.stringify(this.props.value)} />
+		);
 	},
 });
 
@@ -371,7 +416,6 @@ const styleMap = {
 		padding: 2,
 	},
 };
-
 
 // block settings
 const BLOCK_TYPES = [
@@ -390,4 +434,3 @@ var INLINE_STYLES = [
 	{ label: 'Underline', style: 'UNDERLINE', icon: 'fa-underline', text: '' },
 	{ label: 'Monospace', style: 'CODE', icon: 'fa-terminal', text: '' },
 ];
-

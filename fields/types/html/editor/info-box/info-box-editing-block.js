@@ -5,13 +5,13 @@ import EntityEditingBlockMixin from '../mixins/entity-editing-block-mixin';
 import React from 'react';
 
 class InfoBoxEditingBlock extends EntityEditingBlockMixin(React.Component) {
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.state.editorState = this._initEditorState(props.draftRawObj);
 	}
 
 	// overwrite EntityEditingBlock._composeEditingFields
-	_composeEditingFields (props) {
+	_composeEditingFields(props) {
 		return {
 			title: {
 				type: 'text',
@@ -24,9 +24,8 @@ class InfoBoxEditingBlock extends EntityEditingBlockMixin(React.Component) {
 		};
 	}
 
-
 	// overwrite EntityEditingBlock._decomposeEditingFields
-	_decomposeEditingFields (fields) {
+	_decomposeEditingFields(fields) {
 		let { editorState } = this.state;
 		const content = convertToRaw(editorState.getCurrentContent());
 		const cHtml = DraftConverter.convertToHtml(content);
@@ -38,13 +37,13 @@ class InfoBoxEditingBlock extends EntityEditingBlockMixin(React.Component) {
 	}
 
 	// overwrite EntityEditingBlock._handleEditingFieldChange
-	_handleEditingFieldChange (field, e) {
+	_handleEditingFieldChange(field, e) {
 		if (field === 'body') {
 			return;
 		}
 		return super._handleEditingFieldChange(field, e);
 	}
-};
+}
 
 InfoBoxEditingBlock.displayName = 'InfoBoxEditingBlock';
 

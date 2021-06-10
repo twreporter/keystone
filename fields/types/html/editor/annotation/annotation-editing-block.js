@@ -6,17 +6,17 @@ import React from 'react';
 import get from 'lodash/get';
 
 const _ = {
-  get,
-}
+	get,
+};
 
 class AnnotationEditingBlock extends EntityEditingBlockMixin(React.Component) {
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.state.editorState = this._initEditorState(props.draftRawObj);
 	}
 
 	// overwrite
-	_composeEditingFields (props) {
+	_composeEditingFields(props) {
 		return {
 			text: {
 				type: 'text',
@@ -30,10 +30,12 @@ class AnnotationEditingBlock extends EntityEditingBlockMixin(React.Component) {
 	}
 
 	// overwrite
-	_decomposeEditingFields (fields) {
+	_decomposeEditingFields(fields) {
 		let { editorState } = this.state;
 		const content = convertToRaw(editorState.getCurrentContent());
-		const cHtml = DraftConverter.convertToHtml(content, { unstyled: `<div>%content%</div>` });
+		const cHtml = DraftConverter.convertToHtml(content, {
+			unstyled: `<div>%content%</div>`,
+		});
 		return {
 			// annotated text
 			text: fields.text.value,
@@ -44,13 +46,13 @@ class AnnotationEditingBlock extends EntityEditingBlockMixin(React.Component) {
 	}
 
 	// overwrite EntityEditingBlock._handleEditingFieldChange
-	_handleEditingFieldChange (field, e) {
+	_handleEditingFieldChange(field, e) {
 		if (field === 'annotation') {
 			return;
 		}
 		return super._handleEditingFieldChange(field, e);
 	}
-};
+}
 
 AnnotationEditingBlock.displayName = 'AnnotationEditingBlock';
 

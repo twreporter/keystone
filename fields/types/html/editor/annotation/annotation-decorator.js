@@ -3,7 +3,7 @@ import ENTITY from '../entities';
 import React from 'react';
 import classNames from 'classnames';
 class Annotation extends React.Component {
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.state = {
 			isExpanded: false,
@@ -11,28 +11,32 @@ class Annotation extends React.Component {
 		this.handleExpand = this._handleExpand.bind(this);
 	}
 
-	_handleExpand (e) {
+	_handleExpand(e) {
 		e.stopPropagation();
 		this.setState({
 			isExpanded: !this.state.isExpanded,
 		});
 	}
 
-  render () {
-    const { entityKey, contentState } = this.props
-		const { annotation, pureAnnotationText } = contentState.getEntity(entityKey).getData();
+	render() {
+		const { entityKey, contentState } = this.props;
+		const { annotation, pureAnnotationText } = contentState
+			.getEntity(entityKey)
+			.getData();
 		return (
 			<abbr
 				className="annotation"
 				title={pureAnnotationText}
 				style={{ cursor: 'pointer', borderBottom: 0 }}
 			>
-				<span
-					onClick={this.handleExpand}
-					style={{ color: 'red' }}
-				>
+				<span onClick={this.handleExpand} style={{ color: 'red' }}>
 					{this.props.children}
-					<span className={classNames(this.state.isExpanded ? 'up' : '', 'indicator')}/>
+					<span
+						className={classNames(
+							this.state.isExpanded ? 'up' : '',
+							'indicator'
+						)}
+					/>
 				</span>
 				<span
 					className="annotation-html"
@@ -48,22 +52,18 @@ class Annotation extends React.Component {
 			</abbr>
 		);
 	}
-
 }
 
-function findAnnotationEntities (contentBlock, callback, contentState) {
-	contentBlock.findEntityRanges(
-		(character) => {
-			const entityKey = character.getEntity();
-			if (entityKey !== null) {
-				let type = contentState.getEntity(entityKey).getType();
-				type = type && type.toUpperCase();
-				return type === ENTITY.ANNOTATION.type;
-			}
-			return false;
-		},
-		callback
-	);
+function findAnnotationEntities(contentBlock, callback, contentState) {
+	contentBlock.findEntityRanges((character) => {
+		const entityKey = character.getEntity();
+		if (entityKey !== null) {
+			let type = contentState.getEntity(entityKey).getType();
+			type = type && type.toUpperCase();
+			return type === ENTITY.ANNOTATION.type;
+		}
+		return false;
+	}, callback);
 }
 
 export default { strategy: findAnnotationEntities, component: Annotation };
