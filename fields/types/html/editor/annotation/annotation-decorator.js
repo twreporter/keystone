@@ -1,5 +1,4 @@
 'use strict';
-import { Entity } from 'draft-js';
 import ENTITY from '../entities';
 import React from 'react';
 import classNames from 'classnames';
@@ -19,8 +18,9 @@ class Annotation extends React.Component {
 		});
 	}
 
-	render () {
-		const { annotation, pureAnnotationText } = Entity.get(this.props.entityKey).getData();
+  render () {
+    const { entityKey, contentState } = this.props
+		const { annotation, pureAnnotationText } = contentState.getEntity(entityKey).getData();
 		return (
 			<abbr
 				className="annotation"
@@ -51,12 +51,12 @@ class Annotation extends React.Component {
 
 }
 
-function findAnnotationEntities (contentBlock, callback) {
+function findAnnotationEntities (contentBlock, callback, contentState) {
 	contentBlock.findEntityRanges(
 		(character) => {
 			const entityKey = character.getEntity();
 			if (entityKey !== null) {
-				let type = Entity.get(entityKey).getType();
+				let type = contentState.getEntity(entityKey).getType();
 				type = type && type.toUpperCase();
 				return type === ENTITY.ANNOTATION.type;
 			}

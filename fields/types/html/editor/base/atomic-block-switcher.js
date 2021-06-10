@@ -14,7 +14,6 @@ import Wrapper from './block-wrapper';
 import YoutubeBlock from '../youtube/youtube-block';
 import classNames from 'classnames';
 import get from 'lodash/get';
-import { Entity } from 'draft-js';
 import { mobileStyle, tabletMinStyle, tabletMaxStyle } from '../constants/layout-style';
 
 const _ = {
@@ -50,9 +49,9 @@ class AtomicBlockSwitcher extends React.Component {
         this.props.align('center-small')
     }
 
-	render () {
-		const entityKey = this.props.block.getEntityAt(0);
-		let type = entityKey ? Entity.get(entityKey).getType() : '';
+  render () {
+    const entityKey = this.props.block.getEntityAt(0);
+		let type = entityKey ? this.props.contentState.getEntity(entityKey).getType() : '';
 		// backward compatible. Old data type is lower case
 		type = type && type.toUpperCase();
 

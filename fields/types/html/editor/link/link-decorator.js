@@ -1,5 +1,4 @@
 import React from 'react';
-import { Entity } from 'draft-js';
 import ENTITY from '../entities';
 
 const styles = {
@@ -10,7 +9,8 @@ const styles = {
 };
 
 const Link = (props) => {
-	const { url } = Entity.get(props.entityKey).getData();
+  const { contentState, entityKey } = props
+	const { url } = contentState.getEntity(entityKey).getData();
 	return (
 		<a href={url} style={styles.link}>
 			{props.children}
@@ -18,12 +18,12 @@ const Link = (props) => {
 	);
 };
 
-function findLinkEntities (contentBlock, callback) {
+function findLinkEntities (contentBlock, callback, contentState) {
 	contentBlock.findEntityRanges(
 		(character) => {
 			const entityKey = character.getEntity();
 			if (entityKey !== null) {
-				let type = Entity.get(entityKey).getType();
+				let type = contentState.getEntity(entityKey).getType();
 				type = type && type.toUpperCase();
 				return type === ENTITY.LINK.type;
 			}

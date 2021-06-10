@@ -19,8 +19,8 @@ export default function WrapComponent (WrappedComponent) {
 
 			const entityKey = this.props.block.getEntityAt(0);
 			let alignment;
-			if (entityKey) {
-				alignment = _.get(Entity.get(entityKey).get('data'), 'alignment', 'center');
+      if (entityKey) {
+				alignment = _.get(this.props.contentState.getEntity(entityKey).get('data'), 'alignment', 'center');
 			}
 			this.state = {
 				alignment: alignment,
@@ -30,8 +30,8 @@ export default function WrapComponent (WrappedComponent) {
 
 		_align (alignment) {
 			const entityKey = this.props.block.getEntityAt(0);
-			if (entityKey) {
-				Entity.mergeData(entityKey, { alignment });
+      if (entityKey) {
+        Entity.mergeData(entityKey, { alignment });
 				this.setState({ alignment });
 
 				// Force refresh

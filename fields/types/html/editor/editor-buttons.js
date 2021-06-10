@@ -1,6 +1,5 @@
 'use strict';
 import { Button, ButtonGroup } from 'elemental';
-import { Entity } from 'draft-js';
 import AnnotationBt from './annotation/annotation-bt';
 import AudioButton from './audio/audio-bt';
 import BlockQuoteBt from './quote/block-quote-bt';
@@ -95,8 +94,8 @@ export const EntityButtons = (props) => {
 	const { editorState, entities } = props;
 	const selection = editorState.getSelection();
 	const startOffset = selection.getStartOffset();
-	const startBlock = editorState
-		.getCurrentContent()
+	const contentState = editorState.getCurrentContent();
+	const startBlock = contentState 
 		.getBlockForKey(selection.getStartKey());
 
 	const endOffset = selection.getEndOffset();
@@ -114,7 +113,7 @@ export const EntityButtons = (props) => {
 	}
 
 	if (entityKey !== null) {
-		entityInstance = Entity.get(entityKey);
+    entityInstance = contentState.getEntity(entityKey)
 		data = entityInstance.getData();
 	}
 

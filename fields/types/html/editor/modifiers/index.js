@@ -2,15 +2,15 @@
 
 import insertAtomicBlock from './insert-atomic-block';
 import { replaceAtomicBlock } from './replace-block';
-import { Entity } from 'draft-js';
 import removeBlock from './remove-block';
 
 const handleAtomicEdit = (editorState, blockKey, valueChanged) => {
-	const block = editorState.getCurrentContent().getBlockForKey(blockKey);
+  const contentState = editorState.getCurrentContent() 
+	const block = contentState.getBlockForKey(blockKey);
 	const entityKey = block.getEntityAt(0);
 	let blockType;
-	try {
-		blockType = entityKey ? Entity.get(entityKey).getType() : '';
+  try {
+		blockType = entityKey ? contentState.getEntity(entityKey).getType() : '';
 	} catch (e) {
 		console.log('Get entity type in the block occurs error ', e);
 		return editorState;
