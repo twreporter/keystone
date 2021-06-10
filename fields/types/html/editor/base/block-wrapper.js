@@ -1,5 +1,4 @@
 'use strict';
-import { Entity } from 'draft-js';
 import React, { Component } from 'react';
 import get from 'lodash/get';
 
@@ -31,7 +30,7 @@ export default function WrapComponent (WrappedComponent) {
 		_align (alignment) {
 			const entityKey = this.props.block.getEntityAt(0);
       if (entityKey) {
-        Entity.mergeData(entityKey, { alignment });
+        this.props.contentState.mergeEntityData(entityKey, { alignment });
 				this.setState({ alignment });
 
 				// Force refresh
