@@ -93,9 +93,10 @@ let EntityEditingBlock = (superclass) => class extends Component {
 			html = html.replace(/<p|<h1|<h2|<h3|<h4|<h5|<h6/g, '<div').replace(/<\/p|<\/h1|<\/h2|<\/h3|<\/h4|<\/h5|<\/h6/g, '</div');
 
 			let editorState = this.state.editorState;
-			var htmlFragment = convertFromHTML(html);
+      const htmlFragment = convertFromHTML(html);
       if (htmlFragment) {
-        var htmlMap = BlockMapBuilder.createFromArray(htmlFragment);
+        const { contentBlocks, entityMap } = htmlFragment;
+        const htmlMap = BlockMapBuilder.createFromArray(contentBlocks);
 				this._handleEditorStateChange(insertFragment(editorState, htmlMap));
 				// prevent the default paste behavior.
 				return true;
