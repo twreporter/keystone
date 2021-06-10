@@ -1,6 +1,7 @@
 {
   "extends": [
-     "keystone"
+     "keystone",
+     "prettier"
   ],
   "globals": {
     "_": true,
