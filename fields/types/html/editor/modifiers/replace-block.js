@@ -1,11 +1,9 @@
 'use strict';
 
-import { Entity } from 'draft-js';
-
 export function replaceAtomicBlock (editorState, blockKey, value) {
-	const content = editorState.getCurrentContent();
-	const block = content.getBlockForKey(blockKey);
+	const contentState = editorState.getCurrentContent();
+	const block = contentState.getBlockForKey(blockKey);
 	const entityKey = block.getEntityAt(0);
-	Entity.replaceData(entityKey, value);
+  contentState.replaceEntityData(entityKey, value);
 	return editorState;
 };
