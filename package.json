@@ -117,6 +117,7 @@
     "gulp-uglify": "1.5.2",
     "husky": "^3.1.0",
     "istanbul": "0.4.2",
+    "lint-staged": "^7.3.0",
     "mocha": "7.2.0",
     "must": "0.13.1",
     "nightwatch": "^0.8.16",
@@ -180,16 +181,24 @@
     "test-cov": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "posttest-cov": "if [ -n \"$CODECLIMATE_REPO_TOKEN\" ]; then codeclimate < coverage/lcov.info; fi",
     "clean": "rimraf ./coverage",
-    "validate": "npm ls"
+    "validate": "npm ls",
+    "lint-staged": "lint-staged",
+    "commitlint": "commitlint --edit $HUSKY_GIT_PARAMS"
   },
   "engines": {
     "node": ">= 0.10.28",
     "npm": ">= 1.4.9"
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{json,css,md,html,htm}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "files": [
     "admin",
