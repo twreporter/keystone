@@ -190,7 +190,7 @@ module.exports = Field.create({
   },
 
   _toggleInlineEntity(entity, value) {
-    let contentState = this.state.editorState.getCurrentContent();
+    const contentState = this.state.editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity(
       entity,
       'IMMUTABLE',
