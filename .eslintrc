@@ -5,7 +5,12 @@
   "rules": {
     "indent": ["error", 2, {"SwitchCase": 1}],
     "react/jsx-indent": ["error", 2],
-    "react/jsx-indent-props": [2, 2]
+    "react/jsx-indent-props": [2, 2],
+    "space-before-function-paren": ["error", {
+      "anonymous": "never",
+      "named": "never",
+      "asyncArrow": "always"
+    }]
   },
   "globals": {
     "_": true,
