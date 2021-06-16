@@ -7,9 +7,9 @@ import linkDecorator from './link/link-decorator';
 import quoteDecorator from './quote/quote-decorator';
 
 const decorator = new CompositeDecorator([
-	annotationDecorator,
-	linkDecorator,
-	quoteDecorator,
+  annotationDecorator,
+  linkDecorator,
+  quoteDecorator,
 ]);
 
 export default decorator;
