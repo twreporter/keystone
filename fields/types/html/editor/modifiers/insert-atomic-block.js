@@ -1,16 +1,15 @@
 'use strict';
 
-import {
-	AtomicBlockUtils,
-	Entity,
-} from 'draft-js';
+import { AtomicBlockUtils } from '@twreporter/draft-js';
 
-export default function insertAtomicBlock (editorState, type, value) {
-	const entityKey = Entity.create(
-		type,
-		'IMMUTABLE',
-		value
-	);
+export default function insertAtomicBlock(editorState, type, value) {
+  const contentState = editorState.getCurrentContent();
+  const contentStateWithEntity = contentState.createEntity(
+    type,
+    'IMMUTABLE',
+    value
+  );
+  const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-	return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+  return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
 }
