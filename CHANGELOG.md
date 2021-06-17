@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+
+## 0.9.4-rc.3
+
+## Notable Changes
+
+- fix
+  - expire cookie session([#179](https://github.com/twreporter/keystone/pull/179))
+- chore 
+  - replace npm package 'draft-js' by '@twreporter/draft-js'([#180](https://github.com/twreporter/keystone/pull/180))
+  - update .eslintrc([#180](https://github.com/twreporter/keystone/pull/180))
+- refactor
+  - API migration for draft-js@0.8.1 -> draft-js@0.11.8[#180](https://github.com/twreporter/keystone/pull/180)
+- style
+  - fix indent for changed files
+
+### Commits
+* [[`d31e7a5454`](https://github.com/twreporter/keystone/commit/d31e7a5454)] - Merge pull request #180 from taylrj/@twreporter/draft-js@0.11.8 (Tai-Jiun Fang)
+* [[`f9144af627`](https://github.com/twreporter/keystone/commit/f9144af627)] - **refactor**: `let` -\> `const` (Taylor Fang)
+* [[`062b27462c`](https://github.com/twreporter/keystone/commit/062b27462c)] - **style**: fix indent (Taylor Fang)
+* [[`fe5939e395`](https://github.com/twreporter/keystone/commit/fe5939e395)] - **chore**: update 'space-before-function-paren' rule in .eslintrc (Taylor Fang)
+* [[`88bbc41b1c`](https://github.com/twreporter/keystone/commit/88bbc41b1c)] - **chore**: update .eslintrc for indentation (Taylor Fang)
+* [[`bebfe02565`](https://github.com/twreporter/keystone/commit/bebfe02565)] - **style**: format changed files (Taylor Fang)
+* [[`6066a40e91`](https://github.com/twreporter/keystone/commit/6066a40e91)] - **refactor**: update import modules 'draft-js' -\> '@twreporter/draft-js' (Taylor Fang)
+* [[`9c5fccb859`](https://github.com/twreporter/keystone/commit/9c5fccb859)] - **refactor**: migrate API convertFromHTML (Taylor Fang)
+* [[`52d9a7f0a0`](https://github.com/twreporter/keystone/commit/52d9a7f0a0)] - **refactor**: migrate API `Entity.replaceData` (Taylor Fang)
+* [[`0f3a794268`](https://github.com/twreporter/keystone/commit/0f3a794268)] - **refactor**: migrate API `Entity.mergeData` (Taylor Fang)
+* [[`b961a2b76c`](https://github.com/twreporter/keystone/commit/b961a2b76c)] - **refactor**: migrate API `Entity.create` (Taylor Fang)
+* [[`bde53ee01c`](https://github.com/twreporter/keystone/commit/bde53ee01c)] - **refactor**: migrate API `Entity.get` (Taylor Fang)
+* [[`15e78758c6`](https://github.com/twreporter/keystone/commit/15e78758c6)] - **chore**: update npm pkg draft-js to @twreporter/draft-js (Taylor Fang)
+* [[`0083d19a52`](https://github.com/twreporter/keystone/commit/0083d19a52)] - Merge pull request #179 from babygoat/master (babygoat)
+* [[`5c471f27bc`](https://github.com/twreporter/keystone/commit/5c471f27bc)] - **fix**: expire cookie session (Ching-Yang, Tseng)
+* [[`ca254d1647`](https://github.com/twreporter/keystone/commit/ca254d1647)] - Merge pull request #178 from babygoat/master (babygoat)
+
 ## 0.9.4-rc.2
 
 ## Notable Changes
