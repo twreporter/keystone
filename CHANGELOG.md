@@ -7,18 +7,27 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## Notable Changes
 
+- refactor
+  - API migration for draft-js@0.8.1 -> draft-js@0.11.8([#180](https://github.com/twreporter/keystone/pull/180),[#183](https://github.com/twreporter/keystone/pull/183))
+
+### Commits
+* [[`3c8a51bde5`](https://github.com/twreporter/keystone/commit/3c8a51bde5)] - **refactor**: migrate API `Entity.create` (#183) (Tai-Jiun Fang)
+
+## 0.9.4-rc.3
+
+## Notable Changes
+
 - fix
   - expire cookie session([#179](https://github.com/twreporter/keystone/pull/179))
 - chore 
   - replace npm package 'draft-js' by '@twreporter/draft-js'([#180](https://github.com/twreporter/keystone/pull/180))
   - update .eslintrc([#180](https://github.com/twreporter/keystone/pull/180))
 - refactor
-  - API migration for draft-js@0.8.1 -> draft-js@0.11.8([#180](https://github.com/twreporter/keystone/pull/180),[#183](https://github.com/twreporter/keystone/pull/183))
+  - API migration for draft-js@0.8.1 -> draft-js@0.11.8([#180](https://github.com/twreporter/keystone/pull/180))
 - style
   - fix indent for changed files
 
 ### Commits
-* [[`3c8a51bde5`](https://github.com/twreporter/keystone/commit/3c8a51bde5)] - **refactor**: migrate API `Entity.create` (#183) (Tai-Jiun Fang)
 * [[`f9144af627`](https://github.com/twreporter/keystone/commit/f9144af627)] - **refactor**: `let` -\> `const` (Taylor Fang)
 * [[`062b27462c`](https://github.com/twreporter/keystone/commit/062b27462c)] - **style**: fix indent (Taylor Fang)
 * [[`fe5939e395`](https://github.com/twreporter/keystone/commit/fe5939e395)] - **chore**: update 'space-before-function-paren' rule in .eslintrc (Taylor Fang)
