@@ -1,6 +1,6 @@
 {
   "name": "@twreporter/keystone",
-  "version": "0.9.4-rc.4",
+  "version": "0.9.4-rc.5",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
