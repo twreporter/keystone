@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.4-rc.6
+
+## Notable Changes
+
+- chore 
+  - update @twreporter/draft-js to v0.11.8-rc.2[#188](https://github.com/twreporter/keystone/pull/188)
+
+### Commits
+* [[`8524e19da6`](https://github.com/twreporter/keystone/commit/8524e19da6)] - **chore**: upgrade @twreporter/draft-js to v0.11.8-rc.2 (#188) (Tai-Jiun Fang)
+
 ## 0.9.4-rc.5
 
 ## Notable Changes
