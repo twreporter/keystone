@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "~1.7.0",
-    "@twreporter/draft-js": "0.11.8-rc.1",
+    "@twreporter/draft-js": "0.11.8-rc.2",
     "@twreporter/react-article-components": "0.2.0",
     "async": "1.5.2",
     "asyncdi": "1.1.0",
