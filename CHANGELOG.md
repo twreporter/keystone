@@ -2,11 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.4-rc.7
+
+## Notable Changes
+
+- refactor
+  - cleanup redundant operations and rename obscure function([#190](https://github.com/twreporter/keystone/pull/190))
+
+### Commits
+* [[`c4d8b19ec3`](https://github.com/twreporter/keystone/commit/c4d8b19ec3)] - **refactor**: remove redundant initialization (Ching-Yang, Tseng)
+* [[`c4a8ccbdf3`](https://github.com/twreporter/keystone/commit/c4a8ccbdf3)] - **refactor**: rename initDatabase to initDatabaseConfig (Ching-Yang, Tseng)
+
 ## 0.9.4-rc.6
 
 ## Notable Changes
 
-- chore 
+- chore
   - update @twreporter/draft-js to v0.11.8-rc.2[#188](https://github.com/twreporter/keystone/pull/188)
 
 ### Commits
@@ -16,7 +27,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## Notable Changes
 
-- chore 
+- chore
   - update @twreporter/draft-js to v0.11.8-rc.1[#186](https://github.com/twreporter/keystone/pull/186)
 
 ### Commits
@@ -38,7 +49,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 - fix
   - expire cookie session([#179](https://github.com/twreporter/keystone/pull/179))
-- chore 
+- chore
   - replace npm package 'draft-js' by '@twreporter/draft-js'([#180](https://github.com/twreporter/keystone/pull/180))
   - update .eslintrc([#180](https://github.com/twreporter/keystone/pull/180))
 - refactor
