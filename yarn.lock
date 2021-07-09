@@ -241,10 +241,10 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@twreporter/draft-js@0.11.8-rc.2":
-  version "0.11.8-rc.2"
-  resolved "https://registry.yarnpkg.com/@twreporter/draft-js/-/draft-js-0.11.8-rc.2.tgz#8347ab69784d20d89568d2d022557cdb8a37352c"
-  integrity sha512-MMAGLjQlQZhV7hguwYpwxCtDtHsIJ7OkveGlVtVypcPyLX2iDf0QDqkTJD0/oyA0v/h8LDpOyMASNHUyf0kHcw==
+"@twreporter/draft-js@0.11.8-rc.0":
+  version "0.11.8-rc.0"
+  resolved "https://registry.yarnpkg.com/@twreporter/draft-js/-/draft-js-0.11.8-rc.0.tgz#a5ee3afcee0e03607f12f7c6363b805c09fbd24a"
+  integrity sha512-PbHCb0lVr+i5yJC7Nan2KyK2uuEN67pLC40C0toBir7s2No4rnjo7hgNrOlNpBRvw2kzyf/1ltafDX2WPINTpA==
   dependencies:
     fbjs "^2.0.0"
     immutable "~3.7.4"
