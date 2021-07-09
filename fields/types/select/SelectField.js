@@ -10,29 +10,29 @@ import { FormInput } from 'elemental';
 
 module.exports = Field.create({
 
-	displayName: 'SelectField',
+  displayName: 'SelectField',
 
-	valueChanged (newValue) {
-		// TODO: This should be natively handled by the Select component
-		if (this.props.numeric && typeof newValue === 'string') {
-			newValue = newValue ? Number(newValue) : undefined;
-		}
-		this.props.onChange({
-			path: this.props.path,
-			value: newValue,
-		});
-	},
+  valueChanged(newValue) {
+    // TODO: This should be natively handled by the Select component
+    if (this.props.numeric && typeof newValue === 'string') {
+      newValue = newValue ? Number(newValue) : undefined;
+    }
+    this.props.onChange({
+      path: this.props.path,
+      value: newValue,
+    });
+  },
 
-	renderValue () {
-		var selected = this.props.ops.find(option => option.value === this.props.value);
-		return <FormInput noedit>{selected ? selected.label : null}</FormInput>;
-	},
+  renderValue() {
+    var selected = this.props.ops.find(option => option.value === this.props.value);
+    return <FormInput noedit>{selected ? selected.label : null}</FormInput>;
+  },
 
-	renderField () {
-		// TODO: This should be natively handled by the Select component
-		var ops = (this.props.numeric) ? this.props.ops.map(function (i) { return { label: i.label, value: String(i.value) }; }) : this.props.ops;
-		var value = (typeof this.props.value === 'number') ? String(this.props.value) : this.props.value;
-		return <Select simpleValue name={this.props.path} value={value} options={ops} onChange={this.valueChanged} />;
-	},
+  renderField() {
+    // TODO: This should be natively handled by the Select component
+    var ops = (this.props.numeric) ? this.props.ops.map(function(i) { return { label: i.label, value: String(i.value) }; }) : this.props.ops;
+    var value = (typeof this.props.value === 'number') ? String(this.props.value) : this.props.value;
+    return <Select simpleValue name={this.props.path} value={value} options={ops} onChange={this.valueChanged} />;
+  },
 
 });

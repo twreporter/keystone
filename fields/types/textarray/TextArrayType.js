@@ -11,10 +11,10 @@ var super_ = require('../Type');
  * @api public
  */
 
-function textarray (list, path, options) {
-	this._nativeType = [String];
+function textarray(list, path, options) {
+  this._nativeType = [String];
 
-	textarray.super_.call(this, list, path, options);
+  textarray.super_.call(this, list, path, options);
 }
 
 /*!
@@ -29,21 +29,21 @@ util.inherits(textarray, super_);
  * @api public
  */
 
-textarray.prototype.inputIsValid = function (data, required, item) {
-	var value = this.getValueFromData(data);
+textarray.prototype.inputIsValid = function(data, required, item) {
+  var value = this.getValueFromData(data);
 
-	if (required) {
-		if (value === undefined && item && item.get(this.path) && item.get(this.path).length) {
-			return true;
-		}
-		if (value === undefined || !Array.isArray(value) || (typeof value !== 'string') || (typeof value !== 'number')) {
-			return false;
-		}
-		if (Array.isArray(value) && !value.length) {
-			return false;
-		}
-	}
-	return (value === undefined || Array.isArray(value) || (typeof value === 'string') || (typeof value === 'number'));
+  if (required) {
+    if (value === undefined && item && item.get(this.path) && item.get(this.path).length) {
+      return true;
+    }
+    if (value === undefined || !Array.isArray(value) || (typeof value !== 'string') || (typeof value !== 'number')) {
+      return false;
+    }
+    if (Array.isArray(value) && !value.length) {
+      return false;
+    }
+  }
+  return (value === undefined || Array.isArray(value) || (typeof value === 'string') || (typeof value === 'number'));
 };
 
 /**
@@ -52,25 +52,25 @@ textarray.prototype.inputIsValid = function (data, required, item) {
  * @api public
  */
 
-textarray.prototype.updateItem = function (item, data, callback) {
-	var value = this.getValueFromData(data);
+textarray.prototype.updateItem = function(item, data, callback) {
+  var value = this.getValueFromData(data);
 
-	if (typeof value !== 'undefined') {
-		if (value === null) {
-			value = [];
-		}
-		if (typeof value === 'string') {
-			value = [value];
-		}
-		if (typeof value === 'number') {
-			value = [value.toString()];
-		}
-		if (Array.isArray(value)) {
-			item.set(this.path, value);
-		}
-	}
+  if (typeof value !== 'undefined') {
+    if (value === null) {
+      value = [];
+    }
+    if (typeof value === 'string') {
+      value = [value];
+    }
+    if (typeof value === 'number') {
+      value = [value.toString()];
+    }
+    if (Array.isArray(value)) {
+      item.set(this.path, value);
+    }
+  }
 
-	process.nextTick(callback);
+  process.nextTick(callback);
 };
 
 /*!

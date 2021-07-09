@@ -5,7 +5,6 @@ import { FormInput } from 'elemental';
 import cx from 'classnames';
 
 
-
 /**
  * TODO:
  * - Custom path support
@@ -16,67 +15,67 @@ const BOTTOM = 'bottom';
 const BOTTOMLEFT = 'bottom-left';
 
 const imageSrc = {
-    [CENTER]:'title-center',
-    [BOTTOM]:'title-bottom',
-    [BOTTOMLEFT]:'title-bottonLeft',
-    'title-upon-left': 'title-upon-left',
-    'title-above': 'title-above',
-    'header-upon': 'header-upon',
-    'header-above': 'header-above'
+  [CENTER]: 'title-center',
+  [BOTTOM]: 'title-bottom',
+  [BOTTOMLEFT]: 'title-bottonLeft',
+  'title-upon-left': 'title-upon-left',
+  'title-above': 'title-above',
+  'header-upon': 'header-upon',
+  'header-above': 'header-above',
 };
 
 module.exports = Field.create({
 
-	displayName: 'TitlePositionField',
+  displayName: 'TitlePositionField',
 
-	generateRadioGroup (nameValue, ops, value) {
+  generateRadioGroup(nameValue, ops, value) {
 
-		return ops.map((obj, i) => {
-			const imgStyle = cx({
-				'image-content': true,
-				'current': obj.value === value
-			})
-			return (
-				<label key={i} className="col-4 image-container">
+    return ops.map((obj, i) => {
+      const imgStyle = cx({
+        'image-content': true,
+        'current': obj.value === value,
+      });
+      return (
+        <label key={i} className="col-4 image-container">
   				<input type="radio" name={nameValue} value={obj.value} />
-                <img
-                  className={imgStyle}
-                  src={`https://storage.googleapis.com/twreporter-multimedia/images/${imageSrc[obj.value]}.png`}
-                  onClick={() => { this.valueChanged(obj.value); }}
-                  style={{
-                    objectFit: 'cover',
-                    width: '100%',
-                    height: '100%'
-                  }}
-                />
-				</label>
-			);
-		});
-	},
+          <img
+            className={imgStyle}
+            src={`https://storage.googleapis.com/twreporter-multimedia/images/${imageSrc[obj.value]}.png`}
+            onClick={() => { this.valueChanged(obj.value); }}
+            style={{
+              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+            }}
+          />
+        </label>
+      );
+    });
+  },
 
-	valueChanged (newValue) {
-		// TODO: This should be natively handled by the Select component
-		if (this.props.numeric && typeof newValue === 'string') {
-			newValue = newValue ? Number(newValue) : undefined;
-		}
-		this.props.onChange({
-			path: this.props.path,
-			value: newValue,
-		});
+  valueChanged(newValue) {
+    // TODO: This should be natively handled by the Select component
+    if (this.props.numeric && typeof newValue === 'string') {
+      newValue = newValue ? Number(newValue) : undefined;
+    }
+    this.props.onChange({
+      path: this.props.path,
+      value: newValue,
+    });
 
-		this.setState({ active: newValue });
-	},
+    this.setState({ active: newValue });
+  },
 
-	renderValue () {
-		var selected = this.props.ops.find(option => option.value === this.props.value);
-		return <FormInput noedit>{selected ? selected.label : null}</FormInput>;
-	},
+  renderValue() {
+    var selected = this.props.ops.find(option => option.value === this.props.value);
+    return <FormInput noedit>{selected ? selected.label : null}</FormInput>;
+  },
 
-	renderField () {
-		// TODO: This should be natively handled by the Select component
-		var ops = (this.props.numeric) ? this.props.ops.map(function (i) { return { label: i.label, value: String(i.value) }; }) : this.props.ops;
-		var value = (typeof this.props.value === 'number') ? String(this.props.value) : this.props.value;
-		return <div className="row">{this.generateRadioGroup(this.props.path, ops, value)}</div>;
-	},
+  renderField() {
+    // TODO: This should be natively handled by the Select component
+    var ops = (this.props.numeric) ? this.props.ops.map(function(i) { return { label: i.label, value: String(i.value) }; }) : this.props.ops;
+    var value = (typeof this.props.value === 'number') ? String(this.props.value) : this.props.value;
+    return <div className="row">{this.generateRadioGroup(this.props.path, ops, value)}</div>;
+  },
 
 });

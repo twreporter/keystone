@@ -13,66 +13,66 @@ const DEFAULT_FORMAT_STRING = 'YYYY-MM-DD ZZ';
 
 module.exports = Field.create({
 
-	displayName: 'DateField',
+  displayName: 'DateField',
 
-	propTypes: {
-		formatString: React.PropTypes.string,
-		inputFormat: React.PropTypes.string,
-		label: React.PropTypes.string,
-		note: React.PropTypes.string,
-		onChange: React.PropTypes.func,
-		path: React.PropTypes.string,
-		value: React.PropTypes.string,
-	},
+  propTypes: {
+    formatString: React.PropTypes.string,
+    inputFormat: React.PropTypes.string,
+    label: React.PropTypes.string,
+    note: React.PropTypes.string,
+    onChange: React.PropTypes.func,
+    path: React.PropTypes.string,
+    value: React.PropTypes.string,
+  },
 
-	getDefaultProps () {
-		return {
-			formatString: DEFAULT_FORMAT_STRING,
-			inputFormat: DEFAULT_INPUT_FORMAT,
-		};
-	},
+  getDefaultProps() {
+    return {
+      formatString: DEFAULT_FORMAT_STRING,
+      inputFormat: DEFAULT_INPUT_FORMAT,
+    };
+  },
 
-	valueChanged (value) {
-		this.props.onChange({
-			path: this.props.path,
-			value: value,
-		});
-	},
+  valueChanged(value) {
+    this.props.onChange({
+      path: this.props.path,
+      value: value,
+    });
+  },
 
-	moment (value) {
-		var m = moment(value);
-		return m;
-	},
+  moment(value) {
+    var m = moment(value);
+    return m;
+  },
 
-	isValid (value) {
-		return this.moment(value, this.inputFormat).isValid();
-	},
+  isValid(value) {
+    return this.moment(value, this.inputFormat).isValid();
+  },
 
-	format (value) {
-		return value ? this.moment(value).format(this.props.formatString) : '';
-	},
+  format(value) {
+    return value ? this.moment(value).format(this.props.formatString) : '';
+  },
 
-	setToday () {
-		this.valueChanged(this.moment(new Date()).format(this.props.inputFormat));
-	},
+  setToday() {
+    this.valueChanged(this.moment(new Date()).format(this.props.inputFormat));
+  },
 
-	renderValue () {
-		return <FormInput noedit>{this.format(this.props.value)}</FormInput>;
-	},
+  renderValue() {
+    return <FormInput noedit>{this.format(this.props.value)}</FormInput>;
+  },
 
-	renderField () {
-		let value = this.moment(this.props.value);
-		value = value.isValid() ? value.format(this.props.inputFormat) : this.props.value;
-		return (
-			<InputGroup>
-				<InputGroup.Section grow>
-					<DateInput ref="dateInput" name={this.props.path} format={this.props.inputFormat} value={value} onChange={this.valueChanged} />
-				</InputGroup.Section>
-				<InputGroup.Section>
-					<Button onClick={this.setToday}>Today</Button>
-				</InputGroup.Section>
-			</InputGroup>
-		);
-	},
+  renderField() {
+    let value = this.moment(this.props.value);
+    value = value.isValid() ? value.format(this.props.inputFormat) : this.props.value;
+    return (
+      <InputGroup>
+        <InputGroup.Section grow>
+          <DateInput ref="dateInput" name={this.props.path} format={this.props.inputFormat} value={value} onChange={this.valueChanged} />
+        </InputGroup.Section>
+        <InputGroup.Section>
+          <Button onClick={this.setToday}>Today</Button>
+        </InputGroup.Section>
+      </InputGroup>
+    );
+  },
 
 });

@@ -7,48 +7,48 @@ import get from 'lodash/get';
 
 const _ = {
   get,
-}
+};
 
 export default class AnnotationBlock extends AtomicBlockRendererMixin(React.Component) {
-	constructor (props) {
-		super(props);
-	}
+  constructor(props) {
+    super(props);
+  }
 
-	render () {
-		if (!this.state.data) {
-			return null;
-		}
+  render() {
+    if (!this.state.data) {
+      return null;
+    }
 
-		let blockContent = _.get(this.state.data, ['content', 0], {});
-		let text = blockContent.text;
-		let annotation = blockContent.annotation;
-		let draftRawObj = blockContent.draftRawObj;
-		const EditBlock = (
-			<AnnotationEditingBlock
-				annotation={annotation}
-				draftRawObj={draftRawObj}
-				label="annotation"
-				isModalOpen={this.state.editMode}
-				text={text}
-				onToggle={this.handleEditingBlockChange}
-				toggleModal={this.toggleEditMode}
-			/>
-		);
+    let blockContent = _.get(this.state.data, ['content', 0], {});
+    let text = blockContent.text;
+    let annotation = blockContent.annotation;
+    let draftRawObj = blockContent.draftRawObj;
+    const EditBlock = (
+      <AnnotationEditingBlock
+        annotation={annotation}
+        draftRawObj={draftRawObj}
+        label="annotation"
+        isModalOpen={this.state.editMode}
+        text={text}
+        onToggle={this.handleEditingBlockChange}
+        toggleModal={this.toggleEditMode}
+      />
+    );
 
-		return (
-			<div
-				contentEditable={false}
-				onClick={this.toggleEditMode}
-				style={{ cursor: 'pointer' }}
-			>
-				<div>
+    return (
+      <div
+        contentEditable={false}
+        onClick={this.toggleEditMode}
+        style={{ cursor: 'pointer' }}
+      >
+        <div>
 					要被註解的字串：{text}
-				</div>
-				<div>
+        </div>
+        <div>
 					註解：{annotation}
-				</div>
-				{EditBlock}
-			</div>
-		);
-	}
+        </div>
+        {EditBlock}
+      </div>
+    );
+  }
 };

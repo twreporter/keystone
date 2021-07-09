@@ -196,5 +196,10 @@
     "server",
     "templates",
     "index.js"
+  ],
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
   ]
 }

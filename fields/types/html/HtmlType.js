@@ -7,13 +7,13 @@ var util = require('util');
  * @extends Field
  * @api public
  */
-function html (list, path, options) {
-	// this._nativeType = String;
-	this._defaultSize = 'full';
-	this.wysiwyg = options.wysiwyg || false;
-	this.height = options.height || 180;
-	this._properties = ['wysiwyg', 'height'];
-	html.super_.call(this, list, path, options);
+function html(list, path, options) {
+  // this._nativeType = String;
+  this._defaultSize = 'full';
+  this.wysiwyg = options.wysiwyg || false;
+  this.height = options.height || 180;
+  this._properties = ['wysiwyg', 'height'];
+  html.super_.call(this, list, path, options);
 }
 util.inherits(html, FieldType);
 
@@ -30,23 +30,23 @@ html.prototype.addFilterToQuery = TextType.prototype.addFilterToQuery;
  * @api public
  */
 
-html.prototype.addToSchema = function () {
-	var schema = this.list.schema;
+html.prototype.addToSchema = function() {
+  var schema = this.list.schema;
 
-	this.paths = {
-		draft: this._path.append('.draft'),
-		html: this._path.append('.html'),
-		apiData: this._path.append('.apiData'),
-	};
+  this.paths = {
+    draft: this._path.append('.draft'),
+    html: this._path.append('.html'),
+    apiData: this._path.append('.apiData'),
+  };
 
-	schema.nested[this.path] = true;
-	schema.add({
-		html: { type: String },
-		draft: { type: Object },
-		apiData: { type: Object },
-	}, this.path + '.');
+  schema.nested[this.path] = true;
+  schema.add({
+    html: { type: String },
+    draft: { type: Object },
+    apiData: { type: Object },
+  }, this.path + '.');
 
-	this.bindUnderscoreMethods();
+  this.bindUnderscoreMethods();
 };
 
 
@@ -56,8 +56,8 @@ html.prototype.addToSchema = function () {
  * @api public
  */
 
-html.prototype.format = function (item) {
-	return item.get(this.paths.html);
+html.prototype.format = function(item) {
+  return item.get(this.paths.html);
 };
 
 /**
@@ -68,11 +68,11 @@ html.prototype.format = function (item) {
  * @api public
  */
 
-html.prototype.inputIsValid = function (data, required, item) {
-	if (!(this.path in data || this.paths.draft in data) && item && item.get(this.paths.draft)) {
-		return true;
-	}
-	return (!required || data[this.path] || data[this.paths.draft]) ? true : false;
+html.prototype.inputIsValid = function(data, required, item) {
+  if (!(this.path in data || this.paths.draft in data) && item && item.get(this.paths.draft)) {
+    return true;
+  }
+  return (!required || data[this.path] || data[this.paths.draft]) ? true : false;
 };
 
 
@@ -82,8 +82,8 @@ html.prototype.inputIsValid = function (data, required, item) {
  * @api public
  */
 
-html.prototype.isModified = function (item) {
-	return item.isModified(this.paths.html);
+html.prototype.isModified = function(item) {
+  return item.isModified(this.paths.html);
 };
 
 
@@ -95,23 +95,23 @@ html.prototype.isModified = function (item) {
  * @api public
  */
 
-html.prototype.updateItem = function (item, data, callback) {
-	var value = this.getValueFromData(data);
-	if (value && value !== '') {
-                var dObj = {}
-                try {
-                        dObj = JSON.parse(value);
-                } catch (err) {
-                        console.error('Error to JSON.parse:', err)
-                }
-		if (dObj.draft) {
-			item.set(this.paths.draft, dObj.draft);
-			item.set(this.paths.html, dObj.html);
-			item.set(this.paths.apiData, dObj.apiData);
-		}
-	}
+html.prototype.updateItem = function(item, data, callback) {
+  var value = this.getValueFromData(data);
+  if (value && value !== '') {
+    var dObj = {};
+    try {
+      dObj = JSON.parse(value);
+    } catch (err) {
+      console.error('Error to JSON.parse:', err);
+    }
+    if (dObj.draft) {
+      item.set(this.paths.draft, dObj.draft);
+      item.set(this.paths.html, dObj.html);
+      item.set(this.paths.apiData, dObj.apiData);
+    }
+  }
 
-	process.nextTick(callback);
+  process.nextTick(callback);
 };
 
 
