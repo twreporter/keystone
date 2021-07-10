@@ -1,7 +1,6 @@
 import Field from '../Field';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import classnames from 'classnames';
 import get from 'lodash/get';
 import keys from 'lodash/keys';
 import { Button, FormField, FormInput, FormNote } from 'elemental';

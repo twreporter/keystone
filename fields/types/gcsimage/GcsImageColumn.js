@@ -34,7 +34,7 @@ var GcsImageColumn = React.createClass({
     );
 
     const iptc = _.get(value, ['iptc'], {});
-    const { byline, caption, created_time, keywords } = iptc;
+    const { byline, caption, created_time } = iptc;
 
     let createdTime = created_time;
     if (typeof createdTime === 'string' && createdTime !== '') {

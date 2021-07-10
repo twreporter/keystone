@@ -1,6 +1,5 @@
 import Field from '../Field';
 import React from 'react';
-import Select from 'react-select';
 import { FormInput } from 'elemental';
 import cx from 'classnames';
 
@@ -37,7 +36,7 @@ module.exports = Field.create({
       });
       return (
         <label key={i} className="col-4 image-container">
-  				<input type="radio" name={nameValue} value={obj.value} />
+          <input type="radio" name={nameValue} value={obj.value} />
           <img
             className={imgStyle}
             src={`https://storage.googleapis.com/twreporter-multimedia/images/${imageSrc[obj.value]}.png`}

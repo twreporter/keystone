@@ -252,7 +252,6 @@ gcsimage.prototype.uploadFile = function(item, file, update, callback) {
   var filename = prefix + file.name;
   var split = filename.split('.');
   var filenameWithoutExt = split[0];
-  var ext = split[1] || '';
   var originalname = file.originalname;
   var filetype = file.mimetype || file.type;
   let gcsDir = this.options.destination ? this.options.destination : '';

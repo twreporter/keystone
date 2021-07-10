@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { FormField, FormInput, FormSelect, SegmentedControl } from 'elemental';
+import { FormField, FormInput, FormSelect } from 'elemental';
 
 const modeOptions = [
   { label: '描述裡包含：', value: 'caption_contains', placeholder: '請輸入您想搜尋的字串' },
@@ -43,7 +43,7 @@ var GcsImageFilter = React.createClass({
     this.updateFilter({ value: e.target.value });
   },
   render() {
-    const { field, filter } = this.props;
+    const { filter } = this.props;
     const mode = modeOptions.filter(option => option.value === filter.mode)[0];
 
     return (
