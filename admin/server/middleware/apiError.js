@@ -10,26 +10,26 @@
 		apiError(err) => 500 { err }
 */
 
-module.exports = function (req, res, next) {
-	res.apiError = function apiError (statusCode, error, detail) {
-		if (typeof statusCode !== 'number' && arguments.length < 3) {
-			detail = error;
-			error = statusCode;
-			statusCode = 500;
-		}
-		if (statusCode) {
-			res.status(statusCode);
-		}
-		if (error instanceof Error) {
-			error = error.name !== 'Error' ? error.name + ': ' + error.message : error.message;
-		}
-		if (detail instanceof Error) {
-			detail = detail.name !== 'Error' ? detail.name + ': ' + detail.message : detail.message;
-		}
-		var data = typeof error === 'string' || (error && detail)
-			? { error: error, detail: detail }
-			: error;
-		res.json(data);
-	};
-	next();
+module.exports = function(req, res, next) {
+  res.apiError = function apiError(statusCode, error, detail) {
+    if (typeof statusCode !== 'number' && arguments.length < 3) {
+      detail = error;
+      error = statusCode;
+      statusCode = 500;
+    }
+    if (statusCode) {
+      res.status(statusCode);
+    }
+    if (error instanceof Error) {
+      error = error.name !== 'Error' ? error.name + ': ' + error.message : error.message;
+    }
+    if (detail instanceof Error) {
+      detail = detail.name !== 'Error' ? detail.name + ': ' + detail.message : detail.message;
+    }
+    var data = typeof error === 'string' || (error && detail)
+      ? { error: error, detail: detail }
+      : error;
+    res.json(data);
+  };
+  next();
 };

@@ -12,93 +12,93 @@ const TRANSPARENT_BG
 	</svg>`;
 
 module.exports = Field.create({
-	displayName: 'ColorField',
+  displayName: 'ColorField',
 
-	propTypes: {
-		onChange: React.PropTypes.func,
-		path: React.PropTypes.string,
-		pickerType: React.PropTypes.oneOf(PICKER_TYPES),
-		value: React.PropTypes.string,
-	},
+  propTypes: {
+    onChange: React.PropTypes.func,
+    path: React.PropTypes.string,
+    pickerType: React.PropTypes.oneOf(PICKER_TYPES),
+    value: React.PropTypes.string,
+  },
 
-	getInitialState () {
-		return {
-			displayColorPicker: false,
-		};
-	},
+  getInitialState() {
+    return {
+      displayColorPicker: false,
+    };
+  },
 
-	getDefaultProps () {
-		return {
-			pickerType: 'sketch',
-		};
-	},
+  getDefaultProps() {
+    return {
+      pickerType: 'sketch',
+    };
+  },
 
-	updateValue (value) {
-		this.props.onChange({
-			path: this.props.path,
-			value: value,
-		});
-	},
+  updateValue(value) {
+    this.props.onChange({
+      path: this.props.path,
+      value: value,
+    });
+  },
 
-	handleInputChange (event) {
-		var newValue = event.target.value;
-		if (/^([0-9A-F]{3}){1,2}$/.test(newValue)) {
-			newValue = '#' + newValue;
-		}
-		if (newValue === this.props.value) return;
+  handleInputChange(event) {
+    var newValue = event.target.value;
+    if (/^([0-9A-F]{3}){1,2}$/.test(newValue)) {
+      newValue = '#' + newValue;
+    }
+    if (newValue === this.props.value) return;
 
-		this.updateValue(newValue);
-	},
+    this.updateValue(newValue);
+  },
 
-	handleClick () {
-		this.setState({ displayColorPicker: !this.state.displayColorPicker });
-	},
+  handleClick() {
+    this.setState({ displayColorPicker: !this.state.displayColorPicker });
+  },
 
-	handleClose () {
-		this.setState({ displayColorPicker: false });
-	},
+  handleClose() {
+    this.setState({ displayColorPicker: false });
+  },
 
-	handlePickerChange (color) {
-		var newValue = color.hex;
+  handlePickerChange(color) {
+    var newValue = color.hex;
 
-		if (newValue === this.props.value) return;
+    if (newValue === this.props.value) return;
 
-		this.updateValue(newValue);
-	},
+    this.updateValue(newValue);
+  },
 
-	renderSwatch () {
-		return (this.props.value) ? (
-			<span className="field-type-color__swatch" style={{ backgroundColor: this.props.value }} />
-		) : (
-			<span className="field-type-color__swatch" dangerouslySetInnerHTML={{ __html: TRANSPARENT_BG }} />
-		);
-	},
+  renderSwatch() {
+    return (this.props.value) ? (
+      <span className="field-type-color__swatch" style={{ backgroundColor: this.props.value }} />
+    ) : (
+      <span className="field-type-color__swatch" dangerouslySetInnerHTML={{ __html: TRANSPARENT_BG }} />
+    );
+  },
 
-	renderField () {
-		return (
-			<div className="field-type-color__wrapper">
-				<InputGroup>
-					<InputGroup.Section grow>
-						<FormInput ref="field" onChange={this.valueChanged} name={this.props.path} value={this.props.value} autoComplete="off" />
-					</InputGroup.Section>
-					<InputGroup.Section>
-						<button type="button" onClick={this.handleClick} className="FormInput FormSelect field-type-color__button">
-							{this.renderSwatch()}
-						</button>
-					</InputGroup.Section>
-				</InputGroup>
-				<div className="field-type-color__picker">
-					<ColorPicker
-						color={this.props.value}
-						display={this.state.displayColorPicker}
-						onChangeComplete={this.handlePickerChange}
-						onClose={this.handleClose}
-						position={window.innerWidth > 480 ? 'right' : 'below'}
-						type={this.props.pickerType}
-						/>
-				</div>
-			</div>
-		);
-	},
+  renderField() {
+    return (
+      <div className="field-type-color__wrapper">
+        <InputGroup>
+          <InputGroup.Section grow>
+            <FormInput ref="field" onChange={this.valueChanged} name={this.props.path} value={this.props.value} autoComplete="off" />
+          </InputGroup.Section>
+          <InputGroup.Section>
+            <button type="button" onClick={this.handleClick} className="FormInput FormSelect field-type-color__button">
+              {this.renderSwatch()}
+            </button>
+          </InputGroup.Section>
+        </InputGroup>
+        <div className="field-type-color__picker">
+          <ColorPicker
+            color={this.props.value}
+            display={this.state.displayColorPicker}
+            onChangeComplete={this.handlePickerChange}
+            onClose={this.handleClose}
+            position={window.innerWidth > 480 ? 'right' : 'below'}
+            type={this.props.pickerType}
+          />
+        </div>
+      </div>
+    );
+  },
 
 });

@@ -18,38 +18,38 @@ var super_ = require('../Type');
  * @api public
  */
 
-function embedly (list, path, options) {
+function embedly(list, path, options) {
 
-	this._underscoreMethods = ['reset'];
-	this._fixedSize = 'full';
+  this._underscoreMethods = ['reset'];
+  this._fixedSize = 'full';
 
-	this.fromPath = options.from;
-	this.embedlyOptions = options.options || {};
+  this.fromPath = options.from;
+  this.embedlyOptions = options.options || {};
 
-	// TODO: implement filtering, usage disabled for now
-	options.nofilter = true;
+  // TODO: implement filtering, usage disabled for now
+  options.nofilter = true;
 
-	// check and api key has been set, or bail.
-	if (!keystone.get('embedly api key')) {
-		throw new Error('Invalid Configuration\n\n'
+  // check and api key has been set, or bail.
+  if (!keystone.get('embedly api key')) {
+    throw new Error('Invalid Configuration\n\n'
 			+ 'Embedly fields (' + list.key + '.' + path + ') require the "embedly api key" option to be set.\n\n'
 			+ 'See http://keystonejs.com/docs/configuration/#services-embedly for more information.\n');
-	}
+  }
 
-	// ensure a fromPath has been defined
-	if (!options.from) {
-		throw new Error('Invalid Configuration\n\n'
+  // ensure a fromPath has been defined
+  if (!options.from) {
+    throw new Error('Invalid Configuration\n\n'
 			+ 'Embedly fields (' + list.key + '.' + path + ') require a fromPath option to be set.\n'
 			+ 'See http://keystonejs.com/docs/database/#fieldtypes-embedly for more information.\n');
-	}
+  }
 
-	// embedly fields cannot be set as initial fields
-	if (options.initial) {
-		throw new Error('Invalid Configuration\n\n'
+  // embedly fields cannot be set as initial fields
+  if (options.initial) {
+    throw new Error('Invalid Configuration\n\n'
 			+ 'Embedly fields (' + list.key + '.' + path + ') cannot be set as initial fields.\n');
-	}
+  }
 
-	embedly.super_.call(this, list, path, options);
+  embedly.super_.call(this, list, path, options);
 
 }
 
@@ -66,118 +66,118 @@ util.inherits(embedly, super_);
  * @api public
  */
 
-embedly.prototype.addToSchema = function () {
+embedly.prototype.addToSchema = function() {
 
-	var field = this;
-	var schema = this.list.schema;
+  var field = this;
+  var schema = this.list.schema;
 
-	this.paths = {
-		exists: this._path.append('.exists'),
-		type: this._path.append('.type'),
-		title: this._path.append('.title'),
-		url: this._path.append('.url'),
-		width: this._path.append('.width'),
-		height: this._path.append('.height'),
-		version: this._path.append('.version'),
-		description: this._path.append('.description'),
-		html: this._path.append('.html'),
-		authorName: this._path.append('.authorName'),
-		authorUrl: this._path.append('.authorUrl'),
-		providerName: this._path.append('.providerName'),
-		providerUrl: this._path.append('.providerUrl'),
-		thumbnailUrl: this._path.append('.thumbnailUrl'),
-		thumbnailWidth: this._path.append('.thumbnailWidth'),
-		thumbnailHeight: this._path.append('.thumbnailHeight'),
-	};
+  this.paths = {
+    exists: this._path.append('.exists'),
+    type: this._path.append('.type'),
+    title: this._path.append('.title'),
+    url: this._path.append('.url'),
+    width: this._path.append('.width'),
+    height: this._path.append('.height'),
+    version: this._path.append('.version'),
+    description: this._path.append('.description'),
+    html: this._path.append('.html'),
+    authorName: this._path.append('.authorName'),
+    authorUrl: this._path.append('.authorUrl'),
+    providerName: this._path.append('.providerName'),
+    providerUrl: this._path.append('.providerUrl'),
+    thumbnailUrl: this._path.append('.thumbnailUrl'),
+    thumbnailWidth: this._path.append('.thumbnailWidth'),
+    thumbnailHeight: this._path.append('.thumbnailHeight'),
+  };
 
-	schema.nested[this.path] = true;
-	schema.add({
-		exists: Boolean,
-		type: String,
-		title: String,
-		url: String,
-		width: Number,
-		height: Number,
-		version: String,
-		description: String,
-		html: String,
-		authorName: String,
-		authorUrl: String,
-		providerName: String,
-		providerUrl: String,
-		thumbnailUrl: String,
-		thumbnailWidth: Number,
-		thumbnailHeight: Number,
-	}, this.path + '.');
+  schema.nested[this.path] = true;
+  schema.add({
+    exists: Boolean,
+    type: String,
+    title: String,
+    url: String,
+    width: Number,
+    height: Number,
+    version: String,
+    description: String,
+    html: String,
+    authorName: String,
+    authorUrl: String,
+    providerName: String,
+    providerUrl: String,
+    thumbnailUrl: String,
+    thumbnailWidth: Number,
+    thumbnailHeight: Number,
+  }, this.path + '.');
 
-	// Bind the pre-save hook to hit the embedly api if the source path has changed
+  // Bind the pre-save hook to hit the embedly api if the source path has changed
 
-	schema.pre('save', function (next) {
+  schema.pre('save', function(next) {
 
-		if (!this.isModified(field.fromPath)) {
-			return next();
-		}
+    if (!this.isModified(field.fromPath)) {
+      return next();
+    }
 
-		var fromValue = this.get(field.fromPath);
+    var fromValue = this.get(field.fromPath);
 
-		if (!fromValue) {
-			field.reset(this);
-			return next();
-		}
+    if (!fromValue) {
+      field.reset(this);
+      return next();
+    }
 
-		var post = this;
+    var post = this;
 
-		new EmbedlyAPI({ key: keystone.get('embedly api key') }, function (err, api) { // eslint-disable-line no-new
+    new EmbedlyAPI({ key: keystone.get('embedly api key') }, function(err, api) { // eslint-disable-line no-new
 
-			if (err) {
-				console.error('Error creating Embedly api:');
-				console.error(err, api);
-				field.reset(this);
-				return next();
-			}
+      if (err) {
+        console.error('Error creating Embedly api:');
+        console.error(err, api);
+        field.reset(this);
+        return next();
+      }
 
-			var opts = _.defaults({ url: fromValue }, field.embedlyOptions);
+      var opts = _.defaults({ url: fromValue }, field.embedlyOptions);
 
-			api.oembed(opts, function (err, objs) {
+      api.oembed(opts, function(err, objs) {
 
-				if (err) {
-					console.error('Embedly API Error:');
-					console.error(err, objs);
-					field.reset(post);
-				} else {
-					var data = objs[0];
-					if (data && data.type !== 'error') {
-						post.set(field.path, {
-							exists: true,
-							type: data.type,
-							title: data.title,
-							url: data.url,
-							width: data.width,
-							height: data.height,
-							version: data.version,
-							description: data.description,
-							html: data.html,
-							authorName: data.author_name,
-							authorUrl: data.author_url,
-							providerName: data.provider_name,
-							providerUrl: data.provider_url,
-							thumbnailUrl: data.thumbnail_url,
-							thumbnailWidth: data.thumbnail_width,
-							thumbnailHeight: data.thumbnail_height,
-						});
+        if (err) {
+          console.error('Embedly API Error:');
+          console.error(err, objs);
+          field.reset(post);
+        } else {
+          var data = objs[0];
+          if (data && data.type !== 'error') {
+            post.set(field.path, {
+              exists: true,
+              type: data.type,
+              title: data.title,
+              url: data.url,
+              width: data.width,
+              height: data.height,
+              version: data.version,
+              description: data.description,
+              html: data.html,
+              authorName: data.author_name,
+              authorUrl: data.author_url,
+              providerName: data.provider_name,
+              providerUrl: data.provider_url,
+              thumbnailUrl: data.thumbnail_url,
+              thumbnailWidth: data.thumbnail_width,
+              thumbnailHeight: data.thumbnail_height,
+            });
 
-					} else {
-						field.reset(post);
-					}
-				}
-				return next();
+          } else {
+            field.reset(post);
+          }
+        }
+        return next();
 
-			});
-		});
+      });
+    });
 
-	});
+  });
 
-	this.bindUnderscoreMethods();
+  this.bindUnderscoreMethods();
 
 };
 
@@ -188,25 +188,25 @@ embedly.prototype.addToSchema = function () {
  * @api public
  */
 
-embedly.prototype.reset = function (item) {
-	return item.set(item.set(this.path, {
-		exists: false,
-		type: null,
-		title: null,
-		url: null,
-		width: null,
-		height: null,
-		version: null,
-		description: null,
-		html: null,
-		authorName: null,
-		authorUrl: null,
-		providerName: null,
-		providerUrl: null,
-		thumbnailUrl: null,
-		thumbnailWidth: null,
-		thumbnailHeight: null,
-	}));
+embedly.prototype.reset = function(item) {
+  return item.set(item.set(this.path, {
+    exists: false,
+    type: null,
+    title: null,
+    url: null,
+    width: null,
+    height: null,
+    version: null,
+    description: null,
+    html: null,
+    authorName: null,
+    authorUrl: null,
+    providerName: null,
+    providerUrl: null,
+    thumbnailUrl: null,
+    thumbnailWidth: null,
+    thumbnailHeight: null,
+  }));
 };
 
 
@@ -216,8 +216,8 @@ embedly.prototype.reset = function (item) {
  * @api public
  */
 
-embedly.prototype.format = function (item) {
-	return item.get(this.paths.html);
+embedly.prototype.format = function(item) {
+  return item.get(this.paths.html);
 };
 
 
@@ -227,9 +227,9 @@ embedly.prototype.format = function (item) {
  * @api public
  */
 
-embedly.prototype.isModified = function (item) {
-	// Assume that it has changed if the url is different
-	return item.isModified(this.paths.url);
+embedly.prototype.isModified = function(item) {
+  // Assume that it has changed if the url is different
+  return item.isModified(this.paths.url);
 };
 
 
@@ -239,9 +239,9 @@ embedly.prototype.isModified = function (item) {
  * @api public
  */
 
-embedly.prototype.inputIsValid = function (data) { // eslint-disable-line no-unused-vars
-	// TODO: I don't think embedly fields need to be validated...
-	return true;
+embedly.prototype.inputIsValid = function(data) { // eslint-disable-line no-unused-vars
+  // TODO: I don't think embedly fields need to be validated...
+  return true;
 };
 
 
@@ -251,28 +251,28 @@ embedly.prototype.inputIsValid = function (data) { // eslint-disable-line no-unu
  * @api public
  */
 
-embedly.prototype.updateItem = function (item, data, callback) {
-	// TODO: This could be more granular and check for actual changes to values,
-	// see the Location field for an example
-	item.set(item.set(this.path, {
-		exists: data[this.paths.exists],
-		type: data[this.paths.type],
-		title: data[this.paths.title],
-		url: data[this.paths.url],
-		width: data[this.paths.width],
-		height: data[this.paths.height],
-		version: data[this.paths.version],
-		description: data[this.paths.description],
-		html: data[this.paths.html],
-		authorName: data[this.paths.authorName],
-		authorUrl: data[this.paths.authorUrl],
-		providerName: data[this.paths.providerName],
-		providerUrl: data[this.paths.providerUrl],
-		thumbnailUrl: data[this.paths.thumbnailUrl],
-		thumbnailWidth: data[this.paths.thumbnailWidth],
-		thumbnailHeight: data[this.paths.thumbnailHeight],
-	}));
-	process.nextTick(callback);
+embedly.prototype.updateItem = function(item, data, callback) {
+  // TODO: This could be more granular and check for actual changes to values,
+  // see the Location field for an example
+  item.set(item.set(this.path, {
+    exists: data[this.paths.exists],
+    type: data[this.paths.type],
+    title: data[this.paths.title],
+    url: data[this.paths.url],
+    width: data[this.paths.width],
+    height: data[this.paths.height],
+    version: data[this.paths.version],
+    description: data[this.paths.description],
+    html: data[this.paths.html],
+    authorName: data[this.paths.authorName],
+    authorUrl: data[this.paths.authorUrl],
+    providerName: data[this.paths.providerName],
+    providerUrl: data[this.paths.providerUrl],
+    thumbnailUrl: data[this.paths.thumbnailUrl],
+    thumbnailWidth: data[this.paths.thumbnailWidth],
+    thumbnailHeight: data[this.paths.thumbnailHeight],
+  }));
+  process.nextTick(callback);
 };
 
 

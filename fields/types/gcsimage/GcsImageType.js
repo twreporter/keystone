@@ -12,14 +12,14 @@ var sizeOf = require('probe-image-size');
 
 // lodash
 var forEach = require('lodash/forEach');
-var indexOf = require('lodash/indexOf')
-var set = require('lodash/set')
+var indexOf = require('lodash/indexOf');
+var set = require('lodash/set');
 
 const _ = {
   forEach,
   indexOf,
   set,
-}
+};
 
 /**
  *  FieldType Constructor
@@ -27,7 +27,7 @@ const _ = {
  * @api public
  */
 
-function gcsimage (list, path, options) {
+function gcsimage(list, path, options) {
   this._underscoreMethods = ['format', 'uploadFile'];
   this._fixedSize = 'full';
 
@@ -53,7 +53,7 @@ util.inherits(gcsimage, super_);
  */
 
 Object.defineProperty(gcsimage.prototype, 'gcsConfig', {
-  get: function () {
+  get: function() {
     return this.options.gcsConfig || keystone.get('gcs config');
   },
 });
@@ -64,7 +64,7 @@ Object.defineProperty(gcsimage.prototype, 'gcsConfig', {
  * @api public
  */
 
-gcsimage.prototype.addToSchema = function () {
+gcsimage.prototype.addToSchema = function() {
 
   var _this = this;
   var schema = this.list.schema;
@@ -101,16 +101,16 @@ gcsimage.prototype.addToSchema = function () {
 
   schema.add(schemaPaths);
 
-  var exists = function (item) {
+  var exists = function(item) {
     return (item.get(paths.filename) ? true : false);
   };
 
   // The .exists virtual indicates whether a file is stored
-  schema.virtual(paths.exists).get(function () {
+  schema.virtual(paths.exists).get(function() {
     return schemaMethods.exists.apply(this);
   });
 
-  var reset = function (item) {
+  var reset = function(item) {
     item.set(_this.path, {
       filename: '',
       filetype: '',
@@ -125,7 +125,7 @@ gcsimage.prototype.addToSchema = function () {
   };
 
   var schemaMethods = {
-    exists: function () {
+    exists: function() {
       return exists(this);
     },
     /**
@@ -133,7 +133,7 @@ gcsimage.prototype.addToSchema = function () {
      *
      * @api public
      */
-    reset: function () {
+    reset: function() {
       reset(this);
     },
     /**
@@ -141,9 +141,9 @@ gcsimage.prototype.addToSchema = function () {
      *
      * @api public
      */
-    delete: function () {
+    delete: function() {
       var _this = this;
-      var promise = new Promise(function (resolve, reject) {
+      var promise = new Promise(function(resolve, reject) {
         var gcsConfig = _this.gcsConfig;
         var bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.bucket));
         var filename = _this.get(paths.filename);
@@ -151,7 +151,7 @@ gcsimage.prototype.addToSchema = function () {
           var filenameWithoutExt = filename.split('.')[0];
           bucket.deleteFiles({
             prefix: _this.get(paths.path) + filenameWithoutExt,
-          }, function (err) {
+          }, function(err) {
             if (err) {
               return reject(err);
             }
@@ -166,12 +166,12 @@ gcsimage.prototype.addToSchema = function () {
     },
   };
 
-  _.forEach(schemaMethods, function (fn, key) {
+  _.forEach(schemaMethods, function(fn, key) {
     _this.underscoreMethod(key, fn);
   });
 
   // expose a method on the field to call schema methods
-  this.apply = function (item, method) {
+  this.apply = function(item, method) {
     return schemaMethods[method].apply(item, Array.prototype.slice.call(arguments, 2));
   };
 
@@ -185,7 +185,7 @@ gcsimage.prototype.addToSchema = function () {
  * @api public
  */
 
-gcsimage.prototype.format = function (item) {
+gcsimage.prototype.format = function(item) {
   if (this.hasFormatter()) {
     return this.options.format(item, item[this.path]);
   }
@@ -199,7 +199,7 @@ gcsimage.prototype.format = function (item) {
  * @api public
  */
 
-gcsimage.prototype.hasFormatter = function () {
+gcsimage.prototype.hasFormatter = function() {
   return typeof this.options.format === 'function';
 };
 
@@ -210,7 +210,7 @@ gcsimage.prototype.hasFormatter = function () {
  * @api public
  */
 
-gcsimage.prototype.isModified = function (item) {
+gcsimage.prototype.isModified = function(item) {
   return item.isModified(this.paths.filename);
 };
 
@@ -221,7 +221,7 @@ gcsimage.prototype.isModified = function (item) {
  * @api public
  */
 
-gcsimage.prototype.inputIsValid = function (data) { // eslint-disable-line no-unused-vars
+gcsimage.prototype.inputIsValid = function(data) { // eslint-disable-line no-unused-vars
   // TODO - how should file field input be validated?
   return true;
 };
@@ -233,7 +233,7 @@ gcsimage.prototype.inputIsValid = function (data) { // eslint-disable-line no-un
  * @api public
  */
 
-gcsimage.prototype.updateItem = function (item, data, callback) { // eslint-disable-line no-unused-vars
+gcsimage.prototype.updateItem = function(item, data, callback) { // eslint-disable-line no-unused-vars
   // TODO - direct updating of data (not via upload)
   process.nextTick(callback);
 };
@@ -244,7 +244,7 @@ gcsimage.prototype.updateItem = function (item, data, callback) { // eslint-disa
  * @api public
  */
 
-gcsimage.prototype.uploadFile = function (item, file, update, callback) {
+gcsimage.prototype.uploadFile = function(item, file, update, callback) {
   var _this = this;
   var ONE_YEAR = 60 * 60 * 24 * 365;
   var publicRead = _this.options.publicRead ? _this.options.publicRead : false;
@@ -275,7 +275,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
     return callback(new Error('Unsupported File Type: ' + filetype));
   }
 
-  var doUpload = function () {
+  var doUpload = function() {
 
     if (typeof _this.options.filename === 'function') {
       filename = _this.options.filename(item, filename, originalname);
@@ -287,7 +287,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
       filetype: filetype,
       publicRead: publicRead,
       cacheControl: 'public, max-age=' + ONE_YEAR,
-    }).then(function () {
+    }).then(function() {
       const dimensions = sizeOf.sync(fs.readFileSync(file.path));
 
       var imageData = {
@@ -310,24 +310,24 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
               item.set(_this.path, postUploadData);
             }
             return callback(null, postUploadData);
-          })
+          });
       } else {
         if (update) {
           item.set(_this.path, imageData);
         }
         callback(null, imageData);
       }
-    }).catch(function (err) {
+    }).catch(function(err) {
       console.error(err);
       bucket.deleteFiles({
         prefix: gcsDir + filenameWithoutExt,
-      }, function (deleteErr) {
+      }, function(deleteErr) {
         if (deleteErr) {
           return callback(deleteErr);
         }
         callback(err);
       });
-    }).finally(function () {
+    }).finally(function() {
       // delete local file
       console.log('DELETE LOCAL FILE:', file.path);
       try {
@@ -352,7 +352,7 @@ gcsimage.prototype.uploadFile = function (item, file, update, callback) {
  * @api public
  */
 
-gcsimage.prototype.getRequestHandler = function (item, req, paths, callback) {
+gcsimage.prototype.getRequestHandler = function(item, req, paths, callback) {
 
   var _this = this;
 
@@ -363,9 +363,9 @@ gcsimage.prototype.getRequestHandler = function (item, req, paths, callback) {
     paths = _this.paths;
   }
 
-  callback = callback || function () {};
+  callback = callback || function() {};
 
-  return function () {
+  return function() {
 
     if (req.body) {
       var action = req.body[paths.action];
@@ -384,9 +384,9 @@ gcsimage.prototype.getRequestHandler = function (item, req, paths, callback) {
       if (typeof imageDelete === 'undefined') {
         _this.uploadFile(item, req.files[paths.upload], true, callback);
       } else {
-        imageDelete.then(function (result) {
+        imageDelete.then(function(result) {
           _this.uploadFile(item, req.files[paths.upload], true, callback);
-        }, function (err) {
+        }, function(err) {
           callback(err);
         });
       }
@@ -403,26 +403,26 @@ gcsimage.prototype.getRequestHandler = function (item, req, paths, callback) {
  * @api public
  */
 
-gcsimage.prototype.handleRequest = function (item, req, paths, callback) {
+gcsimage.prototype.handleRequest = function(item, req, paths, callback) {
   this.getRequestHandler(item, req, paths, callback)();
 };
 
 /**
  * Add filters to a query
  */
-gcsimage.prototype.addFilterToQuery = function (filter, query) {
+gcsimage.prototype.addFilterToQuery = function(filter, query) {
   query = query || {};
   let value = utils.escapeRegExp(filter.value);
   value = new RegExp(value, 'i');
 
-  switch(filter.mode) {
+  switch (filter.mode) {
     case 'keywords_contains': {
-      query['$or'] = [{
-          keywords: value,
-        },{
-          [`${this.path}.iptc.keywords`]: value,
-        }
-      ]
+      query.$or = [{
+        keywords: value,
+      }, {
+        [`${this.path}.iptc.keywords`]: value,
+      },
+      ];
       break;
     }
     case 'byline_contains': {
@@ -435,12 +435,12 @@ gcsimage.prototype.addFilterToQuery = function (filter, query) {
     }
     case 'caption_contains':
     default: {
-      query['$or'] = [{
-          description: value,
-        },{
-          [`${this.path}.iptc.caption`]: value,
-        }
-      ]
+      query.$or = [{
+        description: value,
+      }, {
+        [`${this.path}.iptc.caption`]: value,
+      },
+      ];
       break;
     }
   }

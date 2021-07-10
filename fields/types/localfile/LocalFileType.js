@@ -17,40 +17,40 @@ var super_ = require('../Type');
  * @api public
  */
 
-function localfile (list, path, options) {
-	grappling.mixin(this)
-		.allowHooks('move');
-	this._underscoreMethods = ['format', 'uploadFile'];
-	this._fixedSize = 'full';
+function localfile(list, path, options) {
+  grappling.mixin(this)
+    .allowHooks('move');
+  this._underscoreMethods = ['format', 'uploadFile'];
+  this._fixedSize = 'full';
 
-	// TODO: implement filtering, usage disabled for now
-	options.nofilter = true;
+  // TODO: implement filtering, usage disabled for now
+  options.nofilter = true;
 
-	// TODO: implement initial form, usage disabled for now
-	if (options.initial) {
-		throw new Error('Invalid Configuration\n\n'
+  // TODO: implement initial form, usage disabled for now
+  if (options.initial) {
+    throw new Error('Invalid Configuration\n\n'
 			+ 'localfile fields (' + list.key + '.' + path + ') do not currently support being used as initial fields.\n');
-	}
+  }
 
-	if (options.overwrite !== false) {
-		options.overwrite = true;
-	}
+  if (options.overwrite !== false) {
+    options.overwrite = true;
+  }
 
-	localfile.super_.call(this, list, path, options);
+  localfile.super_.call(this, list, path, options);
 
-	// validate destination dir
-	if (!options.dest) {
-		throw new Error('Invalid Configuration\n\n'
+  // validate destination dir
+  if (!options.dest) {
+    throw new Error('Invalid Configuration\n\n'
 			+ 'localfile fields (' + list.key + '.' + path + ') require the "dest" option to be set.');
-	}
-	// Allow hook into before and after
-	if (options.pre && options.pre.move) {
-		this.pre('move', options.pre.move);
-	}
+  }
+  // Allow hook into before and after
+  if (options.pre && options.pre.move) {
+    this.pre('move', options.pre.move);
+  }
 
-	if (options.post && options.post.move) {
-		this.post('move', options.post.move);
-	}
+  if (options.post && options.post.move) {
+    this.post('move', options.post.move);
+  }
 
 }
 
@@ -67,102 +67,102 @@ util.inherits(localfile, super_);
  * @api public
  */
 
-localfile.prototype.addToSchema = function () {
+localfile.prototype.addToSchema = function() {
 
-	var field = this;
-	var schema = this.list.schema;
+  var field = this;
+  var schema = this.list.schema;
 
-	var paths = this.paths = {
-		// fields
-		filename: this._path.append('.filename'),
-		originalname: this._path.append('.originalname'),
-		path: this._path.append('.path'),
-		size: this._path.append('.size'),
-		filetype: this._path.append('.filetype'),
-		// virtuals
-		exists: this._path.append('.exists'),
-		href: this._path.append('.href'),
-		upload: this._path.append('_upload'),
-		action: this._path.append('_action'),
-	};
+  var paths = this.paths = {
+    // fields
+    filename: this._path.append('.filename'),
+    originalname: this._path.append('.originalname'),
+    path: this._path.append('.path'),
+    size: this._path.append('.size'),
+    filetype: this._path.append('.filetype'),
+    // virtuals
+    exists: this._path.append('.exists'),
+    href: this._path.append('.href'),
+    upload: this._path.append('_upload'),
+    action: this._path.append('_action'),
+  };
 
-	var schemaPaths = this._path.addTo({}, {
-		filename: String,
-		originalname: String,
-		path: String,
-		size: Number,
-		filetype: String,
-	});
+  var schemaPaths = this._path.addTo({}, {
+    filename: String,
+    originalname: String,
+    path: String,
+    size: Number,
+    filetype: String,
+  });
 
-	schema.add(schemaPaths);
+  schema.add(schemaPaths);
 
-	// exists checks for a matching file at run-time
-	var exists = function (item) {
-		var filepath = item.get(paths.path);
-		var filename = item.get(paths.filename);
+  // exists checks for a matching file at run-time
+  var exists = function(item) {
+    var filepath = item.get(paths.path);
+    var filename = item.get(paths.filename);
 
-		if (!filepath || !filename) {
-			return false;
-		}
+    if (!filepath || !filename) {
+      return false;
+    }
 
-		return fs.existsSync(path.join(filepath, filename));
-	};
+    return fs.existsSync(path.join(filepath, filename));
+  };
 
-	// The .exists virtual indicates whether a file is stored
-	schema.virtual(paths.exists).get(function () {
-		return schemaMethods.exists.apply(this);
-	});
+  // The .exists virtual indicates whether a file is stored
+  schema.virtual(paths.exists).get(function() {
+    return schemaMethods.exists.apply(this);
+  });
 
-	// The .href virtual returns the public path of the file
-	schema.virtual(paths.href).get(function () {
-		return field.href(this);
-	});
+  // The .href virtual returns the public path of the file
+  schema.virtual(paths.href).get(function() {
+    return field.href(this);
+  });
 
-	// reset clears the value of the field
-	var reset = function (item) {
-		item.set(field.path, {
-			filename: '',
-			path: '',
-			size: 0,
-			filetype: '',
-		});
-	};
+  // reset clears the value of the field
+  var reset = function(item) {
+    item.set(field.path, {
+      filename: '',
+      path: '',
+      size: 0,
+      filetype: '',
+    });
+  };
 
-	var schemaMethods = {
-		exists: function () {
-			return exists(this);
-		},
-		/**
+  var schemaMethods = {
+    exists: function() {
+      return exists(this);
+    },
+    /**
 		 * Resets the value of the field
 		 *
 		 * @api public
 		 */
-		reset: function () {
-			reset(this);
-		},
-		/**
+    reset: function() {
+      reset(this);
+    },
+    /**
 		 * Deletes the file from localfile and resets the field
 		 *
 		 * @api public
 		 */
-		delete: function () {
-			if (exists(this)) {
-				fs.unlinkSync(path.join(this.get(paths.path), this.get(paths.filename)));
-			}
-			reset(this);
-		},
-	};
+    delete: function() {
+      if (exists(this)) {
+        fs.unlinkSync(path.join(this.get(paths.path), this.get(paths.filename)));
+      }
+      reset(this);
+    },
+  };
 
-	_.each(schemaMethods, function (fn, key) {
-		field.underscoreMethod(key, fn);
-	});
+  _.each(schemaMethods, function(fn, key) {
+    field.underscoreMethod(key, fn);
+  });
 
-	// expose a method on the field to call schema methods
-	this.apply = function (item, method) {
-		return schemaMethods[method].apply(item, Array.prototype.slice.call(arguments, 2));
-	};
+  // expose a method on the field to call schema methods
+  this.apply = function(item, method) {
+    return schemaMethods[method].apply(item, Array.prototype.slice.call(arguments, 2));
+  };
 
-	this.bindUnderscoreMethods();
+  this.bindUnderscoreMethods();
 };
 
 
@@ -173,14 +173,14 @@ localfile.prototype.addToSchema = function () {
  * @api public
  */
 
-localfile.prototype.format = function (item) {
-	if (!item.get(this.paths.filename)) return '';
-	if (this.hasFormatter()) {
-		var file = item.get(this.path);
-		file.href = this.href(item);
-		return this.options.format.call(this, item, file);
-	}
-	return this.href(item);
+localfile.prototype.format = function(item) {
+  if (!item.get(this.paths.filename)) return '';
+  if (this.hasFormatter()) {
+    var file = item.get(this.path);
+    file.href = this.href(item);
+    return this.options.format.call(this, item, file);
+  }
+  return this.href(item);
 };
 
 
@@ -190,8 +190,8 @@ localfile.prototype.format = function (item) {
  * @api public
  */
 
-localfile.prototype.hasFormatter = function () {
-	return typeof this.options.format === 'function';
+localfile.prototype.hasFormatter = function() {
+  return typeof this.options.format === 'function';
 };
 
 
@@ -201,10 +201,10 @@ localfile.prototype.hasFormatter = function () {
  * @api public
  */
 
-localfile.prototype.href = function (item) {
-	if (!item.get(this.paths.filename)) return '';
-	var prefix = this.options.prefix ? this.options.prefix : item.get(this.paths.path);
-	return prefix + '/' + item.get(this.paths.filename);
+localfile.prototype.href = function(item) {
+  if (!item.get(this.paths.filename)) return '';
+  var prefix = this.options.prefix ? this.options.prefix : item.get(this.paths.path);
+  return prefix + '/' + item.get(this.paths.filename);
 };
 
 
@@ -214,8 +214,8 @@ localfile.prototype.href = function (item) {
  * @api public
  */
 
-localfile.prototype.isModified = function (item) {
-	return item.isModified(this.paths.path);
+localfile.prototype.isModified = function(item) {
+  return item.isModified(this.paths.path);
 };
 
 
@@ -225,9 +225,9 @@ localfile.prototype.isModified = function (item) {
  * @api public
  */
 
-localfile.prototype.inputIsValid = function (data) { // eslint-disable-line no-unused-vars
-	// TODO - how should file field input be validated?
-	return true;
+localfile.prototype.inputIsValid = function(data) { // eslint-disable-line no-unused-vars
+  // TODO - how should file field input be validated?
+  return true;
 };
 
 
@@ -237,9 +237,9 @@ localfile.prototype.inputIsValid = function (data) { // eslint-disable-line no-u
  * @api public
  */
 
-localfile.prototype.updateItem = function (item, data, callback) { // eslint-disable-line no-unused-vars
-	// TODO - direct updating of data (not via upload)
-	process.nextTick(callback);
+localfile.prototype.updateItem = function(item, data, callback) { // eslint-disable-line no-unused-vars
+  // TODO - direct updating of data (not via upload)
+  process.nextTick(callback);
 };
 
 
@@ -249,58 +249,58 @@ localfile.prototype.updateItem = function (item, data, callback) { // eslint-dis
  * @api public
  */
 
-localfile.prototype.uploadFile = function (item, file, update, callback) {
-	var field = this;
-	var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : '';
-	var filename = prefix + file.name;
-	var filetype = file.mimetype || file.type;
+localfile.prototype.uploadFile = function(item, file, update, callback) {
+  var field = this;
+  var prefix = field.options.datePrefix ? moment().format(field.options.datePrefix) + '-' : '';
+  var filename = prefix + file.name;
+  var filetype = file.mimetype || file.type;
 
-	if (field.options.allowedTypes && !_.contains(field.options.allowedTypes, filetype)) {
-		return callback(new Error('Unsupported File Type: ' + filetype));
-	}
+  if (field.options.allowedTypes && !_.contains(field.options.allowedTypes, filetype)) {
+    return callback(new Error('Unsupported File Type: ' + filetype));
+  }
 
-	if (typeof update === 'function') {
-		callback = update;
-		update = false;
-	}
+  if (typeof update === 'function') {
+    callback = update;
+    update = false;
+  }
 
-	var doMove = function (callback) {
+  var doMove = function(callback) {
 
-		if (typeof field.options.filename === 'function') {
-			filename = field.options.filename(item, file);
-		}
+    if (typeof field.options.filename === 'function') {
+      filename = field.options.filename(item, file);
+    }
 
-		fs.move(file.path, path.join(field.options.dest, filename), { clobber: field.options.overwrite }, function (err) {
+    fs.move(file.path, path.join(field.options.dest, filename), { clobber: field.options.overwrite }, function(err) {
 
-			if (err) return callback(err);
+      if (err) return callback(err);
 
-			var fileData = {
-				filename: filename,
-				originalname: file.originalname,
-				path: field.options.dest,
-				size: file.size,
-				filetype: filetype,
-			};
+      var fileData = {
+        filename: filename,
+        originalname: file.originalname,
+        path: field.options.dest,
+        size: file.size,
+        filetype: filetype,
+      };
 
-			if (update) {
-				item.set(field.path, fileData);
-			}
+      if (update) {
+        item.set(field.path, fileData);
+      }
 
-			callback(null, fileData);
+      callback(null, fileData);
 
-		});
-	};
+    });
+  };
 
-	field.callHook('pre:move', item, file, function (err) {
-		if (err) return callback(err);
-		doMove(function (err, fileData) {
-			if (err) return callback(err);
-			field.callHook('post:move', [item, file, fileData], function (err) {
-				if (err) return callback(err);
-				callback(null, fileData);
-			});
-		});
-	});
+  field.callHook('pre:move', item, file, function(err) {
+    if (err) return callback(err);
+    doMove(function(err, fileData) {
+      if (err) return callback(err);
+      field.callHook('post:move', [item, file, fileData], function(err) {
+        if (err) return callback(err);
+        callback(null, fileData);
+      });
+    });
+  });
 };
 
 
@@ -314,36 +314,36 @@ localfile.prototype.uploadFile = function (item, file, update, callback) {
  * @api public
  */
 
-localfile.prototype.getRequestHandler = function (item, req, paths, callback) {
+localfile.prototype.getRequestHandler = function(item, req, paths, callback) {
 
-	var field = this;
+  var field = this;
 
-	if (utils.isFunction(paths)) {
-		callback = paths;
-		paths = field.paths;
-	} else if (!paths) {
-		paths = field.paths;
-	}
+  if (utils.isFunction(paths)) {
+    callback = paths;
+    paths = field.paths;
+  } else if (!paths) {
+    paths = field.paths;
+  }
 
-	callback = callback || function () {};
+  callback = callback || function() {};
 
-	return function () {
+  return function() {
 
-		if (req.body) {
-			var action = req.body[paths.action];
+    if (req.body) {
+      var action = req.body[paths.action];
 
-			if (/^(delete|reset)$/.test(action)) {
-				field.apply(item, action);
-			}
-		}
+      if (/^(delete|reset)$/.test(action)) {
+        field.apply(item, action);
+      }
+    }
 
-		if (req.files && req.files[paths.upload] && req.files[paths.upload].size) {
-			return field.uploadFile(item, req.files[paths.upload], true, callback);
-		}
+    if (req.files && req.files[paths.upload] && req.files[paths.upload].size) {
+      return field.uploadFile(item, req.files[paths.upload], true, callback);
+    }
 
-		return callback();
+    return callback();
 
-	};
+  };
 
 };
 
@@ -354,8 +354,8 @@ localfile.prototype.getRequestHandler = function (item, req, paths, callback) {
  * @api public
  */
 
-localfile.prototype.handleRequest = function (item, req, paths, callback) {
-	this.getRequestHandler(item, req, paths, callback)();
+localfile.prototype.handleRequest = function(item, req, paths, callback) {
+  this.getRequestHandler(item, req, paths, callback)();
 };
 
 

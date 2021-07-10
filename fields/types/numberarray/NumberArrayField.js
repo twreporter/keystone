@@ -3,12 +3,12 @@ import Field from '../Field';
 
 module.exports = Field.create({
 
-	displayName: 'NumberArrayField',
+  displayName: 'NumberArrayField',
 
-	mixins: [ArrayFieldMixin],
+  mixins: [ArrayFieldMixin],
 
-	cleanInput (input) {
-		return input.replace(/[^\d]/g, '');
-	},
+  cleanInput(input) {
+    return input.replace(/[^\d]/g, '');
+  },
 
 });

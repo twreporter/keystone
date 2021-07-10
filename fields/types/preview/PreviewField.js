@@ -4,8 +4,8 @@ import { Button, FormField } from 'elemental';
 
 module.exports = Field.create({
   displayName: 'PreviewField',
-  renderUI () {
-    const previewOrigin = Keystone.previewOrigin || 'https://keystone-preview.twreporter.org'
+  renderUI() {
+    const previewOrigin = Keystone.previewOrigin || 'https://keystone-preview.twreporter.org';
     let url = `${previewOrigin}/a/${this.props.values.name}`;
     return (
       <FormField className="field-type-preview">

@@ -14,13 +14,13 @@ var REGEXP_LNGLAT = /^\s*(\-?\d+(?:\.\d+)?)\s*\,\s*(\-?\d+(?:\.\d+)?)\s*$/;
  * @api public
  */
 
-function geopoint (list, path, options) {
+function geopoint(list, path, options) {
 
-	this._fixedSize = 'medium';
+  this._fixedSize = 'medium';
 
-	// TODO: implement filtering, hard-coded as disabled for now
-	options.nofilter = true;
-	geopoint.super_.call(this, list, path, options);
+  // TODO: implement filtering, hard-coded as disabled for now
+  options.nofilter = true;
+  geopoint.super_.call(this, list, path, options);
 
 }
 
@@ -39,9 +39,9 @@ util.inherits(geopoint, super_);
  * @api public
  */
 
-geopoint.prototype.addToSchema = function () {
-	this.list.schema.path(this.path, _.defaults({ type: [Number], index: '2dsphere' }, this.options));
-	this.bindUnderscoreMethods();
+geopoint.prototype.addToSchema = function() {
+  this.list.schema.path(this.path, _.defaults({ type: [Number], index: '2dsphere' }, this.options));
+  this.bindUnderscoreMethods();
 };
 
 
@@ -49,9 +49,9 @@ geopoint.prototype.addToSchema = function () {
  * Gets the field's data from an Item, as used by the React components
  */
 
-geopoint.prototype.getData = function (item) {
-	var points = item.get(this.path);
-	return (points && points.length === 2) ? points : [];
+geopoint.prototype.getData = function(item) {
+  var points = item.get(this.path);
+  return (points && points.length === 2) ? points : [];
 };
 
 
@@ -61,11 +61,11 @@ geopoint.prototype.getData = function (item) {
  * @api public
  */
 
-geopoint.prototype.format = function (item) {
-	if (item.get(this.path)) {
-		return item.get(this.path).reverse().join(', ');
-	}
-	return null;
+geopoint.prototype.format = function(item) {
+  if (item.get(this.path)) {
+    return item.get(this.path).reverse().join(', ');
+  }
+  return null;
 };
 
 
@@ -75,20 +75,20 @@ geopoint.prototype.format = function (item) {
  * @api public
  */
 
-geopoint.prototype.inputIsValid = function (data, required, item) { // eslint-disable-line no-unused-vars
+geopoint.prototype.inputIsValid = function(data, required, item) { // eslint-disable-line no-unused-vars
 
-	var values = this.getValueFromData(data);
+  var values = this.getValueFromData(data);
 
-	// Input is valid if the field is not required, and not present
-	if (values === undefined && !required) return true;
+  // Input is valid if the field is not required, and not present
+  if (values === undefined && !required) return true;
 
-	if (_.isArray(values)) {
-		values = _.compact(values).join(',');
-	}
+  if (_.isArray(values)) {
+    values = _.compact(values).join(',');
+  }
 
-	if (values === '' && !required) return true;
+  if (values === '' && !required) return true;
 
-	return REGEXP_LNGLAT.test(values);
+  return REGEXP_LNGLAT.test(values);
 
 };
 
@@ -99,35 +99,35 @@ geopoint.prototype.inputIsValid = function (data, required, item) { // eslint-di
  * @api public
  */
 
-geopoint.prototype.updateItem = function (item, data, callback) {
+geopoint.prototype.updateItem = function(item, data, callback) {
 
-	if (!_.isObject(data)) return process.nextTick(callback);
+  if (!_.isObject(data)) return process.nextTick(callback);
 
-	var value = this.getValueFromData(data);
-	if (value === undefined) return process.nextTick(callback);
+  var value = this.getValueFromData(data);
+  if (value === undefined) return process.nextTick(callback);
 
-	if (_.isString(value)) {
+  if (_.isString(value)) {
 
-		// Value should be formatted lng,lat
-		var values = REGEXP_LNGLAT.exec(value);
+    // Value should be formatted lng,lat
+    var values = REGEXP_LNGLAT.exec(value);
 
-		if (values) {
-			item.set(this.path, [values[1], values[2]]);
-		} else {
-			item.set(this.path, undefined);
-		}
+    if (values) {
+      item.set(this.path, [values[1], values[2]]);
+    } else {
+      item.set(this.path, undefined);
+    }
 
-	} else if (_.isArray(value)) {
+  } else if (_.isArray(value)) {
 
-		if (value.length === 2 && REGEXP_LNGLAT.test(_.compact(value).join(','))) {
-			item.set(this.path, value);
-		} else {
-			item.set(this.path, undefined);
-		}
+    if (value.length === 2 && REGEXP_LNGLAT.test(_.compact(value).join(','))) {
+      item.set(this.path, value);
+    } else {
+      item.set(this.path, undefined);
+    }
 
-	}
+  }
 
-	process.nextTick(callback);
+  process.nextTick(callback);
 };
 
 

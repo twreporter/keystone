@@ -262,12 +262,12 @@ let EntityEditingBlock = (superclass) =>
       const { url, text } = value;
       const { editorState } = this.state;
       const contentState = editorState.getCurrentContent();
-      const contentStateWithEntity =
-        url !== ''
+      const contentStateWithEntity
+        = url !== ''
           ? contentState.createEntity(entity, 'IMMUTABLE', {
-              text: text || url,
-              url: url,
-            })
+            text: text || url,
+            url: url,
+          })
           : null;
       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
       this._toggleTextWithEntity(entityKey, text || url);

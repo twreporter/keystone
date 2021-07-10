@@ -7,9 +7,9 @@ var util = require('util');
  * @extends Field
  * @api public
  */
-function color (list, path, options) {
-	this._nativeType = String;
-	color.super_.call(this, list, path, options);
+function color(list, path, options) {
+  this._nativeType = String;
+  color.super_.call(this, list, path, options);
 }
 util.inherits(color, FieldType);
 

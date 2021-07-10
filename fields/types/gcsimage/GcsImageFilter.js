@@ -6,11 +6,11 @@ import { FormField, FormInput, FormSelect, SegmentedControl } from 'elemental';
 const modeOptions = [
   { label: '描述裡包含：', value: 'caption_contains', placeholder: '請輸入您想搜尋的字串' },
   { label: '關鍵字裡包含：', value: 'keywords_contains', placeholder: '請輸入關鍵字，例如：海龜' },
-  { label: '製作程式裡包含：', value: 'byline_contains', placeholder: '請輸入拍攝者，例如：余志偉'},
+  { label: '製作程式裡包含：', value: 'byline_contains', placeholder: '請輸入拍攝者，例如：余志偉' },
   { label: '製作日期裡包含：', value: 'created_date_contains', placeholder: '請輸入製作日期，例如：20201204' },
 ];
 
-function getDefaultValue () {
+function getDefaultValue() {
   return {
     mode: modeOptions[0].value,
     value: '',
@@ -27,22 +27,22 @@ var GcsImageFilter = React.createClass({
   statics: {
     getDefaultValue: getDefaultValue,
   },
-  getDefaultProps () {
+  getDefaultProps() {
     return {
       filter: getDefaultValue(),
     };
   },
-  updateFilter (value) {
+  updateFilter(value) {
     this.props.onChange({ ...this.props.filter, ...value });
   },
-  selectMode (mode) {
+  selectMode(mode) {
     this.updateFilter({ mode });
     ReactDOM.findDOMNode(this.refs.focusTarget).focus();
   },
-  updateValue (e) {
+  updateValue(e) {
     this.updateFilter({ value: e.target.value });
   },
-  render () {
+  render() {
     const { field, filter } = this.props;
     const mode = modeOptions.filter(option => option.value === filter.mode)[0];
 

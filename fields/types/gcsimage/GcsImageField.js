@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import get from 'lodash/get';
-import keys from 'lodash/keys'
+import keys from 'lodash/keys';
 import { Button, FormField, FormInput, FormNote } from 'elemental';
 
 const storage = {
@@ -12,13 +12,13 @@ const storage = {
     hostname: 'storage.googleapis.com',
     bucket: 'twreporter-multimedia',
   },
-}
+};
 
-function replaceGCSUrlOrigin (url='') {
-  const { schema, hostname, bucket } = storage.google
-  const toReplace = 'https://www.twreporter.org'
-  const toBeReplaced = `${schema}://${hostname}/${bucket}`
-  return url.replace(toBeReplaced, toReplace)
+function replaceGCSUrlOrigin(url = '') {
+  const { schema, hostname, bucket } = storage.google;
+  const toReplace = 'https://www.twreporter.org';
+  const toBeReplaced = `${schema}://${hostname}/${bucket}`;
+  return url.replace(toBeReplaced, toReplace);
 }
 
 const _ = {
@@ -32,11 +32,11 @@ module.exports = Field.create({
 
   displayName: 'GcsImageField',
 
-  getThumbnail () {
+  getThumbnail() {
     return _.get(this.props, 'value.resizedTargets.mobile.url', '');
   },
 
-  getLocation () {
+  getLocation() {
     const gcsBucket = _.get(this.props, 'value.gcsBucket', '');
     const gcsDir = _.get(this.props, 'value.gcsDir', '');
     const filename = _.get(this.props, 'value.filename', '');
@@ -56,15 +56,15 @@ module.exports = Field.create({
   /**
    *  is this image uploaded from end user local workspace in this session?
    */
-  hasLocal () {
+  hasLocal() {
     return this.state.origin === 'local';
   },
 
-  hasImage () {
+  hasImage() {
     return this.getLocation() || this.hasLocal();
   },
 
-  getImageSource () {
+  getImageSource() {
     if (this.hasLocal()) {
       return this.state.localSource;
     } else if (this.getThumbnail()) {
@@ -77,7 +77,7 @@ module.exports = Field.create({
   /**
    * Render an image preview
    */
-  renderImagePreview () {
+  renderImagePreview() {
     const thumbnail = this.getImageSource();
 
     if (thumbnail) {
@@ -96,26 +96,26 @@ module.exports = Field.create({
   /**
    * Render image details
    */
-  renderImageDetails () {
+  renderImageDetails() {
     if (this.getLocation()) {
       const iptc = _.get(this.props, 'value.iptc', {});
-      let createdTime = _.get(iptc, 'created_time', '')
+      let createdTime = _.get(iptc, 'created_time', '');
       if (typeof createdTime === 'string' && createdTime !== '') {
         const hour = createdTime.slice(0, 2);
         const minute = createdTime.slice(2, 4);
         const second = createdTime.slice(4, 6);
-        const timezone = createdTime.slice(6)
-        createdTime = `${hour}:${minute}:${second}${timezone}`
+        const timezone = createdTime.slice(6);
+        createdTime = `${hour}:${minute}:${second}${timezone}`;
       }
 
-      const resizedTargets = _.get(this.props, 'value.resizedTargets', {})
+      const resizedTargets = _.get(this.props, 'value.resizedTargets', {});
       const resizedJsx = _.keys(resizedTargets)
         .map(resolution => {
-          const url = replaceGCSUrlOrigin(_.get(resizedTargets, [resolution, 'url'], ''))
+          const url = replaceGCSUrlOrigin(_.get(resizedTargets, [resolution, 'url'], ''));
           return (
             <p key={`${resolution}-img-url`}>{resolution}: {url}</p>
-          )
-        })
+          );
+        });
 
       return (
         <div key={this.props.path + '_details'} className="image-details">
@@ -151,30 +151,30 @@ module.exports = Field.create({
     return null;
   },
 
-  fileFieldNode () {
+  fileFieldNode() {
     return ReactDOM.findDOMNode(this.refs.fileField);
   },
 
-  changeImage () {
+  changeImage() {
     this.fileFieldNode().click();
   },
 
   /**
    * Check support for input files on input change.
    */
-  fileChanged (event) {
+  fileChanged(event) {
     var self = this;
 
     if (window.FileReader) {
       var files = event.target.files;
-      Array.prototype.forEach.call(files, function (f) {
+      Array.prototype.forEach.call(files, function(f) {
         if (supportTypes.indexOf(f.type) === -1) {
           alert(`系統不支援您上傳的檔案格式。系統支援的檔案格式為 GIF, PNG, JPG, TIFF, SVG, BMP。`);
           return false;
         }
 
         var fileReader = new FileReader();
-        fileReader.onload = function (e) {
+        fileReader.onload = function(e) {
           if (!self.isMounted()) return;
           self.setState({
             localSource: e.target.result,
@@ -191,7 +191,7 @@ module.exports = Field.create({
   },
 
 
-  renderImageToolbar () {
+  renderImageToolbar() {
     return (
       <div key={this.props.path + '_toolbar'} className="image-toolbar">
         <div className="u-float-left">
@@ -203,7 +203,7 @@ module.exports = Field.create({
     );
   },
 
-  renderNote () {
+  renderNote() {
     const defaultNoteJsx = (
       <FormNote note="系統支援的圖片檔案格式為 GIF, PNG, JPG, TIFF, SVG, BMP。" />
     );
@@ -218,7 +218,7 @@ module.exports = Field.create({
     );
   },
 
-  renderUI () {
+  renderUI() {
     const fileLocation = this.getLocation();
     const fileInputJsx = fileLocation ? null : (
       <div>

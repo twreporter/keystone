@@ -6,9 +6,9 @@ var util = require('util');
  * @extends Field
  * @api public
  */
-function preview (list, path, options) {
-	this._nativeType = String;
-	preview.super_.call(this, list, path, options);
+function preview(list, path, options) {
+  this._nativeType = String;
+  preview.super_.call(this, list, path, options);
 }
 util.inherits(preview, FieldType);
 
