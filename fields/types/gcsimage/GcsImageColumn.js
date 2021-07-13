@@ -34,7 +34,7 @@ var GcsImageColumn = React.createClass({
     );
 
     const iptc = _.get(value, ['iptc'], {});
-    const { byline, caption, created_time } = iptc;
+    const { byline, caption, created_time, keywords, created_date } = iptc;
 
     let createdTime = created_time;
     if (typeof createdTime === 'string' && createdTime !== '') {
@@ -54,8 +54,8 @@ var GcsImageColumn = React.createClass({
           <div>
             <p>描述：{caption}</p>
             <p>製作程式：{byline}</p>
-            <p>關鍵字：{Array.isArray(iptc.keywords) ? iptc.keywords.join(';') : iptc.keywords}</p>
-            <p>製作日期: {iptc.created_date} {createdTime}</p>
+            <p>關鍵字：{Array.isArray(keywords) ? keywords.join(';') : keywords}</p>
+            <p>製作日期: {created_date} {createdTime}</p>
           </div>
         </div>
       </td>
