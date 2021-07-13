@@ -2,62 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.4-rc.7
+## 0.9.4, 2021/7/13
 
 ## Notable Changes
 
 - refactor
   - cleanup redundant operations and rename obscure function([#190](https://github.com/twreporter/keystone/pull/190))
+  - API migration for draft-js@0.8.1 -> draft-js@0.11.8([#180](https://github.com/twreporter/keystone/pull/180),[#183](https://github.com/twreporter/keystone/pull/183))
+  - use mongoose as session storage driver([#171](https://github.com/twreporter/keystone/pull/171))
+  - change `cookie signin` option([#169](https://github.com/twreporter/keystone/pull/169))
+- fix
+	- expire cookie session([#179](https://github.com/twreporter/keystone/pull/179))
+	- enable mocha test([#170](https://github.com/twreporter/keystone/pull/170))
+- chore
+	- replace npm package 'draft-js' by '@twreporter/draft-js'([#180](https://github.com/twreporter/keystone/pull/180))
+	- update .eslintrc([#180](https://github.com/twreporter/keystone/pull/180))
+- ci
+	- add circleci to publish @twreporter/keystone([#172](https://github.com/twreporter/keystone/pull/172), [#173](https://github.com/twreporter/keystone/pull/173), [#175](https://github.com/twreporter/keystone/pull/175), [#177](https://github.com/twreporter/keystone/pull/177))
 
 ### Commits
 * [[`c4d8b19ec3`](https://github.com/twreporter/keystone/commit/c4d8b19ec3)] - **refactor**: remove redundant initialization (Ching-Yang, Tseng)
 * [[`c4a8ccbdf3`](https://github.com/twreporter/keystone/commit/c4a8ccbdf3)] - **refactor**: rename initDatabase to initDatabaseConfig (Ching-Yang, Tseng)
-
-## 0.9.4-rc.6
-
-## Notable Changes
-
-- chore
-  - update @twreporter/draft-js to v0.11.8-rc.2[#188](https://github.com/twreporter/keystone/pull/188)
-
-### Commits
 * [[`8524e19da6`](https://github.com/twreporter/keystone/commit/8524e19da6)] - **chore**: upgrade @twreporter/draft-js to v0.11.8-rc.2 (#188) (Tai-Jiun Fang)
-
-## 0.9.4-rc.5
-
-## Notable Changes
-
-- chore
-  - update @twreporter/draft-js to v0.11.8-rc.1[#186](https://github.com/twreporter/keystone/pull/186)
-
-### Commits
 * [[`af1a49aefc`](https://github.com/twreporter/keystone/commit/af1a49aefc)] - **chore**: update @twreporter/draft-js to v0.11.8-rc.1 (#186) (Tai-Jiun Fang)
-
-## 0.9.4-rc.4
-
-## Notable Changes
-
-- refactor
-  - API migration for draft-js@0.8.1 -> draft-js@0.11.8([#180](https://github.com/twreporter/keystone/pull/180),[#183](https://github.com/twreporter/keystone/pull/183))
-
-### Commits
 * [[`3c8a51bde5`](https://github.com/twreporter/keystone/commit/3c8a51bde5)] - **refactor**: migrate API `Entity.create` (#183) (Tai-Jiun Fang)
-
-## 0.9.4-rc.3
-
-## Notable Changes
-
-- fix
-  - expire cookie session([#179](https://github.com/twreporter/keystone/pull/179))
-- chore
-  - replace npm package 'draft-js' by '@twreporter/draft-js'([#180](https://github.com/twreporter/keystone/pull/180))
-  - update .eslintrc([#180](https://github.com/twreporter/keystone/pull/180))
-- refactor
-  - API migration for draft-js@0.8.1 -> draft-js@0.11.8([#180](https://github.com/twreporter/keystone/pull/180))
-- style
-  - fix indent for changed files
-
-### Commits
 * [[`f9144af627`](https://github.com/twreporter/keystone/commit/f9144af627)] - **refactor**: `let` -\> `const` (Taylor Fang)
 * [[`062b27462c`](https://github.com/twreporter/keystone/commit/062b27462c)] - **style**: fix indent (Taylor Fang)
 * [[`fe5939e395`](https://github.com/twreporter/keystone/commit/fe5939e395)] - **chore**: update 'space-before-function-paren' rule in .eslintrc (Taylor Fang)
@@ -70,43 +38,9 @@ All notable changes to this project will be documented in this file. See [standa
 * [[`b961a2b76c`](https://github.com/twreporter/keystone/commit/b961a2b76c)] - **refactor**: migrate API `Entity.create` (Taylor Fang)
 * [[`bde53ee01c`](https://github.com/twreporter/keystone/commit/bde53ee01c)] - **refactor**: migrate API `Entity.get` (Taylor Fang)
 * [[`15e78758c6`](https://github.com/twreporter/keystone/commit/15e78758c6)] - **chore**: update npm pkg draft-js to @twreporter/draft-js (Taylor Fang)
-* [[`0083d19a52`](https://github.com/twreporter/keystone/commit/0083d19a52)] - Merge pull request #179 from babygoat/master (babygoat)
 * [[`5c471f27bc`](https://github.com/twreporter/keystone/commit/5c471f27bc)] - **fix**: expire cookie session (Ching-Yang, Tseng)
-* [[`ca254d1647`](https://github.com/twreporter/keystone/commit/ca254d1647)] - Merge pull request #178 from babygoat/master (babygoat)
-
-## 0.9.4-rc.2
-
-## Notable Changes
-
-- ci
-  - fix the identation of filters field([#177](https://github.com/twreporter/keystone/pull/177))
-
-### Commits
 * [[`e4ae84bf8f`](https://github.com/twreporter/keystone/commit/e4ae84bf8f)] - **ci**: fix the identation of filters field (Ching-Yang, Tseng)
-
-## 0.9.4-rc.1
-
-## Notable Changes
-
-- ci
-  - fix tag trigger build([#175](https://github.com/twreporter/keystone/pull/175))
-
-### Commits
 * [[`5de56eaeec`](https://github.com/twreporter/keystone/commit/5de56eaeec)] - **ci**: fix tag trigger build (Ching-Yang, Tseng)
-
-## 0.9.4-rc.0
-
-## Notable Changes
-- fix: enable mocha test([#170](https://github.com/twreporter/keystone/pull/170))
-
-- refactor:
-  - change `cookie signin` option([#169](https://github.com/twreporter/keystone/pull/169))
-  - use mongoose as session storage driver([#171](https://github.com/twreporter/keystone/pull/171))
-
-- ci
-  - add circleci to publish @twreporter/keystone([#172](https://github.com/twreporter/keystone/pull/172), [#173](https://github.com/twreporter/keystone/pull/173))
-
-### Commits
 * [[`d9d1f2098f`](https://github.com/twreporter/keystone/commit/d9d1f2098f)] - **ci**: fix .npmrc path and incorrect publish trigger (Ching-Yang, Tseng)
 * [[`63ee015aa5`](https://github.com/twreporter/keystone/commit/63ee015aa5)] - **ci**: add circleci to build and publish the package (Ching-Yang, Tseng)
 * [[`a981a8116b`](https://github.com/twreporter/keystone/commit/a981a8116b)] - **fix**: utilize mongoose as session driver (Ching-Yang, Tseng)
