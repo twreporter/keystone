@@ -3,16 +3,16 @@ import blacklist from 'blacklist';
 import classnames from 'classnames';
 
 var PopoutList = React.createClass({
-	displayName: 'PopoutList',
-	propTypes: {
-		children: React.PropTypes.node.isRequired,
-		className: React.PropTypes.string,
-	},
-	render () {
-		let className = classnames('PopoutList', this.props.className);
-		let props = blacklist(this.props, 'className');
-		return <div className={className} {...props} />;
-	},
+  displayName: 'PopoutList',
+  propTypes: {
+    children: React.PropTypes.node.isRequired,
+    className: React.PropTypes.string,
+  },
+  render() {
+    let className = classnames('PopoutList', this.props.className);
+    let props = blacklist(this.props, 'className');
+    return <div className={className} {...props} />;
+  },
 });
 module.exports = PopoutList;
 

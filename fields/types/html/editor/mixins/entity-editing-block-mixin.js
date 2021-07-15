@@ -116,7 +116,7 @@ let EntityEditingBlock = (superclass) =>
         let editorState = this.state.editorState;
         const htmlFragment = convertFromHTML(html);
         if (htmlFragment) {
-          const { contentBlocks, entityMap } = htmlFragment;
+          const { contentBlocks } = htmlFragment;
           const htmlMap = BlockMapBuilder.createFromArray(contentBlocks);
           this._handleEditorStateChange(insertFragment(editorState, htmlMap));
           // prevent the default paste behavior.
@@ -262,12 +262,12 @@ let EntityEditingBlock = (superclass) =>
       const { url, text } = value;
       const { editorState } = this.state;
       const contentState = editorState.getCurrentContent();
-      const contentStateWithEntity =
-        url !== ''
+      const contentStateWithEntity
+        = url !== ''
           ? contentState.createEntity(entity, 'IMMUTABLE', {
-              text: text || url,
-              url: url,
-            })
+            text: text || url,
+            url: url,
+          })
           : null;
       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
       this._toggleTextWithEntity(entityKey, text || url);

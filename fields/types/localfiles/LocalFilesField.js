@@ -11,201 +11,201 @@ import { Button, FormField, FormInput, FormNote } from 'elemental';
  */
 
 const ICON_EXTS = [
-	'aac', 'ai', 'aiff', 'avi', 'bmp', 'c', 'cpp', 'css', 'dat', 'dmg', 'doc', 'dotx', 'dwg', 'dxf', 'eps', 'exe', 'flv', 'gif', 'h',
-	'hpp', 'html', 'ics', 'iso', 'java', 'jpg', 'js', 'key', 'less', 'mid', 'mp3', 'mp4', 'mpg', 'odf', 'ods', 'odt', 'otp', 'ots',
-	'ott', 'pdf', 'php', 'png', 'ppt', 'psd', 'py', 'qt', 'rar', 'rb', 'rtf', 'sass', 'scss', 'sql', 'tga', 'tgz', 'tiff', 'txt',
-	'wav', 'xls', 'xlsx', 'xml', 'yml', 'zip',
+  'aac', 'ai', 'aiff', 'avi', 'bmp', 'c', 'cpp', 'css', 'dat', 'dmg', 'doc', 'dotx', 'dwg', 'dxf', 'eps', 'exe', 'flv', 'gif', 'h',
+  'hpp', 'html', 'ics', 'iso', 'java', 'jpg', 'js', 'key', 'less', 'mid', 'mp3', 'mp4', 'mpg', 'odf', 'ods', 'odt', 'otp', 'ots',
+  'ott', 'pdf', 'php', 'png', 'ppt', 'psd', 'py', 'qt', 'rar', 'rb', 'rtf', 'sass', 'scss', 'sql', 'tga', 'tgz', 'tiff', 'txt',
+  'wav', 'xls', 'xlsx', 'xml', 'yml', 'zip',
 ];
 
 var LocalFilesFieldItem = React.createClass({
-	propTypes: {
-		deleted: React.PropTypes.bool,
-		filename: React.PropTypes.string,
-		isQueued: React.PropTypes.bool,
-		key: React.PropTypes.number,
-		size: React.PropTypes.number,
-		toggleDelete: React.PropTypes.func,
-	},
+  propTypes: {
+    deleted: React.PropTypes.bool,
+    filename: React.PropTypes.string,
+    isQueued: React.PropTypes.bool,
+    key: React.PropTypes.number,
+    size: React.PropTypes.number,
+    toggleDelete: React.PropTypes.func,
+  },
 
-	renderActionButton () {
-		if (!this.props.shouldRenderActionButton || this.props.isQueued) return null;
+  renderActionButton() {
+    if (!this.props.shouldRenderActionButton || this.props.isQueued) return null;
 
-		var buttonLabel = this.props.deleted ? 'Undo' : 'Remove';
-		var buttonType = this.props.deleted ? 'link' : 'link-cancel';
+    var buttonLabel = this.props.deleted ? 'Undo' : 'Remove';
+    var buttonType = this.props.deleted ? 'link' : 'link-cancel';
 
-		return <Button key="action-button" type={buttonType} onClick={this.props.toggleDelete}>{buttonLabel}</Button>;
-	},
+    return <Button key="action-button" type={buttonType} onClick={this.props.toggleDelete}>{buttonLabel}</Button>;
+  },
 
-	render () {
-		let { filename } = this.props;
-		let ext = filename.split('.').pop();
+  render() {
+    let { filename } = this.props;
+    let ext = filename.split('.').pop();
 
-		let iconName = '_blank';
-		if (_.contains(ICON_EXTS, ext)) iconName = ext;
+    let iconName = '_blank';
+    if (_.contains(ICON_EXTS, ext)) iconName = ext;
 
-		let note;
-		if (this.props.deleted) {
-			note = <FormInput key="delete-note" noedit className="field-type-localfiles__note field-type-localfiles__note--delete">save to delete</FormInput>;
-		} else if (this.props.isQueued) {
-			note = <FormInput key="upload-note" noedit className="field-type-localfiles__note field-type-localfiles__note--upload">save to upload</FormInput>;
-		}
+    let note;
+    if (this.props.deleted) {
+      note = <FormInput key="delete-note" noedit className="field-type-localfiles__note field-type-localfiles__note--delete">save to delete</FormInput>;
+    } else if (this.props.isQueued) {
+      note = <FormInput key="upload-note" noedit className="field-type-localfiles__note field-type-localfiles__note--upload">save to upload</FormInput>;
+    }
 
-		return (
-			<FormField>
-				<img key="file-type-icon" className="file-icon" src={Keystone.adminPath + '/images/icons/32/' + iconName + '.png'} />
-				<FormInput key="file-name" noedit className="field-type-localfiles__filename">
-					{filename}
-					{this.props.size ? ' (' + bytes(this.props.size) + ')' : null}
-				</FormInput>
-				{note}
-				{this.renderActionButton()}
-			</FormField>
-		);
-	},
+    return (
+      <FormField>
+        <img key="file-type-icon" className="file-icon" src={Keystone.adminPath + '/images/icons/32/' + iconName + '.png'} />
+        <FormInput key="file-name" noedit className="field-type-localfiles__filename">
+          {filename}
+          {this.props.size ? ' (' + bytes(this.props.size) + ')' : null}
+        </FormInput>
+        {note}
+        {this.renderActionButton()}
+      </FormField>
+    );
+  },
 
 });
 
 module.exports = Field.create({
 
-	getInitialState () {
-		var items = [];
-		var self = this;
+  getInitialState() {
+    var items = [];
+    var self = this;
 
-		_.each(this.props.value, function (item) {
-			self.pushItem(item, items);
-		});
+    _.each(this.props.value, function(item) {
+      self.pushItem(item, items);
+    });
 
-		return { items: items };
-	},
+    return { items: items };
+  },
 
-	removeItem (id) {
-		var thumbs = [];
-		var self = this;
-		_.each(this.state.items, function (thumb) {
-			if (thumb.props._id === id) {
-				thumb.props.deleted = !thumb.props.deleted;
-			}
-			self.pushItem(thumb.props, thumbs);
-		});
+  removeItem(id) {
+    var thumbs = [];
+    var self = this;
+    _.each(this.state.items, function(thumb) {
+      if (thumb.props._id === id) {
+        thumb.props.deleted = !thumb.props.deleted;
+      }
+      self.pushItem(thumb.props, thumbs);
+    });
 
-		this.setState({ items: thumbs });
-	},
+    this.setState({ items: thumbs });
+  },
 
-	pushItem (args, thumbs) {
-		thumbs = thumbs || this.state.items;
-		args.toggleDelete = this.removeItem.bind(this, args._id);
-		args.shouldRenderActionButton = this.shouldRenderField();
-		args.adminPath = Keystone.adminPath;
-		thumbs.push(<LocalFilesFieldItem key={args._id} {...args} />);
-	},
+  pushItem(args, thumbs) {
+    thumbs = thumbs || this.state.items;
+    args.toggleDelete = this.removeItem.bind(this, args._id);
+    args.shouldRenderActionButton = this.shouldRenderField();
+    args.adminPath = Keystone.adminPath;
+    thumbs.push(<LocalFilesFieldItem key={args._id} {...args} />);
+  },
 
-	fileFieldNode () {
-		return ReactDOM.findDOMNode(this.refs.fileField);
-	},
+  fileFieldNode() {
+    return ReactDOM.findDOMNode(this.refs.fileField);
+  },
 
-	renderFileField () {
-		return <input ref="fileField" type="file" name={this.props.paths.upload} multiple className="field-upload" onChange={this.uploadFile} tabIndex="-1" />;
-	},
+  renderFileField() {
+    return <input ref="fileField" type="file" name={this.props.paths.upload} multiple className="field-upload" onChange={this.uploadFile} tabIndex="-1" />;
+  },
 
-	clearFiles () {
-		this.fileFieldNode().value = '';
+  clearFiles() {
+    this.fileFieldNode().value = '';
 
-		this.setState({
-			items: this.state.items.filter(function (thumb) {
-				return !thumb.props.isQueued;
-			}),
-		});
-	},
+    this.setState({
+      items: this.state.items.filter(function(thumb) {
+        return !thumb.props.isQueued;
+      }),
+    });
+  },
 
-	uploadFile (event) {
-		var self = this;
+  uploadFile(event) {
+    var self = this;
 
-		var files = event.target.files;
-		_.each(files, function (f) {
-			self.pushItem({ isQueued: true, filename: f.name });
-			self.forceUpdate();
-		});
-	},
+    var files = event.target.files;
+    _.each(files, function(f) {
+      self.pushItem({ isQueued: true, filename: f.name });
+      self.forceUpdate();
+    });
+  },
 
-	changeFiles () {
-		this.fileFieldNode().click();
-	},
+  changeFiles() {
+    this.fileFieldNode().click();
+  },
 
-	hasFiles () {
-		return this.refs.fileField && this.fileFieldNode().value;
-	},
+  hasFiles() {
+    return this.refs.fileField && this.fileFieldNode().value;
+  },
 
-	renderToolbar () {
-		if (!this.shouldRenderField()) return null;
+  renderToolbar() {
+    if (!this.shouldRenderField()) return null;
 
-		var clearFilesButton;
-		if (this.hasFiles()) {
-			clearFilesButton = <Button type="link-cancel" className="ml-5" onClick={this.clearFiles}>Clear Uploads</Button>;
-		}
+    var clearFilesButton;
+    if (this.hasFiles()) {
+      clearFilesButton = <Button type="link-cancel" className="ml-5" onClick={this.clearFiles}>Clear Uploads</Button>;
+    }
 
-		return (
-			<div className="files-toolbar">
-				<Button onClick={this.changeFiles}>Upload</Button>
-				{clearFilesButton}
-			</div>
-		);
-	},
+    return (
+      <div className="files-toolbar">
+        <Button onClick={this.changeFiles}>Upload</Button>
+        {clearFilesButton}
+      </div>
+    );
+  },
 
-	renderPlaceholder () {
-		return (
-			<div className="file-field file-upload" onClick={this.changeFiles}>
-				<div className="file-preview">
-					<span className="file-thumbnail">
-						<span className="file-dropzone" />
-						<div className="ion-picture file-uploading" />
-					</span>
-				</div>
+  renderPlaceholder() {
+    return (
+      <div className="file-field file-upload" onClick={this.changeFiles}>
+        <div className="file-preview">
+          <span className="file-thumbnail">
+            <span className="file-dropzone" />
+            <div className="ion-picture file-uploading" />
+          </span>
+        </div>
 
-				<div className="file-details">
-					<span className="file-message">Click to upload</span>
-				</div>
-			</div>
-		);
-	},
+        <div className="file-details">
+          <span className="file-message">Click to upload</span>
+        </div>
+      </div>
+    );
+  },
 
-	renderContainer () {
-		return (
-			<div className="files-container clearfix">
-				{this.state.items}
-			</div>
-		);
-	},
+  renderContainer() {
+    return (
+      <div className="files-container clearfix">
+        {this.state.items}
+      </div>
+    );
+  },
 
-	renderFieldAction () {
-		var value = '';
-		var remove = [];
-		_.each(this.state.items, function (thumb) {
-			if (thumb && thumb.props.deleted) remove.push(thumb.props._id);
-		});
-		if (remove.length) value = 'delete:' + remove.join(',');
+  renderFieldAction() {
+    var value = '';
+    var remove = [];
+    _.each(this.state.items, function(thumb) {
+      if (thumb && thumb.props.deleted) remove.push(thumb.props._id);
+    });
+    if (remove.length) value = 'delete:' + remove.join(',');
 
-		return <input ref="action" className="field-action" type="hidden" value={value} name={this.props.paths.action} />;
-	},
+    return <input ref="action" className="field-action" type="hidden" value={value} name={this.props.paths.action} />;
+  },
 
-	renderUploadsField () {
-		return <input ref="uploads" className="field-uploads" type="hidden" name={this.props.paths.uploads} />;
-	},
+  renderUploadsField() {
+    return <input ref="uploads" className="field-uploads" type="hidden" name={this.props.paths.uploads} />;
+  },
 
-	renderNote: function () {
-		if (!this.props.note) return null;
-		return <FormNote note={this.props.note} />;
-	},
+  renderNote: function() {
+    if (!this.props.note) return null;
+    return <FormNote note={this.props.note} />;
+  },
 
-	renderUI () {
-		return (
-			<FormField label={this.props.label} className="field-type-localfiles">
-				{this.renderFieldAction()}
-				{this.renderUploadsField()}
-				{this.renderFileField()}
-				{this.renderContainer()}
-				{this.renderToolbar()}
-				{this.renderNote()}
-			</FormField>
-		);
-	},
+  renderUI() {
+    return (
+      <FormField label={this.props.label} className="field-type-localfiles">
+        {this.renderFieldAction()}
+        {this.renderUploadsField()}
+        {this.renderFileField()}
+        {this.renderContainer()}
+        {this.renderToolbar()}
+        {this.renderNote()}
+      </FormField>
+    );
+  },
 });

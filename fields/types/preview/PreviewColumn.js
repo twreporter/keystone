@@ -8,15 +8,15 @@ var PreviewColumn = React.createClass({
     col: React.PropTypes.object,
     data: React.PropTypes.object,
   },
-  renderValue () {
-    const previewOrigin = Keystone.previewOrigin || 'https://keystone-preview.twreporter.org'
+  renderValue() {
+    const previewOrigin = Keystone.previewOrigin || 'https://keystone-preview.twreporter.org';
     return (
       <ItemsTableValue truncate={false} field={this.props.col.type}>
         <a style={{ textDecoration: 'underline' }} href={`${previewOrigin}/a/${this.props.data.slug}`} target="_blank" >{this.props.col.label}</a>
       </ItemsTableValue>
     );
   },
-  render () {
+  render() {
     return (
       <ItemsTableCell>
         {this.renderValue()}

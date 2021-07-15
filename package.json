@@ -196,5 +196,8 @@
     "server",
     "templates",
     "index.js"
+  ],
+  "pre-commit": [
+    "lint-fix"
   ]
 }

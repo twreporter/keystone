@@ -310,7 +310,7 @@ module.exports = Field.create({
       let editorState = this.state.editorState;
       const htmlFragment = convertFromHTML(html);
       if (htmlFragment) {
-        const { contentBlocks, entityMap } = htmlFragment;
+        const { contentBlocks } = htmlFragment;
         const htmlMap = BlockMapBuilder.createFromArray(contentBlocks);
         this.onChange(insertFragment(editorState, htmlMap));
         // prevent the default paste behavior.

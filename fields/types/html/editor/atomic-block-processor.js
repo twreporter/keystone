@@ -11,7 +11,7 @@ const _ = {
 };
 
 const processor = {
-  convertBlock (entityMap, block) {
+  convertBlock(entityMap, block) {
     let alignment = 'center';
     let content;
     let entityRange = block.entityRanges[0];
