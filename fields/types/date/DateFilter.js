@@ -102,7 +102,7 @@ var DateFilter = React.createClass({
     });
   },
   switchBetweenActiveInputFields(e, day, modifiers) {
-    if (modifiers.disabled === true) return;
+    if (modifiers && modifiers.disabled) return;
     const { activeInputField } = this.state;
     let send = {};
     send[activeInputField] = day;
@@ -116,7 +116,7 @@ var DateFilter = React.createClass({
     );
   },
   selectDay(e, day, modifiers) {
-    if (modifiers.disabled === true) return;
+    if (modifiers && modifiers.disabled) return;
     this.updateFilter({ value: day });
   },
   showCurrentDate() {
