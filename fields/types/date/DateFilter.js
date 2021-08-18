@@ -27,6 +27,14 @@ const DayPickerIndicator = ({ activeInputField }) => {
   );
 };
 
+DayPickerIndicator.propTypes = {
+  activeInputField: React.PropTypes.oneOf(['after', 'before']),
+};
+
+DayPickerIndicator.defaultProps = {
+  activeInputField: 'after',
+};
+
 
 function getDefaultValue() {
   return {
