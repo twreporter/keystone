@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.5-rc.0, 2021/8/19
+
+## Notable Changes
+
+- fix
+  - date filter on choosing 'between'([#197](https://github.com/twreporter/keystone/pull/197))
+- style
+  - update .eslintrc for code styling([#194](https://github.com/twreporter/keystone/pull/194))
+    - add spread operator suppoprt in .eslintrc
+    - set comma-dangle to 'only-multiline' in .eslintrc
+  - update precommit-hook to include `eslint --fix`([#194](https://github.com/twreporter/keystone/pull/194))
+
+### Commits
+* [[`24c4391afb`](https://github.com/twreporter/keystone/commit/24c4391afb)] - **refactor**: add propType check for `DayPickerIndicator` (Tai-Jiun Fang)
+* [[`9e9706a8af`](https://github.com/twreporter/keystone/commit/9e9706a8af)] - **refactor**: check `modifiers` before using in DateFilter (Tai-Jiun Fang)
+* [[`f243e6c795`](https://github.com/twreporter/keystone/commit/f243e6c795)] - **fix**: date filter on choosing 'between' (Tai-Jiun Fang)
+* [[`cf9e960a4e`](https://github.com/twreporter/keystone/commit/cf9e960a4e)] - **refactor**: update precommit-hook config to include `eslint --fix` (Tai-Jiun Fang)
+* [[`7be8d97c09`](https://github.com/twreporter/keystone/commit/7be8d97c09)] - **refactor**: destruct prop as variables (Tai-Jiun Fang)
+* [[`112eb7a5bc`](https://github.com/twreporter/keystone/commit/112eb7a5bc)] - **refactor**: remove unused code (Tai-Jiun Fang)
+* [[`6e54993818`](https://github.com/twreporter/keystone/commit/6e54993818)] - **fix**: misspelled param `filename` (Tai-Jiun Fang)
+* [[`4de499a23b`](https://github.com/twreporter/keystone/commit/4de499a23b)] - **style**: fix indentations in codebase (Tai-Jiun Fang)
+* [[`b0399c56e9`](https://github.com/twreporter/keystone/commit/b0399c56e9)] - **style**: set comma-dangle to 'only-multiline' in .eslintrc (Tai-Jiun Fang)
+* [[`ad8887b103`](https://github.com/twreporter/keystone/commit/ad8887b103)] - **style**: add spread operator suppoprt in .eslintrc (Tai-Jiun Fang)
+
 ## 0.9.4, 2021/7/13
 
 ## Notable Changes
