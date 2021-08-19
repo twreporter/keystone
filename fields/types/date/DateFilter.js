@@ -17,16 +17,24 @@ const MODE_OPTIONS = [
   { label: 'Between', value: 'between' },
 ];
 
-var DayPickerIndicator = React.createClass({
-  render() {
-    return (
-      <span className="DayPicker-Indicator">
-        <span className="DayPicker-Indicator__border" />
-        <span className="DayPicker-Indicator__bg" />
-      </span>
-    );
-  },
-});
+const DayPickerIndicator = ({ activeInputField }) => {
+  const style = activeInputField === 'before' ? { left: '15rem' } : null;
+  return (
+    <span className="DayPicker-Indicator" style={style}>
+      <span className="DayPicker-Indicator__border" />
+      <span className="DayPicker-Indicator__bg" />
+    </span>
+  );
+};
+
+DayPickerIndicator.propTypes = {
+  activeInputField: React.PropTypes.oneOf(['after', 'before']),
+};
+
+DayPickerIndicator.defaultProps = {
+  activeInputField: 'after',
+};
+
 
 function getDefaultValue() {
   return {
@@ -102,7 +110,7 @@ var DateFilter = React.createClass({
     });
   },
   switchBetweenActiveInputFields(e, day, modifiers) {
-    if (modifiers.indexOf('disabled') > -1) return;
+    if (modifiers && modifiers.disabled) return;
     const { activeInputField } = this.state;
     let send = {};
     send[activeInputField] = day;
@@ -116,7 +124,7 @@ var DateFilter = React.createClass({
     );
   },
   selectDay(e, day, modifiers) {
-    if (modifiers.disabled === true) return;
+    if (modifiers && modifiers.disabled) return;
     this.updateFilter({ value: day });
   },
   showCurrentDate() {
@@ -132,12 +140,15 @@ var DateFilter = React.createClass({
   },
   renderControls() {
     let controls;
+    const { activeInputField } = this.state;
     const { field, filter } = this.props;
     const mode = MODE_OPTIONS.filter(i => i.value === filter.mode)[0];
     const placeholder = field.label + ' is ' + mode.label.toLowerCase() + '...';
 
-    // DayPicker stuff
-    const modifiers = {
+    // DayPicker Modifiers - Selected Day
+    const modifiers = filter.mode === 'between' ? {
+      selected: (day) => moment(filter[activeInputField]).isSame(day),
+    } : {
       selected: (day) => moment(filter.value).isSame(day),
     };
 
@@ -158,7 +169,7 @@ var DateFilter = React.createClass({
               className="DayPicker--chrome"
               onDayClick={this.switchBetweenActiveInputFields}
             />
-            <DayPickerIndicator />
+            <DayPickerIndicator activeInputField={activeInputField} />
           </div>
         </div>
       );
