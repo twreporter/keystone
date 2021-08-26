@@ -22,9 +22,14 @@ var ListDownloadForm = React.createClass({
     };
   },
   getDefaultSelectedColumns() {
-    var selectedColumns = {};
-    CurrentListStore.getActiveColumns().forEach(col => {
-      selectedColumns[col.path] = true;
+    // assign default export columns for common usage
+    const defaultExportColumns = [
+      'title', // 標題
+      'publishedDate', // 發佈日期
+    ];
+    let selectedColumns = {};
+    defaultExportColumns.forEach(path => {
+      selectedColumns[path] = true;
     });
     return selectedColumns;
   },
