@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.5-rc.1, 2021/8/27
+
+## Notable Changes
+
+- fix
+  - persist the username cookie([#198](https://github.com/twreporter/keystone/pull/198))
+- refactor 
+  - update default exported column to download([#200](https://github.com/twreporter/keystone/pull/200))
+
+### Commits
+* [[`a510115cdf`](https://github.com/twreporter/keystone/commit/a510115cdf)] - **refactor**: update default exported column to download (#200) (Tai-Jiun Fang)
+* [[`b5f8143af9`](https://github.com/twreporter/keystone/commit/b5f8143af9)] - **fix**: persist the username cookie (Ching-Yang, Tseng)
+
 ## 0.9.5-rc.0, 2021/8/19
 
 ## Notable Changes
