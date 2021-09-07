@@ -1,21 +1,25 @@
 /*!
  * Module dependencies.
  */
-var fs = require('fs');
-var gcsHelper = require('../../../lib/gcsHelper');
-var keystone = require('../../../');
-var moment = require('moment');
-var super_ = require('../Type');
-var util = require('util');
-var utils = require('keystone-utils');
+const fs = require('fs');
+const gcsHelper = require('../../../lib/gcsHelper');
+const keystone = require('../../../');
+const moment = require('moment');
+const super_ = require('../Type');
+const util = require('util');
+const utils = require('keystone-utils');
 
 // lodash
-var forEach = require('lodash/forEach');
-var indexOf = require('lodash/indexOf');
-var set = require('lodash/set');
+const defaults = require('lodash/defaults');
+const forEach = require('lodash/forEach');
+const get = require('lodash/get');
+const indexOf = require('lodash/indexOf');
+const set = require('lodash/set');
 
 const _ = {
+  defaults,
   forEach,
+  get,
   indexOf,
   set,
 };
@@ -64,10 +68,10 @@ Object.defineProperty(gcsavatar.prototype, 'gcsConfig', {
 
 gcsavatar.prototype.addToSchema = function() {
 
-  var _this = this;
-  var schema = this.list.schema;
+  const _this = this;
+  const schema = this.list.schema;
 
-  var paths = this.paths = {
+  const paths = this.paths = {
     // fields
     filename: this._path.append('.filename'),
     filetype: this._path.append('.filetype'),
@@ -80,7 +84,7 @@ gcsavatar.prototype.addToSchema = function() {
     upload: this._path.append('_upload'),
   };
 
-  var schemaPaths = this._path.addTo({}, {
+  const schemaPaths = this._path.addTo({}, {
     filename: String,
     filetype: String,
     gcsBucket: String,
@@ -89,7 +93,7 @@ gcsavatar.prototype.addToSchema = function() {
 
   schema.add(schemaPaths);
 
-  var exists = function(item) {
+  const exists = function(item) {
     return (item.get(paths.filename) ? true : false);
   };
 
@@ -98,7 +102,7 @@ gcsavatar.prototype.addToSchema = function() {
     return schemaMethods.exists.apply(this);
   });
 
-  var reset = function(item) {
+  const reset = function(item) {
     item.set(_this.path, {
       filename: '',
       filetype: '',
@@ -107,7 +111,7 @@ gcsavatar.prototype.addToSchema = function() {
     });
   };
 
-  var schemaMethods = {
+  const schemaMethods = {
     exists: function() {
       return exists(this);
     },
@@ -125,13 +129,13 @@ gcsavatar.prototype.addToSchema = function() {
      * @api public
      */
     delete: function() {
-      var _this = this;
-      var promise = new Promise(function(resolve, reject) {
-        var gcsConfig = _this.gcsConfig;
-        var bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.gcsBucket));
-        var filename = _this.get(paths.filename);
+      const _this = this;
+      const promise = new Promise(function(resolve, reject) {
+        const gcsConfig = _this.gcsConfig;
+        const bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.gcsBucket));
+        const filename = _this.get(paths.filename);
         if (filename && typeof filename === 'string') {
-          var filenameWithoutExt = filename.split('.')[0];
+          const filenameWithoutExt = filename.split('.')[0];
           bucket.deleteFiles({
             prefix: _this.get(paths.path) + filenameWithoutExt,
           }, function(err) {
@@ -204,7 +208,7 @@ gcsavatar.prototype.isModified = function(item) {
  * @api public
  */
 
-gcsavatar.prototype.inputIsValid = function(data) { // eslint-disable-line no-unused-vars
+gcsavatar.prototype.inputIsValid = function(data) {
   // TODO - how should file field input be validated?
   return true;
 };
@@ -216,7 +220,7 @@ gcsavatar.prototype.inputIsValid = function(data) { // eslint-disable-line no-un
  * @api public
  */
 
-gcsavatar.prototype.updateItem = function(item, data, callback) { // eslint-disable-line no-unused-vars
+gcsavatar.prototype.updateItem = function(item, data, callback) {
   // TODO - direct updating of data (not via upload)
   process.nextTick(callback);
 };
@@ -228,15 +232,15 @@ gcsavatar.prototype.updateItem = function(item, data, callback) { // eslint-disa
  */
 
 gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
-  var _this = this;
-  var ONE_YEAR = 60 * 60 * 24 * 365;
-  var publicRead = _this.options.publicRead ? _this.options.publicRead : false;
-  var prefix = _this.options.datePrefix ? moment().format(_this.options.datePrefix) + '-' : '';
-  var filename = prefix + file.name;
-  var split = filename.split('.');
-  var filenameWithoutExt = split[0];
-  var originalname = file.originalname;
-  var filetype = file.mimetype || file.type;
+  const _this = this;
+  const ONE_YEAR = 60 * 60 * 24 * 365;
+  const publicRead = _this.options.publicRead ? _this.options.publicRead : false;
+  const prefix = _this.options.datePrefix ? moment().format(_this.options.datePrefix) + '-' : '';
+  let filename = prefix + file.name;
+  const split = filename.split('.');
+  const filenameWithoutExt = split[0];
+  const originalname = file.originalname;
+  const filetype = file.mimetype || file.type;
   let gcsDir = this.options.destination ? this.options.destination : '';
 
   if (typeof gcsDir === 'string' && gcsDir !== '') {
@@ -257,54 +261,58 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
     return callback(new Error('Unsupported File Type: ' + filetype));
   }
 
-  var doUpload = function() {
-
-    if (typeof _this.options.filename === 'function') {
-      filename = _this.options.filename(item, filename, originalname);
-    }
-    var bucket = gcsHelper.initBucket(_this.gcsConfig, _this.options.bucket);
-    return gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
-      destination: gcsDir + filename,
+  if (typeof _this.options.filename === 'function') {
+    filename = _this.options.filename(item, filename, originalname);
+  }
+  const bucket = gcsHelper.initBucket(_this.gcsConfig, _this.options.bucket);
+  return gcsHelper.uploadFileToBucket(bucket, fs.createReadStream(file.path), {
+    destination: gcsDir + filename,
+    filetype: filetype,
+    publicRead: publicRead,
+    cacheControl: 'public, max-age=' + ONE_YEAR,
+  }).then(function() {
+    const imageData = {
+      filepath: file.path,
+      filename: filename,
       filetype: filetype,
-      publicRead: publicRead,
-      cacheControl: 'public, max-age=' + ONE_YEAR,
-    }).then(function() {
+      gcsBucket: _this.options.bucket,
+      gcsDir: gcsDir,
+    };
 
-      var imageData = {
-        filepath: file.path,
-        filename: filename,
-        filetype: filetype,
-        gcsBucket: _this.options.bucket,
-        gcsDir: gcsDir,
-      };
-
-      if (update) {
-        item.set(_this.path, imageData);
+    if (update) {
+      item.set(_this.path, imageData);
+    }
+    callback(null, imageData);
+    return imageData;
+  }).catch(function(err) {
+    console.error(err);
+    bucket.deleteFiles({
+      prefix: gcsDir + filenameWithoutExt,
+    }, function(deleteErr) {
+      if (deleteErr) {
+        return callback(deleteErr);
       }
-      callback(null, imageData);
-    }).catch(function(err) {
-      console.error(err);
-      bucket.deleteFiles({
-        prefix: gcsDir + filenameWithoutExt,
-      }, function(deleteErr) {
-        if (deleteErr) {
-          return callback(deleteErr);
-        }
-        callback(err);
-      });
-    }).finally(function() {
-      // delete local file
-      console.log('DELETE LOCAL FILE:', file.path);
-      try {
-        fs.unlinkSync(file.path);
-      } catch (err) {
-        console.error('DELETE LOCAL FILE ERROR:', err);
-      };
+      callback(err);
     });
-  };
-  doUpload();
+  }).finally(function() {
+    // delete local file
+    console.log('DELETE LOCAL FILE:', file.path);
+    try {
+      fs.unlinkSync(file.path);
+    } catch (err) {
+      console.error('DELETE LOCAL FILE ERROR:', err);
+    };
+  });
 };
 
+gcsavatar.prototype.setAvatarURLToCookie = function(res, value, opts) {
+  const cookieOptions = _.defaults({}, keystone.get('cookie signin options'), opts);
+  try {
+    res.cookie('keystone.avatar', value, cookieOptions);
+  } catch (err) {
+    console.error('SET COOKIE ERROR:', err);
+  };
+};
 
 /**
  * Returns a callback that handles a standard form submission for the field
@@ -316,9 +324,9 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
  * @api public
  */
 
-gcsavatar.prototype.getRequestHandler = function(item, req, paths, callback) {
+gcsavatar.prototype.getRequestHandler = function(item, req, res, paths, callback) {
 
-  var _this = this;
+  const _this = this;
 
   if (utils.isFunction(paths)) {
     callback = paths;
@@ -332,7 +340,7 @@ gcsavatar.prototype.getRequestHandler = function(item, req, paths, callback) {
   return function() {
 
     if (req.body) {
-      var action = req.body[paths.action];
+      const action = req.body[paths.action];
 
       if (/^(delete|reset)$/.test(action)) {
         _this.apply(item, action);
@@ -340,19 +348,27 @@ gcsavatar.prototype.getRequestHandler = function(item, req, paths, callback) {
     }
 
     if (req.files && req.files[paths.upload] && req.files[paths.upload].size) {
-      var imageDelete;
+      let imageDelete;
       if (_this.options.autoCleanup && item.get(_this.paths.exists)) {
         // capture image delete promise
         imageDelete = _this.apply(item, 'delete');
       }
       if (typeof imageDelete === 'undefined') {
-        _this.uploadFile(item, req.files[paths.upload], true, callback);
+        _this.uploadFile(item, req.files[paths.upload], true, callback)
+          .then((imageData) => {
+            const { gcsBucket, gcsDir, filename } = imageData;
+            const imageURL = `https://storage.googleapis.com/${gcsBucket}/${gcsDir}${filename}`;
+            _this.setAvatarURLToCookie(res, imageURL);
+          });
       } else {
         imageDelete.then(function(result) {
           _this.uploadFile(item, req.files[paths.upload], true, callback);
         }, function(err) {
           callback(err);
-        });
+        })
+          .then((imageData) => {
+            _this.setAvatarURLToCookie(res, imageData.filepath);
+          });
       }
     } else {
       return callback();
@@ -367,8 +383,8 @@ gcsavatar.prototype.getRequestHandler = function(item, req, paths, callback) {
  * @api public
  */
 
-gcsavatar.prototype.handleRequest = function(item, req, paths, callback) {
-  this.getRequestHandler(item, req, paths, callback)();
+gcsavatar.prototype.handleRequest = function(item, req, res, paths, callback) {
+  this.getRequestHandler(item, req, res, paths, callback)();
 };
 
 /*!
