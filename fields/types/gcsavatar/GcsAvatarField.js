@@ -8,7 +8,7 @@ const _ = {
   get,
 };
 
-const supportTypes = ['image/gif', 'image/png', 'image/jpeg', 'image/x-tiff', 'image/svg+xml', 'image/bmp'];
+const supportTypes = ['image/png', 'image/jpeg', 'image/svg+xml'];
 
 module.exports = Field.create({
   displayName: 'GcsAvatarField',
@@ -75,7 +75,7 @@ module.exports = Field.create({
       var files = event.target.files;
       Array.prototype.forEach.call(files, function(f) {
         if (supportTypes.indexOf(f.type) === -1) {
-          alert(`系統不支援您上傳的檔案格式。系統支援的檔案格式為 GIF, PNG, JPG, TIFF, SVG, BMP。`);
+          alert(`系統不支援您上傳的檔案格式。系統支援的檔案格式為 PNG, JPG, SVG。`);
           return false;
         }
 
@@ -108,7 +108,7 @@ module.exports = Field.create({
   },
   renderNote() {
     const defaultNoteJsx = (
-      <FormNote note="系統支援的圖片檔案格式為 GIF, PNG, JPG, TIFF, SVG, BMP。" />
+      <FormNote note="系統支援的圖片檔案格式為 PNG, JPG, SVG。" />
     );
     if (!this.props.note) {
       return defaultNoteJsx;
