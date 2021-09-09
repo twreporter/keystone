@@ -40,7 +40,7 @@ function gcsavatar(list, path, options) {
 
   // validate gcs config (has to happen after super_.call)
   if (!keystone.get('gcs config')) {
-    throw new Error('Invalid Configuration\n\n' + 'gcsavatar fields (' + list.key + '.' + path + ') require the "gcs config" option to be set.\n\n' + 'See http://keystonejs.com/docs/configuration/#services-gcsavatar for more information.\n');
+    throw new Error('Invalid Configuration\n\n' + 'gcsavatar fields (' + list.key + '.' + path + ') require the "gcs config" option to be set.\n');
   }
 }
 
