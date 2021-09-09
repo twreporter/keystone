@@ -307,11 +307,7 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
 
 gcsavatar.prototype.setAvatarURLToCookie = function(res, value, opts) {
   const cookieOptions = _.defaults({}, keystone.get('cookie signin options'), opts);
-  try {
-    res.cookie('keystone.avatar', value, cookieOptions);
-  } catch (err) {
-    console.error('SET COOKIE ERROR:', err);
-  };
+  res.cookie('keystone.avatar', value, cookieOptions);
 };
 
 /**
