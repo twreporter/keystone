@@ -8,21 +8,20 @@ const _ = {
   get,
 };
 
-const storageDefaults = {
-  scheme: 'https',
-  hostname: 'storage.googleapis.com',
-};
-
 const supportTypes = ['image/gif', 'image/png', 'image/jpeg', 'image/x-tiff', 'image/svg+xml', 'image/bmp'];
 
 module.exports = Field.create({
   displayName: 'GcsAvatarField',
   getThumbnail() {
-    const { scheme, hostname } = storageDefaults;
+    const storageDefaults = {
+      scheme: 'https',
+      hostname: 'storage.googleapis.com',
+    };
     const gcsBucket = _.get(this.props, 'value.gcsBucket', '');
     const gcsDir = _.get(this.props, 'value.gcsDir', '');
     const filename = _.get(this.props, 'value.filename', '');
     if (gcsBucket && gcsDir && filename) {
+      const { scheme, hostname } = storageDefaults;
       return `${scheme}://${hostname}/${gcsBucket}/${gcsDir}${filename}`;
     }
   },
