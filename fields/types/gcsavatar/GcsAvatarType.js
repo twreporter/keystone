@@ -4,7 +4,6 @@
 const fs = require('fs');
 const gcsHelper = require('../../../lib/gcsHelper');
 const keystone = require('../../../');
-const moment = require('moment');
 const super_ = require('../Type');
 const util = require('util');
 const utils = require('keystone-utils');
@@ -235,8 +234,7 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
   const _this = this;
   const ONE_YEAR = 60 * 60 * 24 * 365;
   const publicRead = _this.options.publicRead ? _this.options.publicRead : false;
-  const prefix = _this.options.datePrefix ? moment().format(_this.options.datePrefix) + '-' : '';
-  let filename = prefix + file.name;
+  let filename = file.name;
   const split = filename.split('.');
   const filenameWithoutExt = split[0];
   const originalname = file.originalname;
