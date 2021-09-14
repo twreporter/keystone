@@ -134,9 +134,8 @@ gcsavatar.prototype.addToSchema = function() {
         const bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.gcsBucket));
         const filename = _this.get(paths.filename);
         if (filename && typeof filename === 'string') {
-          const filenameWithoutExt = filename.split('.')[0];
           bucket.deleteFiles({
-            prefix: _this.get(paths.gcsDir) + filenameWithoutExt,
+            prefix: _this.get(paths.gcsDir) + filename,
           }, function(err) {
             if (err) {
               return reject(err);
@@ -234,20 +233,15 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
   const _this = this;
   const ONE_YEAR = 60 * 60 * 24 * 365;
   const publicRead = _this.options.publicRead ? _this.options.publicRead : false;
-  let filename = file.name;
-  const split = filename.split('.');
-  const fileExt = split[1];
 
-  // Overwrite filename with username (i.e. email account prefix).
+  // Assign filename with email, and non-alphanumeric characters truncated.
   // e.g. When an user uploads the avatar with email 'alice@twreporter.org',
-  // the filename of the uploaded image would be 'alice.jpg'.
+  // the filename of the uploaded image would be 'alicetwreporterorg'.
   // The reason for doing this is that we don't need to deal with url
   // reset in the cookie for the keystone-plugin.
   const email = _.get(item, '_doc.email');
-  const username = email.match(/^([^@]*)@/)[1];
-  const filenameWithoutExt = username;
-  filename = `${username}.${fileExt}`;
-
+  // truncate the non-alphanumeric characters
+  let filename = email.replace(/\W/g, '');
   const originalname = file.originalname;
   const filetype = file.mimetype || file.type;
   let gcsDir = this.options.destination ? this.options.destination : '';
@@ -296,7 +290,7 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
   }).catch(function(err) {
     console.error(err);
     bucket.deleteFiles({
-      prefix: gcsDir + filenameWithoutExt,
+      prefix: gcsDir + filename,
     }, function(deleteErr) {
       if (deleteErr) {
         return callback(deleteErr);
