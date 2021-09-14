@@ -236,7 +236,18 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
   const publicRead = _this.options.publicRead ? _this.options.publicRead : false;
   let filename = file.name;
   const split = filename.split('.');
-  const filenameWithoutExt = split[0];
+  const fileExt = split[1];
+
+  // Overwrite filename with username (i.e. email account prefix).
+  // e.g. When an user uploads the avatar with email 'alice@twreporter.org',
+  // the filename of the uploaded image would be 'alice.jpg'.
+  // The reason for doing this is that we don't need to deal with url 
+  // reset in the cookie for the keystone-plugin.
+  const email = _.get(item, '_doc.email');
+  const username = email.match(/^([^@]*)@/)[1];
+  const filenameWithoutExt = username;
+  filename = `${username}.${fileExt}`;
+
   const originalname = file.originalname;
   const filetype = file.mimetype || file.type;
   let gcsDir = this.options.destination ? this.options.destination : '';
