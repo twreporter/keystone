@@ -130,13 +130,13 @@ gcsavatar.prototype.addToSchema = function() {
     delete: function() {
       const _this = this;
       const promise = new Promise(function(resolve, reject) {
-        const gcsConfig = _this.gcsConfig;
+        const gcsConfig = keystone.get('gcs config');
         const bucket = gcsHelper.initBucket(gcsConfig, _this.get(paths.gcsBucket));
         const filename = _this.get(paths.filename);
         if (filename && typeof filename === 'string') {
           const filenameWithoutExt = filename.split('.')[0];
           bucket.deleteFiles({
-            prefix: _this.get(paths.path) + filenameWithoutExt,
+            prefix: _this.get(paths.gcsDir) + filenameWithoutExt,
           }, function(err) {
             if (err) {
               return reject(err);
@@ -241,7 +241,7 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
   // Overwrite filename with username (i.e. email account prefix).
   // e.g. When an user uploads the avatar with email 'alice@twreporter.org',
   // the filename of the uploaded image would be 'alice.jpg'.
-  // The reason for doing this is that we don't need to deal with url 
+  // The reason for doing this is that we don't need to deal with url
   // reset in the cookie for the keystone-plugin.
   const email = _.get(item, '_doc.email');
   const username = email.match(/^([^@]*)@/)[1];
@@ -314,9 +314,16 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
   });
 };
 
-gcsavatar.prototype.setAvatarURLToCookie = function(res, value, opts) {
+gcsavatar.prototype.setAvatarURLToCookie = function(res, imageData, opts) {
   const cookieOptions = _.defaults({}, keystone.get('cookie signin options'), opts);
-  res.cookie('keystone.avatar', value, cookieOptions);
+  const { gcsBucket, gcsDir, filename } = imageData;
+  const imageURL = `https://storage.googleapis.com/${gcsBucket}/${gcsDir}${filename}`;
+  res.cookie('keystone.avatar', imageURL, cookieOptions);
+};
+
+gcsavatar.prototype.clearAvatarFromCookie = function(res, opts) {
+  const cookieOptions = _.defaults({}, keystone.get('cookie signin options'), opts);
+  res.clearCookie('keystone.avatar', cookieOptions);
 };
 
 /**
@@ -361,19 +368,18 @@ gcsavatar.prototype.getRequestHandler = function(item, req, res, paths, callback
       if (typeof imageDelete === 'undefined') {
         _this.uploadFile(item, req.files[paths.upload], true, callback)
           .then((imageData) => {
-            const { gcsBucket, gcsDir, filename } = imageData;
-            const imageURL = `https://storage.googleapis.com/${gcsBucket}/${gcsDir}${filename}`;
-            _this.setAvatarURLToCookie(res, imageURL);
+            _this.setAvatarURLToCookie(res, imageData);
           });
       } else {
-        imageDelete.then(function(result) {
-          _this.uploadFile(item, req.files[paths.upload], true, callback);
-        }, function(err) {
-          callback(err);
+        imageDelete.then((result) => {
+          // clear 'keystone.avatar' key from cookie after the avatar has been deleted
+          _this.clearAvatarFromCookie(res);
+          return _this.uploadFile(item, req.files[paths.upload], true, callback);
         })
           .then((imageData) => {
-            _this.setAvatarURLToCookie(res, imageData.filepath);
-          });
+            _this.setAvatarURLToCookie(res, imageData);
+          })
+          .catch((err) => callback(err));
       }
     } else {
       return callback();
