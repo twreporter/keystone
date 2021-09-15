@@ -81,7 +81,7 @@ module.exports = function(req, res) {
         return renderView();
       }
 
-      item.getUpdateHandler(req).process(req.body, { flashErrors: true, logErrors: true }, function(err) {
+      item.getUpdateHandler(req, res).process(req.body, { flashErrors: true, logErrors: true }, function(err) {
         if (err) {
           return renderView();
         }

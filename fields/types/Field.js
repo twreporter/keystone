@@ -69,7 +69,7 @@ var Base = module.exports.Base = {
     return <FormInput noedit>{this.props.value}</FormInput>;
   },
   renderUI() {
-    var wrapperClassName = classnames(
+    const wrapperClassName = classnames(
       'field-type-' + this.props.type,
       this.props.className
     );
