@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.5-rc.2, 2021/9/16
+
+## Notable Changes
+
+- feat 
+  - add gcsavatar field and type([#202](https://github.com/twreporter/keystone/pull/202))
+  - add avatar url to cookie for keystone-plugin([#202](https://github.com/twreporter/keystone/pull/202))
+
+### Commits
+* [[`f18419d822`](https://github.com/twreporter/keystone/commit/f18419d822)] - **refactor**: use user email as filename of avatar (Tai-Jiun Fang)
+* [[`6945cd4256`](https://github.com/twreporter/keystone/commit/6945cd4256)] - **fix**: clear cookie when the avatar has been deleted (Tai-Jiun Fang)
+* [[`a2a2f8991a`](https://github.com/twreporter/keystone/commit/a2a2f8991a)] - **refactor**: rewrite filename of user avatar (Tai-Jiun Fang)
+* [[`adeb560766`](https://github.com/twreporter/keystone/commit/adeb560766)] - **refactor**: remove date prefix from avatar filename (Tai-Jiun Fang)
+* [[`59ecfe7254`](https://github.com/twreporter/keystone/commit/59ecfe7254)] - **refactor**: remove set cookie from try ... catch statement (Tai-Jiun Fang)
+* [[`59cfbeb781`](https://github.com/twreporter/keystone/commit/59cfbeb781)] - **refactor**: remove invalid doc link (Tai-Jiun Fang)
+* [[`4075f945c1`](https://github.com/twreporter/keystone/commit/4075f945c1)] - **refactor**: removing supports to some file types for uploading avatar (Tai-Jiun Fang)
+* [[`d19f5cbaf8`](https://github.com/twreporter/keystone/commit/d19f5cbaf8)] - **refactor**: move `storageDefault` constant into function scope (Tai-Jiun Fang)
+* [[`a17e75f844`](https://github.com/twreporter/keystone/commit/a17e75f844)] - **refactor**: remove the unused prop in classname of Field (Tai-Jiun Fang)
+* [[`8b908ea0c4`](https://github.com/twreporter/keystone/commit/8b908ea0c4)] - **feat**: store avatar to cookie for keystone-plugin (Tai-Jiun Fang)
+* [[`bda51880a4`](https://github.com/twreporter/keystone/commit/bda51880a4)] - **feat**: add avatar url to cookie (Tai-Jiun Fang)
+* [[`d9a637f41b`](https://github.com/twreporter/keystone/commit/d9a637f41b)] - **feat**: add gcsavatar field and type (Tai-Jiun Fang)
+
 ## 0.9.5-rc.1, 2021/8/27
 
 ## Notable Changes
