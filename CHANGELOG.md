@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.5-rc.3, 2021/9/16
+
+## Notable Changes
+
+- refactor 
+  - update cache-control for avatar([#204](https://github.com/twreporter/keystone/pull/204))
+
+### Commits
+* [[`20b7e46a3a`](https://github.com/twreporter/keystone/commit/20b7e46a3a)] - **refactor**: update cache-control for avatar (#204) (Tai-Jiun Fang)
+
 ## 0.9.5-rc.2, 2021/9/16
 
 ## Notable Changes
