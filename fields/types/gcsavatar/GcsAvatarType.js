@@ -231,7 +231,6 @@ gcsavatar.prototype.updateItem = function(item, data, callback) {
 
 gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
   const _this = this;
-  const ONE_YEAR = 60 * 60 * 24 * 365;
   const publicRead = _this.options.publicRead ? _this.options.publicRead : false;
 
   // Assign filename with email, and non-alphanumeric characters truncated.
@@ -272,7 +271,7 @@ gcsavatar.prototype.uploadFile = function(item, file, update, callback) {
     destination: gcsDir + filename,
     filetype: filetype,
     publicRead: publicRead,
-    cacheControl: 'public, max-age=' + ONE_YEAR,
+    cacheControl: 'public, max-age= 60, must-revalidate'
   }).then(function() {
     const imageData = {
       filepath: file.path,
