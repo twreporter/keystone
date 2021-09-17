@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.5-rc.4, 2021/9/17
+
+## Notable Changes
+
+- feat
+  - enable signout url([#206](https://github.com/twreporter/keystone/pull/204))
+
+### Commits
+* [[`b64ccb6660`](https://github.com/twreporter/keystone/commit/b64ccb6660)] - **feat**: enable signout url (Ching-Yang, Tseng)
+
 ## 0.9.5-rc.3, 2021/9/16
 
 ## Notable Changes
