@@ -10,7 +10,7 @@ script.
 	Keystone.nav = !{JSON.stringify(nav)};
 	Keystone.nav.currentSection = !{JSON.stringify(section)};
 	Keystone.messages = !{JSON.stringify(messages)};
-	Keystone.signoutUrl = !{JSON.stringify(signoutUrl)||'""'};
+	Keystone.signoutUrl = !{'"/keystone/signout"'};
 	Keystone.csrf = function(obj) {
 		obj['#{csrf_token_key}'] = "#{csrf_token_value}";
 		return obj;
