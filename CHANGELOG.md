@@ -2,35 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.5-rc.4, 2021/9/17
+## 0.9.5, 2021/10/12
 
 ## Notable Changes
 
 - feat
   - enable signout url([#206](https://github.com/twreporter/keystone/pull/204))
+  - add gcsavatar field and type([#202](https://github.com/twreporter/keystone/pull/202))
+  - add avatar url to cookie for keystone-plugin([#202](https://github.com/twreporter/keystone/pull/202), [#204](https://github.com/twreporter/keystone/pull/204))
+- refactor
+  - update default exported column to download([#200](https://github.com/twreporter/keystone/pull/200))
+- fix
+  - persist the username cookie([#198](https://github.com/twreporter/keystone/pull/198))
+  - date filter on choosing 'between'([#197](https://github.com/twreporter/keystone/pull/197))
+- style
+  - update .eslintrc for code styling([#194](https://github.com/twreporter/keystone/pull/194))
+    - add spread operator suppoprt in .eslintrc
+    - set comma-dangle to 'only-multiline' in .eslintrc
+    - update precommit-hook to include `eslint --fix`([#194](https://github.com/twreporter/keystone/pull/194))
 
 ### Commits
 * [[`b64ccb6660`](https://github.com/twreporter/keystone/commit/b64ccb6660)] - **feat**: enable signout url (Ching-Yang, Tseng)
-
-## 0.9.5-rc.3, 2021/9/16
-
-## Notable Changes
-
-- refactor 
-  - update cache-control for avatar([#204](https://github.com/twreporter/keystone/pull/204))
-
-### Commits
 * [[`20b7e46a3a`](https://github.com/twreporter/keystone/commit/20b7e46a3a)] - **refactor**: update cache-control for avatar (#204) (Tai-Jiun Fang)
-
-## 0.9.5-rc.2, 2021/9/16
-
-## Notable Changes
-
-- feat 
-  - add gcsavatar field and type([#202](https://github.com/twreporter/keystone/pull/202))
-  - add avatar url to cookie for keystone-plugin([#202](https://github.com/twreporter/keystone/pull/202))
-
-### Commits
 * [[`f18419d822`](https://github.com/twreporter/keystone/commit/f18419d822)] - **refactor**: use user email as filename of avatar (Tai-Jiun Fang)
 * [[`6945cd4256`](https://github.com/twreporter/keystone/commit/6945cd4256)] - **fix**: clear cookie when the avatar has been deleted (Tai-Jiun Fang)
 * [[`a2a2f8991a`](https://github.com/twreporter/keystone/commit/a2a2f8991a)] - **refactor**: rewrite filename of user avatar (Tai-Jiun Fang)
@@ -43,33 +36,8 @@ All notable changes to this project will be documented in this file. See [standa
 * [[`8b908ea0c4`](https://github.com/twreporter/keystone/commit/8b908ea0c4)] - **feat**: store avatar to cookie for keystone-plugin (Tai-Jiun Fang)
 * [[`bda51880a4`](https://github.com/twreporter/keystone/commit/bda51880a4)] - **feat**: add avatar url to cookie (Tai-Jiun Fang)
 * [[`d9a637f41b`](https://github.com/twreporter/keystone/commit/d9a637f41b)] - **feat**: add gcsavatar field and type (Tai-Jiun Fang)
-
-## 0.9.5-rc.1, 2021/8/27
-
-## Notable Changes
-
-- fix
-  - persist the username cookie([#198](https://github.com/twreporter/keystone/pull/198))
-- refactor 
-  - update default exported column to download([#200](https://github.com/twreporter/keystone/pull/200))
-
-### Commits
 * [[`a510115cdf`](https://github.com/twreporter/keystone/commit/a510115cdf)] - **refactor**: update default exported column to download (#200) (Tai-Jiun Fang)
 * [[`b5f8143af9`](https://github.com/twreporter/keystone/commit/b5f8143af9)] - **fix**: persist the username cookie (Ching-Yang, Tseng)
-
-## 0.9.5-rc.0, 2021/8/19
-
-## Notable Changes
-
-- fix
-  - date filter on choosing 'between'([#197](https://github.com/twreporter/keystone/pull/197))
-- style
-  - update .eslintrc for code styling([#194](https://github.com/twreporter/keystone/pull/194))
-    - add spread operator suppoprt in .eslintrc
-    - set comma-dangle to 'only-multiline' in .eslintrc
-  - update precommit-hook to include `eslint --fix`([#194](https://github.com/twreporter/keystone/pull/194))
-
-### Commits
 * [[`24c4391afb`](https://github.com/twreporter/keystone/commit/24c4391afb)] - **refactor**: add propType check for `DayPickerIndicator` (Tai-Jiun Fang)
 * [[`9e9706a8af`](https://github.com/twreporter/keystone/commit/9e9706a8af)] - **refactor**: check `modifiers` before using in DateFilter (Tai-Jiun Fang)
 * [[`f243e6c795`](https://github.com/twreporter/keystone/commit/f243e6c795)] - **fix**: date filter on choosing 'between' (Tai-Jiun Fang)
