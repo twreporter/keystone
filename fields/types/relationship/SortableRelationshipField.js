@@ -6,6 +6,8 @@ import Select from 'react-select';
 import xhr from 'xhr';
 import { Button, InputGroup } from 'elemental';
 
+import SlugSelectionComponent from './SortableTable';
+
 function compareValues(current, next) {
   let currentLength = current ? current.length : 0;
   let nextLength = next ? next.length : 0;
@@ -180,6 +182,7 @@ module.exports = Field.create({
     return (
       <div>
         <Select.Async
+          multi={this.props.many} // TODO: rewire select to single mode
           disabled={noedit}
           loadOptions={this.loadOptions}
           labelKey="name"
@@ -189,7 +192,8 @@ module.exports = Field.create({
           value={this.state.value}
           valueKey="id"
         />
-        <div>hello world!</div>
+        {this.state.value && <div>{this.state.value.map((item, index) => <p key={`slug-${index}`}>{item.slug}</p>)}</div>}
+        <SlugSelectionComponent />
       </div>
     );
   },
