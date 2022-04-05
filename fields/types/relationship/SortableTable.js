@@ -7,28 +7,6 @@ import ItemTypes from './ItemTypes';
 import update from 'react/lib/update';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-const TRASH_ICON = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-  >
-    <path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z" />
-  </svg>
-);
-
-const HAMBURGER_ICON = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-  >
-    <path d="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z" />
-  </svg>
-);
-
 const cardSource = {
   beginDrag(props) {
     return {
@@ -132,7 +110,6 @@ class Slug extends Component {
       isDragging,
       connectDragSource,
       connectDropTarget,
-      onRemove,
       onSelect,
       isSelected
     } = this.props;
@@ -166,8 +143,7 @@ class Slug extends Component {
         <div style={{ ...slugStyle, opacity }}>
           <div style={slugControlStyle}>
             <Checkbox onChange={onSelect} checked={isSelected} />
-            <button onClick={onRemove}>{TRASH_ICON}</button>
-            {HAMBURGER_ICON}
+            <span className={'octicon octicon-three-bars'} />
           </div>
           <p style={slugTextStyle}>{text}</p>
           <p>{date}</p>
@@ -429,7 +405,7 @@ class SlugListHeader extends Component {
             checked={isSelectAll === 'ALL'}
             indeterminate={isSelectAll === 'INDETERMINATE'}
           />
-          <button onClick={this.onRemoveSelected}>{TRASH_ICON}</button>
+          <button onClick={this.onRemoveSelected}><span className={'octicon octicon-trashcan'} /></button>
         </div>
         <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
