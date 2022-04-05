@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import { findDOMNode } from 'react-dom';
-import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
-import { Checkbox } from 'elemental';
-import ItemTypes from './ItemTypes';
-
 import update from 'react/lib/update';
+import { findDOMNode } from 'react-dom';
+import classnames from 'classnames';
+import { Checkbox } from 'elemental';
+import ItemTypes from './ItemTypes'; // TODO: remove this
+import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 const cardSource = {
@@ -395,6 +395,10 @@ class SlugListHeader extends Component {
       width: '0'
     };
 
+    const className = classnames('ItemList__control ItemList__control--delete', {
+        'is-active': true,
+    });
+
     const { isSelectAll } = this.props;
 
     return (
@@ -405,7 +409,7 @@ class SlugListHeader extends Component {
             checked={isSelectAll === 'ALL'}
             indeterminate={isSelectAll === 'INDETERMINATE'}
           />
-          <button onClick={this.onRemoveSelected}><span className={'octicon octicon-trashcan'} /></button>
+          <button type="button" className={className} onClick={this.onRemoveSelected}><span className={'octicon octicon-trashcan'} /></button>
         </div>
         <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
