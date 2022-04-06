@@ -402,19 +402,18 @@ class DndSlugs extends Component {
     }
 
     return slugs.map((slug, index) => {
-      return (
+      return slug ?
         <DndSlug
           key={`slug-${slug.id}`}
           index={index}
           id={slug.id}
-          text={slug.text}
-          date={slug.date}
+          text={slug.slug}
+          date={slug.fields ? slug.fields.publishedDate : ""}
           onSelect={() => this.onSlugSelect(index)}
           onRemove={() => this.onSlugRemoveByIndex(index)}
           isSelected={slug.isSelected}
           moveSlug={this.moveSlug}
-        />
-      );
+        /> : null;
     });
   }
 
