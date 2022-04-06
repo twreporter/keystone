@@ -26,11 +26,11 @@ class SlugListHeader extends Component {
     onSelectedSlugRemove();
   }
 
+  // TODO: check correctness ***
   onSlugSort() {
     const { sort } = this.state;
-    this.setState({ sort: sort === 'ascending' ? 'descending' : 'ascending' });
     const { onSlugSort } = this.props;
-    onSlugSort(sort === 'ascending');
+    this.setState({ sort: sort === 'ascending' ? 'descending' : 'ascending' }, () => onSlugSort(sort === 'ascending'));
   }
 
   render() {
@@ -98,7 +98,7 @@ class SlugListHeader extends Component {
         <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
           <p>{'發布日期'}</p>
-          <button onClick={this.onSlugSort}>
+          <button type="button" onClick={this.onSlugSort}>
             <span
               style={sort === 'ascending' ? caretUpStyle : caretDownStyle}
             ></span>
