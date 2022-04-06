@@ -2,6 +2,7 @@ import async from 'async';
 import Lists from '../../../admin/client/stores/Lists';
 import Field from '../Field';
 import React from 'react';
+import update from 'react/lib/update';
 import Select from 'react-select';
 import xhr from 'xhr';
 import { Button, InputGroup } from 'elemental';
@@ -178,6 +179,22 @@ module.exports = Field.create({
     this.toggleCreate(false);
   },
 
+  onSlugDrag(dragIndex, hoverIndex) {
+    const { value } = this.state;
+    const dragSlug = value[dragIndex];
+
+    this.setState(
+      update(this.state, {
+        value: {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragSlug]
+          ]
+        }
+      })
+    );
+  },
+
   renderSelect(noedit) {
     return (
       <div>
@@ -192,7 +209,7 @@ module.exports = Field.create({
           value={this.state.value}
           valueKey="id"
         />
-        <SlugSelectionComponent slugs={this.state.value} />
+        <SlugSelectionComponent slugs={this.state.value} onSlugDrag={this.onSlugDrag} />
       </div>
     );
   },
