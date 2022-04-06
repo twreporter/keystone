@@ -193,7 +193,7 @@ module.exports = Field.create({
           valueKey="id"
         />
         {this.state.value && <div>{this.state.value.map((item, index) => <p key={`slug-${index}`}>{item.slug}</p>)}</div>}
-        <SlugSelectionComponent />
+        <SlugSelectionComponent slugs={this.state.value} />
       </div>
     );
   },

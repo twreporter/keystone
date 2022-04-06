@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import update from 'react/lib/update';
 import { findDOMNode } from 'react-dom';
-import classnames from 'classnames';
+// import classnames from 'classnames';
 import { Checkbox } from 'elemental';
 import ItemTypes from './ItemTypes'; // TODO: remove this
 import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
@@ -63,6 +63,7 @@ const cardTarget = {
   }
 };
 
+/*
 const SLUGS = [
   {
     id: 1,
@@ -101,6 +102,113 @@ const SLUGS = [
     date: '2021/7/25 12:25'
   }
 ];
+*/
+
+/*
+class SlugListHeader extends Component {
+  constructor(props) {
+    super(props);
+    this.onSelectAll = this.onSelectAll.bind(this);
+    this.onRemoveSelected = this.onRemoveSelected.bind(this);
+    this.onSlugSort = this.onSlugSort.bind(this);
+    this.state = {
+      sort: 'ascending'
+    };
+  }
+
+  onSelectAll() {
+    const { handleSelectAll } = this.props;
+    handleSelectAll();
+  }
+
+  onRemoveSelected() {
+    const { handleRemoveSelected } = this.props;
+    handleRemoveSelected();
+  }
+
+  onSlugSort() {
+    const { sort } = this.state;
+    this.setState({ sort: sort === 'ascending' ? 'descending' : 'ascending' });
+    const { handleSort } = this.props;
+    handleSort(sort === 'ascending');
+  }
+
+  render() {
+    const { sort } = this.state;
+    const style = {
+      padding: '10px',
+      display: 'flex'
+    };
+
+    const slugControlStyle = {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center'
+    };
+
+    const slugTextStyle = {
+      paddingLeft: '10px',
+      paddingRight: '10px',
+      lineBreak: 'anywhere',
+      textOverflow: 'ellipsis'
+    };
+
+    const dateStyle = {
+      display: 'flex'
+    };
+
+    const caretUpStyle = {
+      borderBottom: '10px solid #000000',
+      borderLeft: '6px solid rgba(0, 0, 0, 0)',
+      borderRight: '6px solid rgba(0, 0, 0, 0)',
+      content: '',
+      display: 'inline-block',
+      height: '0',
+      verticalAlign: 'top',
+      width: '0'
+    };
+
+    const caretDownStyle = {
+      borderTop: '10px solid #000000',
+      borderLeft: '6px solid rgba(0, 0, 0, 0)',
+      borderRight: '6px solid rgba(0, 0, 0, 0)',
+      content: '',
+      display: 'inline-block',
+      height: '0',
+      verticalAlign: 'top',
+      width: '0'
+    };
+
+    const className = classnames('ItemList__control ItemList__control--delete', {
+      'is-active': true,
+    });
+
+    const { isSelectAll } = this.props;
+
+    return (
+      <div style={style}>
+        <div style={slugControlStyle}>
+          <Checkbox
+            onChange={this.onSelectAll}
+            checked={isSelectAll === 'ALL'}
+            indeterminate={isSelectAll === 'INDETERMINATE'}
+          />
+          <button type="button" className={className} onClick={this.onRemoveSelected}><span className={'octicon octicon-trashcan'} /></button>
+        </div>
+        <p style={slugTextStyle}>{'文章Slug'}</p>
+        <div style={dateStyle}>
+          <p>{'發布日期'}</p>
+          <button onClick={this.onSlugSort}>
+            <span
+              style={sort === 'ascending' ? caretUpStyle : caretDownStyle}
+            ></span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+*/
 
 class Slug extends Component {
   render() {
@@ -181,14 +289,15 @@ class SlugListItems extends Component {
     this.onSlugRemoveSelected = this.onSlugRemoveSelected.bind(this);
     this.onSelectAll = this.onSelectAll.bind(this);
     this.onSlugSort = this.onSlugSort.bind(this);
+    this.renderDndSlugs = this.renderDndSlugs.bind(this);
     this.state = {
-      slugs: SLUGS,
+      // slugs: SLUGS,
       isSelectAll: 'NONE'
     };
   }
 
   moveSlug(dragIndex, hoverIndex) {
-    const { slugs } = this.state;
+    const { slugs } = this.props;
     const dragSlug = slugs[dragIndex];
 
     this.setState(
@@ -204,7 +313,7 @@ class SlugListItems extends Component {
   }
 
   updateCheckAllStatus() {
-    const { slugs } = this.state;
+    const { slugs } = this.props;
     let numSelected = 0;
     slugs.forEach((slug) => {
       if (slug && slug.isSelected) {
@@ -225,7 +334,7 @@ class SlugListItems extends Component {
   }
 
   onSlugSelect(index) {
-    const { slugs } = this.state;
+    const { slugs } = this.props;
     slugs[index].isSelected = !slugs[index].isSelected;
 
     this.setState(
@@ -237,7 +346,7 @@ class SlugListItems extends Component {
   }
 
   onSlugRemoveByIndex(index) {
-    const { slugs } = this.state;
+    const { slugs } = this.props;
     slugs.splice(index, 1);
     this.setState(
       {
@@ -248,7 +357,8 @@ class SlugListItems extends Component {
   }
 
   onSelectAll() {
-    const { slugs, isSelectAll } = this.state;
+    const { slugs } = this.props;
+    const { isSelectAll } = this.state;
     let selectionStat;
     if (isSelectAll === 'NONE') {
       selectionStat = 'ALL';
@@ -266,7 +376,7 @@ class SlugListItems extends Component {
   }
 
   onSlugRemoveSelected() {
-    const { slugs } = this.state;
+    const { slugs } = this.props;
     this.setState(
       {
         slugs: slugs.filter((slug) => slug && !slug.isSelected)
@@ -276,7 +386,7 @@ class SlugListItems extends Component {
   }
 
   onSlugSort(isAscending) {
-    const { slugs } = this.state;
+    const { slugs } = this.props;
     this.setState({
       slugs: slugs.sort(function(slugA, slugB) {
         const dateDiff = new Date(slugB.date) - new Date(slugA.date);
@@ -285,151 +395,55 @@ class SlugListItems extends Component {
     });
   }
 
+  renderDndSlugs() {
+    const { slugs } = this.props;
+
+    if (!Array.isArray(slugs) || slugs.length <= 0) {
+      return null;
+    }
+
+    return slugs.map((slug, index) => {
+      return (
+        <DndSlug
+          key={`slug-${slug.id}`}
+          index={index}
+          id={slug.id}
+          text={slug.text}
+          date={slug.date}
+          onSelect={() => this.onSlugSelect(index)}
+          onRemove={() => this.onSlugRemoveByIndex(index)}
+          isSelected={slug.isSelected}
+          moveSlug={this.moveSlug}
+        />
+      );
+    });
+  }
+
   render() {
-    const { slugs, isSelectAll } = this.state;
     const slugStyle = {
       width: 600
     };
 
     return (
-      <div style={slugStyle}>
-        <SlugListHeader
-          isSelectAll={isSelectAll}
-          handleSelectAll={this.onSelectAll}
-          handleRemoveSelected={this.onSlugRemoveSelected}
-          handleSort={this.onSlugSort}
-        />
-        {slugs.map((slug, index) => {
-          return (
-            <DndSlug
-              key={slug.id}
-              index={index}
-              id={slug.id}
-              text={slug.text}
-              date={slug.date}
-              onSelect={() => this.onSlugSelect(index)}
-              onRemove={() => this.onSlugRemoveByIndex(index)}
-              isSelected={slug.isSelected}
-              moveSlug={this.moveSlug}
-            />
-          );
-        })}
-      </div>
+      <div style={slugStyle}>{this.renderDndSlugs()}</div>
     );
   }
 }
 
 const SlugListItemsDnDContainer = DragDropContext(HTML5Backend)(SlugListItems);
 
-class SlugListHeader extends Component {
-  constructor(props) {
-    super(props);
-    this.onSelectAll = this.onSelectAll.bind(this);
-    this.onRemoveSelected = this.onRemoveSelected.bind(this);
-    this.onSlugSort = this.onSlugSort.bind(this);
-    this.state = {
-      sort: 'ascending'
-    };
-  }
-
-  onSelectAll() {
-    const { handleSelectAll } = this.props;
-    handleSelectAll();
-  }
-
-  onRemoveSelected() {
-    const { handleRemoveSelected } = this.props;
-    handleRemoveSelected();
-  }
-
-  onSlugSort() {
-    const { sort } = this.state;
-    this.setState({ sort: sort === 'ascending' ? 'descending' : 'ascending' });
-    const { handleSort } = this.props;
-    handleSort(sort === 'ascending');
-  }
-
-  render() {
-    const { sort } = this.state;
-    const style = {
-      padding: '10px',
-      display: 'flex'
-    };
-
-    const slugControlStyle = {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center'
-    };
-
-    const slugTextStyle = {
-      paddingLeft: '10px',
-      paddingRight: '10px',
-      lineBreak: 'anywhere',
-      textOverflow: 'ellipsis'
-    };
-
-    const dateStyle = {
-      display: 'flex'
-    };
-
-    const caretUpStyle = {
-      borderBottom: '10px solid #000000',
-      borderLeft: '6px solid rgba(0, 0, 0, 0)',
-      borderRight: '6px solid rgba(0, 0, 0, 0)',
-      content: '',
-      display: 'inline-block',
-      height: '0',
-      verticalAlign: 'top',
-      width: '0'
-    };
-
-    const caretDownStyle = {
-      borderTop: '10px solid #000000',
-      borderLeft: '6px solid rgba(0, 0, 0, 0)',
-      borderRight: '6px solid rgba(0, 0, 0, 0)',
-      content: '',
-      display: 'inline-block',
-      height: '0',
-      verticalAlign: 'top',
-      width: '0'
-    };
-
-    const className = classnames('ItemList__control ItemList__control--delete', {
-        'is-active': true,
-    });
-
-    const { isSelectAll } = this.props;
-
-    return (
-      <div style={style}>
-        <div style={slugControlStyle}>
-          <Checkbox
-            onChange={this.onSelectAll}
-            checked={isSelectAll === 'ALL'}
-            indeterminate={isSelectAll === 'INDETERMINATE'}
-          />
-          <button type="button" className={className} onClick={this.onRemoveSelected}><span className={'octicon octicon-trashcan'} /></button>
-        </div>
-        <p style={slugTextStyle}>{'文章Slug'}</p>
-        <div style={dateStyle}>
-          <p>{'發布日期'}</p>
-          <button onClick={this.onSlugSort}>
-            <span
-              style={sort === 'ascending' ? caretUpStyle : caretDownStyle}
-            ></span>
-          </button>
-        </div>
-      </div>
-    );
-  }
-}
-
 class SlugSelectionComponent extends Component {
   render() {
+    const { slugs } = this.props;
     return (
       <div>
-        <SlugListItemsDnDContainer />
+        {/* <SlugListHeader
+          isSelectAll={isSelectAll}
+          handleSelectAll={this.onSelectAll}
+          handleRemoveSelected={this.onSlugRemoveSelected}
+          handleSort={this.onSlugSort}
+        /> */}
+        <SlugListItemsDnDContainer slugs={slugs} />
       </div>
     );
   }
