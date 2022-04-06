@@ -57,6 +57,11 @@ class SlugListHeader extends Component {
       display: 'flex'
     };
 
+    const sortBtnStyle = {
+      border: 'none',
+      backgroundColor: 'Transparent'
+    };
+
     const caretUpStyle = {
       borderBottom: '10px solid #000000',
       borderLeft: '6px solid rgba(0, 0, 0, 0)',
@@ -98,7 +103,7 @@ class SlugListHeader extends Component {
         <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
           <p>{'發布日期'}</p>
-          <button type="button" onClick={this.onSlugSort}>
+          <button type="button" style={sortBtnStyle} onClick={this.onSlugSort}>
             <span
               style={sort === 'ascending' ? caretUpStyle : caretDownStyle}
             ></span>
