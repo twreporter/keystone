@@ -5,6 +5,8 @@ import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { Checkbox } from 'elemental';
 
+const SortOrder = Object.freeze({ ASCENDING: 1, DESCENDING: 2 });
+
 class SlugListHeader extends Component {
   constructor(props) {
     super(props);
@@ -12,7 +14,7 @@ class SlugListHeader extends Component {
     this.onSelectedSlugRemove = this.onSelectedSlugRemove.bind(this);
     this.onSlugSort = this.onSlugSort.bind(this);
     this.state = {
-      sort: 'ascending'
+      sort: SortOrder.ASCENDING
     };
   }
 
@@ -30,7 +32,7 @@ class SlugListHeader extends Component {
   onSlugSort() {
     const { sort } = this.state;
     const { onSlugSort } = this.props;
-    this.setState({ sort: sort === 'ascending' ? 'descending' : 'ascending' }, () => onSlugSort(sort === 'ascending'));
+    this.setState({ sort: sort === SortOrder.ASCENDING ? SortOrder.DESCENDING : SortOrder.ASCENDING }, () => onSlugSort(sort === SortOrder.ASCENDING));
   }
 
   render() {
@@ -103,7 +105,7 @@ class SlugListHeader extends Component {
           <p>{'發布日期'}</p>
           <button type="button" style={sortBtnStyle} onClick={this.onSlugSort}>
             <span
-              style={sort === 'ascending' ? caretUpStyle : caretDownStyle}
+              style={sort === SortOrder.ASCENDING ? caretUpStyle : caretDownStyle}
             ></span>
           </button>
         </div>
