@@ -333,12 +333,8 @@ class DndSlugs extends Component {
   }
 
   render() {
-    const slugStyle = {
-      width: 600
-    };
-
     return (
-      <div style={slugStyle}>{this.renderDndSlugs()}</div>
+      <div>{this.renderDndSlugs()}</div>
     );
   }
 }
