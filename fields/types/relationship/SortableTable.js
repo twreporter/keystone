@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import classnames from 'classnames';
-import ItemTypes from './ItemTypes'; // TODO: remove this
 import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { Checkbox } from 'elemental';
@@ -210,9 +209,9 @@ const cardTarget = {
   }
 };
 
-const DndSlug = DropTarget(ItemTypes.SLUG, cardTarget, (connect) => ({
+const DndSlug = DropTarget('slug', cardTarget, (connect) => ({
   connectDropTarget: connect.dropTarget()
-}))(DragSource(ItemTypes.SLUG, cardSource, (connect, monitor) => ({
+}))(DragSource('slug', cardSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))(Slug));
