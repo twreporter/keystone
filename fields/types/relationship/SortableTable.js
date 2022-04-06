@@ -278,7 +278,7 @@ const DndSlug = DropTarget(ItemTypes.SLUG, cardTarget, (connect) => ({
   isDragging: monitor.isDragging()
 }))(Slug));
 
-class SlugListItems extends Component {
+class DndSlugs extends Component {
   constructor(props) {
     super(props);
     this.moveSlug = this.moveSlug.bind(this);
@@ -291,7 +291,6 @@ class SlugListItems extends Component {
     this.onSlugSort = this.onSlugSort.bind(this);
     this.renderDndSlugs = this.renderDndSlugs.bind(this);
     this.state = {
-      // slugs: SLUGS,
       isSelectAll: 'NONE'
     };
   }
@@ -430,7 +429,7 @@ class SlugListItems extends Component {
   }
 }
 
-const SlugListItemsDnDContainer = DragDropContext(HTML5Backend)(SlugListItems);
+const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
 
 class SlugSelectionComponent extends Component {
   render() {
@@ -443,7 +442,7 @@ class SlugSelectionComponent extends Component {
           handleRemoveSelected={this.onSlugRemoveSelected}
           handleSort={this.onSlugSort}
         /> */}
-        <SlugListItemsDnDContainer slugs={slugs} />
+        <DndSlugsContainer slugs={slugs} />
       </div>
     );
   }
