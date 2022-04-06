@@ -27,6 +27,7 @@ module.exports = Field.create({
     return {
       value: null,
       createIsOpen: false,
+      slugSelectionStat: 'NONE'
     };
   },
 
@@ -180,6 +181,39 @@ module.exports = Field.create({
   },
 
   // TODO: error handling
+  updateCheckAllStatus() {
+    const { value } = this.state;
+    let numSelected = 0;
+    value.forEach((slug) => {
+      if (slug && slug.isSelected) {
+        numSelected++;
+      }
+    });
+
+    let selectionStat = 'INDETERMINATE';
+    if (numSelected === 0) {
+      selectionStat = 'NONE';
+    } else if (numSelected === value.length) {
+      selectionStat = 'ALL';
+    }
+
+    this.setState({
+      slugSelectionStat: selectionStat
+    });
+  },
+
+  // TODO: wire up selection
+  onSelectedSlugRemove() {
+    const { value } = this.state;
+    this.setState(
+      {
+        value: value.filter((slug) => slug && !slug.isSelected)
+      },
+      this.updateCheckAllStatus
+    );
+  },
+
+  // TODO: error handling
   onSlugDrag(dragIndex, hoverIndex) {
     const { value } = this.state;
     const dragSlug = value[dragIndex];
@@ -224,7 +258,7 @@ module.exports = Field.create({
           value={this.state.value}
           valueKey="id"
         />
-        <SlugSelectionComponent slugs={this.state.value} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
+        <SlugSelectionComponent slugs={this.state.value} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
       </div>
     );
   },

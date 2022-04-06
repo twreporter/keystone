@@ -9,7 +9,7 @@ class SlugListHeader extends Component {
   constructor(props) {
     super(props);
     this.onSelectAll = this.onSelectAll.bind(this);
-    this.onRemoveSelected = this.onRemoveSelected.bind(this);
+    this.onSelectedSlugRemove = this.onSelectedSlugRemove.bind(this);
     this.onSlugSort = this.onSlugSort.bind(this);
     this.state = {
       sort: 'ascending'
@@ -21,9 +21,9 @@ class SlugListHeader extends Component {
     handleSelectAll();
   }
 
-  onRemoveSelected() {
-    const { handleRemoveSelected } = this.props;
-    handleRemoveSelected();
+  onSelectedSlugRemove() {
+    const { onSelectedSlugRemove } = this.props;
+    onSelectedSlugRemove();
   }
 
   onSlugSort() {
@@ -93,7 +93,7 @@ class SlugListHeader extends Component {
             checked={isSelectAll === 'ALL'}
             indeterminate={isSelectAll === 'INDETERMINATE'}
           />
-          <button type="button" className={className} onClick={this.onRemoveSelected}><span className={'octicon octicon-trashcan'} /></button>
+          <button type="button" className={className} onClick={this.onSelectedSlugRemove}><span className={'octicon octicon-trashcan'} /></button>
         </div>
         <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
@@ -225,7 +225,6 @@ class DndSlugs extends Component {
 
     this.onSlugRemoveSelected = this.onSlugRemoveSelected.bind(this);
     this.onSelectAll = this.onSelectAll.bind(this);
-    this.onSlugSort = this.onSlugSort.bind(this);
     this.renderDndSlugs = this.renderDndSlugs.bind(this);
     this.state = {
       isSelectAll: 'NONE'
@@ -305,16 +304,6 @@ class DndSlugs extends Component {
     );
   }
 
-  onSlugSort(isAscending) {
-    const { slugs } = this.props;
-    this.setState({
-      slugs: slugs.sort(function(slugA, slugB) {
-        const dateDiff = new Date(slugB.date) - new Date(slugA.date);
-        return (isAscending ? 1 : -1) * dateDiff;
-      })
-    });
-  }
-
   renderDndSlugs() {
     const { slugs, onSlugDrag } = this.props;
 
@@ -369,6 +358,7 @@ class SlugSelectionComponent extends Component {
 }
 
 SlugSelectionComponent.propTypes = {
+  onSelectedSlugRemove: PropTypes.func.isRequired,
   onSlugDrag: PropTypes.func.isRequired,
   onSlugSort: PropTypes.func.isRequired,
   slugs: PropTypes.array.isRequired
