@@ -1,67 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import update from 'react/lib/update';
 import { findDOMNode } from 'react-dom';
 // import classnames from 'classnames';
 import { Checkbox } from 'elemental';
 import ItemTypes from './ItemTypes'; // TODO: remove this
 import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-
-const cardSource = {
-  beginDrag(props) {
-    return {
-      id: props.id,
-      index: props.index
-    };
-  }
-};
-
-const cardTarget = {
-  hover(props, monitor, component) {
-    const dragIndex = monitor.getItem().index;
-    const hoverIndex = props.index;
-
-    // Don't replace items with themselves
-    if (dragIndex === hoverIndex) {
-      return;
-    }
-
-    // Determine rectangle on screen
-    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-
-    // Get vertical middle
-    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
-    // Determine mouse position
-    const clientOffset = monitor.getClientOffset();
-
-    // Get pixels to the top
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-    // Only perform the move when the mouse has crossed half of the items height
-    // When dragging downwards, only move when the cursor is below 50%
-    // When dragging upwards, only move when the cursor is above 50%
-
-    // Dragging downwards
-    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-      return;
-    }
-
-    // Dragging upwards
-    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-      return;
-    }
-
-    // Time to actually perform the action
-    props.moveSlug(dragIndex, hoverIndex);
-
-    // Note: we're mutating the monitor item here!
-    // Generally it's better to avoid mutations,
-    // but it's good here for the sake of performance
-    // to avoid expensive index searches.
-    monitor.getItem().index = hoverIndex;
-  }
-};
 
 /*
 class SlugListHeader extends Component {
@@ -226,8 +169,47 @@ Slug.propTypes = {
   id: PropTypes.any.isRequired,
   index: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
-  moveSlug: PropTypes.func.isRequired,
+  onSlugDrag: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired
+};
+
+const cardSource = {
+  beginDrag(props) {
+    return {
+      id: props.id,
+      index: props.index
+    };
+  }
+};
+
+const cardTarget = {
+  hover(props, monitor, component) {
+    const dragIndex = monitor.getItem().index;
+    const hoverIndex = props.index;
+
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+    const clientOffset = monitor.getClientOffset();
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+    // Dragging downwards
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      return;
+    }
+
+    // Dragging upwards
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      return;
+    }
+
+    props.onSlugDrag(dragIndex, hoverIndex);
+    monitor.getItem().index = hoverIndex;
+  }
 };
 
 const DndSlug = DropTarget(ItemTypes.SLUG, cardTarget, (connect) => ({
@@ -240,7 +222,6 @@ const DndSlug = DropTarget(ItemTypes.SLUG, cardTarget, (connect) => ({
 class DndSlugs extends Component {
   constructor(props) {
     super(props);
-    this.moveSlug = this.moveSlug.bind(this);
     this.updateCheckAllStatus = this.updateCheckAllStatus.bind(this);
     this.onSlugSelect = this.onSlugSelect.bind(this);
     this.onSlugRemoveByIndex = this.onSlugRemoveByIndex.bind(this);
@@ -252,22 +233,6 @@ class DndSlugs extends Component {
     this.state = {
       isSelectAll: 'NONE'
     };
-  }
-
-  moveSlug(dragIndex, hoverIndex) {
-    const { slugs } = this.props;
-    const dragSlug = slugs[dragIndex];
-
-    this.setState(
-      update(this.state, {
-        slugs: {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragSlug]
-          ]
-        }
-      })
-    );
   }
 
   updateCheckAllStatus() {
@@ -354,7 +319,7 @@ class DndSlugs extends Component {
   }
 
   renderDndSlugs() {
-    const { slugs } = this.props;
+    const { slugs, onSlugDrag } = this.props;
 
     if (!Array.isArray(slugs) || slugs.length <= 0) {
       return null;
@@ -371,7 +336,7 @@ class DndSlugs extends Component {
           onSelect={() => this.onSlugSelect(index)}
           onRemove={() => this.onSlugRemoveByIndex(index)}
           isSelected={slug.isSelected}
-          moveSlug={this.moveSlug}
+          onSlugDrag={onSlugDrag}
         /> : null;
     });
   }
@@ -391,7 +356,7 @@ const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
 
 class SlugSelectionComponent extends Component {
   render() {
-    const { slugs } = this.props;
+    const { slugs, onSlugDrag } = this.props;
     return (
       <div>
         {/* <SlugListHeader
@@ -400,7 +365,7 @@ class SlugSelectionComponent extends Component {
           handleRemoveSelected={this.onSlugRemoveSelected}
           handleSort={this.onSlugSort}
         /> */}
-        <DndSlugsContainer slugs={slugs} />
+        <DndSlugsContainer slugs={slugs} onSlugDrag={onSlugDrag} />
       </div>
     );
   }
