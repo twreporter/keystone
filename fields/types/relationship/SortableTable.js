@@ -62,8 +62,7 @@ class SlugListHeader extends Component {
       backgroundColor: 'Transparent'
     };
 
-    const caretUpStyle = {
-      borderBottom: '10px solid #000000',
+    const caretStyle = {
       borderLeft: '6px solid rgba(0, 0, 0, 0)',
       borderRight: '6px solid rgba(0, 0, 0, 0)',
       content: '',
@@ -73,15 +72,14 @@ class SlugListHeader extends Component {
       width: '0'
     };
 
+    const caretUpStyle = {
+      ...caretStyle,
+      borderBottom: '10px solid #000000'
+    };
+
     const caretDownStyle = {
-      borderTop: '10px solid #000000',
-      borderLeft: '6px solid rgba(0, 0, 0, 0)',
-      borderRight: '6px solid rgba(0, 0, 0, 0)',
-      content: '',
-      display: 'inline-block',
-      height: '0',
-      verticalAlign: 'top',
-      width: '0'
+      ...caretStyle,
+      borderTop: '10px solid #000000'
     };
 
     const className = classnames('ItemList__control ItemList__control--delete', {
