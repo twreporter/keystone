@@ -64,47 +64,6 @@ const cardTarget = {
 };
 
 /*
-const SLUGS = [
-  {
-    id: 1,
-    isSelected: false,
-    text: 'migrant-workers-death-in-taiwan',
-    date: '2021/12/25 12:25'
-  },
-  {
-    id: 2,
-    isSelected: false,
-    text: 'child-health-care-taiwan',
-    date: '2021/11/25 12:25'
-  },
-  {
-    id: 3,
-    isSelected: false,
-    text: 'fpc-sixth-naphtha-cracker-20-years',
-    date: '2021/3/25 12:25'
-  },
-  {
-    id: 4,
-    isSelected: false,
-    text: '2017-taipei-golden-horse-film-festival',
-    date: '2021/09/25 12:25'
-  },
-  {
-    id: 5,
-    isSelected: false,
-    text: 'transfer-of-sovereignty-over-hong-kong-20years',
-    date: '2021/8/25 12:25'
-  },
-  {
-    id: 6,
-    isSelected: false,
-    text: '0206earthquake',
-    date: '2021/7/25 12:25'
-  }
-];
-*/
-
-/*
 class SlugListHeader extends Component {
   constructor(props) {
     super(props);
