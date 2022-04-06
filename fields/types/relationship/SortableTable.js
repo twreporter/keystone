@@ -1,12 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
-// import classnames from 'classnames';
-import { Checkbox } from 'elemental';
+import classnames from 'classnames';
 import ItemTypes from './ItemTypes'; // TODO: remove this
 import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import { Checkbox } from 'elemental';
 
-/*
 class SlugListHeader extends Component {
   constructor(props) {
     super(props);
@@ -31,8 +30,8 @@ class SlugListHeader extends Component {
   onSlugSort() {
     const { sort } = this.state;
     this.setState({ sort: sort === 'ascending' ? 'descending' : 'ascending' });
-    const { handleSort } = this.props;
-    handleSort(sort === 'ascending');
+    const { onSlugSort } = this.props;
+    onSlugSort(sort === 'ascending');
   }
 
   render() {
@@ -110,7 +109,6 @@ class SlugListHeader extends Component {
     );
   }
 }
-*/
 
 class Slug extends Component {
   render() {
@@ -356,19 +354,25 @@ const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
 
 class SlugSelectionComponent extends Component {
   render() {
-    const { slugs, onSlugDrag } = this.props;
+    const { slugs, onSlugSort, onSlugDrag } = this.props;
     return (
       <div>
-        {/* <SlugListHeader
-          isSelectAll={isSelectAll}
-          handleSelectAll={this.onSelectAll}
-          handleRemoveSelected={this.onSlugRemoveSelected}
-          handleSort={this.onSlugSort}
-        /> */}
+        <SlugListHeader
+          // isSelectAll={isSelectAll}
+          // handleSelectAll={this.onSelectAll}
+          // handleRemoveSelected={this.onSlugRemoveSelected}
+          onSlugSort={onSlugSort}
+        />
         <DndSlugsContainer slugs={slugs} onSlugDrag={onSlugDrag} />
       </div>
     );
   }
 }
+
+SlugSelectionComponent.propTypes = {
+  onSlugDrag: PropTypes.func.isRequired,
+  onSlugSort: PropTypes.func.isRequired,
+  slugs: PropTypes.array.isRequired
+};
 
 export default SlugSelectionComponent;

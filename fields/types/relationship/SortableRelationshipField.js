@@ -179,6 +179,7 @@ module.exports = Field.create({
     this.toggleCreate(false);
   },
 
+  // TODO: error handling
   onSlugDrag(dragIndex, hoverIndex) {
     const { value } = this.state;
     const dragSlug = value[dragIndex];
@@ -195,6 +196,20 @@ module.exports = Field.create({
     );
   },
 
+  // TODO: error handling
+  onSlugSort(isAscending) {
+    const { value } = this.state;
+    if (Array.isArray(value) && value.length > 0) {
+      this.setState({
+        value: value.sort(function(slugA, slugB) {
+          const dateDiff = new Date(slugA.fields.publishedDate) - new Date(slugB.fields.publishedDate);
+          return (isAscending ? 1 : -1) * dateDiff;
+        })
+      });
+    }
+  },
+
+  // TODO: fix publish date issue
   renderSelect(noedit) {
     return (
       <div>
@@ -209,7 +224,7 @@ module.exports = Field.create({
           value={this.state.value}
           valueKey="id"
         />
-        <SlugSelectionComponent slugs={this.state.value} onSlugDrag={this.onSlugDrag} />
+        <SlugSelectionComponent slugs={this.state.value} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
       </div>
     );
   },
