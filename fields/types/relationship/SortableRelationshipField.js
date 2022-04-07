@@ -219,7 +219,6 @@ module.exports = Field.create({
       return;
     }
     const dragSlug = value[dragIndex];
-
     this.setState(
       update(this.state, {
         value: {
@@ -232,17 +231,17 @@ module.exports = Field.create({
     );
   },
 
-  // TODO: error handling
   onSlugSort(isAscending) {
     const { value } = this.state;
-    if (Array.isArray(value) && value.length > 0) {
-      this.setState({
-        value: value.sort(function(slugA, slugB) {
-          const dateDiff = new Date(slugA.fields.publishedDate) - new Date(slugB.fields.publishedDate);
-          return (isAscending ? 1 : -1) * dateDiff;
-        })
-      });
+    if (!Array.isArray(value) || value.length <= 0) {
+      return;
     }
+    this.setState({
+      value: value.sort(function(slugA, slugB) {
+        const dateDiff = new Date(slugA.fields.publishedDate) - new Date(slugB.fields.publishedDate);
+        return (isAscending ? 1 : -1) * dateDiff;
+      })
+    });
   },
 
   // TODO: fix publish date issue
