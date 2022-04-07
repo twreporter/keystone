@@ -7,6 +7,13 @@ import { Checkbox } from 'elemental';
 
 const SortOrder = Object.freeze({ ASCENDING: 1, DESCENDING: 2 });
 
+const dateStyle = {
+  paddingRight: '5px',
+  flex: '1',
+  display: 'flex',
+  justifyContent: 'flex-end'
+};
+
 class SlugListHeader extends Component {
   constructor(props) {
     super(props);
@@ -46,17 +53,6 @@ class SlugListHeader extends Component {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center'
-    };
-
-    const slugTextStyle = {
-      paddingLeft: '10px',
-      paddingRight: '10px',
-      lineBreak: 'anywhere',
-      textOverflow: 'ellipsis'
-    };
-
-    const dateStyle = {
-      display: 'flex'
     };
 
     const sortBtnStyle = {
@@ -100,9 +96,11 @@ class SlugListHeader extends Component {
           />
           <button type="button" className={className} onClick={this.onSelectedSlugRemove}><span className={'octicon octicon-trashcan'} /></button>
         </div>
-        <p style={slugTextStyle}>{'文章Slug'}</p>
+        <div>
+          {'文章Slug'}
+        </div>
         <div style={dateStyle}>
-          <p>{'發布日期'}</p>
+          {'發布日期'}
           <button type="button" style={sortBtnStyle} onClick={this.onSlugSort}>
             <span
               style={sort === SortOrder.ASCENDING ? caretUpStyle : caretDownStyle}
@@ -158,7 +156,7 @@ class Slug extends Component {
             <span className={'octicon octicon-three-bars'} />
           </div>
           <p style={slugTextStyle}>{text}</p>
-          <p>{date}</p>
+          <div style={dateStyle}><p>{date}</p></div>
         </div>
       )
     );
