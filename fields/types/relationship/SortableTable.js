@@ -147,6 +147,8 @@ class Slug extends Component {
     };
 
     const opacity = isDragging ? 0 : 1;
+    const dateObj = new Date(date);
+    const dateText = dateObj ? dateObj.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }) : 'unknown';
 
     return connectDragSource(
       connectDropTarget(
@@ -156,7 +158,7 @@ class Slug extends Component {
             <span className={'octicon octicon-three-bars'} />
           </div>
           <p style={slugTextStyle}>{text}</p>
-          <div style={dateStyle}><p>{date}</p></div>
+          <div style={dateStyle}><p>{dateText}</p></div>
         </div>
       )
     );
