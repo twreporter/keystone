@@ -213,9 +213,11 @@ module.exports = Field.create({
     );
   },
 
-  // TODO: error handling
   onSlugDrag(dragIndex, hoverIndex) {
     const { value } = this.state;
+    if (!Array.isArray(value) || value.length <= 0 || dragIndex < 0 || dragIndex >= value.length || hoverIndex < 0 || hoverIndex >= value.length) {
+      return;
+    }
     const dragSlug = value[dragIndex];
 
     this.setState(
