@@ -108,10 +108,11 @@ module.exports = Field.create({
     });
     async.map(values, (value, done) => {
       xhr({
-        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + value + '?basic',
+        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + value,
         responseType: 'json',
       }, (err, resp, data) => {
         if (err || !data) return done(err);
+        // TODO: make data simpler: id, slug text, publishedDate, isSelected
         this.cacheItem(data);
         done(err, data);
       });
@@ -244,7 +245,6 @@ module.exports = Field.create({
     });
   },
 
-  // TODO: fix publish date issue
   renderSelect(noedit) {
     return (
       <div>
