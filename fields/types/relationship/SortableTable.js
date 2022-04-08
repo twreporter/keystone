@@ -6,6 +6,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { Checkbox } from 'elemental';
 
 const SortOrder = Object.freeze({ ASCENDING: 1, DESCENDING: 2 });
+const Selection = Object.freeze({ NONE: 'NONE', INDETERMINATE: 'INDETERMINATE', ALL: 'ALL' });
 
 const dateStyle = {
   paddingRight: '5px',
@@ -43,7 +44,6 @@ class SlugListHeader extends Component {
   }
 
   render() {
-    const { sort } = this.state;
     const style = {
       padding: '10px',
       display: 'flex'
@@ -84,15 +84,16 @@ class SlugListHeader extends Component {
       'is-active': true,
     });
 
-    const { isSelectAll } = this.props;
+    const { sort } = this.state;
+    const { selection } = this.props;
 
     return (
       <div style={style}>
         <div style={slugControlStyle}>
           <Checkbox
             onChange={this.onSelectAll}
-            checked={isSelectAll === 'ALL'}
-            indeterminate={isSelectAll === 'INDETERMINATE'}
+            checked={selection === Selection.ALL}
+            indeterminate={selection === Selection.INDETERMINATE}
           />
           <button type="button" className={className} onClick={this.onSelectedSlugRemove}><span className={'octicon octicon-trashcan'} /></button>
         </div>
@@ -337,13 +338,14 @@ const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
 
 class SlugSelectionComponent extends Component {
   render() {
-    const { slugs, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
+    const { slugs, selection, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
     return (
       <div>
         <SlugListHeader
           // isSelectAll={isSelectAll}
           // handleSelectAll={this.onSelectAll}
           // handleRemoveSelected={this.onSlugRemoveSelected}
+          selection={selection}
           onSlugSort={onSlugSort}
         />
         <DndSlugsContainer slugs={slugs} onSlugDrag={onSlugDrag} onSlugSelect={onSlugSelect} />
@@ -357,7 +359,8 @@ SlugSelectionComponent.propTypes = {
   onSlugDrag: PropTypes.func.isRequired,
   onSlugSelect: PropTypes.func.isRequired,
   onSlugSort: PropTypes.func.isRequired,
+  selection: PropTypes.string.isRequired,
   slugs: PropTypes.array.isRequired
 };
 
-export default SlugSelectionComponent;
+export { Selection, SlugSelectionComponent };

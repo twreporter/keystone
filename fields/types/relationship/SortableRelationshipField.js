@@ -7,7 +7,7 @@ import Select from 'react-select';
 import xhr from 'xhr';
 import { Button, InputGroup } from 'elemental';
 
-import SlugSelectionComponent from './SortableTable';
+import { Selection, SlugSelectionComponent } from './SortableTable';
 
 function compareValues(current, next) {
   let currentLength = current ? current.length : 0;
@@ -27,7 +27,7 @@ module.exports = Field.create({
     return {
       value: null,
       createIsOpen: false,
-      slugSelectionStat: 'NONE'
+      slugSelections: Selection.NONE
     };
   },
 
@@ -181,33 +181,34 @@ module.exports = Field.create({
     this.toggleCreate(false);
   },
 
-  // TODO: error handling
-  updateCheckAllStatus() {
-    /*
+  updateSlugSelectionStatus() {
     const { value } = this.state;
+    if (!Array.isArray(value)) {
+      return;
+    }
+
     let numSelected = 0;
     value.forEach((slug) => {
-      if (slug && slug.isSelected) {
+      if (slug && slug.isSlugSelected) {
         numSelected++;
       }
     });
 
-    let selectionStat = 'INDETERMINATE';
+    let selection = Selection.INDETERMINATE;
     if (numSelected === 0) {
-      selectionStat = 'NONE';
+      selection = Selection.NONE;
     } else if (numSelected === value.length) {
-      selectionStat = 'ALL';
+      selection = Selection.ALL;
     }
 
     this.setState({
-      slugSelectionStat: selectionStat
+      slugSelections: selection
     });
-    */
   },
 
   onSlugSelect(slugId) {
     const { value } = this.state;
-    const slug = value.find(slug => slug.id === slugId);
+    const slug = Array.isArray(value) ? value.find(slug => slug && slug.id === slugId) : undefined;
     if (slug) {
       slug.isSlugSelected = !slug.isSlugSelected ? true : false;
     }
@@ -216,7 +217,7 @@ module.exports = Field.create({
       {
         value: value
       },
-      this.updateCheckAllStatus
+      this.updateSlugSelectionStatus
     );
   },
 
@@ -227,7 +228,7 @@ module.exports = Field.create({
       {
         value: value.filter((slug) => slug && !slug.isSelected)
       },
-      this.updateCheckAllStatus
+      this.updateSlugSelectionStatus
     );
   },
 
@@ -276,7 +277,7 @@ module.exports = Field.create({
           value={this.state.value}
           valueKey="id"
         />
-        <SlugSelectionComponent slugs={this.state.value} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
+        <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
       </div>
     );
   },
