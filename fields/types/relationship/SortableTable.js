@@ -27,16 +27,20 @@ class SlugListHeader extends Component {
   }
 
   onSelectAll() {
-    const { handleSelectAll } = this.props;
-    handleSelectAll();
+    const { onSelectAll } = this.props;
+    if (onSelectAll) {
+      onSelectAll();
+    }
   }
 
   onSelectedSlugRemove() {
     const { onSelectedSlugRemove } = this.props;
-    onSelectedSlugRemove();
+    if (onSelectedSlugRemove) {
+      onSelectedSlugRemove();
+    }
   }
 
-  // TODO: check correctness ***
+  // TODO: error handling, check correctness ***
   onSlugSort() {
     const { sort } = this.state;
     const { onSlugSort } = this.props;
@@ -225,37 +229,13 @@ const DndSlug = DropTarget('slug', cardTarget, (connect) => ({
 class DndSlugs extends Component {
   constructor(props) {
     super(props);
-    this.updateCheckAllStatus = this.updateCheckAllStatus.bind(this);
     this.onSlugSelect = this.onSlugSelect.bind(this);
-    this.onSlugRemoveByIndex = this.onSlugRemoveByIndex.bind(this);
 
     this.onSlugRemoveSelected = this.onSlugRemoveSelected.bind(this);
-    this.onSelectAll = this.onSelectAll.bind(this);
     this.renderDndSlugs = this.renderDndSlugs.bind(this);
     this.state = {
       isSelectAll: 'NONE'
     };
-  }
-
-  updateCheckAllStatus() {
-    const { slugs } = this.props;
-    let numSelected = 0;
-    slugs.forEach((slug) => {
-      if (slug && slug.isSelected) {
-        numSelected++;
-      }
-    });
-
-    let selectionStat = 'INDETERMINATE';
-    if (numSelected === 0) {
-      selectionStat = 'NONE';
-    } else if (numSelected === slugs.length) {
-      selectionStat = 'ALL';
-    }
-
-    this.setState({
-      isSelectAll: selectionStat
-    });
   }
 
   onSlugSelect(slugId) {
@@ -263,36 +243,6 @@ class DndSlugs extends Component {
     if (slugId && onSlugSelect) {
       onSlugSelect(slugId);
     }
-  }
-
-  onSlugRemoveByIndex(index) {
-    const { slugs } = this.props;
-    slugs.splice(index, 1);
-    this.setState(
-      {
-        slugs: slugs
-      },
-      this.updateCheckAllStatus
-    );
-  }
-
-  onSelectAll() {
-    const { slugs } = this.props;
-    const { isSelectAll } = this.state;
-    let selectionStat;
-    if (isSelectAll === 'NONE') {
-      selectionStat = 'ALL';
-    } else if (isSelectAll === 'ALL' || isSelectAll === 'INDETERMINATE') {
-      selectionStat = 'NONE';
-    }
-
-    this.setState({
-      slugs: slugs.map((slug) => {
-        slug.isSelected = selectionStat === 'ALL';
-        return slug;
-      }),
-      isSelectAll: selectionStat
-    });
   }
 
   onSlugRemoveSelected() {
@@ -321,7 +271,7 @@ class DndSlugs extends Component {
           text={slug.slug}
           date={slug.fields ? slug.fields.publishedDate : ''}
           onSelect={() => this.onSlugSelect(slug.id)}
-          isSelected={slug.isSelected}
+          isSelected={slug.isSlugSelected}
           onSlugDrag={onSlugDrag}
         /> : null;
     });
@@ -338,14 +288,12 @@ const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
 
 class SlugSelectionComponent extends Component {
   render() {
-    const { slugs, selection, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
+    const { slugs, selection, onSelectAll, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
     return (
       <div>
         <SlugListHeader
-          // isSelectAll={isSelectAll}
-          // handleSelectAll={this.onSelectAll}
-          // handleRemoveSelected={this.onSlugRemoveSelected}
           selection={selection}
+          onSelectAll={onSelectAll}
           onSlugSort={onSlugSort}
         />
         <DndSlugsContainer slugs={slugs} onSlugDrag={onSlugDrag} onSlugSelect={onSlugSelect} />
@@ -355,6 +303,7 @@ class SlugSelectionComponent extends Component {
 }
 
 SlugSelectionComponent.propTypes = {
+  onSelectAll: PropTypes.func.isRequired,
   onSelectedSlugRemove: PropTypes.func.isRequired,
   onSlugDrag: PropTypes.func.isRequired,
   onSlugSelect: PropTypes.func.isRequired,

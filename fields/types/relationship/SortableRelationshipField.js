@@ -221,6 +221,19 @@ module.exports = Field.create({
     );
   },
 
+  onSelectAll() {
+    const { value, slugSelections } = this.state;
+    if (!Array.isArray(value)) {
+      return;
+    }
+    const selection = slugSelections === Selection.NONE ? Selection.ALL : Selection.NONE;
+    value.forEach(slug => { slug.isSlugSelected = selection === Selection.ALL; });
+    this.setState({
+      value: value,
+      slugSelections: selection
+    });
+  },
+
   // TODO: wire up selection
   onSelectedSlugRemove() {
     const { value } = this.state;
@@ -277,7 +290,7 @@ module.exports = Field.create({
           value={this.state.value}
           valueKey="id"
         />
-        <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
+        <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onSelectAll={this.onSelectAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
       </div>
     );
   },
