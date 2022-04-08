@@ -108,11 +108,11 @@ module.exports = Field.create({
     });
     async.map(values, (value, done) => {
       xhr({
+        // TODO: make data simpler: id, slug text, publishedDate, isSelected
         url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + value,
         responseType: 'json',
       }, (err, resp, data) => {
         if (err || !data) return done(err);
-        // TODO: make data simpler: id, slug text, publishedDate, isSelected
         this.cacheItem(data);
         done(err, data);
       });
@@ -183,6 +183,7 @@ module.exports = Field.create({
 
   // TODO: error handling
   updateCheckAllStatus() {
+    /*
     const { value } = this.state;
     let numSelected = 0;
     value.forEach((slug) => {
@@ -201,6 +202,22 @@ module.exports = Field.create({
     this.setState({
       slugSelectionStat: selectionStat
     });
+    */
+  },
+
+  onSlugSelect(slugId) {
+    const { value } = this.state;
+    const slug = value.find(slug => slug.id === slugId);
+    if (slug) {
+      slug.isSlugSelected = !slug.isSlugSelected ? true : false;
+    }
+
+    this.setState(
+      {
+        value: value
+      },
+      this.updateCheckAllStatus
+    );
   },
 
   // TODO: wire up selection
@@ -259,7 +276,7 @@ module.exports = Field.create({
           value={this.state.value}
           valueKey="id"
         />
-        <SlugSelectionComponent slugs={this.state.value} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
+        <SlugSelectionComponent slugs={this.state.value} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
       </div>
     );
   },

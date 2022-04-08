@@ -257,16 +257,11 @@ class DndSlugs extends Component {
     });
   }
 
-  onSlugSelect(index) {
-    const { slugs } = this.props;
-    slugs[index].isSelected = !slugs[index].isSelected;
-
-    this.setState(
-      {
-        slugs: slugs
-      },
-      this.updateCheckAllStatus
-    );
+  onSlugSelect(slugId) {
+    const { onSlugSelect } = this.props;
+    if (slugId && onSlugSelect) {
+      onSlugSelect(slugId);
+    }
   }
 
   onSlugRemoveByIndex(index) {
@@ -324,8 +319,7 @@ class DndSlugs extends Component {
           id={slug.id}
           text={slug.slug}
           date={slug.fields ? slug.fields.publishedDate : ''}
-          onSelect={() => this.onSlugSelect(index)}
-          onRemove={() => this.onSlugRemoveByIndex(index)}
+          onSelect={() => this.onSlugSelect(slug.id)}
           isSelected={slug.isSelected}
           onSlugDrag={onSlugDrag}
         /> : null;
@@ -343,7 +337,7 @@ const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
 
 class SlugSelectionComponent extends Component {
   render() {
-    const { slugs, onSlugSort, onSlugDrag } = this.props;
+    const { slugs, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
     return (
       <div>
         <SlugListHeader
@@ -352,7 +346,7 @@ class SlugSelectionComponent extends Component {
           // handleRemoveSelected={this.onSlugRemoveSelected}
           onSlugSort={onSlugSort}
         />
-        <DndSlugsContainer slugs={slugs} onSlugDrag={onSlugDrag} />
+        <DndSlugsContainer slugs={slugs} onSlugDrag={onSlugDrag} onSlugSelect={onSlugSelect} />
       </div>
     );
   }
@@ -361,6 +355,7 @@ class SlugSelectionComponent extends Component {
 SlugSelectionComponent.propTypes = {
   onSelectedSlugRemove: PropTypes.func.isRequired,
   onSlugDrag: PropTypes.func.isRequired,
+  onSlugSelect: PropTypes.func.isRequired,
   onSlugSort: PropTypes.func.isRequired,
   slugs: PropTypes.array.isRequired
 };
