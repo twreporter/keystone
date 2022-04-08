@@ -234,15 +234,30 @@ module.exports = Field.create({
     });
   },
 
-  // TODO: wire up selection
   onSelectedSlugRemove() {
-    const { value } = this.state;
+    const { value, slugSelections } = this.state;
+    if (!Array.isArray(value) || slugSelections === Select.NONE) {
+      return;
+    }
     this.setState(
       {
-        value: value.filter((slug) => slug && !slug.isSelected)
+        value: value.filter((slug) => slug && !slug.isSlugSelected)
       },
       this.updateSlugSelectionStatus
     );
+  },
+
+  onSlugSort(isAscending) {
+    const { value } = this.state;
+    if (!Array.isArray(value) || value.length <= 0) {
+      return;
+    }
+    this.setState({
+      value: value.sort(function(slugA, slugB) {
+        const dateDiff = new Date(slugA.fields.publishedDate) - new Date(slugB.fields.publishedDate);
+        return (isAscending ? 1 : -1) * dateDiff;
+      })
+    });
   },
 
   onSlugDrag(dragIndex, hoverIndex) {
@@ -261,19 +276,6 @@ module.exports = Field.create({
         }
       })
     );
-  },
-
-  onSlugSort(isAscending) {
-    const { value } = this.state;
-    if (!Array.isArray(value) || value.length <= 0) {
-      return;
-    }
-    this.setState({
-      value: value.sort(function(slugA, slugB) {
-        const dateDiff = new Date(slugA.fields.publishedDate) - new Date(slugB.fields.publishedDate);
-        return (isAscending ? 1 : -1) * dateDiff;
-      })
-    });
   },
 
   renderSelect(noedit) {

@@ -288,12 +288,13 @@ const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
 
 class SlugSelectionComponent extends Component {
   render() {
-    const { slugs, selection, onSelectAll, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
+    const { slugs, selection, onSelectAll, onSelectedSlugRemove, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
     return (
       <div>
         <SlugListHeader
           selection={selection}
           onSelectAll={onSelectAll}
+          onSelectedSlugRemove={onSelectedSlugRemove}
           onSlugSort={onSlugSort}
         />
         <DndSlugsContainer slugs={slugs} onSlugDrag={onSlugDrag} onSlugSelect={onSlugSelect} />
