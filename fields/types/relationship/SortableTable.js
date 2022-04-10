@@ -84,6 +84,7 @@ class SlugListHeader extends Component {
       borderTop: '10px solid #000000'
     };
 
+    // TODO: fix transh can click issue
     const className = classnames('ItemList__control ItemList__control--delete', {
       'is-active': true,
     });
@@ -230,12 +231,8 @@ class DndSlugs extends Component {
   constructor(props) {
     super(props);
     this.onSlugSelect = this.onSlugSelect.bind(this);
-
     this.onSlugRemoveSelected = this.onSlugRemoveSelected.bind(this);
     this.renderDndSlugs = this.renderDndSlugs.bind(this);
-    this.state = {
-      isSelectAll: 'NONE'
-    };
   }
 
   onSlugSelect(slugId) {
