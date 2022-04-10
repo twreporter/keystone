@@ -239,12 +239,17 @@ module.exports = Field.create({
     if (!Array.isArray(value) || slugSelections === Select.NONE) {
       return;
     }
-    this.setState(
-      {
-        value: value.filter((slug) => slug && !slug.isSlugSelected)
-      },
-      this.updateSlugSelectionStatus
-    );
+    const left = value.filter((slug) => slug && !slug.isSlugSelected);
+    const selected = value.filter((slug) => slug && slug.isSlugSelected);
+    // clean up isSlugSelected in selected slugs
+    if (selected && selected.length > 0) {
+      selected.forEach(slug => {
+        if (slug) {
+          slug.isSlugSelected = false;
+        }
+      });
+    }
+    this.setState({ value: left }, this.updateSlugSelectionStatus);
   },
 
   onSlugSort(isAscending) {
