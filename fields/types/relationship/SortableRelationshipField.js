@@ -19,6 +19,13 @@ function compareValues(current, next) {
   return true;
 }
 
+function sortDate(dateStr1, dateStr2, isAscending) {
+  const date1 = new Date(dateStr1);
+  const date2 = new Date(dateStr2);
+  const dateDiff = date1 && date2 ? date1 - date2 : 0;
+  return (isAscending ? 1 : -1) * dateDiff;
+}
+
 module.exports = Field.create({
 
   displayName: 'RelationshipField',
@@ -259,8 +266,7 @@ module.exports = Field.create({
     }
     this.setState({
       value: value.sort(function(slugA, slugB) {
-        const dateDiff = new Date(slugA.fields.publishedDate) - new Date(slugB.fields.publishedDate);
-        return (isAscending ? 1 : -1) * dateDiff;
+        return slugA && slugB && slugA.fields && slugB.fields ? sortDate(slugA.fields.publishedDate, slugB.fields.publishedDate, isAscending) : -1;
       })
     });
   },

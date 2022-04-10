@@ -109,7 +109,7 @@ class SlugListHeader extends Component {
           {'發布日期'}
           <button type="button" style={sortBtnStyle} onClick={this.onSlugSort}>
             <span
-              style={sort === SortOrder.ASCENDING ? caretUpStyle : caretDownStyle}
+              style={sort === SortOrder.ASCENDING ? caretDownStyle : caretUpStyle}
             ></span>
           </button>
         </div>
