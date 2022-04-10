@@ -1,12 +1,12 @@
-import async from 'async';
-import Lists from '../../../admin/client/stores/Lists';
-import Field from '../Field';
 import React from 'react';
 import update from 'react/lib/update';
-import Select from 'react-select';
+import async from 'async';
 import xhr from 'xhr';
+import Select from 'react-select';
 import { Button, InputGroup } from 'elemental';
 
+import Lists from '../../../admin/client/stores/Lists';
+import Field from '../Field';
 import { Selection, SlugSelectionComponent } from './SortableTable';
 
 function compareValues(current, next) {
