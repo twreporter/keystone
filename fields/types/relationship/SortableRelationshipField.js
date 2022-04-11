@@ -34,6 +34,7 @@ module.exports = Field.create({
     return {
       value: null,
       createIsOpen: false,
+      selectedSlug: null,
       slugSelections: Selection.NONE
     };
   },
@@ -137,7 +138,7 @@ module.exports = Field.create({
   loadOptions(input, callback) {
     // NOTE: this seems like the wrong way to add options to the Select
     this.loadOptionsCallback = callback;
-    let filters = this.buildFilters();
+    const filters = this.buildFilters();
     xhr({
       url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + input + '&' + filters,
       responseType: 'json',
@@ -289,6 +290,24 @@ module.exports = Field.create({
     );
   },
 
+  onSlugChange(selected) {
+    this.setState({ selectedSlug: selected });
+    /*
+    // TODO: enable single selection
+    const { value } = this.props;
+    let selectedIdStr = '';
+    if (Array.isArray(value) && value.length > 0) {
+      value.forEach(slugId => selectedIdStr += (slugId + ','));
+    }
+    console.log("this.props.value", this.props.value);
+    console.log(selectedIdStr + selected);
+    this.props.onChange({
+      path: this.props.path,
+      value: selectedIdStr + selected
+    });
+    */
+  },
+
   renderSelect(noedit) {
     return (
       <div>
@@ -301,6 +320,16 @@ module.exports = Field.create({
           onChange={this.valueChanged}
           simpleValue
           value={this.state.value}
+          valueKey="id"
+        />
+        <Select.Async
+          disabled={noedit}
+          loadOptions={this.loadOptions}
+          labelKey="name"
+          name={this.props.path}
+          onChange={this.onSlugChange}
+          simpleValue
+          value={this.state.selectedSlug}
           valueKey="id"
         />
         <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onSelectAll={this.onSelectAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
