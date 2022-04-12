@@ -245,11 +245,15 @@ module.exports = Field.create({
     );
   },
 
-  onSlugChange(selected) {
-    this.setState({ selectedSlug: selected });
-    if (selected) {
-      // TODO: filter selected slugs, not the one in <Select>
-      this.setState({ slugOptions: this._articleOptions.filter(option => option.value !== selected.value) });
+  onSlugChange(selectedOption) {
+    this.setState({ selectedSlug: selectedOption });
+    if (selectedOption && selectedOption.value) {
+      const { selectedSlugs } = this.state;
+      const newSelectedSlugs = [...selectedSlugs, selectedOption.value];
+      this.setState({
+        selectedSlugs: newSelectedSlugs,
+        slugOptions: this._articleOptions.filter(option => !newSelectedSlugs.includes(option.value))
+      });
     }
   },
 
