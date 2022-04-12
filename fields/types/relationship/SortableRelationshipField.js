@@ -5,7 +5,7 @@ import xhr from 'xhr';
 import Select from 'react-select';
 
 import Field from '../Field';
-import { Selection, SlugSelectionComponent } from './SortableTable';
+import { Selection, SlugSelectionComponent } from './SlugSelectionComponent';
 
 function compareValues(current, next) {
   let currentLength = current ? current.length : 0;
