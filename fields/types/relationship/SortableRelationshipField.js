@@ -3,9 +3,7 @@ import update from 'react/lib/update';
 import async from 'async';
 import xhr from 'xhr';
 import Select from 'react-select';
-import { Button, InputGroup } from 'elemental';
 
-import Lists from '../../../admin/client/stores/Lists';
 import Field from '../Field';
 import { Selection, SlugSelectionComponent } from './SortableTable';
 
@@ -220,13 +218,7 @@ module.exports = Field.create({
     if (slug) {
       slug.isSlugSelected = !slug.isSlugSelected ? true : false;
     }
-
-    this.setState(
-      {
-        value: value
-      },
-      this.updateSlugSelectionStatus
-    );
+    this.setState({ value }, this.updateSlugSelectionStatus);
   },
 
   onSelectAll() {
@@ -337,39 +329,12 @@ module.exports = Field.create({
     );
   },
 
-  renderInputGroup() {
-    // TODO: find better solution
-    //   when importing the CreateForm using: import CreateForm from '../../../admin/client/components/CreateForm';
-    //   CreateForm was imported as a blank object. This stack overflow post suggested lazilly requiring it:
-    // http://stackoverflow.com/questions/29807664/cyclic-dependency-returns-empty-object-in-react-native
-    let CreateForm = require('../../../admin/client/components/CreateForm');
-    return (
-      <InputGroup>
-        <InputGroup.Section grow>
-          {this.renderSelect()}
-        </InputGroup.Section>
-        <InputGroup.Section>
-          <Button onClick={() => this.toggleCreate(true)} type="success">+</Button>
-        </InputGroup.Section>
-        <CreateForm
-          list={Lists[this.props.refList.key]}
-          isOpen={this.state.createIsOpen}
-          onCreate={(data) => this.onCreate(data)}
-          onCancel={() => this.toggleCreate(false)} />
-      </InputGroup>
-    );
-  },
-
   renderValue() {
     return this.renderSelect(true);
   },
 
   renderField() {
-    if (this.props.createInline) {
-      return this.renderInputGroup();
-    } else {
-      return this.renderSelect();
-    }
+    return this.renderSelect();
   },
 
 });
