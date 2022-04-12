@@ -41,7 +41,7 @@ module.exports = Field.create({
   componentDidMount() {
     this._itemsCache = {};
     this._articleOptions = [];
-    this.loadArticleOptions();
+    this.loadArticleOptions(this.props.value);
     this.loadSlugInfo(this.props.value);
   },
 
@@ -51,7 +51,7 @@ module.exports = Field.create({
   },
 
   shouldCollapse() {
-    if (this.props.many) {
+    if (this.props.many) { // TODO: remove this.props.many
       // many:true relationships have an Array for a value
       return this.props.collapse && !this.props.value.length;
     }
@@ -97,16 +97,16 @@ module.exports = Field.create({
 
   loadSlugInfo(slugIds) {
     if (!slugIds) {
-      this.setState({ loading: false, value: null });
+      this.setState({ loading: false, value: null, selectedSlugs: [] });
       return;
     };
     slugIds = Array.isArray(slugIds) ? slugIds : slugIds.split(',');
     let cachedValues = slugIds.map(id => this._itemsCache[id]).filter(i => i);
     if (cachedValues.length === slugIds.length) {
-      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0] });
+      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0], selectedSlugs: cachedValues.map(article => article.id) });
       return;
     }
-    this.setState({ loading: true, value: null });
+    this.setState({ loading: true, value: null, selectedSlugs: [] });
     async.map(slugIds, (slugId, done) => {
       xhr({
         // TODO: make data simpler: id, slug text, publishedDate, isSelected
@@ -119,12 +119,13 @@ module.exports = Field.create({
       });
     }, (err, expanded) => {
       if (!this.isMounted()) return;
-      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0] });
+      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0], selectedSlugs: expanded.map(article => article.id) });
     });
   },
 
   // TODO: seems not all articles, there should be an input for search
-  loadArticleOptions() {
+  loadArticleOptions(slugIds) {
+    slugIds = Array.isArray(slugIds) ? slugIds : slugIds.split(',');
     const filters = this.buildFilters();
     xhr({
       url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + '' + '&' + filters,
@@ -135,7 +136,8 @@ module.exports = Field.create({
         return;
       }
       data.results.forEach(article => this._articleOptions.push({ label: article.slug, value: article.id }));
-      this.setState({ slugOptions: this._articleOptions });
+      data.results.forEach(this.cacheItem);
+      this.setState({ slugOptions: this._articleOptions.filter(articleOption => articleOption && !slugIds.includes(articleOption.value)) });
     });
   },
 
@@ -237,9 +239,10 @@ module.exports = Field.create({
   onSlugChange(selectedOption) {
     this.setState({ selectedSlugOption: selectedOption });
     if (selectedOption && selectedOption.value) {
-      const { selectedSlugs } = this.state;
+      const { value, selectedSlugs } = this.state;
       const newSelectedSlugs = [...selectedSlugs, selectedOption.value];
       this.setState({
+        value: [...value, this._itemsCache[selectedOption.value]],
         selectedSlugs: newSelectedSlugs,
         slugOptions: this._articleOptions.filter(option => !newSelectedSlugs.includes(option.value))
       });
