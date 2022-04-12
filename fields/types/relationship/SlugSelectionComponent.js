@@ -50,7 +50,8 @@ class SlugListHeader extends Component {
   render() {
     const style = {
       padding: '10px',
-      display: 'flex'
+      display: 'flex',
+      alignItems: 'center'
     };
 
     const slugControlStyle = {
@@ -70,7 +71,7 @@ class SlugListHeader extends Component {
       content: '',
       display: 'inline-block',
       height: '0',
-      verticalAlign: 'top',
+      verticalAlign: 'middle',
       width: '0'
     };
 
