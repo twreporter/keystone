@@ -137,7 +137,8 @@ class Slug extends Component {
       paddingLeft: '10px',
       marginBottom: '.5rem',
       cursor: 'grab',
-      display: 'flex'
+      display: 'flex',
+      alignItems: 'center'
     };
 
     const slugControlStyle = {
@@ -147,6 +148,7 @@ class Slug extends Component {
     };
 
     const slugTextStyle = {
+      margin: '0',
       paddingLeft: '10px',
       paddingRight: '10px',
       lineBreak: 'anywhere',
@@ -165,7 +167,7 @@ class Slug extends Component {
             <span className={'octicon octicon-three-bars'} />
           </div>
           <p style={slugTextStyle}>{text}</p>
-          <div style={dateStyle}><p>{dateText}</p></div>
+          <div style={dateStyle}><p style={slugTextStyle}>{dateText}</p></div>
         </div>
       )
     );
