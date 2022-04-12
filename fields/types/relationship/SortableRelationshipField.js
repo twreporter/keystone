@@ -189,7 +189,7 @@ module.exports = Field.create({
   },
 
   onSelectedSlugRemove() {
-    const { value, slugSelections } = this.state;
+    const { value, selectedSlugs, slugSelections } = this.state;
     if (!Array.isArray(value) || slugSelections === Select.NONE) {
       return;
     }
@@ -202,6 +202,9 @@ module.exports = Field.create({
           slug.isSlugSelected = false;
         }
       });
+      const selectedIds = selected.map(slug => slug.id);
+      const selectedSlugIds = selectedSlugs.filter(slugId => !selectedIds.includes(slugId));
+      this.setState({ selectedSlugs: selectedSlugIds, slugOptions: this._articleOptions.filter(option => !selectedSlugIds.includes(option.value)) });
     }
     this.setState({ value: left }, this.updateSlugSelectionStatus);
   },
