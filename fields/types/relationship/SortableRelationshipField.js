@@ -31,8 +31,9 @@ module.exports = Field.create({
   getInitialState() {
     return {
       value: null,
-      slugOptions: null,
+      slugOptions: [],
       selectedSlug: null,
+      selectedSlugs: [],
       slugSelections: Selection.NONE
     };
   },
@@ -141,41 +142,10 @@ module.exports = Field.create({
     }, (err, resp, data) => {
       if (err) {
         console.error('Error loading items:', err);
-        return [];
+        return;
       }
       data.results.forEach(article => this._articleOptions.push({ label: article.slug, value: article.slug }));
       this.setState({ slugOptions: this._articleOptions });
-    });
-  },
-
-  // NOTE: this seems like the wrong way to add options to the Select
-  loadOptionsCallback: {},
-  loadOptions(input, callback) {
-    // NOTE: this seems like the wrong way to add options to the Select
-    this.loadOptionsCallback = callback;
-    const filters = this.buildFilters();
-    xhr({
-      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + input + '&' + filters,
-      responseType: 'json',
-    }, (err, resp, data) => {
-      if (err) {
-        console.error('Error loading items:', err);
-        return callback(null, []);
-      }
-      data.results.forEach(this.cacheItem);
-      callback(null, {
-        options: data.results,
-        complete: data.results.length === data.count,
-      });
-    });
-  },
-
-  valueChanged(value) {
-    this.props.onChange({
-      path: this.props.path,
-      // TODO Here is a bug when value is undefined, '' or null
-      // the item won't be deleted if value is undefined, '' or null
-      value: value ? value : ' ',
     });
   },
 
