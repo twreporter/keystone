@@ -32,6 +32,7 @@ module.exports = Field.create({
     return {
       value: null,
       createIsOpen: false,
+      slugOptions: null,
       selectedSlug: null,
       slugSelections: Selection.NONE
     };
@@ -39,6 +40,8 @@ module.exports = Field.create({
 
   componentDidMount() {
     this._itemsCache = {};
+    this._articleOptions = [];
+    this.loadArticleOptions();
     this.loadSlugInfo(this.props.value);
   },
 
@@ -128,6 +131,21 @@ module.exports = Field.create({
         loading: false,
         value: this.props.many ? expanded : expanded[0],
       });
+    });
+  },
+
+  loadArticleOptions() {
+    const filters = this.buildFilters();
+    xhr({
+      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + '' + '&' + filters,
+      responseType: 'json',
+    }, (err, resp, data) => {
+      if (err) {
+        console.error('Error loading items:', err);
+        return [];
+      }
+      data.results.forEach(article => this._articleOptions.push({ label: article.slug, value: article.slug }));
+      this.setState({ slugOptions: this._articleOptions });
     });
   },
 
@@ -259,45 +277,20 @@ module.exports = Field.create({
 
   onSlugChange(selected) {
     this.setState({ selectedSlug: selected });
-    /*
-    // TODO: enable single selection
-    const { value } = this.props;
-    let selectedIdStr = '';
-    if (Array.isArray(value) && value.length > 0) {
-      value.forEach(slugId => selectedIdStr += (slugId + ','));
+    if (selected) {
+      // TODO: filter selected slugs, not the one in <Select>
+      this.setState({ slugOptions: this._articleOptions.filter(option => option.value !== selected.value) });
     }
-    console.log("this.props.value", this.props.value);
-    console.log(selectedIdStr + selected);
-    this.props.onChange({
-      path: this.props.path,
-      value: selectedIdStr + selected
-    });
-    */
   },
 
   renderSelect(noedit) {
     return (
       <div>
-        <Select.Async
-          multi={this.props.many} // TODO: rewire select to single mode
+        <Select
           disabled={noedit}
-          loadOptions={this.loadOptions}
-          labelKey="name"
-          name={this.props.path}
-          onChange={this.valueChanged}
-          simpleValue
-          value={this.state.value}
-          valueKey="id"
-        />
-        <Select.Async
-          disabled={noedit}
-          loadOptions={this.loadOptions}
-          labelKey="name"
-          name={this.props.path}
+          options={this.state.slugOptions}
           onChange={this.onSlugChange}
-          simpleValue
           value={this.state.selectedSlug}
-          valueKey="id"
         />
         <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onSelectAll={this.onSelectAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
       </div>
