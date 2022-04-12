@@ -39,12 +39,12 @@ module.exports = Field.create({
 
   componentDidMount() {
     this._itemsCache = {};
-    this.loadValue(this.props.value);
+    this.loadSlugInfo(this.props.value);
   },
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.value === this.props.value || nextProps.many && compareValues(this.props.value, nextProps.value)) return;
-    this.loadValue(nextProps.value);
+    this.loadSlugInfo(nextProps.value);
   },
 
   shouldCollapse() {
@@ -92,16 +92,16 @@ module.exports = Field.create({
     this._itemsCache[item.id] = item;
   },
 
-  loadValue(values) {
-    if (!values) {
+  loadSlugInfo(slugIds) {
+    if (!slugIds) {
       return this.setState({
         loading: false,
         value: null,
       });
     };
-    values = Array.isArray(values) ? values : values.split(',');
-    let cachedValues = values.map(i => this._itemsCache[i]).filter(i => i);
-    if (cachedValues.length === values.length) {
+    slugIds = Array.isArray(slugIds) ? slugIds : slugIds.split(',');
+    let cachedValues = slugIds.map(i => this._itemsCache[i]).filter(i => i);
+    if (cachedValues.length === slugIds.length) {
       this.setState({
         loading: false,
         value: this.props.many ? cachedValues : cachedValues[0],
@@ -112,10 +112,10 @@ module.exports = Field.create({
       loading: true,
       value: null,
     });
-    async.map(values, (value, done) => {
+    async.map(slugIds, (slugId, done) => {
       xhr({
         // TODO: make data simpler: id, slug text, publishedDate, isSelected
-        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + value,
+        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + slugId,
         responseType: 'json',
       }, (err, resp, data) => {
         if (err || !data) return done(err);
@@ -160,31 +160,6 @@ module.exports = Field.create({
       // the item won't be deleted if value is undefined, '' or null
       value: value ? value : ' ',
     });
-  },
-
-  toggleCreate(visible) {
-    this.setState({
-      createIsOpen: visible,
-    });
-  },
-
-  onCreate(item) {
-    this.cacheItem(item);
-    if (Array.isArray(this.state.value)) {
-      // For many relationships, append the new item to the end
-      let values = this.state.value.map((item) => item.id);
-      values.push(item.id);
-      this.valueChanged(values.join(','));
-    } else {
-      this.valueChanged(item.id);
-    }
-
-    // NOTE: this seems like the wrong way to add options to the Select
-    this.loadOptionsCallback(null, {
-      complete: true,
-      options: Object.keys(this._itemsCache).map((k) => this._itemsCache[k]),
-    });
-    this.toggleCreate(false);
   },
 
   updateSlugSelectionStatus() {
