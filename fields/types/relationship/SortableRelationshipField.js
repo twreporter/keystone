@@ -31,7 +31,6 @@ module.exports = Field.create({
   getInitialState() {
     return {
       value: null,
-      createIsOpen: false,
       slugOptions: null,
       selectedSlug: null,
       slugSelections: Selection.NONE
