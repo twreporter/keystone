@@ -97,24 +97,16 @@ module.exports = Field.create({
 
   loadSlugInfo(slugIds) {
     if (!slugIds) {
-      return this.setState({
-        loading: false,
-        value: null,
-      });
+      this.setState({ loading: false, value: null });
+      return;
     };
     slugIds = Array.isArray(slugIds) ? slugIds : slugIds.split(',');
-    let cachedValues = slugIds.map(i => this._itemsCache[i]).filter(i => i);
+    let cachedValues = slugIds.map(id => this._itemsCache[id]).filter(i => i);
     if (cachedValues.length === slugIds.length) {
-      this.setState({
-        loading: false,
-        value: this.props.many ? cachedValues : cachedValues[0],
-      });
+      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0] });
       return;
     }
-    this.setState({
-      loading: true,
-      value: null,
-    });
+    this.setState({ loading: true, value: null });
     async.map(slugIds, (slugId, done) => {
       xhr({
         // TODO: make data simpler: id, slug text, publishedDate, isSelected
@@ -127,10 +119,7 @@ module.exports = Field.create({
       });
     }, (err, expanded) => {
       if (!this.isMounted()) return;
-      this.setState({
-        loading: false,
-        value: this.props.many ? expanded : expanded[0],
-      });
+      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0] });
     });
   },
 
