@@ -134,6 +134,7 @@ module.exports = Field.create({
     });
   },
 
+  // TODO: seems not all articles, there should be an input for search
   loadArticleOptions() {
     const filters = this.buildFilters();
     xhr({
