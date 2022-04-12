@@ -32,7 +32,7 @@ module.exports = Field.create({
     return {
       value: null,
       slugOptions: [],
-      selectedSlug: null,
+      selectedSlugOption: null,
       selectedSlugs: [],
       slugSelections: Selection.NONE
     };
@@ -134,7 +134,7 @@ module.exports = Field.create({
         console.error('Error loading items:', err);
         return;
       }
-      data.results.forEach(article => this._articleOptions.push({ label: article.slug, value: article.slug }));
+      data.results.forEach(article => this._articleOptions.push({ label: article.slug, value: article.id }));
       this.setState({ slugOptions: this._articleOptions });
     });
   },
@@ -235,7 +235,7 @@ module.exports = Field.create({
   },
 
   onSlugChange(selectedOption) {
-    this.setState({ selectedSlug: selectedOption });
+    this.setState({ selectedSlugOption: selectedOption });
     if (selectedOption && selectedOption.value) {
       const { selectedSlugs } = this.state;
       const newSelectedSlugs = [...selectedSlugs, selectedOption.value];
@@ -253,7 +253,7 @@ module.exports = Field.create({
           disabled={noedit}
           options={this.state.slugOptions}
           onChange={this.onSlugChange}
-          value={this.state.selectedSlug}
+          value={this.state.selectedSlugOption}
         />
         <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onSelectAll={this.onSelectAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
       </div>
