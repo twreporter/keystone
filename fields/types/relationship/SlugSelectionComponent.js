@@ -8,6 +8,13 @@ import { Checkbox } from 'elemental';
 const SortOrder = Object.freeze({ ASCENDING: 1, DESCENDING: 2 });
 const Selection = Object.freeze({ NONE: 'NONE', INDETERMINATE: 'INDETERMINATE', ALL: 'ALL' });
 
+const textStyle = {
+  margin: '0',
+  paddingRight: '10px',
+  lineBreak: 'anywhere',
+  textOverflow: 'ellipsis'
+};
+
 const dateStyle = {
   paddingRight: '5px',
   flex: '1',
@@ -65,6 +72,11 @@ class SlugListHeader extends Component {
       backgroundColor: 'Transparent'
     };
 
+    const slugTextStyle = {
+      ...textStyle,
+      paddingLeft: '25px'
+    };
+
     const caretStyle = {
       borderLeft: '6px solid rgba(0, 0, 0, 0)',
       borderRight: '6px solid rgba(0, 0, 0, 0)',
@@ -103,9 +115,7 @@ class SlugListHeader extends Component {
           />
           <button type="button" className={className} onClick={this.onSelectedSlugRemove}><span className={'octicon octicon-trashcan'} /></button>
         </div>
-        <div>
-          {'文章Slug'}
-        </div>
+        <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
           {'發布日期'}
           <button type="button" style={sortBtnStyle} onClick={this.onSlugSort}>
@@ -148,11 +158,8 @@ class Slug extends Component {
     };
 
     const slugTextStyle = {
-      margin: '0',
-      paddingLeft: '10px',
-      paddingRight: '10px',
-      lineBreak: 'anywhere',
-      textOverflow: 'ellipsis'
+      ...textStyle,
+      paddingLeft: '25px'
     };
 
     const opacity = isDragging ? 0 : 1;
@@ -164,10 +171,10 @@ class Slug extends Component {
         <div style={{ ...slugStyle, opacity }}>
           <div style={slugControlStyle}>
             <Checkbox onChange={onSelect} checked={isSelected} />
-            <span className={'octicon octicon-three-bars'} />
+            <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px' }} />
           </div>
           <p style={slugTextStyle}>{text}</p>
-          <div style={dateStyle}><p style={slugTextStyle}>{dateText}</p></div>
+          <div style={dateStyle}><p style={textStyle}>{dateText}</p></div>
         </div>
       )
     );
