@@ -32,7 +32,7 @@ module.exports = Field.create({
     return {
       value: null,
       slugOptions: [],
-      selectedSlugOption: null,
+      selectedOption: null,
       selectedSlugs: [],
       slugSelections: Selection.NONE
     };
@@ -240,7 +240,7 @@ module.exports = Field.create({
   },
 
   onSlugChange(selectedOption) {
-    this.setState({ selectedSlugOption: selectedOption });
+    this.setState({ selectedOption: selectedOption });
     if (selectedOption && selectedOption.value) {
       const { value, selectedSlugs } = this.state;
       const newSelectedSlugs = [...selectedSlugs, selectedOption.value];
@@ -269,7 +269,7 @@ module.exports = Field.create({
           disabled={noedit}
           options={this.state.slugOptions}
           onChange={this.onSlugChange}
-          value={this.state.selectedSlugOption}
+          value={this.state.selectedOption}
         />
         <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onSelectAll={this.onSelectAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
         {this.renderHiddenInputs()}
