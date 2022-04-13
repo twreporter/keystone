@@ -33,7 +33,7 @@ module.exports = Field.create({
       value: null,
       options: [],
       selectedOption: null,
-      selectedSlugs: [],
+      selectedOptions: [],
       pickUpToRemove: PickUp.NONE
     };
   },
@@ -97,16 +97,16 @@ module.exports = Field.create({
 
   loadSlugInfo(slugIds) {
     if (!slugIds) {
-      this.setState({ loading: false, value: null, selectedSlugs: [] });
+      this.setState({ loading: false, value: null, selectedOptions: [] });
       return;
     };
     slugIds = Array.isArray(slugIds) ? slugIds : slugIds.split(',');
     let cachedValues = slugIds.map(id => this._itemsCache[id]).filter(i => i);
     if (cachedValues.length === slugIds.length) {
-      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0], selectedSlugs: cachedValues.map(article => article.id) });
+      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0], selectedOptions: cachedValues.map(article => article.id) });
       return;
     }
-    this.setState({ loading: true, value: null, selectedSlugs: [] });
+    this.setState({ loading: true, value: null, selectedOptions: [] });
     async.map(slugIds, (slugId, done) => {
       xhr({
         // TODO: make data simpler: id, slug text, publishedDate, isSelected
@@ -119,7 +119,7 @@ module.exports = Field.create({
       });
     }, (err, expanded) => {
       if (!this.isMounted()) return;
-      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0], selectedSlugs: expanded.map(article => article.id) });
+      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0], selectedOptions: expanded.map(article => article.id) });
     });
   },
 
@@ -187,7 +187,7 @@ module.exports = Field.create({
   },
 
   onPickedUpRemove() {
-    const { value, selectedSlugs, pickUpToRemove } = this.state;
+    const { value, selectedOptions, pickUpToRemove } = this.state;
     if (!Array.isArray(value) || pickUpToRemove === PickUp.NONE) {
       return;
     }
@@ -201,8 +201,8 @@ module.exports = Field.create({
         }
       });
       const selectedIds = selected.map(slug => slug.id);
-      const selectedSlugIds = selectedSlugs.filter(slugId => !selectedIds.includes(slugId));
-      this.setState({ selectedSlugs: selectedSlugIds, options: this._articleOptions.filter(option => !selectedSlugIds.includes(option.value)) });
+      const selectedSlugIds = selectedOptions.filter(slugId => !selectedIds.includes(slugId));
+      this.setState({ selectedOptions: selectedSlugIds, options: this._articleOptions.filter(option => !selectedSlugIds.includes(option.value)) });
     }
     this.setState({ value: left }, this.updatePickUpStatus);
   },
@@ -240,11 +240,11 @@ module.exports = Field.create({
   onSlugChange(selectedOption) {
     this.setState({ selectedOption: selectedOption });
     if (selectedOption && selectedOption.value) {
-      const { value, selectedSlugs } = this.state;
-      const newSelectedSlugs = [...selectedSlugs, selectedOption.value];
+      const { value, selectedOptions } = this.state;
+      const newSelectedSlugs = [...selectedOptions, selectedOption.value];
       this.setState({
         value: [...value, this._itemsCache[selectedOption.value]],
-        selectedSlugs: newSelectedSlugs,
+        selectedOptions: newSelectedSlugs,
         options: this._articleOptions.filter(option => !newSelectedSlugs.includes(option.value))
       });
       this.props.onChange({
@@ -256,8 +256,8 @@ module.exports = Field.create({
 
   // Use hidden <input> to send ids of selected articles when parent <form> fires submit event
   renderHiddenInputs() {
-    const { selectedSlugs } = this.state;
-    return selectedSlugs.length > 0 ? selectedSlugs.map((slugId, index) => <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={slugId} />) : null;
+    const { selectedOptions } = this.state;
+    return selectedOptions.length > 0 ? selectedOptions.map((slugId, index) => <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={slugId} />) : null;
   },
 
   renderSelect(noedit) {
