@@ -31,7 +31,7 @@ module.exports = Field.create({
   getInitialState() {
     return {
       value: null,
-      slugOptions: [],
+      options: [],
       selectedOption: null,
       selectedSlugs: [],
       slugSelections: Selection.NONE
@@ -137,7 +137,7 @@ module.exports = Field.create({
       }
       data.results.forEach(article => this._articleOptions.push({ label: article.slug, value: article.id }));
       data.results.forEach(this.cacheItem);
-      this.setState({ slugOptions: this._articleOptions.filter(articleOption => articleOption && !slugIds.includes(articleOption.value)) });
+      this.setState({ options: this._articleOptions.filter(articleOption => articleOption && !slugIds.includes(articleOption.value)) });
     });
   },
 
@@ -204,7 +204,7 @@ module.exports = Field.create({
       });
       const selectedIds = selected.map(slug => slug.id);
       const selectedSlugIds = selectedSlugs.filter(slugId => !selectedIds.includes(slugId));
-      this.setState({ selectedSlugs: selectedSlugIds, slugOptions: this._articleOptions.filter(option => !selectedSlugIds.includes(option.value)) });
+      this.setState({ selectedSlugs: selectedSlugIds, options: this._articleOptions.filter(option => !selectedSlugIds.includes(option.value)) });
     }
     this.setState({ value: left }, this.updateSlugSelectionStatus);
   },
@@ -247,7 +247,7 @@ module.exports = Field.create({
       this.setState({
         value: [...value, this._itemsCache[selectedOption.value]],
         selectedSlugs: newSelectedSlugs,
-        slugOptions: this._articleOptions.filter(option => !newSelectedSlugs.includes(option.value))
+        options: this._articleOptions.filter(option => !newSelectedSlugs.includes(option.value))
       });
       this.props.onChange({
         path: this.props.path,
@@ -267,7 +267,7 @@ module.exports = Field.create({
       <div>
         <Select
           disabled={noedit}
-          options={this.state.slugOptions}
+          options={this.state.options}
           onChange={this.onSlugChange}
           value={this.state.selectedOption}
         />
