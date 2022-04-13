@@ -249,7 +249,17 @@ module.exports = Field.create({
         selectedSlugs: newSelectedSlugs,
         slugOptions: this._articleOptions.filter(option => !newSelectedSlugs.includes(option.value))
       });
+      this.props.onChange({
+        path: this.props.path,
+        value: newSelectedSlugs.join(','),
+      });
     }
+  },
+
+  // Use hidden <input> to send ids of selected articles when parent <form> fires submit event
+  renderHiddenInputs() {
+    const { selectedSlugs } = this.state;
+    return selectedSlugs.length > 0 ? selectedSlugs.map((slugId, index) => <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={slugId} />) : null;
   },
 
   renderSelect(noedit) {
@@ -262,6 +272,7 @@ module.exports = Field.create({
           value={this.state.selectedSlugOption}
         />
         <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onSelectAll={this.onSelectAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
+        {this.renderHiddenInputs()}
       </div>
     );
   },
