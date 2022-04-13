@@ -100,7 +100,6 @@ module.exports = Field.create({
     this.setState({ loading: true, value: null, selectedIds: [] });
     async.map(slugIds, (slugId, done) => {
       xhr({
-        // TODO: make data simpler: id, slug text, publishedDate, isSelected
         url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + slugId,
         responseType: 'json',
       }, (err, resp, data) => {
