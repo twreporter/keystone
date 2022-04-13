@@ -86,21 +86,21 @@ module.exports = Field.create({
     this._itemsCache[item.id] = item;
   },
 
-  loadArticleInfo(slugIds) {
-    if (!slugIds) {
+  loadArticleInfo(articleIds) {
+    if (!articleIds) {
       this.setState({ loading: false, value: null, selectedIds: [] });
       return;
     };
-    slugIds = Array.isArray(slugIds) ? slugIds : slugIds.split(',');
-    let cachedValues = slugIds.map(id => this._itemsCache[id]).filter(i => i);
-    if (cachedValues.length === slugIds.length) {
+    articleIds = Array.isArray(articleIds) ? articleIds : articleIds.split(',');
+    let cachedValues = articleIds.map(id => this._itemsCache[id]).filter(i => i);
+    if (cachedValues.length === articleIds.length) {
       this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0], selectedIds: cachedValues.map(article => article.id) });
       return;
     }
     this.setState({ loading: true, value: null, selectedIds: [] });
-    async.map(slugIds, (slugId, done) => {
+    async.map(articleIds, (articleId, done) => {
       xhr({
-        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + slugId,
+        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + articleId,
         responseType: 'json',
       }, (err, resp, data) => {
         if (err || !data) return done(err);
@@ -114,8 +114,8 @@ module.exports = Field.create({
   },
 
   // TODO: seems not all articles, there should be an input for search
-  loadOptions(slugIds) {
-    slugIds = Array.isArray(slugIds) ? slugIds : slugIds.split(',');
+  loadOptions(articleIds) {
+    articleIds = Array.isArray(articleIds) ? articleIds : articleIds.split(',');
     const filters = this.buildFilters();
     xhr({
       url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + '' + '&' + filters,
@@ -127,7 +127,7 @@ module.exports = Field.create({
       }
       data.results.forEach(article => this._articleOptions.push({ label: article.slug, value: article.id }));
       data.results.forEach(this.cacheItem);
-      this.setState({ options: this._articleOptions.filter(articleOption => articleOption && !slugIds.includes(articleOption.value)) });
+      this.setState({ options: this._articleOptions.filter(articleOption => articleOption && !articleIds.includes(articleOption.value)) });
     });
   },
 
@@ -169,7 +169,7 @@ module.exports = Field.create({
       return;
     }
     const invertedStatus = pickUpStatus === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
-    value.forEach(slug => { slug.isPickedUpToRemove = invertedStatus === PickUp.ALL; });
+    value.forEach(article => { article.isPickedUpToRemove = invertedStatus === PickUp.ALL; });
     this.setState({
       value: value,
       pickUpStatus: invertedStatus
