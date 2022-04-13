@@ -178,7 +178,6 @@ var EditForm = React.createClass({
           });
         }
         props.key = field.path;
-        // TODO: could we move sortablerelationship to field.type
         if (props.key === 'relateds') {
           return React.createElement(Fields.sortablerelateds, props);
         } else {
