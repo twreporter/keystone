@@ -33,7 +33,7 @@ module.exports = Field.create({
       value: null,
       options: [],
       selectedOption: null,
-      selectedOptions: [],
+      selectedIds: [],
       pickUpToRemove: PickUp.NONE
     };
   },
@@ -42,35 +42,28 @@ module.exports = Field.create({
     this._itemsCache = {};
     this._articleOptions = [];
     this.loadOptions(this.props.value);
-    this.loadSlugInfo(this.props.value);
+    this.loadArticleInfo(this.props.value);
   },
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.value === this.props.value || nextProps.many && compareValues(this.props.value, nextProps.value)) return;
-    this.loadSlugInfo(nextProps.value);
+    this.loadArticleInfo(nextProps.value);
   },
 
   shouldCollapse() {
-    if (this.props.many) { // TODO: remove this.props.many
-      // many:true relationships have an Array for a value
-      return this.props.collapse && !this.props.value.length;
-    }
-    return this.props.collapse && !this.props.value;
+    return this.props.collapse && !this.props.value.length;
   },
 
   buildFilters() {
     var filters = {};
-
     _.each(this.props.filters, (value, key) => {
       if (_.isString(value) && value[0] == ':') { // eslint-disable-line eqeqeq
         var fieldName = value.slice(1);
-
         var val = this.props.values[fieldName];
         if (val) {
           filters[key] = val;
           return;
         }
-
         // check if filtering by id and item was already saved
         if (fieldName === ':_id' && Keystone.item) {
           filters[key] = Keystone.item.id;
@@ -82,11 +75,9 @@ module.exports = Field.create({
     }, this);
 
     var parts = [];
-
     _.each(filters, function(val, key) {
       parts.push('filters[' + key + '][value]=' + encodeURIComponent(val));
     });
-
     return parts.join('&');
   },
 
@@ -95,18 +86,18 @@ module.exports = Field.create({
     this._itemsCache[item.id] = item;
   },
 
-  loadSlugInfo(slugIds) {
+  loadArticleInfo(slugIds) {
     if (!slugIds) {
-      this.setState({ loading: false, value: null, selectedOptions: [] });
+      this.setState({ loading: false, value: null, selectedIds: [] });
       return;
     };
     slugIds = Array.isArray(slugIds) ? slugIds : slugIds.split(',');
     let cachedValues = slugIds.map(id => this._itemsCache[id]).filter(i => i);
     if (cachedValues.length === slugIds.length) {
-      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0], selectedOptions: cachedValues.map(article => article.id) });
+      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0], selectedIds: cachedValues.map(article => article.id) });
       return;
     }
-    this.setState({ loading: true, value: null, selectedOptions: [] });
+    this.setState({ loading: true, value: null, selectedIds: [] });
     async.map(slugIds, (slugId, done) => {
       xhr({
         // TODO: make data simpler: id, slug text, publishedDate, isSelected
@@ -119,7 +110,7 @@ module.exports = Field.create({
       });
     }, (err, expanded) => {
       if (!this.isMounted()) return;
-      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0], selectedOptions: expanded.map(article => article.id) });
+      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0], selectedIds: expanded.map(article => article.id) });
     });
   },
 
@@ -148,8 +139,8 @@ module.exports = Field.create({
     }
 
     let numPickedUp = 0;
-    value.forEach((slug) => {
-      if (slug && slug.isSlugSelected) {
+    value.forEach(article => {
+      if (article && article.isPickedUpToRemove) {
         numPickedUp++;
       }
     });
@@ -168,7 +159,7 @@ module.exports = Field.create({
     const { value } = this.state;
     const slug = Array.isArray(value) ? value.find(slug => slug && slug.id === slugId) : undefined;
     if (slug) {
-      slug.isSlugSelected = !slug.isSlugSelected ? true : false; // TODO: rename
+      slug.isPickedUpToRemove = !slug.isPickedUpToRemove ? true : false;
     }
     this.setState({ value }, this.updatePickUpStatus);
   },
@@ -179,7 +170,7 @@ module.exports = Field.create({
       return;
     }
     const invertedStatus = pickUpToRemove === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
-    value.forEach(slug => { slug.isSlugSelected = invertedStatus === PickUp.ALL; });
+    value.forEach(slug => { slug.isPickedUpToRemove = invertedStatus === PickUp.ALL; });
     this.setState({
       value: value,
       pickUpToRemove: invertedStatus
@@ -187,24 +178,25 @@ module.exports = Field.create({
   },
 
   onPickedUpRemove() {
-    const { value, selectedOptions, pickUpToRemove } = this.state;
+    const { value, selectedIds, pickUpToRemove } = this.state;
     if (!Array.isArray(value) || pickUpToRemove === PickUp.NONE) {
       return;
     }
-    const left = value.filter((slug) => slug && !slug.isSlugSelected);
-    const selected = value.filter((slug) => slug && slug.isSlugSelected);
-    // clean up isSlugSelected in selected slugs
-    if (selected && selected.length > 0) {
-      selected.forEach(slug => {
-        if (slug) {
-          slug.isSlugSelected = false;
+
+    const pickedUp = value.filter(article => article && article.isPickedUpToRemove);
+    const notPickedUp = value.filter(article => article && !article.isPickedUpToRemove);
+    // clean up 'isPickedUpToRemove' field in picked up articles
+    if (pickedUp && pickedUp.length > 0) {
+      pickedUp.forEach(article => {
+        if (article) {
+          article.isPickedUpToRemove = false;
         }
       });
-      const selectedIds = selected.map(slug => slug.id);
-      const selectedSlugIds = selectedOptions.filter(slugId => !selectedIds.includes(slugId));
-      this.setState({ selectedOptions: selectedSlugIds, options: this._articleOptions.filter(option => !selectedSlugIds.includes(option.value)) });
+      const pickedUpIds = pickedUp.map(article => article.id);
+      const remainedIds = selectedIds.filter(articleId => !pickedUpIds.includes(articleId));
+      this.setState({ selectedIds: remainedIds, options: this._articleOptions.filter(option => !pickedUpIds.includes(option.value)) });
     }
-    this.setState({ value: left }, this.updatePickUpStatus);
+    this.setState({ value: notPickedUp }, this.updatePickUpStatus);
   },
 
   onSort(isAscending) {
@@ -240,24 +232,24 @@ module.exports = Field.create({
   onSlugChange(selectedOption) {
     this.setState({ selectedOption: selectedOption });
     if (selectedOption && selectedOption.value) {
-      const { value, selectedOptions } = this.state;
-      const newSelectedSlugs = [...selectedOptions, selectedOption.value];
+      const { value, selectedIds } = this.state;
+      const newSelectedIds = [...selectedIds, selectedOption.value];
       this.setState({
         value: [...value, this._itemsCache[selectedOption.value]],
-        selectedOptions: newSelectedSlugs,
-        options: this._articleOptions.filter(option => !newSelectedSlugs.includes(option.value))
+        selectedIds: newSelectedIds,
+        options: this._articleOptions.filter(option => !newSelectedIds.includes(option.value))
       });
       this.props.onChange({
         path: this.props.path,
-        value: newSelectedSlugs.join(','),
+        value: newSelectedIds.join(','),
       });
     }
   },
 
   // Use hidden <input> to send ids of selected articles when parent <form> fires submit event
   renderHiddenInputs() {
-    const { selectedOptions } = this.state;
-    return selectedOptions.length > 0 ? selectedOptions.map((slugId, index) => <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={slugId} />) : null;
+    const { selectedIds } = this.state;
+    return Array.isArray(selectedIds) && selectedIds.length > 0 ? selectedIds.map((articleId, index) => <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={articleId} />) : null;
   },
 
   renderSelect(noedit) {

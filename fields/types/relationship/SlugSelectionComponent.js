@@ -135,8 +135,8 @@ class Slug extends Component {
       isDragging,
       connectDragSource,
       connectDropTarget,
-      onSelect,
-      isSelected
+      onPickUpSingle,
+      isPickedUp
     } = this.props;
 
     const slugStyle = {
@@ -168,7 +168,7 @@ class Slug extends Component {
       connectDropTarget(
         <div style={{ ...slugStyle, opacity }}>
           <div style={slugControlStyle}>
-            <Checkbox onChange={onSelect} checked={isSelected} />
+            <Checkbox onChange={onPickUpSingle} checked={isPickedUp} />
             <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px' }} />
           </div>
           <p style={slugTextStyle}>{text}</p>
@@ -264,8 +264,8 @@ class DndSlugs extends Component {
           id={slug.id}
           text={slug.slug}
           date={slug.fields ? slug.fields.publishedDate : ''}
-          onSelect={() => this.onPickUpSingle(slug.id)}
-          isSelected={slug.isSlugSelected}
+          onPickUpSingle={() => this.onPickUpSingle(slug.id)}
+          isPickedUp={slug.isPickedUpToRemove}
           onSlugDrag={onSlugDrag}
         /> : null;
     });
