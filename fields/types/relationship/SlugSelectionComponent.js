@@ -6,7 +6,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { Checkbox } from 'elemental';
 
 const SortOrder = Object.freeze({ ASCENDING: 1, DESCENDING: 2 });
-const Selection = Object.freeze({ NONE: 'NONE', INDETERMINATE: 'INDETERMINATE', ALL: 'ALL' });
+const PickUp = Object.freeze({ NONE: 'NONE', INDETERMINATE: 'INDETERMINATE', ALL: 'ALL' });
 
 const textStyle = {
   margin: '0',
@@ -110,8 +110,8 @@ class SlugListHeader extends Component {
         <div style={slugControlStyle}>
           <Checkbox
             onChange={this.onSelectAll}
-            checked={selection === Selection.ALL}
-            indeterminate={selection === Selection.INDETERMINATE}
+            checked={selection === PickUp.ALL}
+            indeterminate={selection === PickUp.INDETERMINATE}
           />
           <button type="button" className={className} onClick={this.onSelectedSlugRemove}><span className={'octicon octicon-trashcan'} /></button>
         </div>
@@ -320,4 +320,4 @@ SlugSelectionComponent.propTypes = {
   slugs: PropTypes.array.isRequired
 };
 
-export { Selection, SlugSelectionComponent };
+export { PickUp, SlugSelectionComponent };

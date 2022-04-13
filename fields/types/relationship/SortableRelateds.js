@@ -5,7 +5,7 @@ import xhr from 'xhr';
 import Select from 'react-select';
 
 import Field from '../Field';
-import { Selection, SlugSelectionComponent } from './SlugSelectionComponent';
+import { PickUp, SlugSelectionComponent } from './SlugSelectionComponent';
 
 function compareValues(current, next) {
   let currentLength = current ? current.length : 0;
@@ -34,7 +34,7 @@ module.exports = Field.create({
       options: [],
       selectedOption: null,
       selectedSlugs: [],
-      slugSelections: Selection.NONE
+      slugSelections: PickUp.NONE
     };
   },
 
@@ -154,11 +154,11 @@ module.exports = Field.create({
       }
     });
 
-    let selection = Selection.INDETERMINATE;
+    let selection = PickUp.INDETERMINATE;
     if (numSelected === 0) {
-      selection = Selection.NONE;
+      selection = PickUp.NONE;
     } else if (numSelected === value.length) {
-      selection = Selection.ALL;
+      selection = PickUp.ALL;
     }
 
     this.setState({
@@ -180,8 +180,8 @@ module.exports = Field.create({
     if (!Array.isArray(value)) {
       return;
     }
-    const selection = slugSelections === Selection.NONE ? Selection.ALL : Selection.NONE;
-    value.forEach(slug => { slug.isSlugSelected = selection === Selection.ALL; });
+    const selection = slugSelections === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
+    value.forEach(slug => { slug.isSlugSelected = selection === PickUp.ALL; });
     this.setState({
       value: value,
       slugSelections: selection
