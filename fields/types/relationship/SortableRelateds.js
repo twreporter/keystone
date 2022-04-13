@@ -175,16 +175,16 @@ module.exports = Field.create({
     this.setState({ value }, this.updateSlugSelectionStatus);
   },
 
-  onSelectAll() {
+  onPickUpAll() {
     const { value, slugSelections } = this.state;
     if (!Array.isArray(value)) {
       return;
     }
-    const selection = slugSelections === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
-    value.forEach(slug => { slug.isSlugSelected = selection === PickUp.ALL; });
+    const invertedStatus = slugSelections === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
+    value.forEach(slug => { slug.isSlugSelected = invertedStatus === PickUp.ALL; });
     this.setState({
       value: value,
-      slugSelections: selection
+      slugSelections: invertedStatus
     });
   },
 
@@ -271,7 +271,7 @@ module.exports = Field.create({
           onChange={this.onSlugChange}
           value={this.state.selectedOption}
         />
-        <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onSelectAll={this.onSelectAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
+        <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onPickUpAll={this.onPickUpAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
         {this.renderHiddenInputs()}
       </div>
     );

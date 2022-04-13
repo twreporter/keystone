@@ -25,7 +25,7 @@ const dateStyle = {
 class SlugListHeader extends Component {
   constructor(props) {
     super(props);
-    this.onSelectAll = this.onSelectAll.bind(this);
+    this.onPickUpAll = this.onPickUpAll.bind(this);
     this.onSelectedSlugRemove = this.onSelectedSlugRemove.bind(this);
     this.onSlugSort = this.onSlugSort.bind(this);
     this.state = {
@@ -33,10 +33,10 @@ class SlugListHeader extends Component {
     };
   }
 
-  onSelectAll() {
-    const { onSelectAll } = this.props;
-    if (onSelectAll) {
-      onSelectAll();
+  onPickUpAll() {
+    const { onPickUpAll } = this.props;
+    if (onPickUpAll) {
+      onPickUpAll();
     }
   }
 
@@ -109,7 +109,7 @@ class SlugListHeader extends Component {
       <div style={style}>
         <div style={slugControlStyle}>
           <Checkbox
-            onChange={this.onSelectAll}
+            onChange={this.onPickUpAll}
             checked={selection === PickUp.ALL}
             indeterminate={selection === PickUp.INDETERMINATE}
           />
@@ -295,12 +295,12 @@ const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
 
 class SlugSelectionComponent extends Component {
   render() {
-    const { slugs, selection, onSelectAll, onSelectedSlugRemove, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
+    const { slugs, selection, onPickUpAll, onSelectedSlugRemove, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
     return (
       <div>
         <SlugListHeader
           selection={selection}
-          onSelectAll={onSelectAll}
+          onPickUpAll={onPickUpAll}
           onSelectedSlugRemove={onSelectedSlugRemove}
           onSlugSort={onSlugSort}
         />
@@ -311,7 +311,7 @@ class SlugSelectionComponent extends Component {
 }
 
 SlugSelectionComponent.propTypes = {
-  onSelectAll: PropTypes.func.isRequired,
+  onPickUpAll: PropTypes.func.isRequired,
   onSelectedSlugRemove: PropTypes.func.isRequired,
   onSlugDrag: PropTypes.func.isRequired,
   onSlugSelect: PropTypes.func.isRequired,
