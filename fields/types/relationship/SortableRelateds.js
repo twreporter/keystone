@@ -34,7 +34,7 @@ module.exports = Field.create({
       options: [],
       selectedOption: null,
       selectedIds: [],
-      pickUpToRemove: PickUp.NONE
+      pickUpStatus: PickUp.NONE
     };
   },
 
@@ -152,7 +152,7 @@ module.exports = Field.create({
       pickUpStatus = PickUp.ALL;
     }
 
-    this.setState({ pickUpToRemove: pickUpStatus });
+    this.setState({ pickUpStatus: pickUpStatus });
   },
 
   onPickUpSingle(articleId) {
@@ -165,21 +165,21 @@ module.exports = Field.create({
   },
 
   onPickUpAll() {
-    const { value, pickUpToRemove } = this.state;
+    const { value, pickUpStatus } = this.state;
     if (!Array.isArray(value)) {
       return;
     }
-    const invertedStatus = pickUpToRemove === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
+    const invertedStatus = pickUpStatus === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
     value.forEach(slug => { slug.isPickedUpToRemove = invertedStatus === PickUp.ALL; });
     this.setState({
       value: value,
-      pickUpToRemove: invertedStatus
+      pickUpStatus: invertedStatus
     });
   },
 
   onPickedUpRemove() {
-    const { value, selectedIds, pickUpToRemove } = this.state;
-    if (!Array.isArray(value) || pickUpToRemove === PickUp.NONE) {
+    const { value, selectedIds, pickUpStatus } = this.state;
+    if (!Array.isArray(value) || pickUpStatus === PickUp.NONE) {
       return;
     }
 
@@ -263,7 +263,7 @@ module.exports = Field.create({
         />
         <SlugSelectionComponent
           slugs={this.state.value}
-          pickUpStatus={this.state.pickUpToRemove}
+          pickUpStatus={this.state.pickUpStatus}
           onPickUpSingle={this.onPickUpSingle}
           onPickUpAll={this.onPickUpAll}
           onPickedUpRemove={this.onPickedUpRemove}
