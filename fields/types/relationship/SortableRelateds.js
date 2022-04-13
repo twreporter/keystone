@@ -155,11 +155,11 @@ module.exports = Field.create({
     this.setState({ pickUpToRemove: pickUpStatus });
   },
 
-  onPickUpSingle(slugId) {
+  onPickUpSingle(articleId) {
     const { value } = this.state;
-    const slug = Array.isArray(value) ? value.find(slug => slug && slug.id === slugId) : undefined;
-    if (slug) {
-      slug.isPickedUpToRemove = !slug.isPickedUpToRemove ? true : false;
+    const article = Array.isArray(value) ? value.find(article => article && article.id === articleId) : undefined;
+    if (article) {
+      article.isPickedUpToRemove = !article.isPickedUpToRemove ? true : false;
     }
     this.setState({ value }, this.updatePickUpStatus);
   },
@@ -205,8 +205,8 @@ module.exports = Field.create({
       return;
     }
     this.setState({
-      value: value.sort(function(slugA, slugB) {
-        return slugA && slugB && slugA.fields && slugB.fields ? sortDate(slugA.fields.publishedDate, slugB.fields.publishedDate, isAscending) : -1;
+      value: value.sort(function(articleA, articleB) {
+        return articleA && articleB && articleA.fields && articleB.fields ? sortDate(articleA.fields.publishedDate, articleB.fields.publishedDate, isAscending) : -1;
       })
     });
   },
@@ -229,7 +229,7 @@ module.exports = Field.create({
     );
   },
 
-  onSlugChange(selectedOption) {
+  onOptionChange(selectedOption) {
     this.setState({ selectedOption: selectedOption });
     if (selectedOption && selectedOption.value) {
       const { value, selectedIds } = this.state;
@@ -258,7 +258,7 @@ module.exports = Field.create({
         <Select
           disabled={noedit}
           options={this.state.options}
-          onChange={this.onSlugChange}
+          onChange={this.onOptionChange}
           value={this.state.selectedOption}
         />
         <SlugSelectionComponent
