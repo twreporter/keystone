@@ -26,11 +26,9 @@ class SlugListHeader extends Component {
   constructor(props) {
     super(props);
     this.onPickUpAll = this.onPickUpAll.bind(this);
-    this.onSelectedSlugRemove = this.onSelectedSlugRemove.bind(this);
-    this.onSlugSort = this.onSlugSort.bind(this);
-    this.state = {
-      sort: SortOrder.ASCENDING
-    };
+    this.onPickedUpRemove = this.onPickedUpRemove.bind(this);
+    this.onSort = this.onSort.bind(this);
+    this.state = { sortOrder: SortOrder.ASCENDING };
   }
 
   onPickUpAll() {
@@ -40,18 +38,18 @@ class SlugListHeader extends Component {
     }
   }
 
-  onSelectedSlugRemove() {
-    const { onSelectedSlugRemove } = this.props;
-    if (onSelectedSlugRemove) {
-      onSelectedSlugRemove();
+  onPickedUpRemove() {
+    const { onPickedUpRemove } = this.props;
+    if (onPickedUpRemove) {
+      onPickedUpRemove();
     }
   }
 
-  // TODO: error handling, check correctness ***
-  onSlugSort() {
-    const { sort } = this.state;
-    const { onSlugSort } = this.props;
-    this.setState({ sort: sort === SortOrder.ASCENDING ? SortOrder.DESCENDING : SortOrder.ASCENDING }, () => onSlugSort(sort === SortOrder.ASCENDING));
+  onSort() {
+    const { sortOrder } = this.state;
+    const { onSort } = this.props;
+    const isAscending = sortOrder === SortOrder.ASCENDING;
+    this.setState({ sortOrder: isAscending ? SortOrder.DESCENDING : SortOrder.ASCENDING }, () => onSort(isAscending));
   }
 
   render() {
@@ -102,25 +100,25 @@ class SlugListHeader extends Component {
       'is-active': true,
     });
 
-    const { sort } = this.state;
-    const { selection } = this.props;
+    const { sortOrder } = this.state;
+    const { pickUpStatus } = this.props;
 
     return (
       <div style={style}>
         <div style={slugControlStyle}>
           <Checkbox
             onChange={this.onPickUpAll}
-            checked={selection === PickUp.ALL}
-            indeterminate={selection === PickUp.INDETERMINATE}
+            checked={pickUpStatus === PickUp.ALL}
+            indeterminate={pickUpStatus === PickUp.INDETERMINATE}
           />
-          <button type="button" className={className} onClick={this.onSelectedSlugRemove}><span className={'octicon octicon-trashcan'} /></button>
+          <button type="button" className={className} onClick={this.onPickedUpRemove}><span className={'octicon octicon-trashcan'} /></button>
         </div>
         <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
           {'發布日期'}
-          <button type="button" style={sortBtnStyle} onClick={this.onSlugSort}>
+          <button type="button" style={sortBtnStyle} onClick={this.onSort}>
             <span
-              style={sort === SortOrder.ASCENDING ? caretDownStyle : caretUpStyle}
+              style={sortOrder === SortOrder.ASCENDING ? caretDownStyle : caretUpStyle}
             ></span>
           </button>
         </div>
@@ -240,26 +238,15 @@ const DndSlug = DropTarget('slug', cardTarget, (connect) => ({
 class DndSlugs extends Component {
   constructor(props) {
     super(props);
-    this.onSlugSelect = this.onSlugSelect.bind(this);
-    this.onSlugRemoveSelected = this.onSlugRemoveSelected.bind(this);
+    this.onPickUpSingle = this.onPickUpSingle.bind(this);
     this.renderDndSlugs = this.renderDndSlugs.bind(this);
   }
 
-  onSlugSelect(slugId) {
-    const { onSlugSelect } = this.props;
-    if (slugId && onSlugSelect) {
-      onSlugSelect(slugId);
+  onPickUpSingle(slugId) {
+    const { onPickUpSingle } = this.props;
+    if (slugId && onPickUpSingle) {
+      onPickUpSingle(slugId);
     }
-  }
-
-  onSlugRemoveSelected() {
-    const { slugs } = this.props;
-    this.setState(
-      {
-        slugs: slugs.filter((slug) => slug && !slug.isSelected)
-      },
-      this.updateCheckAllStatus
-    );
   }
 
   renderDndSlugs() {
@@ -277,7 +264,7 @@ class DndSlugs extends Component {
           id={slug.id}
           text={slug.slug}
           date={slug.fields ? slug.fields.publishedDate : ''}
-          onSelect={() => this.onSlugSelect(slug.id)}
+          onSelect={() => this.onPickUpSingle(slug.id)}
           isSelected={slug.isSlugSelected}
           onSlugDrag={onSlugDrag}
         /> : null;
@@ -295,16 +282,16 @@ const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
 
 class SlugSelectionComponent extends Component {
   render() {
-    const { slugs, selection, onPickUpAll, onSelectedSlugRemove, onSlugSort, onSlugDrag, onSlugSelect } = this.props;
+    const { slugs, pickUpStatus, onPickUpSingle, onPickUpAll, onPickedUpRemove, onSort, onSlugDrag } = this.props;
     return (
       <div>
         <SlugListHeader
-          selection={selection}
+          pickUpStatus={pickUpStatus}
           onPickUpAll={onPickUpAll}
-          onSelectedSlugRemove={onSelectedSlugRemove}
-          onSlugSort={onSlugSort}
+          onPickedUpRemove={onPickedUpRemove}
+          onSort={onSort}
         />
-        <DndSlugsContainer slugs={slugs} onSlugDrag={onSlugDrag} onSlugSelect={onSlugSelect} />
+        <DndSlugsContainer slugs={slugs} onSlugDrag={onSlugDrag} onPickUpSingle={onPickUpSingle} />
       </div>
     );
   }
@@ -312,12 +299,12 @@ class SlugSelectionComponent extends Component {
 
 SlugSelectionComponent.propTypes = {
   onPickUpAll: PropTypes.func.isRequired,
-  onSelectedSlugRemove: PropTypes.func.isRequired,
+  onPickUpSingle: PropTypes.func.isRequired,
+  onPickedUpRemove: PropTypes.func.isRequired,
   onSlugDrag: PropTypes.func.isRequired,
-  onSlugSelect: PropTypes.func.isRequired,
-  onSlugSort: PropTypes.func.isRequired,
-  selection: PropTypes.string.isRequired,
-  slugs: PropTypes.array.isRequired
+  onSort: PropTypes.func.isRequired,
+  pickUpStatus: PropTypes.string.isRequired,
+  slugs: PropTypes.array.isRequired,
 };
 
 export { PickUp, SlugSelectionComponent };
