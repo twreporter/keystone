@@ -34,7 +34,7 @@ module.exports = Field.create({
       options: [],
       selectedOption: null,
       selectedSlugs: [],
-      slugSelections: PickUp.NONE
+      pickUpToRemove: PickUp.NONE
     };
   },
 
@@ -141,29 +141,27 @@ module.exports = Field.create({
     });
   },
 
-  updateSlugSelectionStatus() {
+  updatePickUpStatus() {
     const { value } = this.state;
     if (!Array.isArray(value)) {
       return;
     }
 
-    let numSelected = 0;
+    let numPickedUp = 0;
     value.forEach((slug) => {
       if (slug && slug.isSlugSelected) {
-        numSelected++;
+        numPickedUp++;
       }
     });
 
-    let selection = PickUp.INDETERMINATE;
-    if (numSelected === 0) {
-      selection = PickUp.NONE;
-    } else if (numSelected === value.length) {
-      selection = PickUp.ALL;
+    let pickUpStatus = PickUp.INDETERMINATE;
+    if (numPickedUp === 0) {
+      pickUpStatus = PickUp.NONE;
+    } else if (numPickedUp === value.length) {
+      pickUpStatus = PickUp.ALL;
     }
 
-    this.setState({
-      slugSelections: selection
-    });
+    this.setState({ pickUpToRemove: pickUpStatus });
   },
 
   onSlugSelect(slugId) {
@@ -172,25 +170,25 @@ module.exports = Field.create({
     if (slug) {
       slug.isSlugSelected = !slug.isSlugSelected ? true : false;
     }
-    this.setState({ value }, this.updateSlugSelectionStatus);
+    this.setState({ value }, this.updatePickUpStatus);
   },
 
   onPickUpAll() {
-    const { value, slugSelections } = this.state;
+    const { value, pickUpToRemove } = this.state;
     if (!Array.isArray(value)) {
       return;
     }
-    const invertedStatus = slugSelections === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
+    const invertedStatus = pickUpToRemove === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
     value.forEach(slug => { slug.isSlugSelected = invertedStatus === PickUp.ALL; });
     this.setState({
       value: value,
-      slugSelections: invertedStatus
+      pickUpToRemove: invertedStatus
     });
   },
 
   onSelectedSlugRemove() {
-    const { value, selectedSlugs, slugSelections } = this.state;
-    if (!Array.isArray(value) || slugSelections === Select.NONE) {
+    const { value, selectedSlugs, pickUpToRemove } = this.state;
+    if (!Array.isArray(value) || pickUpToRemove === PickUp.NONE) {
       return;
     }
     const left = value.filter((slug) => slug && !slug.isSlugSelected);
@@ -206,7 +204,7 @@ module.exports = Field.create({
       const selectedSlugIds = selectedSlugs.filter(slugId => !selectedIds.includes(slugId));
       this.setState({ selectedSlugs: selectedSlugIds, options: this._articleOptions.filter(option => !selectedSlugIds.includes(option.value)) });
     }
-    this.setState({ value: left }, this.updateSlugSelectionStatus);
+    this.setState({ value: left }, this.updatePickUpStatus);
   },
 
   onSlugSort(isAscending) {
@@ -271,7 +269,7 @@ module.exports = Field.create({
           onChange={this.onSlugChange}
           value={this.state.selectedOption}
         />
-        <SlugSelectionComponent selection={this.state.slugSelections} slugs={this.state.value} onPickUpAll={this.onPickUpAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
+        <SlugSelectionComponent selection={this.state.pickUpToRemove} slugs={this.state.value} onPickUpAll={this.onPickUpAll} onSlugSelect={this.onSlugSelect} onSelectedSlugRemove={this.onSelectedSlugRemove} onSlugDrag={this.onSlugDrag} onSlugSort={this.onSlugSort} />
         {this.renderHiddenInputs()}
       </div>
     );
