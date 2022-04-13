@@ -41,7 +41,7 @@ module.exports = Field.create({
   componentDidMount() {
     this._itemsCache = {};
     this._articleOptions = [];
-    this.loadArticleOptions(this.props.value);
+    this.loadOptions(this.props.value);
     this.loadSlugInfo(this.props.value);
   },
 
@@ -124,7 +124,7 @@ module.exports = Field.create({
   },
 
   // TODO: seems not all articles, there should be an input for search
-  loadArticleOptions(slugIds) {
+  loadOptions(slugIds) {
     slugIds = Array.isArray(slugIds) ? slugIds : slugIds.split(',');
     const filters = this.buildFilters();
     xhr({
