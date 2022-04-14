@@ -112,7 +112,6 @@ module.exports = Field.create({
     });
   },
 
-  // TODO: seems not all posts, there should be an input for search
   loadOptions(postIds) {
     postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
     const filters = this.buildFilters();
@@ -124,8 +123,12 @@ module.exports = Field.create({
         console.error('Error loading items:', err);
         return;
       }
-      data.results.forEach(post => this._options.push({ label: post.slug, value: post.id }));
-      data.results.forEach(this.cacheItem);
+      data.results.forEach(post => {
+        if (post) {
+          this._options.push({ label: post.slug, value: post.id });
+          this.cacheItem(post);
+        }
+      });
       this.setState({ options: this._options.filter(postOption => postOption && !postIds.includes(postOption.value)) });
     });
   },
