@@ -257,7 +257,7 @@ module.exports = Field.create({
   renderHiddenInputs() {
     const { value } = this.state;
     if (!Array.isArray(value) || value.length <= 0) {
-      return null;
+      return <input type="hidden" name={this.props.path} value={''} />;
     }
     return value.map((post, index) => {
       return post && post.id ? <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={post.id} /> : null;

@@ -64,11 +64,6 @@ class SlugListHeader extends Component {
       alignItems: 'center'
     };
 
-    const sortBtnStyle = {
-      border: 'none',
-      backgroundColor: 'Transparent'
-    };
-
     const slugTextStyle = {
       ...textStyle,
       paddingLeft: '25px'
@@ -95,22 +90,22 @@ class SlugListHeader extends Component {
     };
 
     const { sortOrder } = this.state;
-    const { pickUpStatus } = this.props;
-
+    const { disabled, pickUpStatus } = this.props;
     return (
       <div style={style}>
         <div style={slugControlStyle}>
           <Checkbox
+            disabled={disabled}
             onChange={this.onPickUpAll}
             checked={pickUpStatus === PickUp.ALL}
             indeterminate={pickUpStatus === PickUp.INDETERMINATE}
           />
-          <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={this.onPickedUpRemove}><span className={'octicon octicon-trashcan'} /></button>
+          <button type="button" className="ItemList__control ItemList__control--delete-no-focus" disabled={disabled} onClick={this.onPickedUpRemove}><span className={'octicon octicon-trashcan'} /></button>
         </div>
         <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
           {'發布日期'}
-          <button type="button" style={sortBtnStyle} onClick={this.onSort}>
+          <button type="button" className='ItemList__control--sort-date' disabled={disabled} onClick={this.onSort}>
             <span
               style={sortOrder === SortOrder.ASCENDING ? caretDownStyle : caretUpStyle}
             ></span>
@@ -280,6 +275,7 @@ class SlugSelectionComponent extends Component {
     return (
       <div>
         <SlugListHeader
+          disabled={!(Array.isArray(slugs) && slugs.length > 0)}
           pickUpStatus={pickUpStatus}
           onPickUpAll={onPickUpAll}
           onPickedUpRemove={onPickedUpRemove}

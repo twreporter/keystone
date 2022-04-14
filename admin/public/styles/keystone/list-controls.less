@@ -76,9 +76,15 @@ td.ItemList__col--control {
 
 // delete control without focus
 .ItemList__control--delete-no-focus {
-	&:hover {
+	&:hover:enabled {
 		color: @app-danger;
 	}
+}
+
+// sort date control
+.ItemList__control--sort-date {
+	border: none;
+	background: transparent;
 }
 
 
