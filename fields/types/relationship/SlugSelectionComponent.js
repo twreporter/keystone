@@ -105,7 +105,7 @@ class SlugListHeader extends Component {
         <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
           {'發布日期'}
-          <button type="button" className='ItemList__control--sort-date' disabled={disabled} onClick={this.onSort}>
+          <button type="button" className="ItemList__control--sort-date" disabled={disabled} onClick={this.onSort}>
             <span
               style={sortOrder === SortOrder.ASCENDING ? caretDownStyle : caretUpStyle}
             ></span>
