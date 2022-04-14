@@ -33,7 +33,6 @@ module.exports = Field.create({
       value: null,
       options: [],
       selectedOption: null,
-      selectedIds: [],
       pickUpStatus: PickUp.NONE
     };
   },
@@ -88,16 +87,16 @@ module.exports = Field.create({
 
   loadPostInfo(postIds) {
     if (!postIds) {
-      this.setState({ loading: false, value: null, selectedIds: [] });
+      this.setState({ loading: false, value: null });
       return;
     };
     postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
     let cachedValues = postIds.map(id => this._itemsCache[id]).filter(i => i);
     if (cachedValues.length === postIds.length) {
-      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0], selectedIds: cachedValues.map(post => post.id) });
+      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0] });
       return;
     }
-    this.setState({ loading: true, value: null, selectedIds: [] });
+    this.setState({ loading: true, value: null });
     async.map(postIds, (postId, done) => {
       xhr({
         url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + postId,
@@ -109,7 +108,7 @@ module.exports = Field.create({
       });
     }, (err, expanded) => {
       if (!this.isMounted()) return;
-      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0], selectedIds: expanded.map(post => post.id) });
+      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0] });
     });
   },
 
@@ -177,13 +176,13 @@ module.exports = Field.create({
   },
 
   onPickedUpRemove() {
-    const { value, selectedIds, pickUpStatus } = this.state;
+    const { value, pickUpStatus } = this.state;
     if (!Array.isArray(value) || pickUpStatus === PickUp.NONE) {
       return;
     }
 
     const pickedUp = value.filter(post => post && post.isPickedUpToRemove);
-    const notPickedUp = value.filter(post => post && !post.isPickedUpToRemove);
+    const remained = value.filter(post => post && !post.isPickedUpToRemove);
     // clean up 'isPickedUpToRemove' field in picked up posts
     if (pickedUp && pickedUp.length > 0) {
       pickedUp.forEach(post => {
@@ -191,11 +190,10 @@ module.exports = Field.create({
           post.isPickedUpToRemove = false;
         }
       });
-      const pickedUpIds = pickedUp.map(post => post.id);
-      const remainedIds = selectedIds.filter(postId => !pickedUpIds.includes(postId));
-      this.setState({ selectedIds: remainedIds, options: this._options.filter(option => !remainedIds.includes(option.value)) });
+      const remainedIds = remained.map(post => post.id);
+      this.setState({ options: this._options.filter(option => !remainedIds.includes(option.value)) });
     }
-    this.setState({ value: notPickedUp }, this.updatePickUpStatus);
+    this.setState({ value: remained }, this.updatePickUpStatus);
   },
 
   onSort(isAscending) {
@@ -230,12 +228,12 @@ module.exports = Field.create({
 
   onOptionChange(selectedOption) {
     this.setState({ selectedOption: selectedOption });
-    if (selectedOption && selectedOption.value) {
-      const { value, selectedIds } = this.state;
-      const newSelectedIds = [...selectedIds, selectedOption.value];
+    if (selectedOption && selectedOption.value && this._itemsCache[selectedOption.value]) {
+      const { value } = this.state;
+      const newSelectedPosts = [...value, this._itemsCache[selectedOption.value]];
+      const newSelectedIds = newSelectedPosts.map(post => post.id);
       this.setState({
-        value: [...value, this._itemsCache[selectedOption.value]],
-        selectedIds: newSelectedIds,
+        value: newSelectedPosts,
         options: this._options.filter(option => !newSelectedIds.includes(option.value))
       });
       this.props.onChange({
