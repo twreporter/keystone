@@ -113,7 +113,6 @@ module.exports = Field.create({
   },
 
   loadOptions(postIds) {
-    postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
     const filters = this.buildFilters();
     xhr({
       url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + '' + '&' + filters,
@@ -129,6 +128,7 @@ module.exports = Field.create({
           this.cacheItem(post);
         }
       });
+      postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
       this.setState({ options: this._options.filter(postOption => postOption && !postIds.includes(postOption.value)) });
     });
   },
@@ -186,7 +186,8 @@ module.exports = Field.create({
 
     const pickedUp = value.filter(post => post && post.isPickedUpToRemove);
     const remained = value.filter(post => post && !post.isPickedUpToRemove);
-    // clean up 'isPickedUpToRemove' field in picked up posts
+
+    // clean up 'isPickedUpToRemove' field in picked up posts & update options
     if (pickedUp && pickedUp.length > 0) {
       pickedUp.forEach(post => {
         if (post) {
@@ -196,6 +197,12 @@ module.exports = Field.create({
       const remainedIds = remained.map(post => post.id);
       this.setState({ options: this._options.filter(option => !remainedIds.includes(option.value)) });
     }
+
+    // clean up <Select>'s value if there is no post selected
+    if (remained.length === 0) {
+      this.setState({ selectedOption: null });
+    }
+
     this.setState({ value: remained }, this.updatePickUpStatus);
   },
 
