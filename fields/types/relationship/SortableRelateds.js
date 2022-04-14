@@ -193,7 +193,7 @@ module.exports = Field.create({
       });
       const pickedUpIds = pickedUp.map(article => article.id);
       const remainedIds = selectedIds.filter(articleId => !pickedUpIds.includes(articleId));
-      this.setState({ selectedIds: remainedIds, options: this._options.filter(option => !pickedUpIds.includes(option.value)) });
+      this.setState({ selectedIds: remainedIds, options: this._options.filter(option => !remainedIds.includes(option.value)) });
     }
     this.setState({ value: notPickedUp }, this.updatePickUpStatus);
   },
