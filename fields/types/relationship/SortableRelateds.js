@@ -40,7 +40,7 @@ module.exports = Field.create({
 
   componentDidMount() {
     this._itemsCache = {};
-    this._articleOptions = [];
+    this._options = [];
     this.loadOptions(this.props.value);
     this.loadArticleInfo(this.props.value);
   },
@@ -125,9 +125,9 @@ module.exports = Field.create({
         console.error('Error loading items:', err);
         return;
       }
-      data.results.forEach(article => this._articleOptions.push({ label: article.slug, value: article.id }));
+      data.results.forEach(article => this._options.push({ label: article.slug, value: article.id }));
       data.results.forEach(this.cacheItem);
-      this.setState({ options: this._articleOptions.filter(articleOption => articleOption && !articleIds.includes(articleOption.value)) });
+      this.setState({ options: this._options.filter(articleOption => articleOption && !articleIds.includes(articleOption.value)) });
     });
   },
 
@@ -193,7 +193,7 @@ module.exports = Field.create({
       });
       const pickedUpIds = pickedUp.map(article => article.id);
       const remainedIds = selectedIds.filter(articleId => !pickedUpIds.includes(articleId));
-      this.setState({ selectedIds: remainedIds, options: this._articleOptions.filter(option => !pickedUpIds.includes(option.value)) });
+      this.setState({ selectedIds: remainedIds, options: this._options.filter(option => !pickedUpIds.includes(option.value)) });
     }
     this.setState({ value: notPickedUp }, this.updatePickUpStatus);
   },
@@ -236,7 +236,7 @@ module.exports = Field.create({
       this.setState({
         value: [...value, this._itemsCache[selectedOption.value]],
         selectedIds: newSelectedIds,
-        options: this._articleOptions.filter(option => !newSelectedIds.includes(option.value))
+        options: this._options.filter(option => !newSelectedIds.includes(option.value))
       });
       this.props.onChange({
         path: this.props.path,
