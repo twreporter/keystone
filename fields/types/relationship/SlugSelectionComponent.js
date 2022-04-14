@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
-import classnames from 'classnames';
 import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { Checkbox } from 'elemental';
@@ -95,11 +94,6 @@ class SlugListHeader extends Component {
       borderTop: '10px solid #000000'
     };
 
-    // TODO: fix transh can click issue
-    const className = classnames('ItemList__control ItemList__control--delete', {
-      'is-active': true,
-    });
-
     const { sortOrder } = this.state;
     const { pickUpStatus } = this.props;
 
@@ -111,7 +105,7 @@ class SlugListHeader extends Component {
             checked={pickUpStatus === PickUp.ALL}
             indeterminate={pickUpStatus === PickUp.INDETERMINATE}
           />
-          <button type="button" className={className} onClick={this.onPickedUpRemove}><span className={'octicon octicon-trashcan'} /></button>
+          <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={this.onPickedUpRemove}><span className={'octicon octicon-trashcan'} /></button>
         </div>
         <p style={slugTextStyle}>{'文章Slug'}</p>
         <div style={dateStyle}>
