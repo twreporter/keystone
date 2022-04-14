@@ -42,12 +42,12 @@ module.exports = Field.create({
     this._itemsCache = {};
     this._options = [];
     this.loadOptions(this.props.value);
-    this.loadArticleInfo(this.props.value);
+    this.loadPostInfo(this.props.value);
   },
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.value === this.props.value || nextProps.many && compareValues(this.props.value, nextProps.value)) return;
-    this.loadArticleInfo(nextProps.value);
+    this.loadPostInfo(nextProps.value);
   },
 
   shouldCollapse() {
@@ -86,7 +86,7 @@ module.exports = Field.create({
     this._itemsCache[item.id] = item;
   },
 
-  loadArticleInfo(postIds) {
+  loadPostInfo(postIds) {
     if (!postIds) {
       this.setState({ loading: false, value: null, selectedIds: [] });
       return;
