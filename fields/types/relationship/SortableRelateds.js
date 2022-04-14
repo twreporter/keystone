@@ -86,21 +86,21 @@ module.exports = Field.create({
     this._itemsCache[item.id] = item;
   },
 
-  loadArticleInfo(articleIds) {
-    if (!articleIds) {
+  loadArticleInfo(postIds) {
+    if (!postIds) {
       this.setState({ loading: false, value: null, selectedIds: [] });
       return;
     };
-    articleIds = Array.isArray(articleIds) ? articleIds : articleIds.split(',');
-    let cachedValues = articleIds.map(id => this._itemsCache[id]).filter(i => i);
-    if (cachedValues.length === articleIds.length) {
-      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0], selectedIds: cachedValues.map(article => article.id) });
+    postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
+    let cachedValues = postIds.map(id => this._itemsCache[id]).filter(i => i);
+    if (cachedValues.length === postIds.length) {
+      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0], selectedIds: cachedValues.map(post => post.id) });
       return;
     }
     this.setState({ loading: true, value: null, selectedIds: [] });
-    async.map(articleIds, (articleId, done) => {
+    async.map(postIds, (postId, done) => {
       xhr({
-        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + articleId,
+        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + postId,
         responseType: 'json',
       }, (err, resp, data) => {
         if (err || !data) return done(err);
@@ -109,13 +109,13 @@ module.exports = Field.create({
       });
     }, (err, expanded) => {
       if (!this.isMounted()) return;
-      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0], selectedIds: expanded.map(article => article.id) });
+      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0], selectedIds: expanded.map(post => post.id) });
     });
   },
 
-  // TODO: seems not all articles, there should be an input for search
-  loadOptions(articleIds) {
-    articleIds = Array.isArray(articleIds) ? articleIds : articleIds.split(',');
+  // TODO: seems not all posts, there should be an input for search
+  loadOptions(postIds) {
+    postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
     const filters = this.buildFilters();
     xhr({
       url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + '' + '&' + filters,
@@ -125,9 +125,9 @@ module.exports = Field.create({
         console.error('Error loading items:', err);
         return;
       }
-      data.results.forEach(article => this._options.push({ label: article.slug, value: article.id }));
+      data.results.forEach(post => this._options.push({ label: post.slug, value: post.id }));
       data.results.forEach(this.cacheItem);
-      this.setState({ options: this._options.filter(articleOption => articleOption && !articleIds.includes(articleOption.value)) });
+      this.setState({ options: this._options.filter(postOption => postOption && !postIds.includes(postOption.value)) });
     });
   },
 
@@ -138,8 +138,8 @@ module.exports = Field.create({
     }
 
     let numPickedUp = 0;
-    value.forEach(article => {
-      if (article && article.isPickedUpToRemove) {
+    value.forEach(post => {
+      if (post && post.isPickedUpToRemove) {
         numPickedUp++;
       }
     });
@@ -154,11 +154,11 @@ module.exports = Field.create({
     this.setState({ pickUpStatus: pickUpStatus });
   },
 
-  onPickUpSingle(articleId) {
+  onPickUpSingle(postId) {
     const { value } = this.state;
-    const article = Array.isArray(value) ? value.find(article => article && article.id === articleId) : undefined;
-    if (article) {
-      article.isPickedUpToRemove = !article.isPickedUpToRemove ? true : false;
+    const post = Array.isArray(value) ? value.find(post => post && post.id === postId) : undefined;
+    if (post) {
+      post.isPickedUpToRemove = !post.isPickedUpToRemove ? true : false;
     }
     this.setState({ value }, this.updatePickUpStatus);
   },
@@ -169,7 +169,7 @@ module.exports = Field.create({
       return;
     }
     const invertedStatus = pickUpStatus === PickUp.NONE ? PickUp.ALL : PickUp.NONE;
-    value.forEach(article => { article.isPickedUpToRemove = invertedStatus === PickUp.ALL; });
+    value.forEach(post => { post.isPickedUpToRemove = invertedStatus === PickUp.ALL; });
     this.setState({
       value: value,
       pickUpStatus: invertedStatus
@@ -182,17 +182,17 @@ module.exports = Field.create({
       return;
     }
 
-    const pickedUp = value.filter(article => article && article.isPickedUpToRemove);
-    const notPickedUp = value.filter(article => article && !article.isPickedUpToRemove);
-    // clean up 'isPickedUpToRemove' field in picked up articles
+    const pickedUp = value.filter(post => post && post.isPickedUpToRemove);
+    const notPickedUp = value.filter(post => post && !post.isPickedUpToRemove);
+    // clean up 'isPickedUpToRemove' field in picked up posts
     if (pickedUp && pickedUp.length > 0) {
-      pickedUp.forEach(article => {
-        if (article) {
-          article.isPickedUpToRemove = false;
+      pickedUp.forEach(post => {
+        if (post) {
+          post.isPickedUpToRemove = false;
         }
       });
-      const pickedUpIds = pickedUp.map(article => article.id);
-      const remainedIds = selectedIds.filter(articleId => !pickedUpIds.includes(articleId));
+      const pickedUpIds = pickedUp.map(post => post.id);
+      const remainedIds = selectedIds.filter(postId => !pickedUpIds.includes(postId));
       this.setState({ selectedIds: remainedIds, options: this._options.filter(option => !remainedIds.includes(option.value)) });
     }
     this.setState({ value: notPickedUp }, this.updatePickUpStatus);
@@ -204,8 +204,8 @@ module.exports = Field.create({
       return;
     }
     this.setState({
-      value: value.sort(function(articleA, articleB) {
-        return articleA && articleB && articleA.fields && articleB.fields ? sortDate(articleA.fields.publishedDate, articleB.fields.publishedDate, isAscending) : -1;
+      value: value.sort(function(postA, postB) {
+        return postA && postB && postA.fields && postB.fields ? sortDate(postA.fields.publishedDate, postB.fields.publishedDate, isAscending) : -1;
       })
     });
   },
@@ -245,10 +245,10 @@ module.exports = Field.create({
     }
   },
 
-  // Use hidden <input> to send ids of selected articles when parent <form> fires submit event
+  // Use hidden <input> to send ids of selected posts when parent <form> fires submit event
   renderHiddenInputs() {
     const { selectedIds } = this.state;
-    return Array.isArray(selectedIds) && selectedIds.length > 0 ? selectedIds.map((articleId, index) => <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={articleId} />) : null;
+    return Array.isArray(selectedIds) && selectedIds.length > 0 ? selectedIds.map((postId, index) => <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={postId} />) : null;
   },
 
   renderSelect(noedit) {
