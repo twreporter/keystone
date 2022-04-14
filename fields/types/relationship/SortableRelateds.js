@@ -247,8 +247,13 @@ module.exports = Field.create({
 
   // Use hidden <input> to send ids of selected posts when parent <form> fires submit event
   renderHiddenInputs() {
-    const { selectedIds } = this.state;
-    return Array.isArray(selectedIds) && selectedIds.length > 0 ? selectedIds.map((postId, index) => <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={postId} />) : null;
+    const { value } = this.state;
+    if (!Array.isArray(value) || value.length <= 0) {
+      return null;
+    }
+    return value.map((post, index) => {
+      return post && post.id ? <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={post.id} /> : null;
+    });
   },
 
   renderSelect(noedit) {
