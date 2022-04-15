@@ -28,7 +28,7 @@ module.exports = {
   preview: require('../../fields/types/preview/PreviewField'),
   relatedsformat: require('../../fields/types/relatedsformat/RelatedsFormatField'),
   relationship: require('../../fields/types/relationship/RelationshipField'),
-  sortablerelateds: require('../../fields/types/relationship/SortableRelateds'),
+  sortablerelateds: require('../../fields/types/sortableRelateds/SortableRelateds'),
   imagerelationship: require('../../fields/types/imagerelationship/ImageRelationshipField'),
   s3file: require('../../fields/types/s3file/S3FileField'),
   select: require('../../fields/types/select/SelectField'),
