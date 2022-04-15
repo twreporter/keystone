@@ -5,7 +5,7 @@ import xhr from 'xhr';
 import Select from 'react-select';
 
 import Field from '../Field';
-import { PickUp, SlugSelectionComponent } from './SlugSelectionComponent';
+import { PickUp, SlugSortComponent } from './SlugSortComponent';
 
 function compareValues(current, next) {
   let currentLength = current ? current.length : 0;
@@ -273,7 +273,7 @@ module.exports = Field.create({
           onChange={this.onOptionChange}
           value={this.state.selectedOption}
         />
-        <SlugSelectionComponent
+        <SlugSortComponent
           slugs={this.state.value}
           pickUpStatus={this.state.pickUpStatus}
           onPickUpSingle={this.onPickUpSingle}
