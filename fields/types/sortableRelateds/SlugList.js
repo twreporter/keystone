@@ -8,10 +8,13 @@ const textStyle = {
   margin: '0',
   paddingRight: '10px',
   lineBreak: 'anywhere',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
   textOverflow: 'ellipsis'
 };
 
 const dateStyle = {
+  width: '260px',
   paddingRight: '5px',
   flex: '1',
   display: 'flex',
@@ -62,8 +65,8 @@ class Slug extends Component {
             <Checkbox onChange={onPickUpSingle} checked={isPickedUp} />
             <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px' }} />
           </div>
-          <p style={slugTextStyle}>{text}</p>
-          <div style={dateStyle}><p style={textStyle}>{dateText}</p></div>
+          <p style={slugTextStyle} title={text}>{text}</p>
+          <div style={dateStyle}><p style={textStyle} title={dateText}>{dateText}</p></div>
         </div>
       )
     );
