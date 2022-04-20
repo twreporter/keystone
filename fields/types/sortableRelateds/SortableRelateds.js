@@ -3,9 +3,18 @@ import update from 'react/lib/update';
 import async from 'async';
 import xhr from 'xhr';
 import Select from 'react-select';
+import each from 'lodash/each';
+import isString from 'lodash/isString';
+import partition from 'lodash/partition';
 
 import Field from '../Field';
 import { PickUp, SlugSortComponent } from './SlugSortComponent';
+
+const _ = {
+  each,
+  isString,
+  partition
+};
 
 function compareValues(current, next) {
   let currentLength = current ? current.length : 0;
@@ -184,9 +193,7 @@ module.exports = Field.create({
       return;
     }
 
-    const pickedUp = value.filter(post => post && post.isPickedUpToRemove);
-    const remained = value.filter(post => post && !post.isPickedUpToRemove);
-
+    const [pickedUp, remained] = _.partition(value, post => post && post.isPickedUpToRemove);
     // clean up 'isPickedUpToRemove' field in picked up posts & update options
     if (pickedUp && pickedUp.length > 0) {
       pickedUp.forEach(post => {
