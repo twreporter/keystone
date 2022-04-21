@@ -102,7 +102,7 @@ module.exports = Field.create({
     postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
     let cachedValues = postIds.map(id => this._itemsCache[id]).filter(i => i);
     if (cachedValues.length === postIds.length) {
-      this.setState({ loading: false, value: this.props.many ? cachedValues : cachedValues[0] });
+      this.setState({ loading: false, value: cachedValues });
       return;
     }
     this.setState({ loading: true, value: null });
@@ -117,7 +117,7 @@ module.exports = Field.create({
       });
     }, (err, expanded) => {
       if (!this.isMounted()) return;
-      this.setState({ loading: false, value: this.props.many ? expanded : expanded[0] });
+      this.setState({ loading: false, value: expanded });
     });
   },
 
