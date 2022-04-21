@@ -54,7 +54,7 @@ module.exports = Field.create({
   },
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value === this.props.value || nextProps.many && compareValues(this.props.value, nextProps.value)) return;
+    if (nextProps.value === this.props.value || compareValues(this.props.value, nextProps.value)) return;
     this.loadPostInfo(nextProps.value);
   },
 
