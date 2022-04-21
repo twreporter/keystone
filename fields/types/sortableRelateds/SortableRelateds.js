@@ -167,7 +167,10 @@ module.exports = Field.create({
 
   onPickUpSingle(postId) {
     const { value } = this.state;
-    const post = Array.isArray(value) ? value.find(post => post && post.id === postId) : undefined;
+    if (!Array.isArray(value)) {
+      return;
+    }
+    const post = value.find(post => post && post.id === postId);
     if (post) {
       post.isPickedUpToRemove = !post.isPickedUpToRemove ? true : false;
     }
