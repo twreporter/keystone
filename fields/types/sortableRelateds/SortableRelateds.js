@@ -26,7 +26,7 @@ function compareValues(current, next) {
   return true;
 }
 
-function sortDate(dateStr1, dateStr2, isAscending) {
+function getDateDiff(dateStr1, dateStr2, isAscending) {
   const date1 = new Date(dateStr1);
   const date2 = new Date(dateStr2);
   const dateDiff = date1 && date2 ? date1 - date2 : 0;
@@ -220,7 +220,7 @@ module.exports = Field.create({
     }
     this.setState({
       value: value.sort(function(postA, postB) {
-        return postA && postB && postA.fields && postB.fields ? sortDate(postA.fields.publishedDate, postB.fields.publishedDate, isAscending) : -1;
+        return postA && postB && postA.fields && postB.fields ? getDateDiff(postA.fields.publishedDate, postB.fields.publishedDate, isAscending) : -1;
       })
     });
   },
