@@ -220,7 +220,10 @@ module.exports = Field.create({
     }
     this.setState({
       value: value.sort(function(postA, postB) {
-        return postA && postB && postA.fields && postB.fields ? getDateDiff(postA.fields.publishedDate, postB.fields.publishedDate, isAscending) : -1;
+        if (!postA || !postB || !postA.fields || !postB.fields) {
+          return -1;
+        }
+        return getDateDiff(postA.fields.publishedDate, postB.fields.publishedDate, isAscending);
       })
     });
   },
