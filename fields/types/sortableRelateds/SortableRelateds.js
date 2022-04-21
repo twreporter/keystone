@@ -65,7 +65,7 @@ module.exports = Field.create({
   buildFilters() {
     var filters = {};
     _.each(this.props.filters, (value, key) => {
-      if (_.isString(value) && value[0] == ':') { // eslint-disable-line eqeqeq
+      if (_.isString(value) && value[0] === ':') {
         var fieldName = value.slice(1);
         var val = this.props.values[fieldName];
         if (val) {
