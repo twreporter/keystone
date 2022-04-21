@@ -4,6 +4,7 @@ import async from 'async';
 import xhr from 'xhr';
 import Select from 'react-select';
 import each from 'lodash/each';
+import isEqual from 'lodash/isEqual';
 import isString from 'lodash/isString';
 import partition from 'lodash/partition';
 
@@ -12,19 +13,10 @@ import { PickUp, SlugSortComponent } from './SlugSortComponent';
 
 const _ = {
   each,
+  isEqual,
   isString,
   partition
 };
-
-function compareValues(current, next) {
-  let currentLength = current ? current.length : 0;
-  let nextLength = next ? next.length : 0;
-  if (currentLength !== nextLength) return false;
-  for (let i = 0; i < currentLength; i++) {
-    if (current[i] !== next[i]) return false;
-  }
-  return true;
-}
 
 function getDateDiff(dateStr1, dateStr2, isAscending) {
   const date1 = new Date(dateStr1);
@@ -54,7 +46,7 @@ module.exports = Field.create({
   },
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value === this.props.value || compareValues(this.props.value, nextProps.value)) return;
+    if (nextProps.value === this.props.value || _.isEqual(this.props.value, nextProps.value)) return;
     this.loadPostInfo(nextProps.value);
   },
 
