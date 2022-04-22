@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.6-rc.0, 2022/4/22
+
+## Notable Changes
+
+- feat
+  - add sortable dnd relateds feature([#209](https://github.com/twreporter/keystone/pull/209))
+
+### Commits
+* [2457a8bb8e] - Jason/issue 202 (#209) (許守傑 Shou-Chieh Hsu (Jason))
+
 ## 0.9.5, 2021/10/12
 
 ## Notable Changes
