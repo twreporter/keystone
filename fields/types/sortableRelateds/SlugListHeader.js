@@ -62,7 +62,7 @@ class SlugListHeader extends Component {
     this.onPickUpAll = this.onPickUpAll.bind(this);
     this.onPickedUpRemove = this.onPickedUpRemove.bind(this);
     this.onSort = this.onSort.bind(this);
-    this.state = { sortOrder: SortOrder.ASCENDING };
+    this.state = { sortOrder: SortOrder.DESCENDING };
   }
 
   onPickUpAll() {
