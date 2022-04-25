@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.6-rc.1, 2022/4/25
+
+## Notable Changes
+
+- fix
+  - fix initial sort order([#214](https://github.com/twreporter/keystone/pull/214))
+
+### Commits
+* [c94ecb1a02] - Merge pull request #214 from duidae/jason/202_order_issue (許守傑 Shou-Chieh Hsu (Jason))
+* [a4489f08a2] - fix: fix initial sorting order (duidae)
+
 ## 0.9.6-rc.0, 2022/4/22
 
 ## Notable Changes
