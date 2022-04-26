@@ -2,25 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.6-rc.1, 2022/4/25
+## 0.9.6, 2022/4/26
 
 ## Notable Changes
-
-- fix
-  - fix initial sort order([#214](https://github.com/twreporter/keystone/pull/214))
-
-### Commits
-* [c94ecb1a02] - Merge pull request #214 from duidae/jason/202_order_issue (許守傑 Shou-Chieh Hsu (Jason))
-* [a4489f08a2] - fix: fix initial sorting order (duidae)
-
-## 0.9.6-rc.0, 2022/4/22
-
-## Notable Changes
-
 - feat
   - add sortable dnd relateds feature([#209](https://github.com/twreporter/keystone/pull/209))
 
 ### Commits
+* [c94ecb1a02] - Merge pull request #214 from duidae/jason/202_order_issue (許守傑 Shou-Chieh Hsu (Jason))
+* [a4489f08a2] - fix: fix initial sorting order (duidae)
 * [2457a8bb8e] - Jason/issue 202 (#209) (許守傑 Shou-Chieh Hsu (Jason))
 
 ## 0.9.5, 2021/10/12
