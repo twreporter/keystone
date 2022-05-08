@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
-import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import { DragSource, DropTarget } from 'react-dnd';
 import { Checkbox } from 'elemental';
+import DragDropContext from '../../../lib/DragDropContext';
 
 const textStyle = {
   margin: '0',
@@ -172,6 +172,6 @@ class DndSlugs extends Component {
   }
 }
 
-const DndSlugsContainer = DragDropContext(HTML5Backend)(DndSlugs);
+const DndSlugsContainer = DragDropContext(DndSlugs);
 
 export { DndSlugsContainer };
