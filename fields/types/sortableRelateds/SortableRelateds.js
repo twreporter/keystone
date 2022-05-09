@@ -96,7 +96,7 @@ module.exports = Field.create({
     this.setState({ loading: true, value: null });
     async.map(postIds, (postId, done) => {
       xhr({
-        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + postId + '?basic',
+        url: Keystone.adminPath + '/api/' + this.props.refList.path + '/' + postId,
         responseType: 'json',
       }, (err, resp, data) => {
         if (err || !data) return done(err);
