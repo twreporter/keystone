@@ -259,7 +259,7 @@ module.exports = Field.create({
           value={this.state.value}
           loadOptions={this.loadOptions}
           onChange={this.onValueChange}
-          valueComponent={(props) => {return null;}}
+          valueComponent={(props) => { return null; }}
         />
         <SlugSortComponent
           slugs={this.state.value}
