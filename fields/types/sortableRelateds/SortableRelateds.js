@@ -130,6 +130,7 @@ module.exports = Field.create({
   updatePickUpStatus() {
     const { value } = this.state;
     if (!Array.isArray(value)) {
+      this.setState({ pickUpStatus: PickUp.NONE });
       return;
     }
 
@@ -182,7 +183,7 @@ module.exports = Field.create({
     }
 
     const [pickedUp, remained] = _.partition(value, post => post && post.isPickedUpToRemove);
-    // clean up 'isPickedUpToRemove' field in picked up posts & update options
+    // clean up 'isPickedUpToRemove' field in picked up posts
     if (pickedUp && pickedUp.length > 0) {
       pickedUp.forEach(post => {
         if (post) {
@@ -191,6 +192,7 @@ module.exports = Field.create({
       });
     }
     this.setState({ value: remained }, this.updatePickUpStatus);
+    this.onValueChange(remained.map(post => post.id).join(','));
   },
 
   onSort(isAscending) {
