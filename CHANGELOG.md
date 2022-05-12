@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.7-rc.0, 2022/5/12
+
+## Notable Changes
+- fix
+  - fix page freeze when click on image-related component & missing async query/options in select component of slug dnd component([#217](https://github.com/twreporter/keystone/pull/217))
+
+### Commits
+* [f5e10bf075] - Merge pull request #217 from duidae/jason/issue_314_315 (許守傑 Shou-Chieh Hsu (Jason))
+* [0ac331459f] - fix: add comment for null filtering (duidae)
+* [2f6c91ba2f] - fix: add error handling (duidae)
+* [eeb364053c] - fix: delete only 1 issue (duidae)
+* [dd8b4e8cb8] - fix: fix missing date (duidae)
+* [c1d49103e2] - fix: fix lint (duidae)
+* [116fde7ada] - fix: fix missing query (#315) (duidae)
+* [7b4cbcc67b] - fix: fix multiple backend issue(#315) (duidae)
 ## 0.9.6, 2022/4/26
 
 ## Notable Changes
