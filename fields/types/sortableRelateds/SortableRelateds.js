@@ -115,9 +115,9 @@ module.exports = Field.create({
       url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + input + '&' + filters,
       responseType: 'json',
     }, (err, resp, data) => {
-      if (err) {
+      if (err || !data || !data.results) {
         console.error('Error loading items:', err);
-        return callback(null, []);
+        return callback(err, []);
       }
       data.results.forEach(this.cacheItem);
       callback(null, {
