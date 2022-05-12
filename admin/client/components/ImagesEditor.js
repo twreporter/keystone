@@ -1,10 +1,10 @@
 'use strict';
-import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
+import { DragSource, DropTarget } from 'react-dnd';
 import { ImageItem } from './ImageGrid';
 import { FormField, FormInput } from 'elemental';
 import React, { PropTypes, Component } from 'react';
 import update from 'react/lib/update';
-import HTML5Backend from 'react-dnd-html5-backend';
+import DragDropContext from '../../../lib/DragDropContext';
 
 const itemStyle = {
   border: '1px dashed gray',
@@ -185,7 +185,7 @@ DnDContainer.defaultProps = {
   columns: 1,
 };
 
-const ImageDnDContainer = DragDropContext(HTML5Backend)(DropTarget('image', containerTarget, connect => ({
+const ImageDnDContainer = DragDropContext(DropTarget('image', containerTarget, connect => ({
   connectDropTarget: connect.dropTarget(),
 }))(DnDContainer));
 

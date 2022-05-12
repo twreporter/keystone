@@ -32,16 +32,12 @@ module.exports = Field.create({
   getInitialState() {
     return {
       value: null,
-      options: [],
-      selectedOption: null,
       pickUpStatus: PickUp.NONE
     };
   },
 
   componentDidMount() {
     this._itemsCache = {};
-    this._options = [];
-    this.loadOptions(this.props.value);
     this.loadPostInfo(this.props.value);
   },
 
@@ -92,6 +88,7 @@ module.exports = Field.create({
       return;
     };
     postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
+    // Note: filter(i => i) is to filter out null/undefined
     let cachedValues = postIds.map(id => this._itemsCache[id]).filter(i => i);
     if (cachedValues.length === postIds.length) {
       this.setState({ loading: false, value: cachedValues });
@@ -113,30 +110,28 @@ module.exports = Field.create({
     });
   },
 
-  loadOptions(postIds) {
+  loadOptions(input, callback) {
     const filters = this.buildFilters();
     xhr({
-      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&' + filters,
+      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + input + '&' + filters,
       responseType: 'json',
     }, (err, resp, data) => {
-      if (err) {
+      if (err || !data || !data.results) {
         console.error('Error loading items:', err);
-        return;
+        return callback(err, []);
       }
-      data.results.forEach(post => {
-        if (post) {
-          this._options.push({ label: post.slug, value: post.id });
-          this.cacheItem(post);
-        }
+      data.results.forEach(this.cacheItem);
+      callback(null, {
+        options: data.results,
+        complete: data.results.length === data.count,
       });
-      postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
-      this.setState({ options: this._options.filter(postOption => postOption && !postIds.includes(postOption.value)) });
     });
   },
 
   updatePickUpStatus() {
     const { value } = this.state;
     if (!Array.isArray(value)) {
+      this.setState({ pickUpStatus: PickUp.NONE });
       return;
     }
 
@@ -189,23 +184,16 @@ module.exports = Field.create({
     }
 
     const [pickedUp, remained] = _.partition(value, post => post && post.isPickedUpToRemove);
-    // clean up 'isPickedUpToRemove' field in picked up posts & update options
+    // clean up 'isPickedUpToRemove' field in picked up posts
     if (pickedUp && pickedUp.length > 0) {
       pickedUp.forEach(post => {
         if (post) {
           post.isPickedUpToRemove = false;
         }
       });
-      const remainedIds = remained.map(post => post.id);
-      this.setState({ options: this._options.filter(option => !remainedIds.includes(option.value)) });
     }
-
-    // clean up <Select>'s value if there is no post selected
-    if (remained.length === 0) {
-      this.setState({ selectedOption: null });
-    }
-
     this.setState({ value: remained }, this.updatePickUpStatus);
+    this.onValueChange(remained.map(post => post.id).join(','));
   },
 
   onSort(isAscending) {
@@ -241,21 +229,11 @@ module.exports = Field.create({
     );
   },
 
-  onOptionChange(selectedOption) {
-    this.setState({ selectedOption: selectedOption });
-    if (selectedOption && selectedOption.value && this._itemsCache[selectedOption.value]) {
-      const { value } = this.state;
-      const newSelectedPosts = [...value, this._itemsCache[selectedOption.value]];
-      const newSelectedIds = newSelectedPosts.map(post => post.id);
-      this.setState({
-        value: newSelectedPosts,
-        options: this._options.filter(option => !newSelectedIds.includes(option.value))
-      });
-      this.props.onChange({
-        path: this.props.path,
-        value: newSelectedIds.join(','),
-      });
-    }
+  onValueChange(value) {
+    this.props.onChange({
+      path: this.props.path,
+      value: value ? value : '',
+    });
   },
 
   // Use hidden <input> to send ids of selected posts when parent <form> fires submit event
@@ -272,11 +250,19 @@ module.exports = Field.create({
   renderSelect(noedit) {
     return (
       <div>
-        <Select
+        <Select.Async
+          multi
+          simpleValue
+          labelKey="slug"
+          valueKey="id"
+          placeholder="Select..."
           disabled={noedit}
-          options={this.state.options}
-          onChange={this.onOptionChange}
-          value={this.state.selectedOption}
+          clearable={false}
+          backspaceRemoves={false}
+          value={this.state.value}
+          loadOptions={this.loadOptions}
+          onChange={this.onValueChange}
+          valueComponent={(props) => { return null; }}
         />
         <SlugSortComponent
           slugs={this.state.value}
