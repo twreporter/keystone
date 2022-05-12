@@ -88,6 +88,7 @@ module.exports = Field.create({
       return;
     };
     postIds = Array.isArray(postIds) ? postIds : postIds.split(',');
+    // Note: filter(i => i) is to filter out null/undefined
     let cachedValues = postIds.map(id => this._itemsCache[id]).filter(i => i);
     if (cachedValues.length === postIds.length) {
       this.setState({ loading: false, value: cachedValues });
