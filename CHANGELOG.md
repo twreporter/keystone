@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.7-rc.0, 2022/5/12
+## 0.9.7, 2022/5/16
 
 ## Notable Changes
 - fix
@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file. See [standa
 * [c1d49103e2] - fix: fix lint (duidae)
 * [116fde7ada] - fix: fix missing query (#315) (duidae)
 * [7b4cbcc67b] - fix: fix multiple backend issue(#315) (duidae)
+
 ## 0.9.6, 2022/4/26
 
 ## Notable Changes
