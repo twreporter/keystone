@@ -30,6 +30,7 @@ module.exports = {
   relationship: require('../../fields/types/relationship/RelationshipField'),
   sortablerelateds: require('../../fields/types/sortableRelateds/SortableRelateds'),
   imagerelationship: require('../../fields/types/imagerelationship/ImageRelationshipField'),
+  category: require('../../fields/types/category/Category'),
   s3file: require('../../fields/types/s3file/S3FileField'),
   select: require('../../fields/types/select/SelectField'),
   titleposition: require('../../fields/types/titleposition/TitlePositionField'),

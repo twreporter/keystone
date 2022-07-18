@@ -8,6 +8,7 @@ import AltText from './AltText';
 import FooterBar from './FooterBar';
 import InvalidFieldType from './InvalidFieldType';
 import { Button, Col, Form, FormField, FormInput, ResponsiveText, Row } from 'elemental';
+import cloneDeep from 'lodash/cloneDeep';
 
 function upCase(str) {
   return str.slice(0, 1).toUpperCase() + str.substr(1).toLowerCase();
@@ -180,6 +181,18 @@ var EditForm = React.createClass({
         props.key = field.path;
         if (props.key === 'relateds') {
           return React.createElement(Fields.sortablerelateds, props);
+        } else if (props.key === 'categories') {
+          props.label = '分類(舊版)';
+
+          const copyProps = cloneDeep(props);
+          copyProps.key = copyProps.key + "2";
+          copyProps.label = '分類(新版)';
+          return (
+            <div>
+              {React.createElement(Fields[field.type], props)}
+              {React.createElement(Fields.category, copyProps)}
+            </div>
+          )
         } else {
           return React.createElement(Fields[field.type], props);
         }
