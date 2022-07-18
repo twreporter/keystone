@@ -50,7 +50,15 @@ module.exports = Field.create({
   },
 
   onAddCategorySet() {
-    console.log('onAddCategorySet');
+    this.setState({value: [...this.state.value, { major: '國際兩岸', sub: '香港' }]});
+  },
+
+  onRemoveCategorySet(index) {
+    const { value } = this.state;
+    if (Array.isArray(value) && index >= 0 && index < value.length) {
+      const newCategorySet = value.filter((categorySet, i) => i !== index);
+      this.setState({value: newCategorySet});
+    }
   },
 
   renderCategorySelect() {
@@ -59,6 +67,7 @@ module.exports = Field.create({
       return value.map((categorySet, index) => {
         return (
           <div key={`categorySet-${index}`} style={categorySetStyle}>
+            {index > 0 ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button> : null}
             <div style={menuStyle}><Select placeholder="分類" options={majorCategoryOptions} value={categorySet.major} /></div>
             <div style={menuStyle}><Select placeholder="子分類" options={subCategoryOptions} value={categorySet.sub} /></div>
           </div>
@@ -72,7 +81,7 @@ module.exports = Field.create({
     return (
       <div>
         {this.renderCategorySelect()}
-        <div style={btnContainerStyle}><button onClick={this.onAddCategorySet}>新增分類</button></div>
+        <div style={btnContainerStyle}><button type="button" onClick={this.onAddCategorySet}>新增分類</button></div>
       </div>
     );
   },
