@@ -45,12 +45,12 @@ module.exports = Field.create({
 
   getInitialState() {
     return {
-      value: [{ major: '國際兩岸', sub: '香港' }, { major: '人權司法', sub: '日韓' }],
+      value: [{ major: '國際兩岸', sub: '香港' }],
     };
   },
 
   onAddCategorySet() {
-    this.setState({ value: [...this.state.value, { major: '國際兩岸', sub: '香港' }] });
+    this.setState({ value: [...this.state.value, { major: null, sub: null }] });
   },
 
   onRemoveCategorySet(index) {
