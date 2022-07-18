@@ -50,14 +50,14 @@ module.exports = Field.create({
   },
 
   onAddCategorySet() {
-    this.setState({value: [...this.state.value, { major: '國際兩岸', sub: '香港' }]});
+    this.setState({ value: [...this.state.value, { major: '國際兩岸', sub: '香港' }] });
   },
 
   onRemoveCategorySet(index) {
     const { value } = this.state;
     if (Array.isArray(value) && index >= 0 && index < value.length) {
       const newCategorySet = value.filter((categorySet, i) => i !== index);
-      this.setState({value: newCategorySet});
+      this.setState({ value: newCategorySet });
     }
   },
 
@@ -77,11 +77,23 @@ module.exports = Field.create({
     return null;
   },
 
+  renderHiddenInputs() {
+    // TODO: render hidden input for post
+    const { value } = this.state;
+    if (Array.isArray(value)) {
+      return value.map((categorySet, index) => {
+        return <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={categorySet.major} />;
+      });
+    }
+    return null;
+  },
+
   renderCategorySelector() {
     return (
       <div>
         {this.renderCategorySelect()}
         <div style={btnContainerStyle}><button type="button" onClick={this.onAddCategorySet}>新增分類</button></div>
+        {this.renderHiddenInputs()}
       </div>
     );
   },
