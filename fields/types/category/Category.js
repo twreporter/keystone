@@ -10,13 +10,13 @@ const categorySetStyle = {
 
 const menuStyle = {
   flexGrow: 1
-}
+};
 
 const btnContainerStyle = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-end'
-}
+};
 
 module.exports = Field.create({
 
@@ -29,7 +29,7 @@ module.exports = Field.create({
   },
 
   onAddCategorySet() {
-    console.log("onAddCategorySet")
+    console.log('onAddCategorySet');
   },
 
   renderCategorySelect() {
@@ -52,7 +52,7 @@ module.exports = Field.create({
       { value: '東南亞', label: '東南亞' },
       { value: '歐洲', label: '歐洲' },
       { value: '其他', label: '其他' },
-    ]
+    ];
 
     return (
       <div>
@@ -64,7 +64,7 @@ module.exports = Field.create({
           <div style={menuStyle}><Select placeholder="分類" options={majorCategoryOptions} value={null} /></div>
           <div style={menuStyle}><Select placeholder="子分類" options={subCategoryOptions} value={null} /></div>
         </div>
-        <div style={btnContainerStyle}><button onclick={this.onAddCategorySet}>新增分類</button></div>
+        <div style={btnContainerStyle}><button onClick={this.onAddCategorySet}>新增分類</button></div>
       </div>
     );
   },

@@ -185,14 +185,14 @@ var EditForm = React.createClass({
           props.label = '分類(舊版)';
 
           const copyProps = cloneDeep(props);
-          copyProps.key = copyProps.key + "2";
-          copyProps.label = '分類(新版)';
+          copyProps.key = copyProps.key + '2';
+          copyProps.label = '分類';
           return (
             <div>
               {React.createElement(Fields[field.type], props)}
               {React.createElement(Fields.category, copyProps)}
             </div>
-          )
+          );
         } else {
           return React.createElement(Fields[field.type], props);
         }
