@@ -18,6 +18,11 @@ const btnContainerStyle = {
   justifyContent: 'flex-end'
 };
 
+const btnStyle = {
+  border: 'none',
+  backgroundColor: 'transparent'
+}
+
 const majorCategoryOptions = [
   { value: '國際兩岸', label: '國際兩岸' },
   { value: '人權司法', label: '人權司法' },
@@ -92,7 +97,7 @@ module.exports = Field.create({
     return (
       <div>
         {this.renderCategorySelect()}
-        <div style={btnContainerStyle}><button type="button" onClick={this.onAddCategorySet}>新增分類</button></div>
+        <div style={btnContainerStyle}><button type="button" style={btnStyle} onClick={this.onAddCategorySet}>新增分類</button></div>
         {this.renderHiddenInputs()}
       </div>
     );
