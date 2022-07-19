@@ -21,7 +21,7 @@ const btnContainerStyle = {
 const btnStyle = {
   border: 'none',
   backgroundColor: 'transparent'
-}
+};
 
 const majorCategoryOptions = [
   { value: '國際兩岸', label: '國際兩岸' },
