@@ -72,7 +72,7 @@ module.exports = Field.create({
       return value.map((categorySet, index) => {
         return (
           <div key={`categorySet-${index}`} style={categorySetStyle}>
-            {index > 0 ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button> : null}
+            {index > 0 ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button> : <div className="ItemList__control ItemList__control--delete-no-focus" />}
             <div style={menuStyle}><Select placeholder="分類" options={majorCategoryOptions} value={categorySet.major} /></div>
             <div style={menuStyle}><Select placeholder="子分類" options={subCategoryOptions} value={categorySet.sub} /></div>
           </div>
