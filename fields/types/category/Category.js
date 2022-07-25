@@ -6,6 +6,12 @@ import Field from '../Field';
 const categorySetStyle = {
   display: 'flex',
   flexDirection: 'row',
+  marginBottom: '20px',
+};
+
+const majorMenuStyle = {
+  flexGrow: 1,
+  marginRight: '16px',
 };
 
 const menuStyle = {
@@ -73,7 +79,7 @@ module.exports = Field.create({
         return (
           <div key={`categorySet-${index}`} style={categorySetStyle}>
             {index > 0 ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button> : <div className="ItemList__control ItemList__control--delete-no-focus" />}
-            <div style={menuStyle}><Select placeholder="分類" options={majorCategoryOptions} value={categorySet.major} /></div>
+            <div style={majorMenuStyle}><Select placeholder="分類" options={majorCategoryOptions} value={categorySet.major} /></div>
             <div style={menuStyle}><Select placeholder="子分類" options={subCategoryOptions} value={categorySet.sub} /></div>
           </div>
         );
