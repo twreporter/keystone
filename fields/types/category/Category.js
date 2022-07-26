@@ -50,6 +50,24 @@ const subCategoryOptions = [
   { value: '其他', label: '其他' },
 ];
 
+/*
+香港 中國 美國 日韓 東南亞、歐洲、其他
+
+性別 勞動 移工與移民 居住正義 轉型正義 精神疾病 司法改革 數位人權
+
+選舉 政黨與地方政治 政策 交通 食安 資訊戰 社會觀察
+
+疫情 醫療政策 生物科技 病人自主權利 心理 長照 公共衛生
+
+能源 海洋 山林 動物 環境污染 自然災害
+
+經濟 能源 農業 科技
+
+體育 電影 文學 音樂 戲劇 藝術
+
+教育政策 高等教育 青少年 育兒 少子化
+*/
+
 module.exports = Field.create({
 
   displayName: 'RelationshipField',
@@ -61,7 +79,7 @@ module.exports = Field.create({
   },
 
   onAddCategorySet() {
-    this.setState({ value: [...this.state.value, { major: null, sub: null }] });
+    this.setState({ value: [...this.state.value, { major: '', sub: '' }] });
   },
 
   onRemoveCategorySet(index) {
@@ -72,15 +90,36 @@ module.exports = Field.create({
     }
   },
 
+  onUpdateCategorySet(index, categorySet) {
+    const { value } = this.state;
+    if (categorySet && Array.isArray(value) && index >= 0 && index < value.length) {
+      const frontCategorySets = value.slice(0, index);
+      const backCategorySets = value.slice(index + 1);
+      const newValue = [...frontCategorySets, categorySet, ...backCategorySets];
+      this.setState({ value: newValue });
+    }
+  },
+
+  onUpdateSubCategory(index, newSub) {
+    const { value } = this.state;
+    if (newSub && Array.isArray(value) && index >= 0 && index < value.length) {
+      const newCategorySet = { major: value[index].major, sub: newSub };
+      this.onUpdateCategorySet(index, newCategorySet);
+    }
+  },
+
   renderCategorySelect() {
     const { value } = this.state;
     if (Array.isArray(value)) {
       return value.map((categorySet, index) => {
         return (
           <div key={`categorySet-${index}`} style={categorySetStyle}>
-            {index > 0 ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button> : <div className="ItemList__control ItemList__control--delete-no-focus" />}
-            <div style={majorMenuStyle}><Select placeholder="分類" options={majorCategoryOptions} value={categorySet.major} /></div>
-            <div style={menuStyle}><Select placeholder="子分類" options={subCategoryOptions} value={categorySet.sub} /></div>
+            {index > 0 ?
+              <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button> :
+              <div className="ItemList__control ItemList__control--delete-no-focus" />
+            }
+            <div style={majorMenuStyle}><Select placeholder="分類" options={majorCategoryOptions} value={categorySet.major} onChange={(selected) => this.onUpdateCategorySet(index, { major: selected.value, sub: '' })} /></div>
+            <div style={menuStyle}><Select placeholder="子分類" options={subCategoryOptions} value={categorySet.sub} onChange={(selected) => this.onUpdateSubCategory(index, selected.value)} /></div>
           </div>
         );
       });
