@@ -118,8 +118,8 @@ module.exports = Field.create({
               ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button>
               : <div className="ItemList__control ItemList__control--delete-no-focus" />
             }
-            <div style={majorMenuStyle}><Select placeholder="分類" options={majorCategoryOptions} value={categorySet.major} onChange={(selected) => this.onUpdateCategorySet(index, { major: selected.value, sub: '' })} /></div>
-            <div style={menuStyle}><Select placeholder="子分類" options={subCategoryOptions} value={categorySet.sub} onChange={(selected) => this.onUpdateSubCategory(index, selected.value)} /></div>
+            <div style={majorMenuStyle}><Select placeholder="分類" clearable={false} options={majorCategoryOptions} value={categorySet.major} onChange={(selected) => this.onUpdateCategorySet(index, { major: selected.value, sub: '' })} /></div>
+            <div style={menuStyle}><Select placeholder="子分類" disabled={!categorySet.major} clearable={false} options={subCategoryOptions} value={categorySet.sub} onChange={(selected) => this.onUpdateSubCategory(index, selected.value)} /></div>
           </div>
         );
       });
