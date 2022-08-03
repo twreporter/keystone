@@ -128,12 +128,14 @@ module.exports = Field.create({
   },
 
   renderHiddenInputs() {
-    // TODO: render hidden input for post
     const { value } = this.state;
     if (Array.isArray(value)) {
-      return value.map((categorySet, index) => {
-        return <input type="hidden" key={`hidden-input-${index}`} name={this.props.path} value={categorySet.major} />;
-      });
+      let categorySetStr = '[';
+      value.forEach((categorySet, index) => {
+        categorySetStr += `{${categorySet.major}, ${categorySet.sub}}${index < value.length - 1 ? ', ' : ''}`;
+      })
+      categorySetStr += ']'
+      return <input type="hidden" name={"categorySet"} value={categorySetStr} />;
     }
     return null;
   },
