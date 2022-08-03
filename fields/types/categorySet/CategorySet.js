@@ -29,6 +29,7 @@ const btnStyle = {
   backgroundColor: 'transparent'
 };
 
+// TODO: how to get options?
 const categoryOptions = [
   { value: '國際兩岸', label: '國際兩岸' },
   { value: '人權司法', label: '人權司法' },
@@ -72,6 +73,7 @@ module.exports = Field.create({
 
   displayName: 'RelationshipField',
 
+  // TODO: how to get initial value?
   getInitialState() {
     return {
       value: [{ category: '國際兩岸', subCategory: '香港' }],
@@ -127,6 +129,7 @@ module.exports = Field.create({
     return null;
   },
 
+  // TODO: check save values
   renderHiddenInputs() {
     const { value } = this.state;
     if (Array.isArray(value)) {
