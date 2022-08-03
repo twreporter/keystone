@@ -9,12 +9,12 @@ const categorySetStyle = {
   marginBottom: '20px',
 };
 
-const majorMenuStyle = {
+const categoryMenuStyle = {
   flexGrow: 1,
   marginRight: '16px',
 };
 
-const menuStyle = {
+const subCategoryMenuStyle = {
   flexGrow: 1
 };
 
@@ -29,7 +29,7 @@ const btnStyle = {
   backgroundColor: 'transparent'
 };
 
-const majorCategoryOptions = [
+const categoryOptions = [
   { value: '國際兩岸', label: '國際兩岸' },
   { value: '人權司法', label: '人權司法' },
   { value: '政治社會', label: '政治社會' },
@@ -74,12 +74,12 @@ module.exports = Field.create({
 
   getInitialState() {
     return {
-      value: [{ major: '國際兩岸', sub: '香港' }],
+      value: [{ category: '國際兩岸', subCategory: '香港' }],
     };
   },
 
   onAddCategorySet() {
-    this.setState({ value: [...this.state.value, { major: '', sub: '' }] });
+    this.setState({ value: [...this.state.value, { category: '', subCategory: '' }] });
   },
 
   onRemoveCategorySet(index) {
@@ -100,10 +100,10 @@ module.exports = Field.create({
     }
   },
 
-  onUpdateSubCategory(index, newSub) {
+  onUpdateSubCategory(index, newSubCategory) {
     const { value } = this.state;
-    if (newSub && Array.isArray(value) && index >= 0 && index < value.length) {
-      const newCategorySet = { major: value[index].major, sub: newSub };
+    if (newSubCategory && Array.isArray(value) && index >= 0 && index < value.length) {
+      const newCategorySet = { category: value[index].category, subCategory: newSubCategory };
       this.onUpdateCategorySet(index, newCategorySet);
     }
   },
@@ -118,8 +118,8 @@ module.exports = Field.create({
               ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button>
               : <div className="ItemList__control ItemList__control--delete-no-focus" />
             }
-            <div style={majorMenuStyle}><Select placeholder="分類" clearable={false} options={majorCategoryOptions} value={categorySet.major} onChange={(selected) => this.onUpdateCategorySet(index, { major: selected.value, sub: '' })} /></div>
-            <div style={menuStyle}><Select placeholder="子分類" disabled={!categorySet.major} clearable={false} options={subCategoryOptions} value={categorySet.sub} onChange={(selected) => this.onUpdateSubCategory(index, selected.value)} /></div>
+            <div style={categoryMenuStyle}><Select placeholder="分類" clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subCategory: '' })} /></div>
+            <div style={subCategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category} clearable={false} options={subCategoryOptions} value={categorySet.subCategory} onChange={(selected) => this.onUpdateSubCategory(index, selected.value)} /></div>
           </div>
         );
       });
@@ -132,10 +132,12 @@ module.exports = Field.create({
     if (Array.isArray(value)) {
       let categorySetStr = '[';
       value.forEach((categorySet, index) => {
-        categorySetStr += `{${categorySet.major}, ${categorySet.sub}}${index < value.length - 1 ? ', ' : ''}`;
-      })
-      categorySetStr += ']'
-      return <input type="hidden" name={"categorySet"} value={categorySetStr} />;
+        if (categorySet && categorySet.category && categorySet.subCategory) {
+          categorySetStr += `{${categorySet.category}, ${categorySet.subCategory}}${index < value.length - 1 ? ', ' : ''}`;
+        }
+      });
+      categorySetStr += ']';
+      return <input type="hidden" name={'categorySet'} value={categorySetStr} />;
     }
     return null;
   },
