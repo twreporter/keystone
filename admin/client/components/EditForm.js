@@ -190,7 +190,7 @@ var EditForm = React.createClass({
           return (
             <div>
               {React.createElement(Fields[field.type], props)}
-              {React.createElement(Fields.category, copyProps)}
+              {React.createElement(Fields.categorySet, copyProps)}
             </div>
           );
         } else {

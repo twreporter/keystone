@@ -108,7 +108,7 @@ module.exports = Field.create({
     }
   },
 
-  renderCategorySelect() {
+  renderCategorySetSelect() {
     const { value } = this.state;
     if (Array.isArray(value)) {
       return value.map((categorySet, index) => {
@@ -142,10 +142,10 @@ module.exports = Field.create({
     return null;
   },
 
-  renderCategorySelector() {
+  renderCategorySetSelector() {
     return (
       <div>
-        {this.renderCategorySelect()}
+        {this.renderCategorySetSelect()}
         <div style={btnContainerStyle}><button type="button" style={btnStyle} onClick={this.onAddCategorySet}>新增分類</button></div>
         {this.renderHiddenInputs()}
       </div>
@@ -153,10 +153,10 @@ module.exports = Field.create({
   },
 
   renderValue() {
-    return this.renderCategorySelector();
+    return this.renderCategorySetSelector();
   },
 
   renderField() {
-    return this.renderCategorySelector();
+    return this.renderCategorySetSelector();
   },
 });
