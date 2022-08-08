@@ -15,7 +15,7 @@ const categoryMenuStyle = {
   marginRight: '16px',
 };
 
-const subCategoryMenuStyle = {
+const subcategoryMenuStyle = {
   flexGrow: 1
 };
 
@@ -30,6 +30,7 @@ const btnStyle = {
   backgroundColor: 'transparent'
 };
 
+// TODO: remove this when integrate with db
 const categoryMap = new Map([
   ['國際兩岸', ['香港', '中國', '美國', '日韓', '東南亞', '歐洲', '其他']],
   ['人權司法', ['性別', '勞動', '移工與移民', '居住正義', '轉型正義', '精神疾病', '司法改革', '數位人權']],
@@ -40,7 +41,6 @@ const categoryMap = new Map([
   ['文化生活', ['體育', '電影', '文學', '音樂', '戲劇', '藝術']],
   ['教育校園', ['教育政策', '高等教育', '青少年', '育兒', '少子化']],
 ]);
-
 const categoryOptions = Array.from(categoryMap.keys()).map(category => { return { value: category, label: category }; });
 
 module.exports = Field.create({
@@ -50,35 +50,37 @@ module.exports = Field.create({
   // TODO: how to get initial value?
   getInitialState() {
     return {
-      value: [{ category: '國際兩岸', subCategory: '香港' }],
+      value: [{ category: '國際兩岸', subcategory: '香港' }],
     };
   },
 
   componentDidMount() {
-    this._itemsCache = {};
-    // TODO: load category options
-    // this.loadOptions();
+    this.categoryOptions = [];
+    this.subcategoryOptions = [];
+    this.loadOptions();
   },
 
-  // TODO:
-  // get category options from http://localhost:3000/keystone/api/post-categories?basic&search=&
   loadOptions() {
-    // use filter for old/new compatible
-    const filters = '';
     xhr({
-      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + '&' + filters,
+      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=',
       responseType: 'json',
     }, (err, resp, data) => {
       if (err || !data || !data.results) {
         console.error('Error loading items:', err);
         return;
       }
-      data.results.forEach(this.cacheItem);
+      data.results.forEach(category => {
+        // TODO: filter out old
+        if (category && category.id && category.name /* && category.subcategory */) {
+          this.categoryOptions.push({value: category.id, label: category.name});
+        }
+      });
+      console.log("this.categoryOptions", this.categoryOptions)
     });
   },
 
   onAddCategorySet() {
-    this.setState({ value: [...this.state.value, { category: '', subCategory: '' }] });
+    this.setState({ value: [...this.state.value, { category: '', subcategory: '' }] });
   },
 
   onRemoveCategorySet(index) {
@@ -99,10 +101,10 @@ module.exports = Field.create({
     }
   },
 
-  onUpdateSubCategory(index, newSubCategory) {
+  onUpdateSubcategory(index, newSubcategory) {
     const { value } = this.state;
-    if (newSubCategory && Array.isArray(value) && index >= 0 && index < value.length) {
-      const newCategorySet = { category: value[index].category, subCategory: newSubCategory };
+    if (newSubcategory && Array.isArray(value) && index >= 0 && index < value.length) {
+      const newCategorySet = { category: value[index].category, subcategory: newSubcategory };
       this.onUpdateCategorySet(index, newCategorySet);
     }
   },
@@ -111,9 +113,9 @@ module.exports = Field.create({
     const { value } = this.state;
     if (Array.isArray(value)) {
       return value.map((categorySet, index) => {
-        let subCategoryOptions = categoryMap.get(categorySet.category);
-        if (Array.isArray(subCategoryOptions)) {
-          subCategoryOptions = subCategoryOptions.map(subcategory => { return { value: subcategory, label: subcategory }; });
+        let subcategoryOptions = categoryMap.get(categorySet.category);
+        if (Array.isArray(subcategoryOptions)) {
+          subcategoryOptions = subcategoryOptions.map(subcategory => { return { value: subcategory, label: subcategory }; });
         }
         return (
           <div key={`categorySet-${index}`} style={categorySetStyle}>
@@ -121,8 +123,8 @@ module.exports = Field.create({
               ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button>
               : <div className="ItemList__control ItemList__control--delete-no-focus" />
             }
-            <div style={categoryMenuStyle}><Select placeholder="分類" clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subCategory: '' })} /></div>
-            <div style={subCategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !subCategoryOptions} clearable={false} options={subCategoryOptions} value={categorySet.subCategory} onChange={(selected) => this.onUpdateSubCategory(index, selected.value)} /></div>
+            <div style={categoryMenuStyle}><Select placeholder="分類" clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subcategory: '' })} /></div>
+            <div style={subcategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !subcategoryOptions} clearable={false} options={subcategoryOptions} value={categorySet.subcategory} onChange={(selected) => this.onUpdateSubcategory(index, selected.value)} /></div>
           </div>
         );
       });
@@ -137,7 +139,7 @@ module.exports = Field.create({
       let categorySetStr = '[';
       value.forEach((categorySet, index) => {
         if (categorySet && categorySet.category) {
-          categorySetStr += `{${categorySet.category}, ${categorySet.subCategory}}${index < value.length - 1 ? ',' : ''}`;
+          categorySetStr += `{${categorySet.category}, ${categorySet.subcategory}}${index < value.length - 1 ? ',' : ''}`;
         }
       });
       categorySetStr += ']';
