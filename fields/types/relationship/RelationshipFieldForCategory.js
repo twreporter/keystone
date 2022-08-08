@@ -74,7 +74,6 @@ module.exports = Field.create({
 
     var parts = [];
 
-    // TODO: filter out old version categories for old/new compatible
     _.each(filters, function(val, key) {
       parts.push('filters[' + key + '][value]=' + encodeURIComponent(val));
     });
@@ -83,8 +82,11 @@ module.exports = Field.create({
   },
 
   cacheItem(item) {
-    item.href = Keystone.adminPath + '/' + this.props.refList.path + '/' + item.id;
-    this._itemsCache[item.id] = item;
+    // Filter out old version categories for old/new compatible
+    if (item && !item.subcategory) {
+      item.href = Keystone.adminPath + '/' + this.props.refList.path + '/' + item.id;
+      this._itemsCache[item.id] = item;
+    }
   },
 
   loadValue(values) {

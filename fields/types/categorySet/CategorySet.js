@@ -72,10 +72,11 @@ module.exports = Field.create({
       data.results.forEach(category => {
         // TODO: filter out old
         if (category && category.id && category.name /* && category.subcategory */) {
-          this.categoryOptions.push({value: category.id, label: category.name});
+          this.categoryOptions.push({ value: category.id, label: category.name });
+          // TODO: fetch subcategory
         }
       });
-      console.log("this.categoryOptions", this.categoryOptions)
+      console.log('this.categoryOptions', this.categoryOptions, "this.subcategoryOptions", this.subcategoryOptions);
     });
   },
 
