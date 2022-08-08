@@ -76,7 +76,7 @@ module.exports = Field.create({
           // TODO: fetch subcategory
         }
       });
-      console.log('this.categoryOptions', this.categoryOptions, "this.subcategoryOptions", this.subcategoryOptions);
+      console.log('this.categoryOptions', this.categoryOptions, 'this.subcategoryOptions', this.subcategoryOptions);
     });
   },
 
