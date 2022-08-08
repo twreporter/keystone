@@ -182,15 +182,14 @@ var EditForm = React.createClass({
         if (props.key === 'relateds') {
           return React.createElement(Fields.sortablerelateds, props);
         } else if (props.key === 'categories') {
-          props.label = '分類(舊版)';
-
+          // Remove Fields.relationshipForCategory when migration is done.
           const copyProps = cloneDeep(props);
-          copyProps.key = copyProps.key + '2';
-          copyProps.label = '分類';
+          copyProps.label = '分類(舊版)';
+          copyProps.key += '2';
           return (
             <div>
-              {React.createElement(Fields.relationshipForCategory, props)}
-              {React.createElement(Fields.categorySet, copyProps)}
+              {React.createElement(Fields.relationshipForCategory, copyProps)}
+              {React.createElement(Fields.categorySet, props)}
             </div>
           );
         } else {
