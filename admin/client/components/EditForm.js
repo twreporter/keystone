@@ -182,7 +182,6 @@ var EditForm = React.createClass({
         if (props.key === 'relateds') {
           return React.createElement(Fields.sortablerelateds, props);
         } else if (props.key === 'categories') {
-          // TODO: old/new compatible
           props.label = '分類(舊版)';
 
           const copyProps = cloneDeep(props);
@@ -190,7 +189,7 @@ var EditForm = React.createClass({
           copyProps.label = '分類';
           return (
             <div>
-              {React.createElement(Fields[field.type], props)}
+              {React.createElement(Fields.relationshipForCategory, props)}
               {React.createElement(Fields.categorySet, copyProps)}
             </div>
           );

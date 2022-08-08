@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-// import xhr from 'xhr';
+import xhr from 'xhr';
 
 import Field from '../Field';
 
@@ -30,7 +30,6 @@ const btnStyle = {
   backgroundColor: 'transparent'
 };
 
-// TODO: how to get options?
 const categoryMap = new Map([
   ['國際兩岸', ['香港', '中國', '美國', '日韓', '東南亞', '歐洲', '其他']],
   ['人權司法', ['性別', '勞動', '移工與移民', '居住正義', '轉型正義', '精神疾病', '司法改革', '數位人權']],
@@ -55,17 +54,19 @@ module.exports = Field.create({
     };
   },
 
-  /*
   componentDidMount() {
     this._itemsCache = {};
+    // TODO: load category options
     // this.loadOptions();
   },
 
   // TODO:
   // get category options from http://localhost:3000/keystone/api/post-categories?basic&search=&
   loadOptions() {
+    // use filter for old/new compatible
+    const filters = '';
     xhr({
-      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + input,
+      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + '&' + filters,
       responseType: 'json',
     }, (err, resp, data) => {
       if (err || !data || !data.results) {
@@ -75,7 +76,6 @@ module.exports = Field.create({
       data.results.forEach(this.cacheItem);
     });
   },
-  */
 
   onAddCategorySet() {
     this.setState({ value: [...this.state.value, { category: '', subCategory: '' }] });
