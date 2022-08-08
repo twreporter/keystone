@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+// import xhr from 'xhr';
 
 import Field from '../Field';
 
@@ -30,44 +31,18 @@ const btnStyle = {
 };
 
 // TODO: how to get options?
-const categoryOptions = [
-  { value: '國際兩岸', label: '國際兩岸' },
-  { value: '人權司法', label: '人權司法' },
-  { value: '政治社會', label: '政治社會' },
-  { value: '醫療健康', label: '醫療健康' },
-  { value: '環境永續', label: '環境永續' },
-  { value: '經濟產業', label: '經濟產業' },
-  { value: '文化生活', label: '文化生活' },
-  { value: '教育校園', label: '教育校園' },
-];
+const categoryMap = new Map([
+  ['國際兩岸', ['香港', '中國', '美國', '日韓', '東南亞', '歐洲', '其他']],
+  ['人權司法', ['性別', '勞動', '移工與移民', '居住正義', '轉型正義', '精神疾病', '司法改革', '數位人權']],
+  ['政治社會', ['選舉', '政黨與地方政治', '政策', '交通', '食安', '資訊戰', '社會觀察']],
+  ['醫療健康', ['疫情', '醫療政策', '生物科技', '病人自主權利', '心理', '長照', '公共衛生']],
+  ['環境永續', ['能源', '海洋', '山林', '動物', '環境污染', '自然災害']],
+  ['經濟產業', ['經濟', '能源', '農業', '科技']],
+  ['文化生活', ['體育', '電影', '文學', '音樂', '戲劇', '藝術']],
+  ['教育校園', ['教育政策', '高等教育', '青少年', '育兒', '少子化']],
+]);
 
-const subCategoryOptions = [
-  { value: '香港', label: '香港' },
-  { value: '中國', label: '中國' },
-  { value: '美國', label: '美國' },
-  { value: '日韓', label: '日韓' },
-  { value: '東南亞', label: '東南亞' },
-  { value: '歐洲', label: '歐洲' },
-  { value: '其他', label: '其他' },
-];
-
-/*
-香港 中國 美國 日韓 東南亞、歐洲、其他
-
-性別 勞動 移工與移民 居住正義 轉型正義 精神疾病 司法改革 數位人權
-
-選舉 政黨與地方政治 政策 交通 食安 資訊戰 社會觀察
-
-疫情 醫療政策 生物科技 病人自主權利 心理 長照 公共衛生
-
-能源 海洋 山林 動物 環境污染 自然災害
-
-經濟 能源 農業 科技
-
-體育 電影 文學 音樂 戲劇 藝術
-
-教育政策 高等教育 青少年 育兒 少子化
-*/
+const categoryOptions = Array.from(categoryMap.keys()).map(category => { return { value: category, label: category }; });
 
 module.exports = Field.create({
 
@@ -79,6 +54,28 @@ module.exports = Field.create({
       value: [{ category: '國際兩岸', subCategory: '香港' }],
     };
   },
+
+  /*
+  componentDidMount() {
+    this._itemsCache = {};
+    // this.loadOptions();
+  },
+
+  // TODO:
+  // get category options from http://localhost:3000/keystone/api/post-categories?basic&search=&
+  loadOptions() {
+    xhr({
+      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=' + input,
+      responseType: 'json',
+    }, (err, resp, data) => {
+      if (err || !data || !data.results) {
+        console.error('Error loading items:', err);
+        return;
+      }
+      data.results.forEach(this.cacheItem);
+    });
+  },
+  */
 
   onAddCategorySet() {
     this.setState({ value: [...this.state.value, { category: '', subCategory: '' }] });
@@ -114,6 +111,10 @@ module.exports = Field.create({
     const { value } = this.state;
     if (Array.isArray(value)) {
       return value.map((categorySet, index) => {
+        let subCategoryOptions = categoryMap.get(categorySet.category);
+        if (Array.isArray(subCategoryOptions)) {
+          subCategoryOptions = subCategoryOptions.map(subcategory => { return { value: subcategory, label: subcategory }; });
+        }
         return (
           <div key={`categorySet-${index}`} style={categorySetStyle}>
             {index > 0
@@ -121,7 +122,7 @@ module.exports = Field.create({
               : <div className="ItemList__control ItemList__control--delete-no-focus" />
             }
             <div style={categoryMenuStyle}><Select placeholder="分類" clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subCategory: '' })} /></div>
-            <div style={subCategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category} clearable={false} options={subCategoryOptions} value={categorySet.subCategory} onChange={(selected) => this.onUpdateSubCategory(index, selected.value)} /></div>
+            <div style={subCategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !subCategoryOptions} clearable={false} options={subCategoryOptions} value={categorySet.subCategory} onChange={(selected) => this.onUpdateSubCategory(index, selected.value)} /></div>
           </div>
         );
       });
