@@ -49,7 +49,6 @@ module.exports = Field.create({
     return this.props.collapse && !this.props.value;
   },
 
-  // TODO: filter out old version categories for old/new compatible
   buildFilters() {
     var filters = {};
 
@@ -75,6 +74,7 @@ module.exports = Field.create({
 
     var parts = [];
 
+    // TODO: filter out old version categories for old/new compatible
     _.each(filters, function(val, key) {
       parts.push('filters[' + key + '][value]=' + encodeURIComponent(val));
     });
