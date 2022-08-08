@@ -136,8 +136,8 @@ module.exports = Field.create({
     if (Array.isArray(value)) {
       let categorySetStr = '[';
       value.forEach((categorySet, index) => {
-        if (categorySet && categorySet.category && categorySet.subCategory) {
-          categorySetStr += `{${categorySet.category}, ${categorySet.subCategory}}${index < value.length - 1 ? ', ' : ''}`;
+        if (categorySet && categorySet.category) {
+          categorySetStr += `{${categorySet.category}, ${categorySet.subCategory}}${index < value.length - 1 ? ',' : ''}`;
         }
       });
       categorySetStr += ']';
