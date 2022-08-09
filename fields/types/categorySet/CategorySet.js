@@ -56,7 +56,7 @@ module.exports = Field.create({
 
   componentDidMount() {
     this.categoryOptions = [];
-    this.subcategoryOptions = [];
+    this.subcategoryOptionsMap = new Map();
     this.loadOptions();
   },
 
@@ -70,10 +70,24 @@ module.exports = Field.create({
         return;
       }
       data.results.forEach(category => {
-        // TODO: filter out old
         if (category && category.id && category.name /* && category.subcategory */) {
           this.categoryOptions.push({ value: category.id, label: category.name });
-          // TODO: fetch subcategory
+          /* TODO: can we fetch subcategory just once?
+          if (Array.isArray(category.subcategory)) {
+            category.subcategory.forEach(subcategoryId => {
+              xhr({
+                url: Keystone.adminPath + `/api/tags?basic&search=${subcategoryId}`,
+                responseType: 'json',
+              }, (err, resp, data) => {
+                if (err || !data || !data.results) {
+                  console.error('Error loading items:', err);
+                  return;
+                }
+                const subcategoryOptions = .map(subcategory => {return {value: subcategory.id, label: subcategory.name}});
+                this.subcategoryOptionsMap.set(category.id, subcategoryOptions);
+            });
+          }
+          */
         }
       });
       console.log('this.categoryOptions', this.categoryOptions, 'this.subcategoryOptions', this.subcategoryOptions);
@@ -133,7 +147,7 @@ module.exports = Field.create({
     return null;
   },
 
-  // TODO: check save values
+  // TODO: check correctness after post
   renderHiddenInputs() {
     const { value } = this.state;
     if (Array.isArray(value)) {
