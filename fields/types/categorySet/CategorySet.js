@@ -147,28 +147,15 @@ module.exports = Field.create({
     return null;
   },
 
-  // TODO: check correctness after post
-  renderHiddenInputs() {
-    const { value } = this.state;
-    if (Array.isArray(value)) {
-      let categorySetStr = '[';
-      value.forEach((categorySet, index) => {
-        if (categorySet && categorySet.category) {
-          categorySetStr += `{${categorySet.category}, ${categorySet.subcategory}}${index < value.length - 1 ? ',' : ''}`;
-        }
-      });
-      categorySetStr += ']';
-      return <input type="hidden" name={'categorySet'} value={categorySetStr} />;
-    }
-    return null;
-  },
-
   renderCategorySetSelector() {
     return (
       <div>
         {this.renderCategorySetSelect()}
         <div style={btnContainerStyle}><button type="button" style={btnStyle} onClick={this.onAddCategorySet}>新增分類</button></div>
-        {this.renderHiddenInputs()}
+        <input type="hidden" name={this.props.path} value={JSON.stringify([ // TODO
+          {category: {id: "57175d923970a5e46ff854db", name: 'aaa'}, subcategory: {id: "57175d923970a5e46ff854db", name: 'aaa'}},
+          {category: {id: "57175d923970a5e46ff854db", name: 'bbb'}, subcategory: {id: "57175d923970a5e46ff854db", name: 'bbb'}},
+        ])} />
       </div>
     );
   },
