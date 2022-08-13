@@ -153,8 +153,8 @@ module.exports = Field.create({
         {this.renderCategorySetSelect()}
         <div style={btnContainerStyle}><button type="button" style={btnStyle} onClick={this.onAddCategorySet}>新增分類</button></div>
         <input type="hidden" name={this.props.path} value={JSON.stringify([ // TODO
-          {category: {id: "57175d923970a5e46ff854db", name: 'aaa'}, subcategory: {id: "57175d923970a5e46ff854db", name: 'aaa'}},
-          {category: {id: "57175d923970a5e46ff854db", name: 'bbb'}, subcategory: {id: "57175d923970a5e46ff854db", name: 'bbb'}},
+          { category: { id: '57175d923970a5e46ff854db', name: 'aaa' }, subcategory: { id: '57175d923970a5e46ff854db', name: 'aaa' } },
+          { category: { id: '57175d923970a5e46ff854db', name: 'bbb' }, subcategory: { id: '57175d923970a5e46ff854db', name: 'bbb' } },
         ])} />
       </div>
     );
