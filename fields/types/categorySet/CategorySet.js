@@ -50,7 +50,7 @@ module.exports = Field.create({
   // TODO: how to get initial value?
   getInitialState() {
     return {
-      value: [{ category: '國際兩岸', subcategory: '香港' }],
+      value: [{ category: {id: '國際兩岸', name: '國際兩岸'}, subcategory: {id: '香港', name: '香港'} }],
     };
   },
 
@@ -95,7 +95,7 @@ module.exports = Field.create({
   },
 
   onAddCategorySet() {
-    this.setState({ value: [...this.state.value, { category: '', subcategory: '' }] });
+    this.setState({ value: [...this.state.value, { category: {id: '', name: ''}, subcategory: {id: '', name: ''} }] });
   },
 
   onRemoveCategorySet(index) {
@@ -128,7 +128,7 @@ module.exports = Field.create({
     const { value } = this.state;
     if (Array.isArray(value)) {
       return value.map((categorySet, index) => {
-        let subcategoryOptions = categoryMap.get(categorySet.category);
+        let subcategoryOptions = categoryMap.get(categorySet.category.id);
         if (Array.isArray(subcategoryOptions)) {
           subcategoryOptions = subcategoryOptions.map(subcategory => { return { value: subcategory, label: subcategory }; });
         }
@@ -138,8 +138,8 @@ module.exports = Field.create({
               ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button>
               : <div className="ItemList__control ItemList__control--delete-no-focus" />
             }
-            <div style={categoryMenuStyle}><Select placeholder="分類" clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subcategory: '' })} /></div>
-            <div style={subcategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !subcategoryOptions} clearable={false} options={subcategoryOptions} value={categorySet.subcategory} onChange={(selected) => this.onUpdateSubcategory(index, selected.value)} /></div>
+            <div style={categoryMenuStyle}><Select placeholder="分類" clearable={false} options={categoryOptions} value={categorySet.category.id} onChange={(selected) => this.onUpdateCategorySet(index, { category: {id: selected.value, name: selected.label}, subcategory: {id: '', name: ''} })} /></div>
+            <div style={subcategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !subcategoryOptions} clearable={false} options={subcategoryOptions} value={categorySet.subcategory.id} onChange={(selected) => this.onUpdateSubcategory(index, {id: selected.value, name: selected.label})} /></div>
           </div>
         );
       });
@@ -152,10 +152,12 @@ module.exports = Field.create({
       <div>
         {this.renderCategorySetSelect()}
         <div style={btnContainerStyle}><button type="button" style={btnStyle} onClick={this.onAddCategorySet}>新增分類</button></div>
-        <input type="hidden" name={this.props.path} value={JSON.stringify([ // TODO
+        {<input type="hidden" name={this.props.path} value={JSON.stringify([ // TODO
           { category: { id: '57175d923970a5e46ff854db', name: 'aaa' }, subcategory: { id: '57175d923970a5e46ff854db', name: 'aaa' } },
           { category: { id: '57175d923970a5e46ff854db', name: 'bbb' }, subcategory: { id: '57175d923970a5e46ff854db', name: 'bbb' } },
         ])} />
+        }
+        {/*<input type="hidden" name={this.props.path} value={JSON.stringify(this.state.value)}/>*/}
       </div>
     );
   },
