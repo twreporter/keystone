@@ -47,8 +47,8 @@ module.exports = Field.create({
 
   displayName: 'RelationshipField',
 
-  // TODO: how to get initial value?
   getInitialState() {
+    // TODO: init this.state.value with this.props.value
     return {
       value: [{ category: { id: '國際兩岸', name: '國際兩岸' }, subcategory: { id: '香港', name: '香港' } }],
     };
@@ -62,7 +62,7 @@ module.exports = Field.create({
 
   loadOptions() {
     xhr({
-      url: Keystone.adminPath + '/api/' + this.props.refList.path + '?basic&search=',
+      url: Keystone.adminPath + '/api/post-categories?basic',
       responseType: 'json',
     }, (err, resp, data) => {
       if (err || !data || !data.results) {
@@ -70,7 +70,8 @@ module.exports = Field.create({
         return;
       }
       data.results.forEach(category => {
-        if (category && category.id && category.name /* && category.subcategory */) {
+        // TODO: how to get subcategory field from query?
+        if (category && category.id && category.name && category.subcategory) {
           this.categoryOptions.push({ value: category.id, label: category.name });
           /* TODO: can we fetch subcategory just once?
           if (Array.isArray(category.subcategory)) {
