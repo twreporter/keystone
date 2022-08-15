@@ -74,6 +74,7 @@ module.exports = Field.create({
         if (category && category.id && category.name && category.subcategory) {
           this.categoryOptions.push({ value: category.id, label: category.name });
           /* TODO: can we fetch subcategory just once?
+          let subcategoryOptions = [];
           if (Array.isArray(category.subcategory)) {
             category.subcategory.forEach(subcategoryId => {
               xhr({
@@ -84,10 +85,10 @@ module.exports = Field.create({
                   console.error('Error loading items:', err);
                   return;
                 }
-                const subcategoryOptions = .map(subcategory => {return {value: subcategory.id, label: subcategory.name}});
-                this.subcategoryOptionsMap.set(category.id, subcategoryOptions);
+                subcategoryOptions.push({value: subcategoryId, label: data.name}});
             });
           }
+          this.subcategoryOptionsMap.set(category.id, subcategoryOptions);
           */
         }
       });
