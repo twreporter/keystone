@@ -10,8 +10,8 @@ var util = require('util');
  */
 function categorySet(list, path, options) {
   this._nativeType = [{
-    category: { id: keystone.mongoose.Schema.Types.ObjectId, name: String },
-    subcategory: { id: keystone.mongoose.Schema.Types.ObjectId, name: String }
+    category: keystone.mongoose.Schema.Types.ObjectId,
+    subcategory: keystone.mongoose.Schema.Types.ObjectId
   }];
   this._defaultSize = 'full';
   categorySet.super_.call(this, list, path, options);
