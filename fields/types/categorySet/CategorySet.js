@@ -133,7 +133,7 @@ module.exports = Field.create({
     if (Array.isArray(value)) {
       return value.map((categorySet, index) => {
         const subcategoryOptions = subcategoryOptionsMap ? subcategoryOptionsMap.get(categorySet.category) : [];
-        return (
+        return categorySet ? (
           <div key={`categorySet-${index}`} style={categorySetStyle}>
             {index > 0
               ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button>
@@ -142,7 +142,7 @@ module.exports = Field.create({
             <div style={categoryMenuStyle}><Select placeholder="分類" disabled={!categoryOptions} clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subcategory: undefined })} /></div>
             <div style={subcategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !subcategoryOptions} clearable={false} options={subcategoryOptions} value={categorySet.subcategory} onChange={(selected) => this.onUpdateSubcategory(index, selected.value)} /></div>
           </div>
-        );
+        ) : null;
       });
     }
     return null;
