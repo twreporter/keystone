@@ -83,10 +83,11 @@ module.exports = Field.create({
 
   cacheItem(item) {
     // Filter out old version categories for old/new compatible
-    if (item && !item.subcategory) {
-      item.href = Keystone.adminPath + '/' + this.props.refList.path + '/' + item.id;
-      this._itemsCache[item.id] = item;
+    if (item && item.fields && item.fields.subcategory && item.fields.subcategory.length) {
+      return;
     }
+    item.href = Keystone.adminPath + '/' + this.props.refList.path + '/' + item.id;
+    this._itemsCache[item.id] = item;
   },
 
   loadValue(values) {
@@ -143,7 +144,7 @@ module.exports = Field.create({
       }
       data.results.forEach(this.cacheItem);
       callback(null, {
-        options: data.results,
+        options: data.results.filter(category => !(category && category.fields && category.fields.subcategory && category.fields.subcategory.length)),
         complete: data.results.length === data.count,
       });
     });
