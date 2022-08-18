@@ -42,7 +42,7 @@ module.exports = Field.create({
         if (categorySet) {
           value.push({ category: categorySet.category, subcategory: categorySet.subcategory });
         }
-      })
+      });
     }
     return {
       categoryOptions: null,
