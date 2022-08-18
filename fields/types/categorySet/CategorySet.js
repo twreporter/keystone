@@ -132,7 +132,7 @@ module.exports = Field.create({
     const { value, categoryOptions, subcategoryOptionsMap } = this.state;
     if (Array.isArray(value)) {
       return value.map((categorySet, index) => {
-        const subcategoryOptions = subcategoryOptionsMap ? subcategoryOptionsMap.get(categorySet.category) : [];
+        const subcategoryOptions = subcategoryOptionsMap && categorySet ? subcategoryOptionsMap.get(categorySet.category) : undefined;
         return categorySet ? (
           <div key={`categorySet-${index}`} style={categorySetStyle}>
             {index > 0
