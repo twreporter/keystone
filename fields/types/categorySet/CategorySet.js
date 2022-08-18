@@ -39,7 +39,7 @@ module.exports = Field.create({
     let value = [];
     if (Array.isArray(this.props.value)) {
       this.props.value.forEach(categorySet => {
-        if (categorySet) {
+        if (categorySet && categorySet.category) {
           value.push({ category: categorySet.category, subcategory: categorySet.subcategory });
         }
       });
@@ -47,7 +47,7 @@ module.exports = Field.create({
     return {
       categoryOptions: null,
       subcategoryOptionsMap: null,
-      value: value,
+      value: value.length === 0 ? [{ category: undefined, subcategory: undefined }] : value,
     };
   },
 
