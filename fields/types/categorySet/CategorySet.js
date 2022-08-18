@@ -36,11 +36,18 @@ module.exports = Field.create({
   displayName: 'RelationshipField',
 
   getInitialState() {
+    let value = [];
+    if (Array.isArray(this.props.value)) {
+      this.props.value.forEach(categorySet => {
+        if (categorySet) {
+          value.push({ category: categorySet.category, subcategory: categorySet.subcategory });
+        }
+      })
+    }
     return {
       categoryOptions: null,
       subcategoryOptionsMap: null,
-      // value: this.props.value
-      value: [{ category: '62fb9e38aa35b19083567799', subcategory: '5773c3c8c107b51000e9beb1' }],
+      value: value,
     };
   },
 
