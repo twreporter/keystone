@@ -99,7 +99,7 @@ module.exports = Field.create({
   },
 
   onAddCategorySet() {
-    this.setState({ value: [...this.state.value, { category: '', subcategory: '' }] });
+    this.setState({ value: [...this.state.value, { category: undefined, subcategory: undefined }] });
   },
 
   onRemoveCategorySet(index) {
