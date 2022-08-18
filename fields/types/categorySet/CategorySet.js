@@ -52,6 +52,21 @@ module.exports = Field.create({
   },
 
   componentDidMount() {
+    const getSubcategoryOptions = (subcategoryIDs, callback) => {
+      async.map(subcategoryIDs, (subcategoryID, callback) => {
+        xhr({
+          url: Keystone.adminPath + `/api/tags?basic&search=${subcategoryID}`,
+          responseType: 'json',
+        }, (err, resp, data) => {
+          if (err || !data || !Array.isArray(data.results) || data.results.length <= 0) {
+            console.error('Error loading items:', err);
+            return callback(err);
+          }
+          callback(null, { value: data.results[0].id, label: data.results[0].name });
+        });
+      }, callback);
+    };
+
     xhr({
       url: Keystone.adminPath + '/api/post-categories?basic',
       responseType: 'json',
@@ -66,18 +81,7 @@ module.exports = Field.create({
         if (category && category.id && category.name && category.fields && Array.isArray(category.fields.subcategory) && category.fields.subcategory.length > 0) {
           categoryOptions.push({ value: category.id, label: category.name });
           const subcategoryIDs = category.fields.subcategory;
-          async.map(subcategoryIDs, (subcategoryID, callback) => {
-            xhr({
-              url: Keystone.adminPath + `/api/tags?basic&search=${subcategoryID}`,
-              responseType: 'json',
-            }, (err, resp, data) => {
-              if (err || !data || !Array.isArray(data.results) || data.results.length <= 0) {
-                console.error('Error loading items:', err);
-                return callback(err);
-              }
-              callback(null, { value: data.results[0].id, label: data.results[0].name });
-            });
-          }, (err, results) => {
+          getSubcategoryOptions(subcategoryIDs, (err, results) => {
             if (err) {
               console.log(err);
             }
