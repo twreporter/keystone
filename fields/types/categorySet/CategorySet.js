@@ -149,11 +149,12 @@ module.exports = Field.create({
   },
 
   renderCategorySetSelector() {
+    const { value } = this.state;
     return (
       <div>
         {this.renderCategorySetSelect()}
         <div style={btnContainerStyle}><button type="button" style={btnStyle} onClick={this.onAddCategorySet}>新增分類</button></div>
-        <input type="hidden" name={this.props.path} value={JSON.stringify(this.state.value)}/>
+        <input type="hidden" name={this.props.path} value={JSON.stringify(value.filter(categorySet => categorySet && categorySet.category))}/>
       </div>
     );
   },
