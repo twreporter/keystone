@@ -38,7 +38,7 @@ categorySet.prototype.updateItem = function(item, data, callback) {
     } catch (err) {
       console.error('Error to JSON.parse:', err);
     }
-    item.set(this.path, Array.isArray(dObj) ? dObj : []);
+    item.set(this.path, Array.isArray(dObj) ? dObj.filter(obj => obj && obj.category) : []);
   }
 
   process.nextTick(callback);

@@ -83,7 +83,7 @@ module.exports = Field.create({
           const subcategoryIDs = category.fields.subcategory;
           getSubcategoryOptions(subcategoryIDs, (err, results) => {
             if (err) {
-              console.log(err);
+              console.error(err);
             }
             subcategoryOptionsMap.set(category.id, err ? [] : results);
             callback(null);
@@ -93,7 +93,8 @@ module.exports = Field.create({
         }
       }, err => {
         if (err) {
-          console.log(err);
+          console.error(err);
+          alert('Fetch category set failed! Please reload this page and try again.');
         } else {
           // eslint-disable-next-line react/no-did-mount-set-state
           this.setState({ categoryOptions: categoryOptions, subcategoryOptionsMap: subcategoryOptionsMap });
@@ -143,7 +144,7 @@ module.exports = Field.create({
               ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button>
               : <div className="ItemList__control ItemList__control--delete-no-focus" />
             }
-            <div style={categoryMenuStyle}><Select placeholder="分類" disabled={!categoryOptions} clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subcategory: undefined })} /></div>
+            <div style={categoryMenuStyle}><Select placeholder="分類" disabled={!(Array.isArray(categoryOptions) && categoryOptions.length > 0)} clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subcategory: undefined })} /></div>
             <div style={subcategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !subcategoryOptions} clearable={false} options={subcategoryOptions} value={categorySet.subcategory} onChange={(selected) => this.onUpdateSubcategory(index, selected.value)} /></div>
           </div>
         ) : null;
@@ -153,11 +154,11 @@ module.exports = Field.create({
   },
 
   renderCategorySetSelector() {
-    const { value } = this.state;
+    const { value, categoryOptions } = this.state;
     return (
       <div>
         {this.renderCategorySetSelect()}
-        <div style={btnContainerStyle}><button type="button" style={btnStyle} onClick={this.onAddCategorySet}>新增分類</button></div>
+        <div style={btnContainerStyle}><button type="button" disabled={!(Array.isArray(categoryOptions) && categoryOptions.length > 0)} style={btnStyle} onClick={this.onAddCategorySet}>新增分類</button></div>
         <input type="hidden" name={this.props.path} value={JSON.stringify(value.filter(categorySet => categorySet && categorySet.category))}/>
       </div>
     );
