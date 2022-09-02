@@ -73,6 +73,7 @@ module.exports = Field.create({
     }, (err, resp, data) => {
       if (err || !data || !Array.isArray(data.results)) {
         console.error('Error loading items:', err);
+        alert('Fetch category failed! Please reload this page and try again.');
         return;
       }
       let categoryOptions = [];
@@ -84,6 +85,7 @@ module.exports = Field.create({
           getSubcategoryOptions(subcategoryIDs, (err, results) => {
             if (err) {
               console.error(err);
+              alert('Fetch subcategory failed! Please reload this page and try again.');
             }
             subcategoryOptionsMap.set(category.id, err ? [] : results);
             callback(null);
