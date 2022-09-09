@@ -3,6 +3,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button, FormField, FormInput, FormNote } from 'elemental';
 
+const storage = {
+  google: {
+    schema: 'https',
+    hostname: 'storage.googleapis.com',
+    bucket: 'twreporter-multimedia',
+  },
+};
+
+function replaceGCSUrlOrigin(url = '') {
+  const { schema, hostname, bucket } = storage.google;
+  const toReplace = 'https://www.twreporter.org';
+  const toBeReplaced = `${schema}://${hostname}/${bucket}`;
+  return url.replace(toBeReplaced, toReplace);
+}
+
 module.exports = Field.create({
 
   shouldCollapse() {
@@ -29,7 +44,7 @@ module.exports = Field.create({
 
   getFileURL() {
     if (!this.hasLocal() && this.hasExisting()) {
-      return this.props.value.url;
+      return replaceGCSUrlOrigin(this.props.value.url);
     }
   },
 
