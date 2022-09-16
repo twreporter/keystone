@@ -4,6 +4,7 @@ import xhr from 'xhr';
 import async from 'async';
 
 import Field from '../Field';
+import { NEW_CATEGORY_IDS } from '../CategoryConstants';
 
 const categorySetStyle = {
   display: 'flex',
@@ -79,7 +80,7 @@ module.exports = Field.create({
       let categoryOptions = [];
       let subcategoryOptionsMap = new Map([]);
       async.each(data.results, (category, callback) => {
-        if (category && category.id && category.name && category.fields && Array.isArray(category.fields.subcategory) && category.fields.subcategory.length > 0) {
+        if (category && category.id && category.name && category.fields && NEW_CATEGORY_IDS.includes(category.id)) {
           categoryOptions.push({ value: category.id, label: category.name });
           const subcategoryIDs = category.fields.subcategory;
           getSubcategoryOptions(subcategoryIDs, (err, results) => {
@@ -147,7 +148,7 @@ module.exports = Field.create({
               : <div className="ItemList__control ItemList__control--delete-no-focus" />
             }
             <div style={categoryMenuStyle}><Select placeholder="分類" disabled={!(Array.isArray(categoryOptions) && categoryOptions.length > 0)} clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subcategory: undefined })} /></div>
-            <div style={subcategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !subcategoryOptions} clearable={false} options={subcategoryOptions} value={categorySet.subcategory} onChange={(selected) => this.onUpdateSubcategory(index, selected.value)} /></div>
+            <div style={subcategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !Array.isArray(subcategoryOptions) || subcategoryOptions.length <= 0} clearable={false} options={subcategoryOptions} value={categorySet.subcategory} onChange={(selected) => this.onUpdateSubcategory(index, selected.value)} /></div>
           </div>
         ) : null;
       });
