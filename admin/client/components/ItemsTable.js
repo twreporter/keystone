@@ -1,7 +1,7 @@
 import React from 'react';
 
 import TableRow from './ItemsTableRow';
-import DrapDrop from './ItemsTableDragDrop';
+import DragDrop from './ItemsTableDragDrop';
 
 const TABLE_CONTROL_COLUMN_WIDTH = 26; // icon + padding
 
@@ -40,7 +40,7 @@ const ItemsTable = React.createClass({
     if (!items.results.length) return null;
 
     let tableBody = (this.props.list.sortable) ? (
-      <DrapDrop {...this.props} />
+      <DragDrop {...this.props} />
     ) : (
       <tbody >
         {items.results.map((item, i) => {
