@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.8-rc.0, 2022/5/19
+
+## Notable Changes
+- refactor
+  - change assets public url prefix to utilize CDN cache
+
+### Commits
+* [[`849eb5a6c5`](https://github.com/twreporter/keystone/commit/849eb5a6c5)] - **refactor**: change replaceGCSUrlOrigin to a utility function (Tai-Jiun Fang)
+* [[`e9fada5de2`](https://github.com/twreporter/keystone/commit/e9fada5de2)] - **refactor**: change public url prefix to utilize CDN cache (Tai-Jiun Fang)
+
 ## 0.9.7, 2022/5/16
 
 ## Notable Changes
