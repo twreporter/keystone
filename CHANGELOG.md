@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.8-rc.0, 2022/5/19
+## 0.9.8, 2022/5/20
 
 ## Notable Changes
 - refactor
