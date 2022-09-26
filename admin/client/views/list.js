@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import CurrentListStore from '../stores/CurrentListStore';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import CreateForm from '../components/CreateForm';
+import LatestForm from '../components/LatestForm';
 import FlashMessages from '../components/FlashMessages';
 import Footer from '../components/Footer';
 import ItemsTable from '../components/ItemsTable';
@@ -446,6 +447,7 @@ const ListView = React.createClass({
     );
   },
   render() {
+    const isLastest = this.state.list.key === 'Latest';
     return !this.state.ready ? (
       <div className="view-loading-indicator"><Spinner size="md" /></div>
     ) : (
@@ -478,12 +480,21 @@ const ListView = React.createClass({
           User={this.props.User}
           user={this.props.user}
           version={this.props.version} />
-        <CreateForm
-          err={this.props.createFormErrors}
-          isOpen={this.state.showCreateForm}
-          list={this.state.list}
-          onCancel={() => this.toggleCreateModal(false)}
-          values={this.props.createFormData} />
+        {isLastest
+          ? <LatestForm
+            err={this.props.createFormErrors}
+            isOpen={this.state.showCreateForm}
+            list={this.state.list}
+            onCancel={() => this.toggleCreateModal(false)}
+            values={this.props.createFormData}
+          />
+          : <CreateForm
+            err={this.props.createFormErrors}
+            isOpen={this.state.showCreateForm}
+            list={this.state.list}
+            onCancel={() => this.toggleCreateModal(false)}
+            values={this.props.createFormData}
+          />}
         <UpdateForm
           isOpen={this.state.showUpdateForm}
           itemIds={Object.keys(this.state.checkedItems)}
