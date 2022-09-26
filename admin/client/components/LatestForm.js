@@ -1,6 +1,7 @@
 import React from 'react';
 import Fields from '../fields';
 import InvalidFieldType from './InvalidFieldType';
+import Select from 'react-select';
 import { Alert, Button, Form, Modal } from 'elemental';
 
 var LatestForm = React.createClass({
@@ -111,7 +112,7 @@ var LatestForm = React.createClass({
 
     return <Alert type="danger">{alertContent}</Alert>;
   },
-  renderForm() {
+  renderSelect() {
     if (!this.props.isOpen) return;
 
     var form = [];
@@ -151,10 +152,22 @@ var LatestForm = React.createClass({
         <Modal.Header text={'Create a new ' + list.singular} onClose={this.props.onCancel} showCloseButton />
         <Modal.Body>
           {this.renderAlerts()}
-          {form}
+          <Select.Async
+            multi={this.props.many}
+            options={[{label: 'test1', value: 'test1'}, {label: 'test2', value: 'test2'}]}
+            /*
+            loadOptions={this.loadOptions}
+            labelKey="name"
+            name={this.props.path}
+            onChange={this.valueChanged}
+            simpleValue
+            value={this.state.value}
+            valueKey="id"
+            */
+          />
         </Modal.Body>
         <Modal.Footer>
-          <Button type="success" submit>Test Create</Button>
+          <Button type="success" submit>Add</Button>
           <Button type="link-cancel" onClick={this.props.onCancel}>Cancel</Button>
         </Modal.Footer>
       </Form>
@@ -163,7 +176,7 @@ var LatestForm = React.createClass({
   render() {
     return (
       <Modal isOpen={this.props.isOpen} onCancel={this.props.onCancel} backdropClosesModal>
-        {this.renderForm()}
+        {this.renderSelect()}
       </Modal>
     );
   },
