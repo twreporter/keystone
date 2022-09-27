@@ -1,6 +1,7 @@
 import React from 'react';
 import Fields from '../fields';
 import InvalidFieldType from './InvalidFieldType';
+import xhr from 'xhr';
 import Select from 'react-select';
 import { Alert, Button, Form, Modal } from 'elemental';
 
@@ -32,11 +33,13 @@ var LatestForm = React.createClass({
       }
     });
     return {
+      value: '',
       values: values,
       err: this.props.err,
     };
   },
   componentDidMount() {
+    this._itemsCache = {};
     if (this.refs.focusTarget) {
       this.refs.focusTarget.focus();
     }
@@ -46,6 +49,27 @@ var LatestForm = React.createClass({
       // focus the focusTarget after the "open modal" CSS animation has started
       setTimeout(() => this.refs.focusTarget && this.refs.focusTarget.focus(), 0);
     }
+  },
+  cacheItem(item) {
+    item.href = Keystone.adminPath + '/tags/' + item.id;
+    this._itemsCache[item.id] = item;
+  },
+  loadOptions(input, callback) {
+    // const filters = this.buildFilters(); // TODO: build filter: lastest_order === 0
+    xhr({
+      url: Keystone.adminPath + '/api/tags' + '?search=' + input, // + '&' + filters,
+      responseType: 'json',
+    }, (err, resp, data) => {
+      if (err || !data || !data.results) {
+        console.error('Error loading items:', err);
+        return callback(err, []);
+      }
+      data.results.forEach(this.cacheItem);
+      callback(null, {
+        options: data.results,
+        complete: data.results.length === data.count,
+      });
+    });
   },
   handleChange(event) {
     var values = Object.assign({}, this.state.values);
@@ -86,6 +110,10 @@ var LatestForm = React.createClass({
         }
       });
     }
+  },
+
+  onValueChange(value) {
+    this.setState({ value });
   },
 
   renderAlerts() {
@@ -153,17 +181,14 @@ var LatestForm = React.createClass({
         <Modal.Body>
           {this.renderAlerts()}
           <Select.Async
-            multi={this.props.many}
-            options={[{label: 'test1', value: 'test1'}, {label: 'test2', value: 'test2'}]}
-            /*
-            loadOptions={this.loadOptions}
-            labelKey="name"
-            name={this.props.path}
-            onChange={this.valueChanged}
+            multi
             simpleValue
-            value={this.state.value}
+            placeholder="Select..."
+            labelKey="name"
             valueKey="id"
-            */
+            value={this.state.value}
+            loadOptions={this.loadOptions}
+            onChange={this.onValueChange}
           />
         </Modal.Body>
         <Modal.Footer>
