@@ -179,7 +179,6 @@ var LatestForm = React.createClass({
         <input type="hidden" name={Keystone.csrf.key} value={Keystone.csrf.value} />
         <Modal.Header text={'Create a new ' + list.singular} onClose={this.props.onCancel} showCloseButton />
         <Modal.Body>
-          {this.renderAlerts()}
           <Select.Async
             multi
             simpleValue
@@ -190,6 +189,7 @@ var LatestForm = React.createClass({
             loadOptions={this.loadOptions}
             onChange={this.onValueChange}
           />
+          {this.renderAlerts()}
         </Modal.Body>
         <Modal.Footer>
           <Button type="success" submit>Add</Button>
