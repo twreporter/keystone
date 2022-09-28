@@ -85,7 +85,7 @@ module.exports = Field.create({
 
   cacheItem(item) {
     // Filter out old version categories for old/new compatible
-    if (item && item.fields && !OLD_CATEGORY_IDS.includes(item.id)) {
+    if (item && !OLD_CATEGORY_IDS.includes(item.id)) {
       return;
     }
     item.href = Keystone.adminPath + '/' + this.props.refList.path + '/' + item.id;
