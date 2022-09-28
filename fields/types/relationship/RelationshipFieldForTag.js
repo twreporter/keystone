@@ -145,7 +145,6 @@ module.exports = Field.create({
         return callback(null, []);
       }
       data.results.forEach(this.cacheItem);
-      console.log(data.results);
       callback(null, {
         options: data.results.filter(subcategory => !NEW_SUBCATEGORY_IDS.includes(subcategory.id)),
         complete: data.results.length === data.count,
