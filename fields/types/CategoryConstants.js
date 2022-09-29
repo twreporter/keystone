@@ -32,7 +32,7 @@ export const NEW_CATEGORY_IDS = [
   '574d028748fa171000c45d48', // 影像(新舊共用)
 ];
 
-// 54 new subcategories
+// 55 new subcategories
 export const NEW_SUBCATEGORY_IDS = [
   '63206383207bf7c5f871622d', // 香港
   '63206383207bf7c5f871622e', // 中國
@@ -93,5 +93,5 @@ export const NEW_SUBCATEGORY_IDS = [
   '63206383207bf7c5f8716268', // On the Ground 路邊攤計畫
   '63206383207bf7c5f871626a', // 書摘
   '63206383207bf7c5f871626b', // 讀者投書
-  // TODO: '', // 氣候變遷
+  '633407174a9cab5ac7a90738', // 氣候變遷
 ];
