@@ -1,6 +1,7 @@
 import Field from '../Field';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import replaceGCSUrlOrigin from '../../utils/replace-gcs-url-origin';
 import { Button, FormField, FormInput, FormNote } from 'elemental';
 
 module.exports = Field.create({
@@ -29,7 +30,7 @@ module.exports = Field.create({
 
   getFileURL() {
     if (!this.hasLocal() && this.hasExisting()) {
-      return this.props.value.url;
+      return replaceGCSUrlOrigin(this.props.value.url);
     }
   },
 
