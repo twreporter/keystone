@@ -183,6 +183,9 @@ var EditForm = React.createClass({
         } else if (props.key === 'categories') {
           // Remove Fields.relationshipForCategory when migration is done.
           return React.createElement(Fields.relationshipForCategory, props);
+        } else if (props.key === 'tags') {
+          // Remove Fields.relationshipForTag when migration is done.
+          return React.createElement(Fields.relationshipForTag, props);
         } else if (props.key === 'categorySet') {
           return React.createElement(Fields.categorySet, props);
         } else {

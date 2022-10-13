@@ -10,7 +10,7 @@ import Select from 'react-select';
 import xhr from 'xhr';
 import { Button, InputGroup } from 'elemental';
 
-import { OLD_CATEGORY_IDS } from '../CategoryConstants';
+import { NEW_SUBCATEGORY_IDS } from '../CategoryConstants';
 
 function compareValues(current, next) {
   let currentLength = current ? current.length : 0;
@@ -84,8 +84,8 @@ module.exports = Field.create({
   },
 
   cacheItem(item) {
-    // Filter out old version categories for old/new compatible
-    if (item && !OLD_CATEGORY_IDS.includes(item.id)) {
+    // Filter out new version tags for old/new compatible
+    if (item && NEW_SUBCATEGORY_IDS.includes(item.id)) {
       return;
     }
     item.href = Keystone.adminPath + '/' + this.props.refList.path + '/' + item.id;
@@ -146,7 +146,7 @@ module.exports = Field.create({
       }
       data.results.forEach(this.cacheItem);
       callback(null, {
-        options: data.results.filter(category => category && OLD_CATEGORY_IDS.includes(category.id)),
+        options: data.results.filter(subcategory => !NEW_SUBCATEGORY_IDS.includes(subcategory.id)),
         complete: data.results.length === data.count,
       });
     });
