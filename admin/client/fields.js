@@ -28,7 +28,6 @@ module.exports = {
   preview: require('../../fields/types/preview/PreviewField'),
   relatedsformat: require('../../fields/types/relatedsformat/RelatedsFormatField'),
   relationship: require('../../fields/types/relationship/RelationshipField'),
-  relationshipForCategory: require('../../fields/types/relationship/RelationshipFieldForCategory'),
   sortablerelateds: require('../../fields/types/sortableRelateds/SortableRelateds'),
   imagerelationship: require('../../fields/types/imagerelationship/ImageRelationshipField'),
   categorySet: require('../../fields/types/categorySet/CategorySet'),
@@ -39,4 +38,8 @@ module.exports = {
   textarea: require('../../fields/types/textarea/TextareaField'),
   textarray: require('../../fields/types/textarray/TextArrayField'),
   url: require('../../fields/types/url/UrlField'),
+
+  // Remove relationshipForCategory, relationshipForTag when migration is done.
+  relationshipForCategory: require('../../fields/types/relationship/RelationshipFieldForCategory'),
+  relationshipForTag: require('../../fields/types/relationship/RelationshipFieldForTag'),
 };

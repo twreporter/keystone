@@ -2,13 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.9-rc.0, 2022/9/21
+## 0.9.9, 2022/10/24
 
 ## Notable Changes
 - feat
   - support category set for new info architecture
+- fix
+  - add tag filter for old/new info architecture compatibility
 
 ### Commits
+* \[[`4f07fec7d4`](https://github.com/twreporter/keystone/commit/4f07fec7d4)] - Jason/327 compatibility tag filter (#226) (許守傑 Shou-Chieh Hsu (Jason))
 * \[[`db447d9c0e`](https://github.com/twreporter/keystone/commit/db447d9c0e)] - Jason/issue 327 (#220) (許守傑 Shou-Chieh Hsu (Jason))
 
 ## 0.9.8, 2022/5/20
