@@ -486,15 +486,14 @@ const ListView = React.createClass({
             isOpen={this.state.showCreateForm}
             list={this.state.list}
             onCancel={() => this.toggleCreateModal(false)}
-            values={this.props.createFormData}
-          />
+            values={this.props.createFormData} />
           : <CreateForm
             err={this.props.createFormErrors}
             isOpen={this.state.showCreateForm}
             list={this.state.list}
             onCancel={() => this.toggleCreateModal(false)}
-            values={this.props.createFormData}
-          />}
+            values={this.props.createFormData} />
+        }
         <UpdateForm
           isOpen={this.state.showUpdateForm}
           itemIds={Object.keys(this.state.checkedItems)}
