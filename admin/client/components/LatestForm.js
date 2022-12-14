@@ -55,9 +55,11 @@ var LatestForm = React.createClass({
     this._itemsCache[item.id] = item;
   },
   loadOptions(input, callback) {
-    // const filters = this.buildFilters(); // TODO: build filter: lastest_order === 0
+    // Filter out old/selected tags with 'latest_order === 0' condition,
+    // old tags do not have latest_order field & selected tags' latest_order > 0
+    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"value":0}}');
     xhr({
-      url: Keystone.adminPath + '/api/tags' + '?search=' + input, // + '&' + filters,
+      url: Keystone.adminPath + '/api/tags?search=' + input + '&' + filters,
       responseType: 'json',
     }, (err, resp, data) => {
       if (err || !data || !data.results) {
