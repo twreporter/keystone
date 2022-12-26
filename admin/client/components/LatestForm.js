@@ -118,6 +118,12 @@ var LatestForm = React.createClass({
     this.setState({ value });
   },
 
+  onAddTags() {
+    console.log("add tags", this.state.value);
+    // TODO: modify latest_order value when adding tags
+    window.location.reload();
+  },
+
   renderAlerts() {
     if (!this.state.err || !this.state.err.errors) return;
 
@@ -194,7 +200,7 @@ var LatestForm = React.createClass({
           {this.renderAlerts()}
         </Modal.Body>
         <Modal.Footer>
-          <Button type="success" submit>Add</Button>
+          <Button type="success" onClick={this.onAddTags} disabled={!this.state.value}>Add</Button>
           <Button type="link-cancel" onClick={this.props.onCancel}>Cancel</Button>
         </Modal.Footer>
       </Form>
