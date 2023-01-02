@@ -56,7 +56,7 @@ const CommonListView = React.createClass({
   },
   getStateFromStore() {
     var state = {
-      columns: CurrentListStore.getActiveColumns(), // TODO: get columns for latest rows
+      columns: CurrentListStore.getActiveColumns(),
       currentPage: CurrentListStore.getCurrentPage(),
       filters: CurrentListStore.getActiveFilters(),
       items: CurrentListStore.getItems(),
