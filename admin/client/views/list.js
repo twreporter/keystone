@@ -6,7 +6,6 @@ import classnames from 'classnames';
 import CurrentListStore from '../stores/CurrentListStore';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import CreateForm from '../components/CreateForm';
-import LatestForm from '../components/LatestForm';
 import FlashMessages from '../components/FlashMessages';
 import Footer from '../components/Footer';
 import ItemsTable from '../components/ItemsTable';
@@ -22,7 +21,16 @@ import UpdateForm from '../components/UpdateForm';
 import { BlankState, Button, Container, FormInput, InputGroup, Pagination, Spinner } from 'elemental';
 import { plural } from '../utils';
 
+import LatestListView from './latestList';
 const ListView = React.createClass({
+  render() {
+    const list = CurrentListStore.getList();
+    const isLastest = list && list.key === 'Latest';
+    return isLastest ? <LatestListView {...this.props} /> : <CommonListView {...this.props} />;
+  },
+});
+
+const CommonListView = React.createClass({
   getInitialState() {
     return {
       confirmationDialog: {
@@ -48,7 +56,7 @@ const ListView = React.createClass({
   },
   getStateFromStore() {
     var state = {
-      columns: CurrentListStore.getActiveColumns(),
+      columns: CurrentListStore.getActiveColumns(), // TODO: get columns for latest rows
       currentPage: CurrentListStore.getCurrentPage(),
       filters: CurrentListStore.getActiveFilters(),
       items: CurrentListStore.getItems(),
@@ -447,7 +455,6 @@ const ListView = React.createClass({
     );
   },
   render() {
-    const isLastest = this.state.list.key === 'Latest';
     return !this.state.ready ? (
       <div className="view-loading-indicator"><Spinner size="md" /></div>
     ) : (
@@ -480,20 +487,12 @@ const ListView = React.createClass({
           User={this.props.User}
           user={this.props.user}
           version={this.props.version} />
-        {isLastest
-          ? <LatestForm
-            err={this.props.createFormErrors}
-            isOpen={this.state.showCreateForm}
-            list={this.state.list}
-            onCancel={() => this.toggleCreateModal(false)}
-            values={this.props.createFormData} />
-          : <CreateForm
-            err={this.props.createFormErrors}
-            isOpen={this.state.showCreateForm}
-            list={this.state.list}
-            onCancel={() => this.toggleCreateModal(false)}
-            values={this.props.createFormData} />
-        }
+        <CreateForm
+          err={this.props.createFormErrors}
+          isOpen={this.state.showCreateForm}
+          list={this.state.list}
+          onCancel={() => this.toggleCreateModal(false)}
+          values={this.props.createFormData} />
         <UpdateForm
           isOpen={this.state.showUpdateForm}
           itemIds={Object.keys(this.state.checkedItems)}
