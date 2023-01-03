@@ -98,7 +98,7 @@ const LatestListView = React.createClass({
     } else {
       props.onClick = () => this.toggleCreateModal(true);
     }
-    const createButtonText = "Add tag";
+    const createButtonText = 'Add tag';
     return (
       <InputGroup.Section className="ListHeader__create">
         <Button {...props} title={createButtonText}>
@@ -196,7 +196,7 @@ const LatestListView = React.createClass({
     });
   },
   deleteTableItem(item, e) {
-    // TODO: 
+    // TODO: delete operation
     console.log('delete', item.name);
   },
   removeConfirmationDialog() {
