@@ -25,8 +25,8 @@ import LatestListView from './latestList';
 const ListView = React.createClass({
   render() {
     const list = CurrentListStore.getList();
-    const isLastest = list && list.key === 'Latest';
-    return isLastest ? <LatestListView {...this.props} /> : <CommonListView {...this.props} />;
+    const isLastestList = list && list.key === 'Latest';
+    return isLastestList ? <LatestListView {...this.props} /> : <CommonListView {...this.props} />;
   },
 });
 

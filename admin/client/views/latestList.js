@@ -1,24 +1,17 @@
 'use strict';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import classnames from 'classnames';
 import CurrentListStore from '../stores/CurrentListStore';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import LatestForm from '../components/LatestForm';
 import FlashMessages from '../components/FlashMessages';
 import Footer from '../components/Footer';
 import ItemsTable from '../components/ItemsTable';
-import ListColumnsForm from '../components/ListColumnsForm';
-import ListDownloadForm from '../components/ListDownloadForm';
-import ListFilters from '../components/ListFilters';
-import ListFiltersAdd from '../components/ListFiltersAdd';
-import ListSort from '../components/ListSort';
 import MobileNavigation from '../components/MobileNavigation';
 import PrimaryNavigation from '../components/PrimaryNavigation';
 import SecondaryNavigation from '../components/SecondaryNavigation';
 import UpdateForm from '../components/UpdateForm';
-import { BlankState, Button, Container, FormInput, InputGroup, Pagination, Spinner } from 'elemental';
+import { BlankState, Button, Container, InputGroup, Pagination, Spinner } from 'elemental';
 import { plural } from '../utils';
 
 const LatestListView = React.createClass({
@@ -89,81 +82,13 @@ const LatestListView = React.createClass({
   // HEADER
   // ==============================
 
-  updateSearch(e) {
-    clearTimeout(this._searchTimeout);
-    this.setState({
-      searchString: e.target.value,
-    });
-    var delay = e.target.value.length > 1 ? 150 : 0;
-    this._searchTimeout = setTimeout(() => {
-      delete this._searchTimeout;
-      CurrentListStore.setActiveSearch(this.state.searchString);
-    }, delay);
-  },
-  handleSearchClear() {
-    CurrentListStore.setActiveSearch('');
-    this.setState({ searchString: '' });
-    ReactDOM.findDOMNode(this.refs.listSearchInput).focus();
-  },
-  handleSearchKey(e) {
-    // clear on esc
-    if (e.which === 27) {
-      this.handleSearchClear();
-    }
-  },
   handlePageSelect(i) {
     CurrentListStore.setCurrentPage(i);
-  },
-  toggleManageMode(filter = !this.state.manageMode) {
-    this.setState({
-      manageMode: filter,
-      checkedItems: {},
-    });
   },
   toggleUpdateModal(filter = !this.state.showUpdateForm) {
     this.setState({
       showUpdateForm: filter,
     });
-  },
-  massUpdate() {
-    // TODO: Implement update multi-item
-    console.log('Update ALL the things!');
-  },
-  massDelete() {
-    let { checkedItems, list } = this.state;
-    let itemCount = plural(checkedItems, ('* ' + list.singular.toLowerCase()), ('* ' + list.plural.toLowerCase()));
-    let itemIds = Object.keys(checkedItems);
-
-    this.setState({
-      confirmationDialog: {
-        isOpen: true,
-        label: 'Delete',
-        body: `Are you sure you want to delete ${itemCount}?<br /><br />This cannot be undone.`,
-        onConfirmation: () => {
-          CurrentListStore.deleteItems(itemIds);
-          this.toggleManageMode();
-          this.removeConfirmationDialog();
-        },
-      },
-    });
-  },
-  handleManagementSelect(selection) {
-    if (selection === 'all') this.checkAllTableItems();
-    if (selection === 'none') this.uncheckAllTableItems();
-    if (selection === 'visible') this.checkAllTableItems();
-    return false;
-  },
-  renderSearch() {
-    var searchClearIcon = classnames('ListHeader__search__icon octicon', {
-      'is-search octicon-search': !this.state.searchString.length,
-      'is-clear octicon-x': this.state.searchString.length,
-    });
-    return (
-      <InputGroup.Section grow className="ListHeader__search">
-        <FormInput ref="listSearchInput" value={this.state.searchString} onChange={this.updateSearch} onKeyUp={this.handleSearchKey} placeholder="Search" className="ListHeader__searchbar-input" />
-        <button ref="listSearchClear" type="button" title="Clear search query" onClick={this.handleSearchClear} disabled={!this.state.searchString.length} className={searchClearIcon} />
-      </InputGroup.Section>
-    );
   },
   renderCreateButton() {
     if (this.state.list.nocreate) return null;
@@ -173,16 +98,13 @@ const LatestListView = React.createClass({
     } else {
       props.onClick = () => this.toggleCreateModal(true);
     }
+    const createButtonText = "Add tag";
     return (
       <InputGroup.Section className="ListHeader__create">
-        <Button {...props} title={'Create ' + this.state.list.singular}>
+        <Button {...props} title={createButtonText}>
           <span className="ListHeader__create__icon octicon octicon-plus" />
-          <span className="ListHeader__create__label">
-						Create
-          </span>
-          <span className="ListHeader__create__label--lg">
-						Create {this.state.list.singular}
-          </span>
+          <span className="ListHeader__create__label">{createButtonText}</span>
+          <span className="ListHeader__create__label--lg">{createButtonText}</span>
         </Button>
       </InputGroup.Section>
     );
@@ -197,76 +119,6 @@ const LatestListView = React.createClass({
         onCancel={this.removeConfirmationDialog}
         onConfirmation={props.onConfirmation}
       />
-    );
-  },
-  renderManagement() {
-    // WIP: Management mode currently under development, so the UI is disabled
-    // unless the KEYSTONE_DEV environment variable is set
-    if (!Keystone.devMode) return;
-
-    let { checkedItems, items, list, manageMode, pageSize } = this.state;
-    if (!items.count || (list.nodelete && list.noedit)) return;
-
-    let checkedItemCount = Object.keys(checkedItems).length;
-    let buttonNoteStyles = { color: '#999', fontWeight: 'normal' };
-
-    // action buttons
-    let actionUpdateButton = !list.noedit ? (
-      <InputGroup.Section>
-        <Button onClick={this.toggleUpdateModal} disabled={!checkedItemCount}>Update</Button>
-      </InputGroup.Section>
-    ) : null;
-    let actionDeleteButton = !list.nodelete ? (
-      <InputGroup.Section>
-        <Button onClick={this.massDelete} disabled={!checkedItemCount}>Delete</Button>
-      </InputGroup.Section>
-    ) : null;
-    let actionButtons = manageMode ? (
-      <InputGroup.Section>
-        <InputGroup contiguous>
-          {actionUpdateButton}
-          {actionDeleteButton}
-        </InputGroup>
-      </InputGroup.Section>
-    ) : null;
-
-    // select buttons
-    let selectAllButton = items.count > pageSize ? (
-      <InputGroup.Section>
-        <Button onClick={() => this.handleManagementSelect('all')} title="Select all rows (including those not visible)">All <small style={buttonNoteStyles}>({items.count})</small></Button>
-      </InputGroup.Section>
-    ) : null;
-    let selectButtons = manageMode ? (
-      <InputGroup.Section>
-        <InputGroup contiguous>
-          {selectAllButton}
-          <InputGroup.Section>
-            <Button onClick={() => this.handleManagementSelect('visible')} title="Select all rows">{items.count > pageSize ? 'Page' : 'All'} <small style={buttonNoteStyles}>({items.results.length})</small></Button>
-          </InputGroup.Section>
-          <InputGroup.Section>
-            <Button onClick={() => this.handleManagementSelect('none')} title="Deselect all rows">None</Button>
-          </InputGroup.Section>
-        </InputGroup>
-      </InputGroup.Section>
-    ) : null;
-
-    // selected count text
-    let selectedCountText = manageMode ? (
-      <InputGroup.Section grow>
-        <span style={{ color: '#666', display: 'inline-block', lineHeight: '2.4em', margin: 1 }}>{checkedItemCount} selected</span>
-      </InputGroup.Section>
-    ) : null;
-
-    // put it all together
-    return (
-      <InputGroup style={{ float: 'left', marginRight: '.75em' }}>
-        <InputGroup.Section>
-          <Button isActive={manageMode} onClick={() => this.toggleManageMode(!manageMode)}>Manage</Button>
-        </InputGroup.Section>
-        {selectButtons}
-        {actionButtons}
-        {selectedCountText}
-      </InputGroup>
     );
   },
   renderPagination() {
@@ -294,13 +146,8 @@ const LatestListView = React.createClass({
         <Container>
           <h2 className="ListHeader__title">
             {plural(items.count, ('* ' + list.singular), ('* ' + list.plural))}
-            <ListSort />
           </h2>
           <InputGroup className="ListHeader__bar">
-            {this.renderSearch()}
-            <ListFiltersAdd className="ListHeader__filter" />
-            <ListColumnsForm className="ListHeader__columns" />
-            <ListDownloadForm className="ListHeader__download" />
             <InputGroup.Section className="ListHeader__expand">
               <Button isActive={!this.state.constrainTableWidth} onClick={this.toggleTableWidth} title="Expand table width">
                 <span className="octicon octicon-mirror" />
@@ -308,9 +155,7 @@ const LatestListView = React.createClass({
             </InputGroup.Section>
             {this.renderCreateButton()}
           </InputGroup>
-          <ListFilters />
           <div style={{ height: 34, marginBottom: '2em' }}>
-            {this.renderManagement()}
             {this.renderPagination()}
             <span style={{ clear: 'both', display: 'table' }} />
           </div>
@@ -352,7 +197,7 @@ const LatestListView = React.createClass({
   },
   deleteTableItem(item, e) {
     // TODO: 
-    console.log("delete", item.name);
+    console.log('delete', item.name);
   },
   removeConfirmationDialog() {
     this.setState({
