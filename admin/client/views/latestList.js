@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+import xhr from 'xhr';
+import async from 'async';
 import CurrentListStore from '../stores/CurrentListStore';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import LatestForm from '../components/LatestForm';
@@ -16,27 +18,8 @@ import { plural } from '../utils';
 
 const LatestListView = React.createClass({
   getInitialState() {
-    // TODO: get post # & latest date
-    /*
-    items.results.forEach(tagId, () => {
-      // Get # of posts & the newest published post of specific tag
-      const filters = 'filters=' + encodeURIComponent(`{"tags":{"inverted":false,"value":["${tagId}"]}}&select=title,name,state,publishedDate&limit=1&sort=-publishedDate`);
-      xhr({
-        url: Keystone.adminPath + '/api/posts?' + filters,
-        responseType: 'json',
-      }, (err, resp, data) => {
-        if (err || !data || !data.results) {
-          console.error('Error loading items:', err);
-          return;
-        }
-        if (data.count > 0 && Array.isArray(data.results) && data.results.length > 0) {
-          // TODO: count, data.results[0].fields.publishedDate
-          data.results[0].fields.publishedDate;
-        }
-      });
-    });
-    */
     return {
+      tags: [],
       confirmationDialog: {
         isOpen: false,
       },
@@ -51,16 +34,60 @@ const LatestListView = React.createClass({
   },
   componentDidMount() {
     CurrentListStore.addChangeListener(this.updateStateFromStore);
+    this.loadTagsInfo();
   },
   componentWillUnmount() {
     CurrentListStore.removeChangeListener(this.updateStateFromStore);
+  },
+  loadTagsInfo() {
+    // Get tags that latest_order > 0
+    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}');
+    xhr({
+      url: Keystone.adminPath + '/api/tags?' + filters,
+      responseType: 'json',
+    }, (err, resp, data) => {
+      if (err || !data || !data.results) {
+        console.error('Error loading items:', err);
+        return;
+      }
+      async.map(data.results, (tag, done) => {
+        if (tag && tag.id) {
+          // Get # of posts, newest post date of tag
+          const filters = 'filters=' + encodeURIComponent(`{"tags":{"inverted":false,"value":["${tag.id}"]}}`) + '&select=title,name,state,publishedDate&limit=1&sort=-publishedDate';
+          xhr({
+            url: Keystone.adminPath + '/api/posts?' + filters,
+            responseType: 'json',
+          }, (err, resp, data) => {
+            if (err || !data) return done(err);
+            let count = 0;
+            let newestDate;
+            if (data.count > 0 && Array.isArray(data.results) && data.results.length > 0) {
+              count = data.count;
+              newestDate = data.results[0].fields.publishedDate;
+            }
+            done(null, {
+              id: tag.id,
+              name: tag.name,
+              numPost: count,
+              newestDate: newestDate
+            });
+          });
+        }
+      }, (err, results) => {
+        if (err) {
+          console.log(err);
+        } else {
+          this.setState({ tags: results });
+        }
+      });
+    });
   },
   updateStateFromStore() {
     this.setState(this.getStateFromStore());
   },
   getStateFromStore() {
     var state = {
-      columns: CurrentListStore.getActiveColumns(), // TODO: get columns for latest rows
+      columns: CurrentListStore.getActiveColumns(),
       currentPage: CurrentListStore.getCurrentPage(),
       filters: CurrentListStore.getActiveFilters(),
       items: CurrentListStore.getItems(),
@@ -145,7 +172,7 @@ const LatestListView = React.createClass({
       <div className="ListHeader">
         <Container>
           <h2 className="ListHeader__title">
-            {plural(items.count, ('* ' + list.singular), ('* ' + list.plural))}
+            {`${plural(items.count, ('* ' + list.singular), ('* ' + list.plural))} sorted by 最新`}
           </h2>
           <InputGroup className="ListHeader__bar">
             <InputGroup.Section className="ListHeader__expand">
@@ -276,6 +303,9 @@ const LatestListView = React.createClass({
             rowAlert={this.state.rowAlert}
             checkTableItem={this.checkTableItem}
           />
+          {this.state.tags.map((tag, index) => { // TODO: render DnD items
+            return <span key={`dndTag-${index}`}>{tag.name} {tag.numPost} {tag.newestDate ? tag.newestDate : '---'}</span>;
+          })}
           {this.renderNoSearchResults()}
         </Container>
       </div>
