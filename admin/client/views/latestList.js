@@ -16,6 +16,8 @@ import UpdateForm from '../components/UpdateForm';
 import { BlankState, Button, Container, InputGroup, Pagination, Spinner } from 'elemental';
 import { plural } from '../utils';
 
+import { LatestDndContainer } from './latestDndItem';
+
 const LatestListView = React.createClass({
   getInitialState() {
     return {
@@ -293,7 +295,11 @@ const LatestListView = React.createClass({
         {this.renderHeader()}
         <Container style={containerStyle}>
           <FlashMessages messages={this.props.messages} />
-          <ItemsTable
+          {this.state.columns.map((column, index) => {
+            return <span key={`column-${index}`}>{column.label}</span>;
+          })}
+          <LatestDndContainer slugs={this.state.tags} onSlugDrag={() => {}} />
+          {false && <ItemsTable
             deleteTableItem={this.deleteTableItem}
             list={this.state.list}
             columns={this.state.columns}
@@ -303,7 +309,8 @@ const LatestListView = React.createClass({
             rowAlert={this.state.rowAlert}
             checkTableItem={this.checkTableItem}
           />
-          {this.state.tags.map((tag, index) => { // TODO: render DnD items
+          }
+          {false && this.state.tags.map((tag, index) => { // TODO: render DnD items
             return <span key={`dndTag-${index}`}>{tag.name} {tag.numPost} {tag.newestDate ? tag.newestDate : '---'}</span>;
           })}
           {this.renderNoSearchResults()}

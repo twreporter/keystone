@@ -115,12 +115,59 @@ var LatestForm = React.createClass({
   },
 
   onValueChange(value) {
-    this.setState({ value });
+    this.setState({ value }, () => {
+      console.log('value change', this.state.value);
+    });
+  },
+
+  getMaxLatestOrder() {
+    let maxLatestOrder = 0;
+    // Find tags which latest_order > 0
+    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}');
+    xhr({
+      url: Keystone.adminPath + '/api/tags?' + filters,
+      responseType: 'json',
+    }, (err, resp, data) => {
+      if (err || !data || !data.results) {
+        console.error('Error loading items:', err);
+        return;
+      }
+      console.log('getMaxLatestOrder', data);
+      /*
+      data.results.forEach(tag => {
+        if (tag && tag.fields && Number.isInteger(tag.fields.latest_order) && tag.fields.latest_order > maxLatestOrder) {
+          maxLatestOrder = tag.fields.latest_order;
+        }
+      });
+      */
+    });
+    console.log('maxLatestOrder', maxLatestOrder);
+    return maxLatestOrder;
   },
 
   onAddTags() {
-    console.log("add tags", this.state.value);
-    // TODO: modify latest_order value when adding tags
+    const selectedTags = this.state.value;
+    const tagsArray = Array.isArray(selectedTags) ? selectedTags : selectedTags.split(',');
+    if (tagsArray && tagsArray.length > 0) {
+      const maxLatestOrder = this.getMaxLatestOrder();
+      console.log('getMaxLatestOrder', maxLatestOrder);
+      // TODO: error handling
+      tagsArray.forEach((tagID, index) => {
+        // const latestOrder = maxLatestOrder + index + 1;
+        // TODO: update latest_order field of every selected(id)
+        // http://localhost:3000/keystone/api/tags/5c3581c95d251f1700a64232
+        /*
+        xhr({
+          url: Keystone.adminPath + '/api/tags/' + tagID,
+          responseType: 'json',
+        }, (err, resp, data) => {
+          // how to update item??
+          // latestOrder
+        });
+        */
+      });
+    }
+    // Refresh page when tags are added
     window.location.reload();
   },
 
