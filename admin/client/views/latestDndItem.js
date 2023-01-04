@@ -60,6 +60,7 @@ class Slug extends Component {
       connectDropTarget(
         <div style={{ ...slugStyle, opacity }}>
           <div style={slugControlStyle}>
+          <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => {}}><span className={'octicon octicon-circle-slash'} /></button>
             <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px' }} />
           </div>
           <p style={slugTextStyle} title={text}>{text}</p>
@@ -150,7 +151,6 @@ class DndSlugs extends Component {
           numPost={slug.numPost}
           text={slug.name}
           date={slug.newestDate}
-          isPickedUp={slug.isPickedUpToRemove}
           onSlugDrag={onSlugDrag}
         /> : null;
     });

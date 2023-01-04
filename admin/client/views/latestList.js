@@ -295,11 +295,11 @@ const LatestListView = React.createClass({
         {this.renderHeader()}
         <Container style={containerStyle}>
           <FlashMessages messages={this.props.messages} />
-          {this.state.columns.map((column, index) => {
+          {this.state.columns.map((column, index) => { // TODO: style
             return <span key={`column-${index}`}>{column.label}</span>;
           })}
           <LatestDndContainer slugs={this.state.tags} onSlugDrag={() => {}} />
-          {false && <ItemsTable
+          {false && <ItemsTable // TODO: delete
             deleteTableItem={this.deleteTableItem}
             list={this.state.list}
             columns={this.state.columns}
@@ -310,7 +310,7 @@ const LatestListView = React.createClass({
             checkTableItem={this.checkTableItem}
           />
           }
-          {false && this.state.tags.map((tag, index) => { // TODO: render DnD items
+          {false && this.state.tags.map((tag, index) => { // TODO: delete
             return <span key={`dndTag-${index}`}>{tag.name} {tag.numPost} {tag.newestDate ? tag.newestDate : '---'}</span>;
           })}
           {this.renderNoSearchResults()}
