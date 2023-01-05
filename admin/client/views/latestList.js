@@ -113,7 +113,7 @@ const LatestListView = React.createClass({
       if (err || !data) return;
     });
     */
-   // TODO: is it better to use index?
+    // TODO: is it better to use index?
     this.setState({ latests: latests.filter(latest => latest && latest.id !== id) });
   },
   updateStateFromStore() {
