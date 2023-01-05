@@ -5,7 +5,7 @@ import xhr from 'xhr';
 import Select from 'react-select';
 import { Alert, Button, Form, Modal } from 'elemental';
 
-var LatestForm = React.createClass({
+var CreateLatestForm = React.createClass({
   displayName: 'CreateForm',
   propTypes: {
     err: React.PropTypes.object,
@@ -262,4 +262,4 @@ var LatestForm = React.createClass({
   },
 });
 
-module.exports = LatestForm;
+module.exports = CreateLatestForm;

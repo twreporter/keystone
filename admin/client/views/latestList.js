@@ -5,7 +5,7 @@ import xhr from 'xhr';
 import async from 'async';
 import CurrentListStore from '../stores/CurrentListStore';
 import ConfirmationDialog from '../components/ConfirmationDialog';
-import LatestForm from '../components/LatestForm';
+import CreateLatestForm from '../components/CreateLatestForm';
 import FlashMessages from '../components/FlashMessages';
 import Footer from '../components/Footer';
 import ItemsTable from '../components/ItemsTable';
@@ -365,7 +365,7 @@ const LatestListView = React.createClass({
           User={this.props.User}
           user={this.props.user}
           version={this.props.version} />
-        <LatestForm // TODO: rename to CreateLatestForm
+        <CreateLatestForm
           err={this.props.createFormErrors}
           isOpen={this.state.showCreateForm}
           list={this.state.list}
