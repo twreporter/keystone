@@ -54,13 +54,13 @@ class Slug extends Component {
 
     const opacity = isDragging ? 0 : 1;
     const dateObj = new Date(date);
-    const dateText = dateObj ? dateObj.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }) : 'unknown';
+    const dateText = dateObj && dateObj.toString() !== 'Invalid Date' ? dateObj.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }) : '---';
 
     return connectDragSource(
       connectDropTarget(
         <div style={{ ...slugStyle, opacity }}>
           <div style={slugControlStyle}>
-          <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => {}}><span className={'octicon octicon-circle-slash'} /></button>
+            <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => {}}><span className={'octicon octicon-circle-slash'} /></button>
             <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px' }} />
           </div>
           <p style={slugTextStyle} title={text}>{text}</p>
@@ -122,14 +122,14 @@ const cardTarget = {
   }
 };
 
-const DndSlug = DropTarget('slug', cardTarget, (connect) => ({
+const DndItem = DropTarget('slug', cardTarget, (connect) => ({
   connectDropTarget: connect.dropTarget()
 }))(DragSource('slug', cardSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))(Slug));
 
-class DndSlugs extends Component {
+class DndItems extends Component {
   constructor(props) {
     super(props);
     this.renderDndItems = this.renderDndItems.bind(this);
@@ -142,15 +142,15 @@ class DndSlugs extends Component {
       return null;
     }
 
-    return slugs.map((slug, index) => {
-      return slug
-        ? <DndSlug
+    return slugs.map((item, index) => {
+      return item
+        ? <DndItem
           key={`dnd-item-${index}`}
           index={index}
-          id={slug.id}
-          numPost={slug.numPost}
-          text={slug.name}
-          date={slug.newestDate}
+          id={item.id}
+          text={item.name}
+          numPost={item.numPost}
+          date={item.newestDate}
           onSlugDrag={onSlugDrag}
         /> : null;
     });
@@ -163,6 +163,6 @@ class DndSlugs extends Component {
   }
 }
 
-const LatestDndContainer = DragDropContext(DndSlugs);
+const LatestDndContainer = DragDropContext(DndItems);
 
 export { LatestDndContainer };
