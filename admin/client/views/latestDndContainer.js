@@ -44,12 +44,14 @@ const latestTextStyle = {
 class Latest extends Component {
   render() {
     const {
+      id, // TODO: is it better to use index?
       text,
       numPost,
       date,
       isDragging,
       connectDragSource,
       connectDropTarget,
+      onLatestRemove
     } = this.props;
 
     const opacity = isDragging ? 0 : 1;
@@ -60,7 +62,7 @@ class Latest extends Component {
       connectDropTarget(
         <div style={{ ...latestStyle, opacity }}>
           <div style={latestControlStyle}>
-            <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => {}}><span className={'octicon octicon-circle-slash'} /></button>
+            <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => onLatestRemove(id)}><span className={'octicon octicon-circle-slash'} /></button>
             <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px' }} />
           </div>
           <p style={latestTextStyle} title={text}>{text}</p>
@@ -80,6 +82,7 @@ Latest.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   numPost: PropTypes.number.isRequired,
   onLatestDrag: PropTypes.func.isRequired,
+  onLatestRemove: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired
 };
 
@@ -136,7 +139,7 @@ class DndLatests extends Component {
   }
 
   renderDndLatests() {
-    const { latests, onLatestDrag } = this.props;
+    const { latests, onLatestDrag, onLatestRemove } = this.props;
 
     if (!Array.isArray(latests) || latests.length <= 0) {
       return null;
@@ -152,6 +155,7 @@ class DndLatests extends Component {
           numPost={latest.numPost}
           date={latest.newestDate}
           onLatestDrag={onLatestDrag}
+          onLatestRemove={onLatestRemove}
         /> : null;
     });
   }

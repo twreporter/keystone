@@ -99,6 +99,23 @@ const LatestListView = React.createClass({
       })
     );
   },
+  onLatestRemove(id) {
+    const { latests } = this.state;
+    if (!Array.isArray(latests)) {
+      return;
+    }
+    // TODO: is it possible to not to refresh?
+    /*
+    xhr({
+      url: Keystone.adminPath + `/api/tags/${id}`,
+      responseType: 'json',
+    }, (err, resp, data) => {
+      if (err || !data) return;
+    });
+    */
+   // TODO: is it better to use index?
+    this.setState({ latests: latests.filter(latest => latest && latest.id !== id) });
+  },
   updateStateFromStore() {
     this.setState(this.getStateFromStore());
   },
@@ -313,7 +330,7 @@ const LatestListView = React.createClass({
           {this.state.columns.map((column, index) => { // TODO: style
             return <span key={`column-${index}`}>{column.label}</span>;
           })}
-          <LatestDndContainer latests={this.state.latests} onLatestDrag={this.onLatestDrag} />
+          <LatestDndContainer latests={this.state.latests} onLatestDrag={this.onLatestDrag} onLatestRemove={this.onLatestRemove} />
           {this.renderNoSearchResults()}
         </Container>
       </div>
