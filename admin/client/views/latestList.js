@@ -1,27 +1,25 @@
 'use strict';
 
 import React from 'react';
+import update from 'react/lib/update';
 import xhr from 'xhr';
 import async from 'async';
 import CurrentListStore from '../stores/CurrentListStore';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import CreateLatestForm from '../components/CreateLatestForm';
+import { LatestDndContainer } from './latestDndContainer';
 import FlashMessages from '../components/FlashMessages';
 import Footer from '../components/Footer';
-import ItemsTable from '../components/ItemsTable';
 import MobileNavigation from '../components/MobileNavigation';
 import PrimaryNavigation from '../components/PrimaryNavigation';
 import SecondaryNavigation from '../components/SecondaryNavigation';
-import UpdateForm from '../components/UpdateForm';
 import { BlankState, Button, Container, InputGroup, Pagination, Spinner } from 'elemental';
 import { plural } from '../utils';
-
-import { LatestDndContainer } from './latestDndContainer';
 
 const LatestListView = React.createClass({
   getInitialState() {
     return {
-      tags: [],
+      latests: [],
       confirmationDialog: {
         isOpen: false,
       },
@@ -79,10 +77,27 @@ const LatestListView = React.createClass({
         if (err) {
           console.log(err);
         } else {
-          this.setState({ tags: results });
+          this.setState({ latests: results });
         }
       });
     });
+  },
+  onLatestDrag(dragIndex, hoverIndex) {
+    const { latests } = this.state;
+    if (!Array.isArray(latests) || latests.length <= 0 || dragIndex < 0 || dragIndex >= latests.length || hoverIndex < 0 || hoverIndex >= latests.length) {
+      return;
+    }
+    const dragLatest = latests[dragIndex];
+    this.setState(
+      update(this.state, {
+        latests: {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragLatest]
+          ]
+        }
+      })
+    );
   },
   updateStateFromStore() {
     this.setState(this.getStateFromStore());
@@ -298,21 +313,7 @@ const LatestListView = React.createClass({
           {this.state.columns.map((column, index) => { // TODO: style
             return <span key={`column-${index}`}>{column.label}</span>;
           })}
-          <LatestDndContainer latests={this.state.tags} onLatestDrag={() => {}} />
-          {false && <ItemsTable // TODO: delete
-            deleteTableItem={this.deleteTableItem}
-            list={this.state.list}
-            columns={this.state.columns}
-            items={this.state.items}
-            manageMode={this.state.manageMode}
-            checkedItems={this.state.checkedItems}
-            rowAlert={this.state.rowAlert}
-            checkTableItem={this.checkTableItem}
-          />
-          }
-          {false && this.state.tags.map((tag, index) => { // TODO: delete
-            return <span key={`dndTag-${index}`}>{tag.name} {tag.numPost} {tag.newestDate ? tag.newestDate : '---'}</span>;
-          })}
+          <LatestDndContainer latests={this.state.latests} onLatestDrag={this.onLatestDrag} />
           {this.renderNoSearchResults()}
         </Container>
       </div>
@@ -372,12 +373,6 @@ const LatestListView = React.createClass({
           onCancel={() => this.toggleCreateModal(false)}
           values={this.props.createFormData}
         />
-        <UpdateForm
-          isOpen={this.state.showUpdateForm}
-          itemIds={Object.keys(this.state.checkedItems)}
-          list={this.state.list}
-          onCancel={() => this.toggleUpdateModal(false)} />
-        {this.renderConfirmationDialog()}
       </div>
     );
   },

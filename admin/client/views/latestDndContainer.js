@@ -145,7 +145,7 @@ class DndLatests extends Component {
     return latests.map((latest, index) => {
       return latest
         ? <DndLatest
-          key={`dnd-latest-${index}`}
+          key={`latest-${latest.id}`}
           index={index}
           id={latest.id}
           text={latest.name}
