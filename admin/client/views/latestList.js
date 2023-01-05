@@ -16,7 +16,7 @@ import UpdateForm from '../components/UpdateForm';
 import { BlankState, Button, Container, InputGroup, Pagination, Spinner } from 'elemental';
 import { plural } from '../utils';
 
-import { LatestDndContainer } from './latestDndItem';
+import { LatestDndContainer } from './latestDndContainer';
 
 const LatestListView = React.createClass({
   getInitialState() {
@@ -298,7 +298,7 @@ const LatestListView = React.createClass({
           {this.state.columns.map((column, index) => { // TODO: style
             return <span key={`column-${index}`}>{column.label}</span>;
           })}
-          <LatestDndContainer slugs={this.state.tags} onSlugDrag={() => {}} />
+          <LatestDndContainer latests={this.state.tags} onLatestDrag={() => {}} />
           {false && <ItemsTable // TODO: delete
             deleteTableItem={this.deleteTableItem}
             list={this.state.list}
