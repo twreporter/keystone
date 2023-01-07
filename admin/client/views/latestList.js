@@ -116,6 +116,9 @@ const LatestListView = React.createClass({
     // TODO: is it better to use index?
     this.setState({ latests: latests.filter(latest => latest && latest.id !== id) });
   },
+  onSaveLatest() {
+    console.log("onSaveLatest");
+  },
   updateStateFromStore() {
     this.setState(this.getStateFromStore());
   },
@@ -331,6 +334,7 @@ const LatestListView = React.createClass({
             return <span key={`column-${index}`}>{column.label}</span>;
           })}
           <LatestDndContainer latests={this.state.latests} onLatestDrag={this.onLatestDrag} onLatestRemove={this.onLatestRemove} />
+          <Button type="primary" onClick={this.onSaveLatest}>Save</Button>
           {this.renderNoSearchResults()}
         </Container>
       </div>
