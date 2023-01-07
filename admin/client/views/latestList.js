@@ -99,15 +99,10 @@ const LatestListView = React.createClass({
       })
     );
   },
-  onLatestRemove(id) {
-    const { latests } = this.state;
-    if (!Array.isArray(latests)) {
-      return;
-    }
-    // TODO: extract to single function
+  updateLatestOrder(id, latestOrder) {
     let formData = new FormData();
     formData.append('action', 'updateItem');
-    formData.append('latest_order', 0);
+    formData.append('latest_order', latestOrder);
     xhr({
       url: Keystone.adminPath + `/api/tags/${id}`,
       method: 'POST',
@@ -131,12 +126,18 @@ const LatestListView = React.createClass({
         body = JSON.parse(body);
       } catch (e) {
         console.log('Error parsing results json:', e, body);
-        // return callback(e);
       }
-      // callback(null, body);
     });
+  },
+  onLatestRemove(id) {
+    const { latests } = this.state;
+    if (!Array.isArray(latests)) {
+      return;
+    }
     // TODO: is it better to use index?
-    this.setState({ latests: latests.filter(latest => latest && latest.id !== id) });
+    this.setState({ latests: latests.filter(latest => latest && latest.id !== id) }, () => {
+      this.updateLatestOrder(id, 0);
+    });
   },
   onSaveLatest() {
     console.log('onSaveLatest');
