@@ -132,14 +132,11 @@ var CreateLatestForm = React.createClass({
         console.error('Error loading items:', err);
         return;
       }
-      console.log('getMaxLatestOrder', data);
-      /*
       data.results.forEach(tag => {
         if (tag && tag.fields && Number.isInteger(tag.fields.latest_order) && tag.fields.latest_order > maxLatestOrder) {
           maxLatestOrder = tag.fields.latest_order;
         }
       });
-      */
     });
     console.log('maxLatestOrder', maxLatestOrder);
     return maxLatestOrder;
@@ -149,22 +146,21 @@ var CreateLatestForm = React.createClass({
     const selectedTags = this.state.value;
     const tagsArray = Array.isArray(selectedTags) ? selectedTags : selectedTags.split(',');
     if (tagsArray && tagsArray.length > 0) {
-      const maxLatestOrder = this.getMaxLatestOrder();
-      console.log('getMaxLatestOrder', maxLatestOrder);
-      // TODO: error handling
+      // TODO: getMaxLatestOrder
+      // const maxLatestOrder = this.getMaxLatestOrder();
+      // console.log('getMaxLatestOrder', maxLatestOrder);
       tagsArray.forEach((tagID, index) => {
-        // const latestOrder = maxLatestOrder + index + 1;
-        // TODO: update latest_order field of every selected(id)
-        // http://localhost:3000/keystone/api/tags/5c3581c95d251f1700a64232
-        /*
+        const latestOrder = 1 + index;// maxLatestOrder + index + 1;
+        let formData = new FormData();
+        formData.append('action', 'updateItem');
+        formData.append('latest_order', latestOrder);
         xhr({
-          url: Keystone.adminPath + '/api/tags/' + tagID,
-          responseType: 'json',
-        }, (err, resp, data) => {
-          // how to update item??
-          // latestOrder
+          url: Keystone.adminPath + `/api/tags/${tagID}`,
+          method: 'POST',
+          headers: Keystone.csrf.header,
+          body: formData,
+        }, (err, resp, body) => {
         });
-        */
       });
     }
     // Refresh page when tags are added

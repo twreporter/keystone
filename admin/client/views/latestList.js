@@ -104,20 +104,42 @@ const LatestListView = React.createClass({
     if (!Array.isArray(latests)) {
       return;
     }
-    // TODO: is it possible to not to refresh?
-    /*
+    // TODO: extract to single function
+    let formData = new FormData();
+    formData.append('action', 'updateItem');
+    formData.append('latest_order', 0);
     xhr({
       url: Keystone.adminPath + `/api/tags/${id}`,
-      responseType: 'json',
-    }, (err, resp, data) => {
-      if (err || !data) return;
+      method: 'POST',
+      headers: Keystone.csrf.header,
+      body: formData,
+    }, (err, resp, body) => {
+      // if (err) return callback(err);
+      // TODO: check resp.statusCode
+      /*
+        if (resp.statusCode === 200) {
+          callback(null, data);
+        } else {
+          // NOTE: xhr callback will be called with an Error if
+          //  there is an error in the browser that prevents
+          //  sending the request. A HTTP 500 response is not
+          //  going to cause an error to be returned.
+          callback(data, null);
+        }
+      */
+      try {
+        body = JSON.parse(body);
+      } catch (e) {
+        console.log('Error parsing results json:', e, body);
+        // return callback(e);
+      }
+      // callback(null, body);
     });
-    */
     // TODO: is it better to use index?
     this.setState({ latests: latests.filter(latest => latest && latest.id !== id) });
   },
   onSaveLatest() {
-    console.log("onSaveLatest");
+    console.log('onSaveLatest');
   },
   updateStateFromStore() {
     this.setState(this.getStateFromStore());
