@@ -171,7 +171,7 @@ var CreateLatestForm = React.createClass({
           }
           // Refresh page when tags are added
           window.location.reload();
-       });
+        });
       }, err => {
         console.log('Get max latest order failed!', err);
       });
