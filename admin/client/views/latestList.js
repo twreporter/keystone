@@ -139,9 +139,6 @@ const LatestListView = React.createClass({
       this.updateLatestOrder(id, 0);
     });
   },
-  onSaveLatest() {
-    console.log('onSaveLatest');
-  },
   updateStateFromStore() {
     this.setState(this.getStateFromStore());
   },
@@ -357,7 +354,6 @@ const LatestListView = React.createClass({
             return <span key={`column-${index}`}>{column.label}</span>;
           })}
           <LatestDndContainer latests={this.state.latests} onLatestDrag={this.onLatestDrag} onLatestRemove={this.onLatestRemove} />
-          <Button type="primary" onClick={this.onSaveLatest}>Save</Button>
           {this.renderNoSearchResults()}
         </Container>
       </div>
