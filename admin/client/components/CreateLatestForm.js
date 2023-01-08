@@ -1,9 +1,10 @@
 import React from 'react';
-import Fields from '../fields';
-import InvalidFieldType from './InvalidFieldType';
 import xhr from 'xhr';
+import async from 'async';
 import Select from 'react-select';
 import { Alert, Button, Form, Modal } from 'elemental';
+import Fields from '../fields';
+import InvalidFieldType from './InvalidFieldType';
 
 var CreateLatestForm = React.createClass({
   displayName: 'CreateForm',
@@ -115,56 +116,66 @@ var CreateLatestForm = React.createClass({
   },
 
   onValueChange(value) {
-    this.setState({ value }, () => {
-      console.log('value change', this.state.value);
-    });
+    this.setState({ value });
   },
 
   getMaxLatestOrder() {
-    let maxLatestOrder = 0;
-    // Find tags which latest_order > 0
-    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}');
-    xhr({
-      url: Keystone.adminPath + '/api/tags?' + filters,
-      responseType: 'json',
-    }, (err, resp, data) => {
-      if (err || !data || !data.results) {
-        console.error('Error loading items:', err);
-        return;
-      }
-      data.results.forEach(tag => {
-        if (tag && tag.fields && Number.isInteger(tag.fields.latest_order) && tag.fields.latest_order > maxLatestOrder) {
-          maxLatestOrder = tag.fields.latest_order;
+    return new Promise((resolve, reject) => {
+      // Find tags which latest_order > 0
+      const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}');
+      xhr({
+        url: Keystone.adminPath + '/api/tags?' + filters,
+        responseType: 'json',
+      }, (err, resp, data) => {
+        if (err) {
+          return reject(err);
         }
+        if (!data || !data.results) {
+          return reject(new Error('Empty query result!'));
+        }
+        let maxLatestOrder = 0;
+        data.results.forEach(tag => {
+          if (tag && tag.fields && Number.isInteger(tag.fields.latest_order) && tag.fields.latest_order > maxLatestOrder) {
+            maxLatestOrder = tag.fields.latest_order;
+          }
+        });
+        resolve(maxLatestOrder);
       });
     });
-    console.log('maxLatestOrder', maxLatestOrder);
-    return maxLatestOrder;
   },
-
   onAddTags() {
     const selectedTags = this.state.value;
     const tagsArray = Array.isArray(selectedTags) ? selectedTags : selectedTags.split(',');
     if (tagsArray && tagsArray.length > 0) {
-      // TODO: getMaxLatestOrder
-      // const maxLatestOrder = this.getMaxLatestOrder();
-      // console.log('getMaxLatestOrder', maxLatestOrder);
-      tagsArray.forEach((tagID, index) => {
-        const latestOrder = 1 + index;// maxLatestOrder + index + 1;
-        let formData = new FormData();
-        formData.append('action', 'updateItem');
-        formData.append('latest_order', latestOrder);
-        xhr({
-          url: Keystone.adminPath + `/api/tags/${tagID}`,
-          method: 'POST',
-          headers: Keystone.csrf.header,
-          body: formData,
-        }, (err, resp, body) => {
-        });
+      this.getMaxLatestOrder().then(maxLatestOrder => {
+        async.forEachOf(tagsArray, (tagID, index, callback) => {
+          const newLatestOrder = maxLatestOrder + index + 1;
+          let formData = new FormData();
+          formData.append('action', 'updateItem');
+          formData.append('latest_order', newLatestOrder);
+          xhr({
+            url: Keystone.adminPath + `/api/tags/${tagID}`,
+            method: 'POST',
+            headers: Keystone.csrf.header,
+            body: formData,
+          }, (err, resp, body) => {
+            if (err) {
+              console.log(`Update tag's(${tagID}) latest_order to ${newLatestOrder} failed!`, err);
+              return callback(err);
+            }
+            callback();
+          });
+        }, err => {
+          if (err) {
+            console.log('Update latest_order of tags failed!', err);
+          }
+          // Refresh page when tags are added
+          window.location.reload();
+       });
+      }, err => {
+        console.log('Get max latest order failed!', err);
       });
     }
-    // Refresh page when tags are added
-    window.location.reload();
   },
 
   renderAlerts() {
