@@ -16,6 +16,44 @@ import SecondaryNavigation from '../components/SecondaryNavigation';
 import { BlankState, Button, Container, InputGroup, Pagination, Spinner } from 'elemental';
 import { plural } from '../utils';
 
+const latestColumnContainerStyle = {
+  borderBottomWidth: '2px',
+  borderBottomStyle: 'solid',
+  borderBottomColor: 'rgba(0, 0, 0, 0.06)',
+  paddingBottom: '10px',
+  marginBottom: '10px',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+};
+
+const latestColumnTextStyle = {
+  color: '#999',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis'
+};
+
+const latestColumns = [
+  {
+    name: '最新',
+    style: {
+      width: '500px',
+      ...latestColumnTextStyle
+    }
+  },{
+    name: '文章數量',
+    style: {
+      ...latestColumnTextStyle
+    }
+  },{
+    name: '最新文章日期',
+    style: {
+      width: '280px',
+      ...latestColumnTextStyle
+    }
+  }
+];
+
 const LatestListView = React.createClass({
   getInitialState() {
     return {
@@ -350,9 +388,11 @@ const LatestListView = React.createClass({
         {this.renderHeader()}
         <Container style={containerStyle}>
           <FlashMessages messages={this.props.messages} />
-          {this.state.columns.map((column, index) => { // TODO: style
-            return <span key={`column-${index}`}>{column.label}</span>;
-          })}
+          <div style={latestColumnContainerStyle}>
+            {latestColumns.map((column, index) => {
+              return <span style={column.style} key={`column-${index}`}>{column.name}</span>;
+            })}
+          </div>
           <LatestDndContainer latests={this.state.latests} onLatestDrag={this.onLatestDrag} onLatestRemove={this.onLatestRemove} />
           {this.renderNoSearchResults()}
         </Container>
