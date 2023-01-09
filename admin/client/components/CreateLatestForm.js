@@ -2,7 +2,7 @@ import React from 'react';
 import xhr from 'xhr';
 import async from 'async';
 import Select from 'react-select';
-import { Alert, Button, Form, Modal } from 'elemental';
+import { Alert, Button, Modal } from 'elemental';
 import Fields from '../fields';
 import InvalidFieldType from './InvalidFieldType';
 
@@ -77,9 +77,7 @@ var CreateLatestForm = React.createClass({
   handleChange(event) {
     var values = Object.assign({}, this.state.values);
     values[event.path] = event.value;
-    this.setState({
-      values: values,
-    });
+    this.setState({ values: values });
   },
   getFieldProps(field) {
     var props = Object.assign({}, field);
@@ -90,35 +88,9 @@ var CreateLatestForm = React.createClass({
     props.key = field.path;
     return props;
   },
-
-  submitForm(event) {
-    // If there is an onCreate function,
-    // 	create new item using async create api instead
-    // 	of using a POST request to the list endpoint.
-    if (this.props.onCreate) {
-      event.preventDefault();
-      let createForm = this.refs.createForm.getDOMNode();
-      let formData = new FormData(createForm);
-      this.props.list.createItem(formData, (err, data) => {
-        if (data) {
-          this.props.onCreate(data);
-          this.setState({
-            values: {},
-            err: null,
-          }); // Clear form
-        } else {
-          this.setState({
-            err: err.detail,
-          });
-        }
-      });
-    }
-  },
-
   onValueChange(value) {
     this.setState({ value });
   },
-
   getMaxLatestOrder() {
     return new Promise((resolve, reject) => {
       // Find tags which latest_order > 0
@@ -177,7 +149,6 @@ var CreateLatestForm = React.createClass({
       });
     }
   },
-
   renderAlerts() {
     if (!this.state.err || !this.state.err.errors) return;
 
@@ -207,7 +178,6 @@ var CreateLatestForm = React.createClass({
 
     var form = [];
     var list = this.props.list;
-    var formAction = `${Keystone.adminPath}/${list.path}`;
     var nameField = this.props.list.nameField;
     var focusRef;
 
@@ -236,10 +206,8 @@ var CreateLatestForm = React.createClass({
     });
 
     return (
-      <Form ref="createForm" type="horizontal" encType="multipart/form-data" method="post" action={formAction} onSubmit={this.submitForm} className="create-form">
-        <input type="hidden" name="action" value="create" />
-        <input type="hidden" name={Keystone.csrf.key} value={Keystone.csrf.value} />
-        <Modal.Header text={'Add new tags'} onClose={this.props.onCancel} showCloseButton />
+      <div>
+        <Modal.Header text="Add new tags" onClose={this.props.onCancel} showCloseButton />
         <Modal.Body>
           <Select.Async
             multi
@@ -257,7 +225,7 @@ var CreateLatestForm = React.createClass({
           <Button type="success" onClick={this.onAddTags} disabled={!this.state.value}>Add</Button>
           <Button type="link-cancel" onClick={this.props.onCancel}>Cancel</Button>
         </Modal.Footer>
-      </Form>
+      </div>
     );
   },
   render() {
