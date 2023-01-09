@@ -40,12 +40,12 @@ const latestColumns = [
       width: '500px',
       ...latestColumnTextStyle
     }
-  },{
+  }, {
     name: '文章數量',
     style: {
       ...latestColumnTextStyle
     }
-  },{
+  }, {
     name: '最新文章日期',
     style: {
       width: '280px',
