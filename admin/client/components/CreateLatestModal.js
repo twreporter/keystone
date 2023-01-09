@@ -154,7 +154,6 @@ var CreateLatestModal = React.createClass({
     let errors = this.state.err.errors;
     var alertContent;
     var errorCount = Object.keys(errors).length;
-
     var messages = Object.keys(errors).map((path) => {
       return errorCount > 1 ? <li key={path}>{errors[path].message}</li> : <div key={path}>{errors[path].message}</div>;
     });
