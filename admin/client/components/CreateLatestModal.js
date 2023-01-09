@@ -6,8 +6,8 @@ import { Alert, Button, Modal } from 'elemental';
 import Fields from '../fields';
 import InvalidFieldType from './InvalidFieldType';
 
-var CreateLatestForm = React.createClass({
-  displayName: 'CreateForm',
+var CreateLatestModal = React.createClass({
+  displayName: 'CreateLatestModal',
   propTypes: {
     err: React.PropTypes.object,
     isOpen: React.PropTypes.bool,
@@ -237,4 +237,4 @@ var CreateLatestForm = React.createClass({
   },
 });
 
-module.exports = CreateLatestForm;
+module.exports = CreateLatestModal;
