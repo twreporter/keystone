@@ -13,11 +13,9 @@ const textStyle = {
 };
 
 const dateStyle = {
-  width: '260px',
+  width: '280px',
   paddingRight: '5px',
-  flex: '1',
-  display: 'flex',
-  justifyContent: 'flex-end'
+  alignItems: 'center'
 };
 
 const latestStyle = {
@@ -27,18 +25,26 @@ const latestStyle = {
   marginBottom: '.5rem',
   cursor: 'grab',
   display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
   alignItems: 'center'
 };
 
 const latestControlStyle = {
+  width: '500px',
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center'
 };
 
+const numPostStyle = {
+  width: '100px',
+  paddingLeft: '10px',
+  ...textStyle,
+};
+
 const latestTextStyle = {
   ...textStyle,
-  paddingLeft: '25px'
 };
 
 class Latest extends Component {
@@ -63,10 +69,10 @@ class Latest extends Component {
         <div style={{ ...latestStyle, opacity }}>
           <div style={latestControlStyle}>
             <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => onLatestRemove(id)}><span className={'octicon octicon-circle-slash'} /></button>
-            <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px' }} />
+            <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px', marginRight: '10px' }} />
+            <p style={latestTextStyle} title={text}>{text}</p>
           </div>
-          <p style={latestTextStyle} title={text}>{text}</p>
-          <p style={latestTextStyle} title={numPost}>{numPost}</p>
+          <span style={numPostStyle} title={numPost}>{numPost}</span>
           <div style={dateStyle}><p style={textStyle} title={dateText}>{dateText}</p></div>
         </div>
       )
