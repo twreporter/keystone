@@ -4,7 +4,6 @@ import async from 'async';
 import Select from 'react-select';
 import { Alert, Button, Modal } from 'elemental';
 import Fields from '../fields';
-import InvalidFieldType from './InvalidFieldType';
 
 var CreateLatestModal = React.createClass({
   displayName: 'CreateLatestModal',
@@ -176,7 +175,6 @@ var CreateLatestModal = React.createClass({
   renderSelect() {
     if (!this.props.isOpen) return;
 
-    var form = [];
     var list = this.props.list;
     var nameField = this.props.list.nameField;
     var focusRef;
@@ -189,20 +187,17 @@ var CreateLatestModal = React.createClass({
         nameFieldProps.placeholder = nameField.label;
         nameFieldProps.label = false;
       }
-      form.push(React.createElement(Fields[nameField.type], nameFieldProps));
     }
 
     Object.keys(list.initialFields).forEach(key => {
       var field = list.fields[list.initialFields[key]];
       if (typeof Fields[field.type] !== 'function') {
-        form.push(React.createElement(InvalidFieldType, { type: field.type, path: field.path, key: field.path }));
         return;
       }
       var fieldProps = this.getFieldProps(field);
       if (!focusRef) {
         fieldProps.ref = focusRef = 'focusTarget';
       }
-      form.push(React.createElement(Fields[field.type], fieldProps));
     });
 
     return (
