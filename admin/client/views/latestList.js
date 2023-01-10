@@ -299,36 +299,7 @@ const LatestListView = React.createClass({
   toggleCreateModal(visible) {
     this.setState({ isCreateModalOpen: visible });
   },
-  renderBlankStateCreateButton() {
-    var props = { type: 'success' };
-    if (this.state.list.nocreate) return null;
-    if (this.state.list.autocreate) {
-      props.href = '?new' + this.props.csrfQuery;
-    } else {
-      props.onClick = () => this.toggleCreateModal(true);
-    }
-    return (
-      <Button {...props}>
-        <span className="octicon octicon-plus" />
-				Create {this.state.list.singular}
-      </Button>
-    );
-  },
-  renderBlankState() {
-    if (!this.state.showBlankState) return null;
-    return (
-      <Container>
-        <FlashMessages messages={this.props.messages} />
-        <BlankState style={{ marginTop: 40 }}>
-          <BlankState.Heading>No {this.state.list.plural.toLowerCase()} found&hellip;</BlankState.Heading>
-          {this.renderBlankStateCreateButton()}
-        </BlankState>
-      </Container>
-    );
-  },
   renderActiveState() {
-    if (this.state.showBlankState) return null;
-
     let containerStyle = {
       transition: 'max-width 160ms ease-out',
       msTransition: 'max-width 160ms ease-out',
@@ -338,7 +309,6 @@ const LatestListView = React.createClass({
     if (!this.state.constrainTableWidth) {
       containerStyle.maxWidth = '100%';
     }
-
     return (
       <div>
         {this.renderHeader()}
@@ -350,23 +320,14 @@ const LatestListView = React.createClass({
             })}
           </div>
           <LatestDndContainer latests={this.state.latests} onLatestDrag={this.onLatestDrag} onLatestRemove={this.onLatestRemove} />
-          {this.renderNoSearchResults()}
+          {this.state.latests && this.state.latests.length === 0 && 
+            <BlankState style={{ marginTop: 20, marginBottom: 20 }}>
+              <span className="octicon octicon-search" style={{ fontSize: 32, marginBottom: 20 }} />
+              <BlankState.Heading>Empty latests.</BlankState.Heading>
+            </BlankState>
+          }
         </Container>
       </div>
-    );
-  },
-  renderNoSearchResults() {
-    if (this.state.items.results.length) return null;
-    let matching = this.state.search;
-    if (this.state.filters.length) {
-      matching += (matching ? ' and ' : '') + plural(this.state.filters.length, '* filter', '* filters');
-    }
-    matching = matching ? ' found matching ' + matching : '.';
-    return (
-      <BlankState style={{ marginTop: 20, marginBottom: 20 }}>
-        <span className="octicon octicon-search" style={{ fontSize: 32, marginBottom: 20 }} />
-        <BlankState.Heading>No {this.state.list.plural.toLowerCase()}{matching}</BlankState.Heading>
-      </BlankState>
     );
   },
   render() {
@@ -392,7 +353,6 @@ const LatestListView = React.createClass({
             lists={this.props.nav.currentSection.lists} />
         </header>
         <div className="keystone-body">
-          {this.renderBlankState()}
           {this.renderActiveState()}
         </div>
         <Footer
