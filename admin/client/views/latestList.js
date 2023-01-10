@@ -65,7 +65,7 @@ const LatestListView = React.createClass({
       constrainTableWidth: true,
       manageMode: false,
       searchString: '',
-      showCreateForm: window.location.search === '?create' || Keystone.createFormErrors,
+      isCreateModalOpen: window.location.search === '?create' || Keystone.createFormErrors,
       showUpdateForm: false,
       ...this.getStateFromStore(),
     };
@@ -285,42 +285,6 @@ const LatestListView = React.createClass({
       </div>
     );
   },
-
-  // ==============================
-  // TABLE
-  // ==============================
-
-  checkTableItem(item, e) {
-    e.preventDefault();
-    let newCheckedItems = { ...this.state.checkedItems };
-    let itemId = item.id;
-    if (this.state.checkedItems[itemId]) {
-      delete newCheckedItems[itemId];
-    } else {
-      newCheckedItems[itemId] = true;
-    }
-    this.setState({
-      checkedItems: newCheckedItems,
-    });
-  },
-  checkAllTableItems() {
-    let checkedItems = {};
-    this.state.items.results.forEach(item => {
-      checkedItems[item.id] = true;
-    });
-    this.setState({
-      checkedItems: checkedItems,
-    });
-  },
-  uncheckAllTableItems() {
-    this.setState({
-      checkedItems: {},
-    });
-  },
-  deleteTableItem(item, e) {
-    // TODO: delete operation
-    console.log('delete', item.name);
-  },
   removeConfirmationDialog() {
     this.setState({
       confirmationDialog: {
@@ -329,19 +293,10 @@ const LatestListView = React.createClass({
     });
   },
   toggleTableWidth() {
-    this.setState({
-      constrainTableWidth: !this.state.constrainTableWidth,
-    });
+    this.setState({ constrainTableWidth: !this.state.constrainTableWidth });
   },
-
-  // ==============================
-  // COMMON
-  // ==============================
-
   toggleCreateModal(visible) {
-    this.setState({
-      showCreateForm: visible,
-    });
+    this.setState({ isCreateModalOpen: visible });
   },
   renderBlankStateCreateButton() {
     var props = { type: 'success' };
@@ -448,7 +403,7 @@ const LatestListView = React.createClass({
           version={this.props.version} />
         <CreateLatestModal
           err={this.props.createFormErrors}
-          isOpen={this.state.showCreateForm}
+          isOpen={this.state.isCreateModalOpen}
           list={this.state.list}
           onCancel={() => this.toggleCreateModal(false)}
           values={this.props.createFormData}
