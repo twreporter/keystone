@@ -9,6 +9,8 @@ import Footer from '../components/Footer';
 import MobileNavigation from '../components/MobileNavigation';
 import PrimaryNavigation from '../components/PrimaryNavigation';
 
+const latestList = 'latests';
+
 var listsByKey = {};
 Keystone.lists.forEach((list) => {
   listsByKey[list.key] = list;
@@ -19,6 +21,7 @@ var ListTile = React.createClass({
     count: React.PropTypes.string,
     href: React.PropTypes.string,
     label: React.PropTypes.string,
+    noEdit: React.PropTypes.bool,
   },
   render() {
     return (
@@ -26,9 +29,9 @@ var ListTile = React.createClass({
         <span className="dashboard-group__list-inner">
           <a href={this.props.href} className="dashboard-group__list-tile">
             <div className="dashboard-group__list-label">{this.props.label}</div>
-            <div className="dashboard-group__list-count">{this.props.count}</div>
+            <div className="dashboard-group__list-count">{this.props.noEdit ? 'Edit items' : this.props.count}</div>
           </a>
-          <a href={this.props.href + '?create'} className="dashboard-group__list-create octicon octicon-plus" title="Create" tabIndex="-1" />
+          {!this.props.noEdit && <a href={this.props.href + '?create'} className="dashboard-group__list-create octicon octicon-plus" title="Create" tabIndex="-1" />}
         </span>
       </div>
     );
@@ -91,7 +94,7 @@ var HomeView = React.createClass({
   renderFlatNav() {
     let lists = this.props.navLists.map((list) => {
       var href = list.external ? list.path : `${Keystone.adminPath}/${list.path}`;
-      return <ListTile key={list.path} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
+      return <ListTile key={list.path} noEdit={list.path === latestList} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
     });
     return <div className="dashboard-group__lists">{lists}</div>;
   },
@@ -108,7 +111,7 @@ var HomeView = React.createClass({
               <div className="dashboard-group__lists">
                 {navSection.lists.map((list) => {
                   var href = list.external ? list.path : `${Keystone.adminPath}/${list.path}`;
-                  return <ListTile key={list.path} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
+                  return <ListTile key={list.path} noEdit={list.path === latestList} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
                 })}
               </div>
             </div>
@@ -129,7 +132,7 @@ var HomeView = React.createClass({
         <div className="dashboard-group__lists">
           {this.props.orphanedLists.map((list) => {
             var href = list.external ? list.path : `${Keystone.adminPath}/${list.path}`;
-            return <ListTile key={list.path} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
+            return <ListTile key={list.path} noEdit={list.path === latestList} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
           })}
         </div>
       </div>
