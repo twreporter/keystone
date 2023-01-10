@@ -152,7 +152,7 @@ const LatestListView = React.createClass({
         async.forEachOf(this.state.latests, (latest, index) => {
           this.updateLatestOrder(latest.id, index + 1);
         }, err => {
-          console.error('Update latests failed: ', err);
+          if (err) console.error('Update latests failed: ', err);
         });
       });
   },
@@ -164,7 +164,7 @@ const LatestListView = React.createClass({
     this.updateLatestOrder(id, 0).then(resolved => {
       this.setState({ latests: latests.filter(latest => latest && latest.id !== id) });
     }, err => {
-      console.error('Remove latest failed: ', err);
+      if (err) console.error('Remove latest failed: ', err);
     });
   },
   getStateFromStore() {
