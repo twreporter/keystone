@@ -66,7 +66,6 @@ const LatestListView = React.createClass({
       manageMode: false,
       searchString: '',
       isCreateModalOpen: window.location.search === '?create' || Keystone.createFormErrors,
-      showUpdateForm: false,
       ...this.getStateFromStore(),
     };
   },
@@ -210,9 +209,6 @@ const LatestListView = React.createClass({
   handlePageSelect(i) {
     CurrentListStore.setCurrentPage(i);
   },
-  toggleUpdateModal(filter = !this.state.showUpdateForm) {
-    this.setState({ showUpdateForm: filter });
-  },
   renderCreateButton() {
     if (this.state.list.nocreate) return null;
     var props = { type: 'success' };
@@ -320,8 +316,8 @@ const LatestListView = React.createClass({
             })}
           </div>
           <LatestDndContainer latests={this.state.latests} onLatestDrag={this.onLatestDrag} onLatestRemove={this.onLatestRemove} />
-          {this.state.latests && this.state.latests.length === 0 && 
-            <BlankState style={{ marginTop: 20, marginBottom: 20 }}>
+          {this.state.latests && this.state.latests.length === 0
+            && <BlankState style={{ marginTop: 20, marginBottom: 20 }}>
               <span className="octicon octicon-search" style={{ fontSize: 32, marginBottom: 20 }} />
               <BlankState.Heading>Empty latests.</BlankState.Heading>
             </BlankState>
