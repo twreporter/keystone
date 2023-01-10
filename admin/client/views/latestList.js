@@ -208,9 +208,7 @@ const LatestListView = React.createClass({
     CurrentListStore.setCurrentPage(i);
   },
   toggleUpdateModal(filter = !this.state.showUpdateForm) {
-    this.setState({
-      showUpdateForm: filter,
-    });
+    this.setState({ showUpdateForm: filter });
   },
   renderCreateButton() {
     if (this.state.list.nocreate) return null;
