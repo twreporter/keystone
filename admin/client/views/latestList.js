@@ -5,7 +5,6 @@ import update from 'react/lib/update';
 import xhr from 'xhr';
 import async from 'async';
 import CurrentListStore from '../stores/CurrentListStore';
-import ConfirmationDialog from '../components/ConfirmationDialog';
 import CreateLatestModal from '../components/CreateLatestModal';
 import { LatestDndContainer } from './latestDndContainer';
 import FlashMessages from '../components/FlashMessages';
@@ -58,10 +57,6 @@ const LatestListView = React.createClass({
   getInitialState() {
     return {
       latests: [],
-      confirmationDialog: {
-        isOpen: false,
-      },
-      checkedItems: {},
       constrainTableWidth: true,
       manageMode: false,
       searchString: '',
@@ -228,18 +223,6 @@ const LatestListView = React.createClass({
       </InputGroup.Section>
     );
   },
-  renderConfirmationDialog() {
-    const props = this.state.confirmationDialog;
-    return (
-      <ConfirmationDialog
-        isOpen={props.isOpen}
-        body={props.body}
-        confirmationLabel={props.label}
-        onCancel={this.removeConfirmationDialog}
-        onConfirmation={props.onConfirmation}
-      />
-    );
-  },
   renderPagination() {
     let { currentPage, items, list, manageMode, pageSize } = this.state;
     if (manageMode || !items.count) return;
@@ -281,13 +264,6 @@ const LatestListView = React.createClass({
         </Container>
       </div>
     );
-  },
-  removeConfirmationDialog() {
-    this.setState({
-      confirmationDialog: {
-        isOpen: false,
-      },
-    });
   },
   toggleTableWidth() {
     this.setState({ constrainTableWidth: !this.state.constrainTableWidth });
