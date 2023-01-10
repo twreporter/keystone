@@ -12,7 +12,7 @@ import Footer from '../components/Footer';
 import MobileNavigation from '../components/MobileNavigation';
 import PrimaryNavigation from '../components/PrimaryNavigation';
 import SecondaryNavigation from '../components/SecondaryNavigation';
-import { BlankState, Button, Container, InputGroup, Pagination, Spinner } from 'elemental';
+import { BlankState, Button, Container, InputGroup, Spinner } from 'elemental';
 import { plural } from '../utils';
 
 const latestColumnContainerStyle = {
@@ -57,19 +57,14 @@ const LatestListView = React.createClass({
   getInitialState() {
     return {
       latests: [],
+      isReady: false,
       constrainTableWidth: true,
-      manageMode: false,
-      searchString: '',
       isCreateModalOpen: window.location.search === '?create' || Keystone.createFormErrors,
       ...this.getStateFromStore(),
     };
   },
   componentDidMount() {
-    CurrentListStore.addChangeListener(this.updateStateFromStore);
     this.loadTagsInfo();
-  },
-  componentWillUnmount() {
-    CurrentListStore.removeChangeListener(this.updateStateFromStore);
   },
   loadTagsInfo() {
     // Get tags that latest_order > 0 & sorted with latest_order incrementally
@@ -109,7 +104,7 @@ const LatestListView = React.createClass({
         if (err) {
           console.log(err);
         } else {
-          this.setState({ latests: results });
+          this.setState({ latests: results, isReady: true });
         }
       });
     });
@@ -169,40 +164,12 @@ const LatestListView = React.createClass({
     if (!Array.isArray(latests)) {
       return;
     }
-    // TODO: is it better to use index?
     this.setState({ latests: latests.filter(latest => latest && latest.id !== id) }, () => {
       this.updateLatestOrder(id, 0);
     });
   },
-  updateStateFromStore() {
-    this.setState(this.getStateFromStore());
-  },
   getStateFromStore() {
-    var state = {
-      columns: CurrentListStore.getActiveColumns(),
-      currentPage: CurrentListStore.getCurrentPage(),
-      filters: CurrentListStore.getActiveFilters(),
-      items: CurrentListStore.getItems(),
-      list: CurrentListStore.getList(),
-      loading: CurrentListStore.isLoading(),
-      pageSize: CurrentListStore.getPageSize(),
-      ready: CurrentListStore.isReady(),
-      search: CurrentListStore.getActiveSearch(),
-      rowAlert: CurrentListStore.rowAlert(),
-    };
-    if (!this._searchTimeout) {
-      state.searchString = state.search;
-    }
-    state.showBlankState = (state.ready && !state.loading && !state.items.results.length && !state.search && !state.filters.length);
-    return state;
-  },
-
-  // ==============================
-  // HEADER
-  // ==============================
-
-  handlePageSelect(i) {
-    CurrentListStore.setCurrentPage(i);
+    return { list: CurrentListStore.getList() };
   },
   renderCreateButton() {
     if (this.state.list.nocreate) return null;
@@ -223,31 +190,13 @@ const LatestListView = React.createClass({
       </InputGroup.Section>
     );
   },
-  renderPagination() {
-    let { currentPage, items, list, manageMode, pageSize } = this.state;
-    if (manageMode || !items.count) return;
-
-    return (
-      <Pagination
-        className="ListHeader__pagination"
-        currentPage={currentPage}
-        onPageSelect={this.handlePageSelect}
-        pageSize={pageSize}
-        plural={list.plural}
-        singular={list.singular}
-        style={{ marginBottom: 0 }}
-        total={items.count}
-        limit={10}
-      />
-    );
-  },
   renderHeader() {
-    let { items, list } = this.state;
+    let { list } = this.state;
     return (
       <div className="ListHeader">
         <Container>
           <h2 className="ListHeader__title">
-            {`${plural(items.count, ('* ' + list.singular), ('* ' + list.plural))} sorted by 最新`}
+            {`${plural(this.state.latests.length, ('* ' + list.singular), ('* ' + list.plural))} sorted by 最新`}
           </h2>
           <InputGroup className="ListHeader__bar">
             <InputGroup.Section className="ListHeader__expand">
@@ -258,7 +207,6 @@ const LatestListView = React.createClass({
             {this.renderCreateButton()}
           </InputGroup>
           <div style={{ height: 34, marginBottom: '2em' }}>
-            {this.renderPagination()}
             <span style={{ clear: 'both', display: 'table' }} />
           </div>
         </Container>
@@ -303,7 +251,7 @@ const LatestListView = React.createClass({
     );
   },
   render() {
-    return !this.state.ready ? (
+    return !this.state.isReady ? (
       <div className="view-loading-indicator"><Spinner size="md" /></div>
     ) : (
       <div className="keystone-wrapper">
