@@ -118,9 +118,25 @@ const LatestListView = React.createClass({
       });
     });
   },
+  updateLatestOrder(id, latestOrder) {
+    return new Promise((resolve, reject) => {
+      let formData = new FormData();
+      formData.append('action', 'updateItem');
+      formData.append('latest_order', latestOrder);
+      xhr({
+        url: Keystone.adminPath + `/api/tags/${id}`,
+        method: 'POST',
+        headers: Keystone.csrf.header,
+        body: formData,
+      }, (err, resp, body) => {
+        if (err) return reject(err);
+        resolve('Success');
+      });
+    });
+  },
   onLatestDrag(dragIndex, hoverIndex) {
     const { latests } = this.state;
-    if (!Array.isArray(latests) || latests.length <= 0 || dragIndex < 0 || dragIndex >= latests.length || hoverIndex < 0 || hoverIndex >= latests.length) {
+    if (!latests || !Array.isArray(latests) || latests.length <= 0 || dragIndex < 0 || dragIndex >= latests.length || hoverIndex < 0 || hoverIndex >= latests.length) {
       return;
     }
     const dragLatest = latests[dragIndex];
@@ -135,46 +151,20 @@ const LatestListView = React.createClass({
       }), () => {
         async.forEachOf(this.state.latests, (latest, index) => {
           this.updateLatestOrder(latest.id, index + 1);
+        }, err => {
+          console.error('Update latests failed: ', err);
         });
       });
   },
-  updateLatestOrder(id, latestOrder) {
-    let formData = new FormData();
-    formData.append('action', 'updateItem');
-    formData.append('latest_order', latestOrder);
-    xhr({
-      url: Keystone.adminPath + `/api/tags/${id}`,
-      method: 'POST',
-      headers: Keystone.csrf.header,
-      body: formData,
-    }, (err, resp, body) => {
-      // if (err) return callback(err);
-      // TODO: check resp.statusCode
-      /*
-        if (resp.statusCode === 200) {
-          callback(null, data);
-        } else {
-          // NOTE: xhr callback will be called with an Error if
-          //  there is an error in the browser that prevents
-          //  sending the request. A HTTP 500 response is not
-          //  going to cause an error to be returned.
-          callback(data, null);
-        }
-      */
-      try {
-        body = JSON.parse(body);
-      } catch (e) {
-        console.log('Error parsing results json:', e, body);
-      }
-    });
-  },
   onLatestRemove(id) {
     const { latests } = this.state;
-    if (!Array.isArray(latests)) {
+    if (!latests || !Array.isArray(latests) || latests.length <= 0) {
       return;
     }
-    this.setState({ latests: latests.filter(latest => latest && latest.id !== id) }, () => {
-      this.updateLatestOrder(id, 0);
+    this.updateLatestOrder(id, 0).then(resolved => {
+      this.setState({ latests: latests.filter(latest => latest && latest.id !== id) });
+    }, err => {
+      console.error('Remove latest failed: ', err);
     });
   },
   getStateFromStore() {
