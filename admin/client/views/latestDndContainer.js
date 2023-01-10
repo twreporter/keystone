@@ -50,7 +50,7 @@ const latestTextStyle = {
 class Latest extends Component {
   render() {
     const {
-      id, // TODO: is it better to use index?
+      id,
       text,
       numPost,
       date,
