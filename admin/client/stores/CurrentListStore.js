@@ -173,11 +173,6 @@ const CurrentListStore = new Store({
   loadItems(options = {}) {
     _loading = true;
     defaultRowAlert();
-
-    if (_list.preFilter) {
-      active.filters.push(_list.preFilter);
-    }
-
     _list.loadItems({
       search: active.search,
       filters: active.filters,
