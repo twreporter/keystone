@@ -64,48 +64,56 @@ const LatestListView = React.createClass({
     };
   },
   componentDidMount() {
-    this.loadTagsInfo();
+    this.updateTagsState();
+  },
+  updateTagsState() {
+    this.loadTagsInfo().then(result => {
+      this.setState({ latests: result, isReady: true });
+    }, err => {
+      this.setState({ latests: [], isReady: true });
+    });
   },
   loadTagsInfo() {
-    // Get tags that latest_order > 0 & sorted with latest_order incrementally
-    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}') + '&sort=latest_order';
-    xhr({
-      url: Keystone.adminPath + '/api/tags?' + filters,
-      responseType: 'json',
-    }, (err, resp, data) => {
-      if (err || !data || !data.results) {
-        console.error('Error loading items:', err);
-        return;
-      }
-      async.map(data.results, (tag, done) => {
-        if (tag && tag.id) {
-          // Get # of posts, newest post date of tag
-          const filters = 'filters=' + encodeURIComponent(`{"tags":{"inverted":false,"value":["${tag.id}"]}}`) + '&select=title,name,state,publishedDate&limit=1&sort=-publishedDate';
-          xhr({
-            url: Keystone.adminPath + '/api/posts?' + filters,
-            responseType: 'json',
-          }, (err, resp, data) => {
-            if (err || !data) return done(err);
-            let count = 0;
-            let newestDate;
-            if (data.count > 0 && Array.isArray(data.results) && data.results.length > 0) {
-              count = data.count;
-              newestDate = data.results[0].fields.publishedDate;
-            }
-            done(null, {
-              id: tag.id,
-              name: tag.name,
-              numPost: count,
-              newestDate: newestDate
-            });
-          });
-        }
-      }, (err, results) => {
+    return new Promise((resolve, reject) => {
+      // Get tags that latest_order > 0 & sorted with latest_order incrementally
+      const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}') + '&sort=latest_order';
+      xhr({
+        url: Keystone.adminPath + '/api/tags?' + filters,
+        responseType: 'json',
+      }, (err, resp, data) => {
         if (err) {
-          console.log(err);
-        } else {
-          this.setState({ latests: results, isReady: true });
+          return reject(new Error(`Error loading items: ${err}`));
         }
+        if (!data || !data.results) {
+          return reject(new Error('Empty query result!'));
+        }
+        async.map(data.results, (tag, done) => {
+          if (tag && tag.id) {
+            // Get # of posts, newest post date of tag
+            const filters = 'filters=' + encodeURIComponent(`{"tags":{"inverted":false,"value":["${tag.id}"]}}`) + '&select=title,name,state,publishedDate&limit=1&sort=-publishedDate';
+            xhr({
+              url: Keystone.adminPath + '/api/posts?' + filters,
+              responseType: 'json',
+            }, (err, resp, data) => {
+              if (err || !data) return done(err);
+              let count = 0;
+              let newestDate;
+              if (data.count > 0 && Array.isArray(data.results) && data.results.length > 0) {
+                count = data.count;
+                newestDate = data.results[0].fields.publishedDate;
+              }
+              done(null, {
+                id: tag.id,
+                name: tag.name,
+                numPost: count,
+                newestDate: newestDate
+              });
+            });
+          }
+        }, (err, results) => {
+          if (err) return reject(new Error('Fail to load # of posts/newest post date!'));
+          resolve(results);
+        });
       });
     });
   },
