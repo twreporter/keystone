@@ -138,7 +138,7 @@ const LatestListView = React.createClass({
         async.forEachOf(this.state.latests, (latest, index) => {
           this.updateLatestOrder(latest.id, index + 1);
         });
-    });
+      });
   },
   updateLatestOrder(id, latestOrder) {
     let formData = new FormData();
