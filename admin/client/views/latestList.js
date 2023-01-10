@@ -78,8 +78,8 @@ const LatestListView = React.createClass({
     CurrentListStore.removeChangeListener(this.updateStateFromStore);
   },
   loadTagsInfo() {
-    // Get tags that latest_order > 0
-    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}');
+    // Get tags that latest_order > 0 & sorted with latest_order incrementally
+    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}') + '&sort=latest_order';
     xhr({
       url: Keystone.adminPath + '/api/tags?' + filters,
       responseType: 'json',
@@ -134,8 +134,11 @@ const LatestListView = React.createClass({
             [hoverIndex, 0, dragLatest]
           ]
         }
-      })
-    );
+      }), () => {
+        async.forEachOf(this.state.latests, (latest, index) => {
+          this.updateLatestOrder(latest.id, index + 1);
+        });
+    });
   },
   updateLatestOrder(id, latestOrder) {
     let formData = new FormData();
