@@ -64,16 +64,16 @@ const LatestListView = React.createClass({
     };
   },
   componentDidMount() {
-    this.updateTagsState();
+    this.updateLatestsState();
   },
-  updateTagsState() {
-    this.loadTagsInfo().then(result => {
-      this.setState({ latests: result, isReady: true });
+  updateLatestsState() {
+    this.loadLatestsInfo().then(latests => {
+      this.setState({ latests: latests, isReady: true });
     }, err => {
       this.setState({ latests: [], isReady: true });
     });
   },
-  loadTagsInfo() {
+  loadLatestsInfo() {
     return new Promise((resolve, reject) => {
       // Get tags that latest_order > 0 & sorted with latest_order incrementally
       const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}') + '&sort=latest_order';
@@ -95,7 +95,8 @@ const LatestListView = React.createClass({
               url: Keystone.adminPath + '/api/posts?' + filters,
               responseType: 'json',
             }, (err, resp, data) => {
-              if (err || !data) return done(err);
+              if (err) return done(err);
+              if (!data) return done(new Error('Empty data!'));
               let count = 0;
               let newestDate;
               if (data.count > 0 && Array.isArray(data.results) && data.results.length > 0) {
@@ -110,9 +111,9 @@ const LatestListView = React.createClass({
               });
             });
           }
-        }, (err, results) => {
+        }, (err, latests) => {
           if (err) return reject(new Error('Fail to load # of posts/newest post date!'));
-          resolve(results);
+          resolve(latests);
         });
       });
     });
