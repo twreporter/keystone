@@ -139,20 +139,10 @@ const LatestListView = React.createClass({
       const currentLatestIDs = this.state.latests.map(latest => latest.id);
       const totalIDs = [...newLatestIDs, ...currentLatestIDs];
       async.forEachOf(totalIDs, (tagID, index, callback) => {
-        let formData = new FormData();
-        formData.append('action', 'updateItem');
-        formData.append('latest_order', index + 1);
-        xhr({
-          url: Keystone.adminPath + `/api/tags/${tagID}`,
-          method: 'POST',
-          headers: Keystone.csrf.header,
-          body: formData,
-        }, (err, resp, body) => {
-          if (err) {
-            console.log(`Update tag's(${tagID}) latest_order to ${index + 1} failed!`, err);
-            return callback(err);
-          }
+        this.updateLatestOrder(tagID, index + 1).then(resolved => {
           callback();
+        }, err => {
+          callback(err);
         });
       }, err => {
         if (err) {
