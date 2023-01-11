@@ -134,6 +134,62 @@ const LatestListView = React.createClass({
       });
     });
   },
+  getMaxLatestOrder() {
+    return new Promise((resolve, reject) => {
+      // Find tags which latest_order > 0
+      const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}');
+      xhr({
+        url: Keystone.adminPath + '/api/tags?' + filters,
+        responseType: 'json',
+      }, (err, resp, data) => {
+        if (err) {
+          return reject(err);
+        }
+        if (!data || !data.results) {
+          return reject(new Error('Empty query result!'));
+        }
+        let maxLatestOrder = 0;
+        data.results.forEach(tag => {
+          if (tag && tag.fields && Number.isInteger(tag.fields.latest_order) && tag.fields.latest_order > maxLatestOrder) {
+            maxLatestOrder = tag.fields.latest_order;
+          }
+        });
+        resolve(maxLatestOrder);
+      });
+    });
+  },
+  onLatestsAdd(tagIDs) {
+    if (Array.isArray(tagIDs) && tagIDs.length > 0) {
+      this.getMaxLatestOrder().then(maxLatestOrder => {
+        async.forEachOf(tagIDs, (tagID, index, callback) => {
+          const newLatestOrder = maxLatestOrder + index + 1;
+          let formData = new FormData();
+          formData.append('action', 'updateItem');
+          formData.append('latest_order', newLatestOrder);
+          xhr({
+            url: Keystone.adminPath + `/api/tags/${tagID}`,
+            method: 'POST',
+            headers: Keystone.csrf.header,
+            body: formData,
+          }, (err, resp, body) => {
+            if (err) {
+              console.log(`Update tag's(${tagID}) latest_order to ${newLatestOrder} failed!`, err);
+              return callback(err);
+            }
+            callback();
+          });
+        }, err => {
+          if (err) {
+            console.log('Update latest_order of tags failed!', err);
+          }
+          // Refresh page when tags are added
+          window.location.reload();
+        });
+      }, err => {
+        console.log('Get max latest order failed!', err);
+      });
+    }
+  },
   onLatestDrag(dragIndex, hoverIndex) {
     const { latests } = this.state;
     if (!latests || !Array.isArray(latests) || latests.length <= 0 || dragIndex < 0 || dragIndex >= latests.length || hoverIndex < 0 || hoverIndex >= latests.length) {
@@ -285,6 +341,7 @@ const LatestListView = React.createClass({
           err={this.props.createFormErrors}
           isOpen={this.state.isCreateModalOpen}
           list={this.state.list}
+          onLatestsAdd={this.onLatestsAdd}
           onCancel={() => this.toggleCreateModal(false)}
           values={this.props.createFormData}
         />

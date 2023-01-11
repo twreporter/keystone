@@ -1,6 +1,5 @@
 import React from 'react';
 import xhr from 'xhr';
-import async from 'async';
 import Select from 'react-select';
 import { Alert, Button, Modal } from 'elemental';
 import Fields from '../fields';
@@ -12,7 +11,7 @@ var CreateLatestModal = React.createClass({
     isOpen: React.PropTypes.bool,
     list: React.PropTypes.object,
     onCancel: React.PropTypes.func,
-    onCreate: React.PropTypes.func,
+    onLatestsAdd: React.PropTypes.func,
     values: React.PropTypes.object,
   },
   getDefaultProps() {
@@ -90,62 +89,11 @@ var CreateLatestModal = React.createClass({
   onValueChange(value) {
     this.setState({ value });
   },
-  getMaxLatestOrder() {
-    return new Promise((resolve, reject) => {
-      // Find tags which latest_order > 0
-      const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}');
-      xhr({
-        url: Keystone.adminPath + '/api/tags?' + filters,
-        responseType: 'json',
-      }, (err, resp, data) => {
-        if (err) {
-          return reject(err);
-        }
-        if (!data || !data.results) {
-          return reject(new Error('Empty query result!'));
-        }
-        let maxLatestOrder = 0;
-        data.results.forEach(tag => {
-          if (tag && tag.fields && Number.isInteger(tag.fields.latest_order) && tag.fields.latest_order > maxLatestOrder) {
-            maxLatestOrder = tag.fields.latest_order;
-          }
-        });
-        resolve(maxLatestOrder);
-      });
-    });
-  },
-  onAddTags() {
+  onLatestsAdd() {
     const selectedTags = this.state.value;
     const tagsArray = Array.isArray(selectedTags) ? selectedTags : selectedTags.split(',');
-    if (tagsArray && tagsArray.length > 0) {
-      this.getMaxLatestOrder().then(maxLatestOrder => {
-        async.forEachOf(tagsArray, (tagID, index, callback) => {
-          const newLatestOrder = maxLatestOrder + index + 1;
-          let formData = new FormData();
-          formData.append('action', 'updateItem');
-          formData.append('latest_order', newLatestOrder);
-          xhr({
-            url: Keystone.adminPath + `/api/tags/${tagID}`,
-            method: 'POST',
-            headers: Keystone.csrf.header,
-            body: formData,
-          }, (err, resp, body) => {
-            if (err) {
-              console.log(`Update tag's(${tagID}) latest_order to ${newLatestOrder} failed!`, err);
-              return callback(err);
-            }
-            callback();
-          });
-        }, err => {
-          if (err) {
-            console.log('Update latest_order of tags failed!', err);
-          }
-          // Refresh page when tags are added
-          window.location.reload();
-        });
-      }, err => {
-        console.log('Get max latest order failed!', err);
-      });
+    if (tagsArray && tagsArray.length > 0 && this.props.onLatestsAdd) {
+      this.props.onLatestsAdd(tagsArray);
     }
   },
   renderAlerts() {
@@ -216,7 +164,7 @@ var CreateLatestModal = React.createClass({
           {this.renderAlerts()}
         </Modal.Body>
         <Modal.Footer>
-          <Button type="success" onClick={this.onAddTags} disabled={!this.state.value}>Add</Button>
+          <Button type="success" onClick={this.onLatestsAdd} disabled={!this.state.value}>Add</Button>
           <Button type="link-cancel" onClick={this.props.onCancel}>Cancel</Button>
         </Modal.Footer>
       </div>
