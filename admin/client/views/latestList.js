@@ -134,59 +134,32 @@ const LatestListView = React.createClass({
       });
     });
   },
-  getMaxLatestOrder() {
-    return new Promise((resolve, reject) => {
-      // Find tags which latest_order > 0
-      const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}');
-      xhr({
-        url: Keystone.adminPath + '/api/tags?' + filters,
-        responseType: 'json',
-      }, (err, resp, data) => {
-        if (err) {
-          return reject(err);
-        }
-        if (!data || !data.results) {
-          return reject(new Error('Empty query result!'));
-        }
-        let maxLatestOrder = 0;
-        data.results.forEach(tag => {
-          if (tag && tag.fields && Number.isInteger(tag.fields.latest_order) && tag.fields.latest_order > maxLatestOrder) {
-            maxLatestOrder = tag.fields.latest_order;
-          }
-        });
-        resolve(maxLatestOrder);
-      });
-    });
-  },
-  onLatestsAdd(tagIDs) {
-    if (Array.isArray(tagIDs) && tagIDs.length > 0) {
-      this.getMaxLatestOrder().then(maxLatestOrder => {
-        async.forEachOf(tagIDs, (tagID, index, callback) => {
-          const newLatestOrder = maxLatestOrder + index + 1;
-          let formData = new FormData();
-          formData.append('action', 'updateItem');
-          formData.append('latest_order', newLatestOrder);
-          xhr({
-            url: Keystone.adminPath + `/api/tags/${tagID}`,
-            method: 'POST',
-            headers: Keystone.csrf.header,
-            body: formData,
-          }, (err, resp, body) => {
-            if (err) {
-              console.log(`Update tag's(${tagID}) latest_order to ${newLatestOrder} failed!`, err);
-              return callback(err);
-            }
-            callback();
-          });
-        }, err => {
+  onLatestsAdd(newLatestIDs) {
+    if (Array.isArray(newLatestIDs) && newLatestIDs.length > 0) {
+      const currentLatestIDs = this.state.latests.map(latest => latest.id);
+      const totalIDs = [...newLatestIDs, ...currentLatestIDs];
+      async.forEachOf(totalIDs, (tagID, index, callback) => {
+        let formData = new FormData();
+        formData.append('action', 'updateItem');
+        formData.append('latest_order', index + 1);
+        xhr({
+          url: Keystone.adminPath + `/api/tags/${tagID}`,
+          method: 'POST',
+          headers: Keystone.csrf.header,
+          body: formData,
+        }, (err, resp, body) => {
           if (err) {
-            console.log('Update latest_order of tags failed!', err);
+            console.log(`Update tag's(${tagID}) latest_order to ${index + 1} failed!`, err);
+            return callback(err);
           }
-          // Refresh page when tags are added
-          window.location.reload();
+          callback();
         });
       }, err => {
-        console.log('Get max latest order failed!', err);
+        if (err) {
+          console.log('Update latest_order of tags failed!', err);
+        }
+        // Refresh page when tags are added
+        window.location.reload();
       });
     }
   },
