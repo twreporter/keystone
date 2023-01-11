@@ -54,9 +54,10 @@ var CreateLatestModal = React.createClass({
     this._itemsCache[item.id] = item;
   },
   loadOptions(input, callback) {
-    // Filter out old/selected tags with 'latest_order === 0' condition,
-    // old tags do not have latest_order field & selected tags' latest_order > 0
-    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"value":0}}');
+    // latest's option: non-latest + non-subcategory
+    // non-latest: !(latest_order > 0)
+    // non-subcategory: !(category.length > 0)
+    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"lte&null","value":0}}') + '&select=category';
     xhr({
       url: Keystone.adminPath + '/api/tags?search=' + input + '&' + filters,
       responseType: 'json',
@@ -65,9 +66,10 @@ var CreateLatestModal = React.createClass({
         console.error('Error loading items:', err);
         return callback(err, []);
       }
-      data.results.forEach(this.cacheItem);
+      const filteredResults = data.results.filter(tag => !(tag && tag.fields && Array.isArray(tag.fields.category) && tag.fields.category.length > 0));
+      filteredResults.forEach(this.cacheItem);
       callback(null, {
-        options: data.results,
+        options: filteredResults,
         complete: data.results.length === data.count,
       });
     });

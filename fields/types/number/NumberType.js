@@ -45,6 +45,22 @@ number.prototype.addFilterToQuery = function(filter, query) {
     else if (filter.mode === 'lt') {
       query[this.path] = filter.inverted ? { $gt: value } : { $lt: value };
     }
+    else if (filter.mode === 'lte&null') {
+      const condition = [{
+        [this.path]: { $lte: value }
+      }, {
+        [this.path]: { $exists: false }
+      }];
+      if (query.$and) {
+        query.$and.push({ $or: condition });
+      } else if (query.$or) {
+        // Fix implict AND issue of mongoDB
+        query.$and = [{ $or: query.$or }, { $or: condition }];
+        delete query.$or;
+      } else {
+        query.$or = condition;
+      }
+    }
     else {
       query[this.path] = value;
     }
