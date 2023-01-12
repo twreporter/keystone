@@ -170,9 +170,9 @@ const LatestListView = React.createClass({
         }, err => {
           if (err) {
             console.error(`Update ${dragLatest.name} failed: `, err);
-            this.setState({ messages: {error: [`Update ${dragLatest.name} failed!`, err]} });
+            this.setState({ messages: { error: [`Update ${dragLatest.name} failed!`, err] } });
           } else {
-            this.setState({ messages: {success: [`Update ${dragLatest.name} successfully.`]} });
+            this.setState({ messages: { success: [`Update ${dragLatest.name} successfully.`] } });
           }
         });
       });
@@ -185,11 +185,11 @@ const LatestListView = React.createClass({
     this.updateLatestOrder(id, 0).then(success => {
       this.setState({
         latests: latests.filter(latest => latest && latest.id !== id),
-        messages: {success: [`Remove ${name} successfully.`]}
+        messages: { success: [`Remove ${name} successfully.`] }
       });
     }).catch(err => {
       console.error(`Remove ${name} failed: `, err);
-      this.setState({ messages: {error: [`Remove ${name} failed!`, err]} });
+      this.setState({ messages: { error: [`Remove ${name} failed!`, err] } });
     });
   },
   getStateFromStore() {
@@ -254,7 +254,7 @@ const LatestListView = React.createClass({
       <div>
         {this.renderHeader()}
         <Container style={containerStyle}>
-          <div style={{ height: 64}}>
+          <div style={{ height: 64 }}>
             <FlashMessages messages={this.state.messages} />
           </div>
           <div style={latestColumnContainerStyle}>
