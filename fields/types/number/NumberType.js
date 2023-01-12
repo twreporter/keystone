@@ -54,7 +54,7 @@ number.prototype.addFilterToQuery = function(filter, query) {
       if (query.$and) {
         query.$and.push({ $or: condition });
       } else if (query.$or) {
-        // Fix implict AND issue of mongoDB
+        // Fix implicit AND issue of mongoDB
         query.$and = [{ $or: query.$or }, { $or: condition }];
         delete query.$or;
       } else {
