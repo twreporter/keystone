@@ -58,6 +58,7 @@ const LatestListView = React.createClass({
     return {
       latests: [],
       isReady: false,
+      messages: {},
       constrainTableWidth: true,
       isCreateModalOpen: window.location.search === '?create' || Keystone.createFormErrors,
       ...this.getStateFromStore(),
@@ -139,11 +140,7 @@ const LatestListView = React.createClass({
       const currentLatestIDs = this.state.latests.map(latest => latest.id);
       const totalIDs = [...newLatestIDs, ...currentLatestIDs];
       async.forEachOf(totalIDs, (tagID, index, callback) => {
-        this.updateLatestOrder(tagID, index + 1).then(resolved => {
-          callback();
-        }, err => {
-          callback(err);
-        });
+        this.updateLatestOrder(tagID, index + 1).then(success => callback()).catch(err => callback(err));
       }, err => {
         if (err) {
           console.log('Update latest_order of tags failed!', err);
@@ -168,22 +165,31 @@ const LatestListView = React.createClass({
           ]
         }
       }), () => {
-        async.forEachOf(this.state.latests, (latest, index) => {
-          this.updateLatestOrder(latest.id, index + 1);
+        async.forEachOf(this.state.latests, (latest, index, callback) => {
+          this.updateLatestOrder(latest.id, index + 1).then(success => callback()).catch(err => callback(err));
         }, err => {
-          if (err) console.error('Update latests failed: ', err);
+          if (err) {
+            console.error(`Update ${dragLatest.name} failed: `, err);
+            this.setState({ messages: {error: [`Update ${dragLatest.name} failed!`, err]} });
+          } else {
+            this.setState({ messages: {success: [`Update ${dragLatest.name} successfully.`]} });
+          }
         });
       });
   },
-  onLatestRemove(id) {
+  onLatestRemove(id, name) {
     const { latests } = this.state;
     if (!latests || !Array.isArray(latests) || latests.length <= 0) {
       return;
     }
-    this.updateLatestOrder(id, 0).then(resolved => {
-      this.setState({ latests: latests.filter(latest => latest && latest.id !== id) });
-    }, err => {
-      if (err) console.error('Remove latest failed: ', err);
+    this.updateLatestOrder(id, 0).then(success => {
+      this.setState({
+        latests: latests.filter(latest => latest && latest.id !== id),
+        messages: {success: [`Remove ${name} successfully.`]}
+      });
+    }).catch(err => {
+      console.error(`Remove ${name} failed: `, err);
+      this.setState({ messages: {error: [`Remove ${name} failed!`, err]} });
     });
   },
   getStateFromStore() {
@@ -224,9 +230,6 @@ const LatestListView = React.createClass({
             </InputGroup.Section>
             {this.renderCreateButton()}
           </InputGroup>
-          <div style={{ height: 34, marginBottom: '2em' }}>
-            <span style={{ clear: 'both', display: 'table' }} />
-          </div>
         </Container>
       </div>
     );
@@ -251,7 +254,9 @@ const LatestListView = React.createClass({
       <div>
         {this.renderHeader()}
         <Container style={containerStyle}>
-          <FlashMessages messages={this.props.messages} />
+          <div style={{ height: 64}}>
+            <FlashMessages messages={this.state.messages} />
+          </div>
           <div style={latestColumnContainerStyle}>
             {latestColumns.map((column, index) => {
               return <span style={column.style} key={`column-${index}`}>{column.name}</span>;

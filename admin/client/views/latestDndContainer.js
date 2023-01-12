@@ -68,7 +68,7 @@ class Latest extends Component {
       connectDropTarget(
         <div style={{ ...latestStyle, opacity }}>
           <div style={latestControlStyle}>
-            <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => onLatestRemove(id)}><span className={'octicon octicon-circle-slash'} /></button>
+            <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => onLatestRemove(id, text)}><span className={'octicon octicon-circle-slash'} /></button>
             <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px', marginRight: '10px' }} />
             <p style={latestTextStyle} title={text}>{text}</p>
           </div>
