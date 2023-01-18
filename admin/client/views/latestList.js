@@ -34,7 +34,7 @@ const latestColumnTextStyle = {
 
 const latestColumns = [
   {
-    name: '最新',
+    name: '標籤名稱',
     style: {
       width: '500px',
       ...latestColumnTextStyle
@@ -220,7 +220,7 @@ const LatestListView = React.createClass({
       <div className="ListHeader">
         <Container>
           <h2 className="ListHeader__title">
-            {`${plural(this.state.latests.length, ('* ' + list.singular), ('* ' + list.plural))} sorted by 最新`}
+            {`${plural(this.state.latests.length, ('* ' + list.singular), ('* ' + list.plural))} sorted by 顯示順序`}
           </h2>
           <InputGroup className="ListHeader__bar">
             <InputGroup.Section className="ListHeader__expand">
