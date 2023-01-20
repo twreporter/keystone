@@ -2,7 +2,6 @@ import React from 'react';
 import xhr from 'xhr';
 import Select from 'react-select';
 import { Alert, Button, Modal } from 'elemental';
-import Fields from '../fields';
 
 var CreateLatestModal = React.createClass({
   displayName: 'CreateLatestModal',
@@ -12,28 +11,18 @@ var CreateLatestModal = React.createClass({
     list: React.PropTypes.object,
     onCancel: React.PropTypes.func,
     onLatestsAdd: React.PropTypes.func,
-    values: React.PropTypes.object,
+    values: React.PropTypes.array,
   },
   getDefaultProps() {
     return {
       err: null,
-      values: {},
+      values: [],
       isOpen: false,
     };
   },
   getInitialState() {
-    var values = Object.assign({}, this.props.values);
-
-    Object.keys(this.props.list.fields).forEach(key => {
-      var field = this.props.list.fields[key];
-
-      if (!values[field.path]) {
-        values[field.path] = field.defaultValue;
-      }
-    });
     return {
-      value: '',
-      values: values,
+      value: null,
       err: this.props.err,
     };
   },
@@ -54,49 +43,40 @@ var CreateLatestModal = React.createClass({
     this._itemsCache[item.id] = item;
   },
   loadOptions(input, callback) {
-    // latest's option: non-latest + non-subcategory
-    // non-latest: !(latest_order > 0)
+    // latest's option: non-subcategory + non-latest
     // non-subcategory: !(category.length > 0)
-    const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"lte&null","value":0}}') + '&select=category';
+    // non-latest: this.props.values
     xhr({
-      url: Keystone.adminPath + '/api/tags?search=' + input + '&' + filters,
+      url: Keystone.adminPath + '/api/tags?search=' + input + '&select=category',
       responseType: 'json',
     }, (err, resp, data) => {
       if (err || !data || !data.results) {
         console.error('Error loading items:', err);
         return callback(err, []);
       }
-      const filteredResults = data.results.filter(tag => !(tag && tag.fields && Array.isArray(tag.fields.category) && tag.fields.category.length > 0));
-      filteredResults.forEach(this.cacheItem);
+      const nonSubcategoryTags = data.results.filter(tag => !(tag && tag.fields && Array.isArray(tag.fields.category) && tag.fields.category.length > 0));
+      nonSubcategoryTags.forEach(this.cacheItem);
+      const selectedIDs = Array.isArray(this.props.values) ? this.props.values.map(tag => tag.id) : [];
       callback(null, {
-        options: filteredResults,
+        options: nonSubcategoryTags.filter(tag => tag && tag.id && !selectedIDs.includes(tag.id)),
         complete: data.results.length === data.count,
       });
     });
-  },
-  handleChange(event) {
-    var values = Object.assign({}, this.state.values);
-    values[event.path] = event.value;
-    this.setState({ values: values });
-  },
-  getFieldProps(field) {
-    var props = Object.assign({}, field);
-    props.value = this.state.values[field.path];
-    props.values = this.state.values;
-    props.onChange = this.handleChange;
-    props.mode = 'create';
-    props.key = field.path;
-    return props;
   },
   onValueChange(value) {
     this.setState({ value });
   },
   onLatestsAdd() {
     const selectedTags = this.state.value;
-    const tagsArray = Array.isArray(selectedTags) ? selectedTags : selectedTags.split(',');
-    if (tagsArray && tagsArray.length > 0 && this.props.onLatestsAdd) {
-      this.props.onLatestsAdd(tagsArray);
+    if (Array.isArray(selectedTags) && selectedTags.length > 0 && this.props.onLatestsAdd) {
+      this.props.onLatestsAdd(selectedTags.map(selectedTag => {
+        return {
+          id: selectedTag.id,
+          name: selectedTag.name
+        };
+      }));
     }
+    this.setState({ value: null });
   },
   renderAlerts() {
     if (!this.state.err || !this.state.err.errors) return;
@@ -122,40 +102,15 @@ var CreateLatestModal = React.createClass({
     return <Alert type="danger">{alertContent}</Alert>;
   },
   renderSelect() {
+    const { value } = this.state;
+    const disableAdd = !value || (Array.isArray(value) && value.length <= 0);
     if (!this.props.isOpen) return;
-
-    var list = this.props.list;
-    var nameField = this.props.list.nameField;
-    var focusRef;
-
-    if (list.nameIsInitial) {
-      var nameFieldProps = this.getFieldProps(nameField);
-      nameFieldProps.ref = focusRef = 'focusTarget';
-      if (nameField.type === 'text') {
-        nameFieldProps.className = 'item-name-field';
-        nameFieldProps.placeholder = nameField.label;
-        nameFieldProps.label = false;
-      }
-    }
-
-    Object.keys(list.initialFields).forEach(key => {
-      var field = list.fields[list.initialFields[key]];
-      if (typeof Fields[field.type] !== 'function') {
-        return;
-      }
-      var fieldProps = this.getFieldProps(field);
-      if (!focusRef) {
-        fieldProps.ref = focusRef = 'focusTarget';
-      }
-    });
-
     return (
       <div>
         <Modal.Header text="Add new tags" onClose={this.props.onCancel} showCloseButton />
         <Modal.Body>
           <Select.Async
             multi
-            simpleValue
             placeholder="Select..."
             labelKey="name"
             valueKey="id"
@@ -166,7 +121,7 @@ var CreateLatestModal = React.createClass({
           {this.renderAlerts()}
         </Modal.Body>
         <Modal.Footer>
-          <Button type="success" onClick={this.onLatestsAdd} disabled={!this.state.value}>Add</Button>
+          <Button type="success" onClick={this.onLatestsAdd} disabled={disableAdd}>Add</Button>
           <Button type="link-cancel" onClick={this.props.onCancel}>Cancel</Button>
         </Modal.Footer>
       </div>

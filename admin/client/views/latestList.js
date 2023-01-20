@@ -12,8 +12,15 @@ import Footer from '../components/Footer';
 import MobileNavigation from '../components/MobileNavigation';
 import PrimaryNavigation from '../components/PrimaryNavigation';
 import SecondaryNavigation from '../components/SecondaryNavigation';
-import { BlankState, Button, Container, InputGroup, Spinner } from 'elemental';
+import { BlankState, Button, Container, InputGroup, ResponsiveText, Spinner } from 'elemental';
 import { plural } from '../utils';
+
+const latestSavePanelStyle = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  marginBottom: '32px',
+};
 
 const latestColumnContainerStyle = {
   borderBottomWidth: '2px',
@@ -56,7 +63,9 @@ const latestColumns = [
 const LatestListView = React.createClass({
   getInitialState() {
     return {
+      prevLatests: [],
       latests: [],
+      isDirty: false,
       isReady: false,
       messages: {},
       constrainTableWidth: true,
@@ -68,13 +77,17 @@ const LatestListView = React.createClass({
     this.updateLatestsState();
   },
   updateLatestsState() {
-    this.loadLatestsInfo().then(latests => {
-      this.setState({ latests: latests, isReady: true });
+    this.loadLatests().then(latests => {
+      this.setState({
+        prevLatests: [...latests],
+        latests: [...latests],
+        isReady: true
+      });
     }, err => {
-      this.setState({ latests: [], isReady: true });
+      this.setState({ prevLatests: [], latests: [], isReady: true });
     });
   },
-  loadLatestsInfo() {
+  loadLatests() {
     return new Promise((resolve, reject) => {
       // Get tags that latest_order > 0 & sorted with latest_order incrementally
       const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}') + '&sort=latest_order';
@@ -88,36 +101,40 @@ const LatestListView = React.createClass({
         if (!data || !data.results) {
           return reject(new Error('Empty query result!'));
         }
-        async.map(data.results, (tag, done) => {
-          if (tag && tag.id) {
-            // Get # of posts, newest post date of tag
-            const filters = 'filters=' + encodeURIComponent(`{"tags":{"inverted":false,"value":["${tag.id}"]}}`) + '&select=title,name,state,publishedDate&limit=1&sort=-publishedDate';
-            xhr({
-              url: Keystone.adminPath + '/api/posts?' + filters,
-              responseType: 'json',
-            }, (err, resp, data) => {
-              if (err) return done(err);
-              if (!data) return done(new Error('Empty data!'));
-              let count = 0;
-              let newestDate;
-              if (data.count > 0 && Array.isArray(data.results) && data.results.length > 0) {
-                count = data.count;
-                newestDate = data.results[0].fields.publishedDate;
-              }
-              done(null, {
-                id: tag.id,
-                name: tag.name,
-                numPost: count,
-                newestDate: newestDate
-              });
-            });
-          }
-        }, (err, latests) => {
+        const callback = (err, latests) => {
           if (err) return reject(new Error('Fail to load # of posts/newest post date!'));
           resolve(latests);
-        });
+        };
+        this.loadLatestInfo(data.results, callback);
       });
     });
+  },
+  loadLatestInfo(tags, callback) {
+    async.map(tags, (tag, done) => {
+      if (tag && tag.id) {
+        // Get # of posts, newest post date of tag
+        const filters = 'filters=' + encodeURIComponent(`{"tags":{"inverted":false,"value":["${tag.id}"]}}`) + '&select=title,name,state,publishedDate&limit=1&sort=-publishedDate';
+        xhr({
+          url: Keystone.adminPath + '/api/posts?' + filters,
+          responseType: 'json',
+        }, (err, resp, data) => {
+          if (err) return done(err);
+          if (!data) return done(new Error('Empty data!'));
+          let count = 0;
+          let newestDate;
+          if (data.count > 0 && Array.isArray(data.results) && data.results.length > 0) {
+            count = data.count;
+            newestDate = data.results[0].fields.publishedDate;
+          }
+          done(null, {
+            id: tag.id,
+            name: tag.name,
+            numPost: count,
+            newestDate: newestDate
+          });
+        });
+      }
+    }, callback);
   },
   updateLatestOrder(id, latestOrder) {
     return new Promise((resolve, reject) => {
@@ -135,20 +152,18 @@ const LatestListView = React.createClass({
       });
     });
   },
-  onLatestsAdd(newLatestIDs) {
-    if (Array.isArray(newLatestIDs) && newLatestIDs.length > 0) {
-      const currentLatestIDs = this.state.latests.map(latest => latest.id);
-      const totalIDs = [...newLatestIDs, ...currentLatestIDs];
-      async.forEachOf(totalIDs, (tagID, index, callback) => {
-        this.updateLatestOrder(tagID, index + 1).then(success => callback()).catch(err => callback(err));
-      }, err => {
+  onLatestsAdd(newLatests) { // newLatests: {id: string, name: string}[]
+    if (Array.isArray(newLatests) && newLatests.length > 0) {
+      this.loadLatestInfo(newLatests, (err, latests) => {
         if (err) {
-          console.log('Update latest_order of tags failed!', err);
+          console.error('Load newly added latests info failed!');
+          this.setState({ messages: { error: ['Load newly added latests info failed!'] } });
+          return;
         }
-        // Refresh page when tags are added
-        window.location.reload();
+        this.setState({ latests: [...latests, ...this.state.latests], isDirty: true });
       });
     }
+    this.toggleCreateModal(false);
   },
   onLatestDrag(dragIndex, hoverIndex) {
     const { latests } = this.state;
@@ -164,33 +179,44 @@ const LatestListView = React.createClass({
             [hoverIndex, 0, dragLatest]
           ]
         }
-      }), () => {
-        async.forEachOf(this.state.latests, (latest, index, callback) => {
-          this.updateLatestOrder(latest.id, index + 1).then(success => callback()).catch(err => callback(err));
-        }, err => {
-          if (err) {
-            console.error(`Update ${dragLatest.name} failed: `, err);
-            this.setState({ messages: { error: [`Update ${dragLatest.name} failed!`, err] } });
-          } else {
-            this.setState({ messages: { success: [`Update ${dragLatest.name} successfully.`] } });
-          }
+      }));
+    this.setState({ isDirty: true });
+  },
+  onLatestRemove(id) {
+    const { latests } = this.state;
+    if (Array.isArray(latests) && latests.length > 0) {
+      this.setState({ latests: latests.filter(latest => latest && latest.id !== id), isDirty: true });
+    }
+  },
+  onSave() {
+    const { prevLatests, latests } = this.state;
+    async.each(prevLatests, (prevLatest, callback) => {
+      this.updateLatestOrder(prevLatest.id, 0).then(success => callback()).catch(err => callback(err));
+    }, err => {
+      const date = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+      if (err) {
+        console.error('Reset latests failed!', err);
+        this.setState({ messages: { error: [`Reset latests failed! ${date}`] } });
+        return;
+      };
+      async.forEachOf(latests, (latest, index, callback) => {
+        this.updateLatestOrder(latest.id, index + 1).then(success => callback()).catch(err => callback(err));
+      }, err => {
+        if (err) {
+          console.error('Update latests failed!', err);
+          this.setState({ messages: { error: [`Update latests failed! ${date}`] } });
+          return;
+        }
+        this.setState({
+          prevLatests: [...latests],
+          isDirty: false,
+          messages: { success: [`Update latests successfully. ${date}`] },
         });
       });
-  },
-  onLatestRemove(id, name) {
-    const { latests } = this.state;
-    if (!latests || !Array.isArray(latests) || latests.length <= 0) {
-      return;
-    }
-    this.updateLatestOrder(id, 0).then(success => {
-      this.setState({
-        latests: latests.filter(latest => latest && latest.id !== id),
-        messages: { success: [`Remove ${name} successfully.`] }
-      });
-    }).catch(err => {
-      console.error(`Remove ${name} failed: `, err);
-      this.setState({ messages: { error: [`Remove ${name} failed!`, err] } });
     });
+  },
+  onResetChange() {
+    this.setState({ latests: [...this.state.prevLatests], isDirty: false });
   },
   getStateFromStore() {
     return { list: CurrentListStore.getList() };
@@ -240,7 +266,7 @@ const LatestListView = React.createClass({
   toggleCreateModal(visible) {
     this.setState({ isCreateModalOpen: visible });
   },
-  renderActiveState() {
+  renderLatestComponent() {
     let containerStyle = {
       transition: 'max-width 160ms ease-out',
       msTransition: 'max-width 160ms ease-out',
@@ -256,6 +282,12 @@ const LatestListView = React.createClass({
         <Container style={containerStyle}>
           <div style={{ height: 64 }}>
             <FlashMessages messages={this.state.messages} />
+          </div>
+          <div style={latestSavePanelStyle}>
+            <Button key="reset" type="link-cancel" disabled={!this.state.isDirty} onClick={this.onResetChange}>
+              <ResponsiveText hiddenXS="reset changes" visibleXS="reset" />
+            </Button>
+            <Button key="save" type="primary" disabled={!this.state.isDirty} onClick={this.onSave}>Save</Button>
           </div>
           <div style={latestColumnContainerStyle}>
             {latestColumns.map((column, index) => {
@@ -296,7 +328,7 @@ const LatestListView = React.createClass({
             lists={this.props.nav.currentSection.lists} />
         </header>
         <div className="keystone-body">
-          {this.renderActiveState()}
+          {this.renderLatestComponent()}
         </div>
         <Footer
           appversion={this.props.appversion}
@@ -311,7 +343,7 @@ const LatestListView = React.createClass({
           list={this.state.list}
           onLatestsAdd={this.onLatestsAdd}
           onCancel={() => this.toggleCreateModal(false)}
-          values={this.props.createFormData}
+          values={this.state.latests}
         />
       </div>
     );
