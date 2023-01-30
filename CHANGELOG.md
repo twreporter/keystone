@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.10-rc.0, 2023/01/30
+
+## Notable Changes
+- feat
+  - support latest page settings
+
+### Commits
+* \[[`60feb962b3`](https://github.com/twreporter/keystone/commit/60feb962b3)] - Jason/issue 406 (#231) (許守傑 Shou-Chieh Hsu (Jason))
+
 ## 0.9.9, 2022/10/24
 
 ## Notable Changes
