@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import CurrentListStore from '../stores/CurrentListStore';
 import ConfirmationDialog from '../components/ConfirmationDialog';
+import LatestListView from './latestList';
 import CreateForm from '../components/CreateForm';
 import FlashMessages from '../components/FlashMessages';
 import Footer from '../components/Footer';
@@ -22,6 +23,14 @@ import { BlankState, Button, Container, FormInput, InputGroup, Pagination, Spinn
 import { plural } from '../utils';
 
 const ListView = React.createClass({
+  render() {
+    const list = CurrentListStore.getList();
+    const isLastestList = list && list.key === 'Latest';
+    return isLastestList ? <LatestListView {...this.props} /> : <CommonListView {...this.props} />;
+  },
+});
+
+const CommonListView = React.createClass({
   getInitialState() {
     return {
       confirmationDialog: {

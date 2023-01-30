@@ -17,7 +17,8 @@ var ItemsTableDragDrop = React.createClass({
       <tbody >
         {this.props.items.results.map((item, i) => {
           return (
-            <Sortable key={item.id}
+            <Sortable
+              key={item.id}
               index={i}
               sortOrder={item.sortOrder || 0}
               id={item.id}
