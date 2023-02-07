@@ -38,6 +38,7 @@ module.exports = {
   textarea: require('../../fields/types/textarea/TextareaField'),
   textarray: require('../../fields/types/textarray/TextArrayField'),
   url: require('../../fields/types/url/UrlField'),
+  tag: require('../../fields/types/tag/TagField'),
 
   // Remove relationshipForCategory, relationshipForTag when migration is done.
   relationshipForCategory: require('../../fields/types/relationship/RelationshipFieldForCategory'),
