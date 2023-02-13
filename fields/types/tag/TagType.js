@@ -1,5 +1,5 @@
 var FieldType = require('../Type');
-var TextType = require('../text/TextType');
+var NumberType = require('../number/NumberType');
 var util = require('util');
 
 /**
@@ -8,13 +8,13 @@ var util = require('util');
  * @api public
  */
 function tag(list, path, options) {
-  this._nativeType = String;
+  this._nativeType = Number;
   tag.super_.call(this, list, path, options);
 }
 util.inherits(tag, FieldType);
 
-/* Inherit from TextType prototype */
-tag.prototype.addFilterToQuery = TextType.prototype.addFilterToQuery;
+/* Inherit from NumberType prototype */
+tag.prototype.addFilterToQuery = NumberType.prototype.addFilterToQuery;
 
 /* Export Field Type */
 module.exports = tag;
