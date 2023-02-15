@@ -151,11 +151,11 @@ module.exports = Field.create({
               <Select
                 placeholder="分類"
                 disabled={!(Array.isArray(categoryOptions) && categoryOptions.length > 0)}
-                clearable={true}
+                clearable
                 options={categoryOptions}
                 value={categorySet.category}
                 onChange={selected => {
-                  this.onUpdateCategorySet(index, { category: selected ? selected.value : undefined, subcategory: undefined })
+                  this.onUpdateCategorySet(index, { category: selected ? selected.value : undefined, subcategory: undefined });
                 }}
               />
             </div>
@@ -163,11 +163,11 @@ module.exports = Field.create({
               <Select
                 placeholder="子分類"
                 disabled={!categorySet.category || !Array.isArray(subcategoryOptions) || subcategoryOptions.length <= 0}
-                clearable={true}
+                clearable
                 options={subcategoryOptions}
                 value={categorySet.subcategory}
                 onChange={selected => {
-                  this.onUpdateSubcategory(index, selected ? selected.value : undefined)
+                  this.onUpdateSubcategory(index, selected ? selected.value : undefined);
                 }}
               />
             </div>
