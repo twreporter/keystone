@@ -130,7 +130,7 @@ module.exports = Field.create({
 
   onUpdateSubcategory(index, newSubcategory) {
     const { value } = this.state;
-    if (newSubcategory && Array.isArray(value) && index >= 0 && index < value.length) {
+    if (Array.isArray(value) && index >= 0 && index < value.length) {
       const newCategorySet = { category: value[index].category, subcategory: newSubcategory };
       this.onUpdateCategorySet(index, newCategorySet);
     }
@@ -147,8 +147,30 @@ module.exports = Field.create({
               ? <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => this.onRemoveCategorySet(index)}><span className={'octicon octicon-trashcan'} /></button>
               : <div className="ItemList__control ItemList__control--delete-no-focus" />
             }
-            <div style={categoryMenuStyle}><Select placeholder="分類" disabled={!(Array.isArray(categoryOptions) && categoryOptions.length > 0)} clearable={false} options={categoryOptions} value={categorySet.category} onChange={(selected) => this.onUpdateCategorySet(index, { category: selected.value, subcategory: undefined })} /></div>
-            <div style={subcategoryMenuStyle}><Select placeholder="子分類" disabled={!categorySet.category || !Array.isArray(subcategoryOptions) || subcategoryOptions.length <= 0} clearable={false} options={subcategoryOptions} value={categorySet.subcategory} onChange={(selected) => this.onUpdateSubcategory(index, selected.value)} /></div>
+            <div style={categoryMenuStyle}>
+              <Select
+                placeholder="分類"
+                disabled={!(Array.isArray(categoryOptions) && categoryOptions.length > 0)}
+                clearable={true}
+                options={categoryOptions}
+                value={categorySet.category}
+                onChange={selected => {
+                  this.onUpdateCategorySet(index, { category: selected ? selected.value : undefined, subcategory: undefined })
+                }}
+              />
+            </div>
+            <div style={subcategoryMenuStyle}>
+              <Select
+                placeholder="子分類"
+                disabled={!categorySet.category || !Array.isArray(subcategoryOptions) || subcategoryOptions.length <= 0}
+                clearable={true}
+                options={subcategoryOptions}
+                value={categorySet.subcategory}
+                onChange={selected => {
+                  this.onUpdateSubcategory(index, selected ? selected.value : undefined)
+                }}
+              />
+            </div>
           </div>
         ) : null;
       });
