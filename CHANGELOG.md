@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.10-rc.1, 2023/02/16
+
+## Notable Changes
+- fix
+  - add clearable to category set select
+
+### Commits
+* \[[`0999aa029f`](https://github.com/twreporter/keystone/commit/0999aa029f)] - Jason/add select clearable (#235) (許守傑 Shou-Chieh Hsu (Jason))
+
 ## 0.9.10-rc.0, 2023/01/30
 
 ## Notable Changes
