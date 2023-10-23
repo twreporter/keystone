@@ -2,32 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.10-rc.2, 2023/02/21
+## 0.9.10, 2023/10/23
 
 ## Notable Changes
 - fix
  - search bar style
-
-### Commits
-- [`bc9b2fafe8`](https://github.com/twreporter/keystone/commit/bc9b2fafe8)] - **fix**: remove comments (Aylie Chou)
-- [[`6b9226f7bd`](https://github.com/twreporter/keystone/commit/6b9226f7bd)] - **fix**: search bar style (Aylie Chou)
-
-## 0.9.10-rc.1, 2023/02/16
-
-## Notable Changes
-- fix
-  - add clearable to category set select
-
-### Commits
-* \[[`0999aa029f`](https://github.com/twreporter/keystone/commit/0999aa029f)] - Jason/add select clearable (#235) (許守傑 Shou-Chieh Hsu (Jason))
-
-## 0.9.10-rc.0, 2023/01/30
-
-## Notable Changes
+ - add clearable to category set select
 - feat
   - support latest page settings
 
 ### Commits
+- [`bc9b2fafe8`](https://github.com/twreporter/keystone/commit/bc9b2fafe8)] - **fix**: remove comments (Aylie Chou)
+- [[`6b9226f7bd`](https://github.com/twreporter/keystone/commit/6b9226f7bd)] - **fix**: search bar style (Aylie Chou)
+* \[[`0999aa029f`](https://github.com/twreporter/keystone/commit/0999aa029f)] - Jason/add select clearable (#235) (許守傑 Shou-Chieh Hsu (Jason))
 * \[[`60feb962b3`](https://github.com/twreporter/keystone/commit/60feb962b3)] - Jason/issue 406 (#231) (許守傑 Shou-Chieh Hsu (Jason))
 
 ## 0.9.9, 2022/10/24
