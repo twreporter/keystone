@@ -30,6 +30,8 @@ export const NEW_CATEGORY_IDS = [
   '63206383207bf7c5f8716269', // 評論
 
   '574d028748fa171000c45d48', // 影像(新舊共用)
+
+  '656ecd09822294615dce5ad3', // 基金會消息
 ];
 
 // 55 new subcategories
@@ -94,4 +96,7 @@ export const NEW_SUBCATEGORY_IDS = [
   '63206383207bf7c5f871626a', // 書摘
   '63206383207bf7c5f871626b', // 讀者投書
   '633407174a9cab5ac7a90738', // 氣候變遷
+  '656ecd09822294615dce5ad4', // 營運紀事
+  '656ecd09822294615dce5ad5', // 得獎肯定
+  '656ecd09822294615dce5ad6', // 公益合作
 ];
