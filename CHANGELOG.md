@@ -2,9 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.11-rc.0, 2023/12/26
+
+### Notable Changes
+
+- feat
+  - add foundation category set ids in white list
+
+### Commits
+
+- [[`20bb9a6613`](https://github.com/twreporter/keystone/commit/20bb9a6613)] - **feat**: add foundation category set ids in white list (Aylie Chou)
+
 ## 0.9.10, 2023/10/23
 
-## Notable Changes
+### Notable Changes
+
 - fix
  - search bar style
  - add clearable to category set select
@@ -12,6 +24,7 @@ All notable changes to this project will be documented in this file. See [standa
   - support latest page settings
 
 ### Commits
+
 - [`bc9b2fafe8`](https://github.com/twreporter/keystone/commit/bc9b2fafe8)] - **fix**: remove comments (Aylie Chou)
 - [[`6b9226f7bd`](https://github.com/twreporter/keystone/commit/6b9226f7bd)] - **fix**: search bar style (Aylie Chou)
 * \[[`0999aa029f`](https://github.com/twreporter/keystone/commit/0999aa029f)] - Jason/add select clearable (#235) (許守傑 Shou-Chieh Hsu (Jason))
@@ -19,33 +32,37 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## 0.9.9, 2022/10/24
 
-## Notable Changes
+### Notable Changes
 - feat
   - support category set for new info architecture
 - fix
   - add tag filter for old/new info architecture compatibility
 
 ### Commits
+
 * \[[`4f07fec7d4`](https://github.com/twreporter/keystone/commit/4f07fec7d4)] - Jason/327 compatibility tag filter (#226) (許守傑 Shou-Chieh Hsu (Jason))
 * \[[`db447d9c0e`](https://github.com/twreporter/keystone/commit/db447d9c0e)] - Jason/issue 327 (#220) (許守傑 Shou-Chieh Hsu (Jason))
 
 ## 0.9.8, 2022/5/20
 
-## Notable Changes
+### Notable Changes
+
 - refactor
   - change assets public url prefix to utilize CDN cache
 
 ### Commits
+
 * [[`849eb5a6c5`](https://github.com/twreporter/keystone/commit/849eb5a6c5)] - **refactor**: change replaceGCSUrlOrigin to a utility function (Tai-Jiun Fang)
 * [[`e9fada5de2`](https://github.com/twreporter/keystone/commit/e9fada5de2)] - **refactor**: change public url prefix to utilize CDN cache (Tai-Jiun Fang)
 
 ## 0.9.7, 2022/5/16
 
-## Notable Changes
+### Notable Changes
 - fix
   - fix page freeze when click on image-related component & missing async query/options in select component of slug dnd component([#217](https://github.com/twreporter/keystone/pull/217))
 
 ### Commits
+
 * [f5e10bf075] - Merge pull request #217 from duidae/jason/issue_314_315 (許守傑 Shou-Chieh Hsu (Jason))
 * [0ac331459f] - fix: add comment for null filtering (duidae)
 * [2f6c91ba2f] - fix: add error handling (duidae)
@@ -57,18 +74,20 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## 0.9.6, 2022/4/26
 
-## Notable Changes
+### Notable Changes
+
 - feat
   - add sortable dnd relateds feature([#209](https://github.com/twreporter/keystone/pull/209))
 
 ### Commits
+
 * [c94ecb1a02] - Merge pull request #214 from duidae/jason/202_order_issue (許守傑 Shou-Chieh Hsu (Jason))
 * [a4489f08a2] - fix: fix initial sorting order (duidae)
 * [2457a8bb8e] - Jason/issue 202 (#209) (許守傑 Shou-Chieh Hsu (Jason))
 
 ## 0.9.5, 2021/10/12
 
-## Notable Changes
+### Notable Changes
 
 - feat
   - enable signout url([#206](https://github.com/twreporter/keystone/pull/204))
@@ -86,6 +105,7 @@ All notable changes to this project will be documented in this file. See [standa
     - update precommit-hook to include `eslint --fix`([#194](https://github.com/twreporter/keystone/pull/194))
 
 ### Commits
+
 * [[`b64ccb6660`](https://github.com/twreporter/keystone/commit/b64ccb6660)] - **feat**: enable signout url (Ching-Yang, Tseng)
 * [[`20b7e46a3a`](https://github.com/twreporter/keystone/commit/20b7e46a3a)] - **refactor**: update cache-control for avatar (#204) (Tai-Jiun Fang)
 * [[`f18419d822`](https://github.com/twreporter/keystone/commit/f18419d822)] - **refactor**: use user email as filename of avatar (Tai-Jiun Fang)
@@ -115,7 +135,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## 0.9.4, 2021/7/13
 
-## Notable Changes
+### Notable Changes
 
 - refactor
   - cleanup redundant operations and rename obscure function([#190](https://github.com/twreporter/keystone/pull/190))
@@ -132,6 +152,7 @@ All notable changes to this project will be documented in this file. See [standa
 	- add circleci to publish @twreporter/keystone([#172](https://github.com/twreporter/keystone/pull/172), [#173](https://github.com/twreporter/keystone/pull/173), [#175](https://github.com/twreporter/keystone/pull/175), [#177](https://github.com/twreporter/keystone/pull/177))
 
 ### Commits
+
 * [[`c4d8b19ec3`](https://github.com/twreporter/keystone/commit/c4d8b19ec3)] - **refactor**: remove redundant initialization (Ching-Yang, Tseng)
 * [[`c4a8ccbdf3`](https://github.com/twreporter/keystone/commit/c4a8ccbdf3)] - **refactor**: rename initDatabase to initDatabaseConfig (Ching-Yang, Tseng)
 * [[`8524e19da6`](https://github.com/twreporter/keystone/commit/8524e19da6)] - **chore**: upgrade @twreporter/draft-js to v0.11.8-rc.2 (#188) (Tai-Jiun Fang)
