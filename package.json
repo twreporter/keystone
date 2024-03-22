@@ -199,5 +199,8 @@
   ],
   "pre-commit": [
     "lint-fix"
-  ]
+  ],
+  "resolutions": {
+    "graceful-fs": "^4.2.11"
+  }
 }

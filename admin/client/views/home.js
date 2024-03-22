@@ -9,7 +9,7 @@ import Footer from '../components/Footer';
 import MobileNavigation from '../components/MobileNavigation';
 import PrimaryNavigation from '../components/PrimaryNavigation';
 
-const noEditList = [ 'latests', 'reviews' ]
+const noEditList = ['latests', 'reviews'];
 
 var listsByKey = {};
 Keystone.lists.forEach((list) => {

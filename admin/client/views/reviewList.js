@@ -80,20 +80,18 @@ const ReviewListView = React.createClass({
   },
   updateReviewsState() {
     this.loadReviews().then(reviews => {
-      console.log('loadReviews done', reviews)
       this.setState({
         prevReviews: [...reviews],
         reviews: [...reviews],
         isReady: true
       });
     }, err => {
-      console.log('loadReviews err', err)
       this.setState({ prevReviews: [], reviews: [], isReady: true });
     });
   },
   loadReviews() {
     return new Promise((resolve, reject) => {
-      const order = 'sort=order'
+      const order = 'sort=order';
       xhr({
         url: Keystone.adminPath + '/api/reviews?' + order,
         responseType: 'json',
@@ -106,7 +104,6 @@ const ReviewListView = React.createClass({
         }
         const callback = (err, reviews) => {
           if (err) return reject(new Error('Fail to load info of reviews!'));
-          console.log('loadReviews callback', reviews)
           resolve(reviews);
         };
         this.loadReviewInfo(data.results, callback);
@@ -116,7 +113,7 @@ const ReviewListView = React.createClass({
   loadReviewInfo(reviews, callback) {
     async.map(reviews, (review, done) => {
       if (review && review.fields && review.fields.post_id) {
-        const select = '?select=title,reviewWord,publishedDate'
+        const select = '?select=title,reviewWord,publishedDate';
         xhr({
           url: Keystone.adminPath + '/api/posts/' + review.fields.post_id + select,
           responseType: 'json',
@@ -135,9 +132,9 @@ const ReviewListView = React.createClass({
     }, callback);
   },
   updateReview(id, { postId, order }) {
-    const isCreate = !id
-    const action = isCreate ? 'create' : 'updateItem'
-    const path = isCreate ? '/api/reviews/create' : `/api/reviews/${id}`
+    const isCreate = !id;
+    const action = isCreate ? 'create' : 'updateItem';
+    const path = isCreate ? '/api/reviews/create' : `/api/reviews/${id}`;
 
     return new Promise((resolve, reject) => {
       let formData = new FormData();
@@ -152,24 +149,24 @@ const ReviewListView = React.createClass({
         responseType: 'json',
       }, (err, resp, body) => {
         if (err) return reject(err);
-        const addReview = { id: body.id, post_id: body.fields.post_id }
-        this.onUpdateReviewSuccess(addReview)
+        const addReview = { id: body.id, post_id: body.fields.post_id };
+        this.onUpdateReviewSuccess(addReview);
         resolve(addReview);
       });
     });
   },
   onUpdateReviewSuccess(review) {
-    const reviews = this.state.reviews
-    const index = reviews.findIndex(item => item.post_id === review.post_id)
+    const reviews = this.state.reviews;
+    const index = reviews.findIndex(item => item.post_id === review.post_id);
     if (index < 0) {
-      return
+      return;
     }
-    reviews[index].id = review.id
+    reviews[index].id = review.id;
     this.setState({ reviews });
   },
   deleteReview(reviewId) {
     if (!reviewId) {
-      return Promise.resolve()
+      return Promise.resolve();
     }
 
     return new Promise((resolve, reject) => {
@@ -182,23 +179,23 @@ const ReviewListView = React.createClass({
         body: formData,
       }, (err, resp, body) => {
         if (err) return reject(err);
-        this.onDeleteReviewSuccess(reviewId)
+        this.onDeleteReviewSuccess(reviewId);
         resolve('Success');
       });
     });
   },
   onDeleteReviewSuccess(reviewId) {
-    const reviews = this.state.reviews
-    const index = reviews.findIndex(item => item.id === reviewId)
+    const reviews = this.state.reviews;
+    const index = reviews.findIndex(item => item.id === reviewId);
     if (index < 0) {
-      return
+      return;
     }
-    reviews.splice(index, 1)
+    reviews.splice(index, 1);
     this.setState({ reviews });
   },
   onPostAdd(newPosts) {
     if (Array.isArray(newPosts) && newPosts.length > 0) {
-      this.loadReviewInfo(newPosts.map(post => ({ fields: { post_id: post.id }})), (err, reviews) => {
+      this.loadReviewInfo(newPosts.map(post => ({ fields: { post_id: post.id } })), (err, reviews) => {
         if (err) {
           console.error('Load newly added review info failed!');
           this.setState({ messages: { error: ['Load newly added review info failed!'] } });
@@ -234,7 +231,7 @@ const ReviewListView = React.createClass({
   },
   onSave() {
     const { prevReviews, reviews } = this.state;
-    const deleteReviews = prevReviews.filter(item => !reviews.some(review => review.id === item.id))
+    const deleteReviews = prevReviews.filter(item => !reviews.some(review => review.id === item.id));
     const date = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
 
     // delete reviews
@@ -249,7 +246,7 @@ const ReviewListView = React.createClass({
 
       // create or update reviews
       async.forEachOf(reviews, (review, index, callback) => {
-        this.updateReview(review.id, { postId: review.post_id, order: index + 1}).then(success => callback()).catch(err => callback(err));
+        this.updateReview(review.id, { postId: review.post_id, order: index + 1 }).then(success => callback()).catch(err => callback(err));
       }, err => {
         if (err) {
           console.error('Update reviews failed!', err);
@@ -316,7 +313,6 @@ const ReviewListView = React.createClass({
     this.setState({ isCreateModalOpen: visible });
   },
   renderReviewComponent() {
-    console.log('state', this.state)
     let containerStyle = {
       transition: 'max-width 160ms ease-out',
       msTransition: 'max-width 160ms ease-out',

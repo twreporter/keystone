@@ -73,7 +73,7 @@ class ReviewDndItem extends Component {
             <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => onRemove(id)}><span className={'octicon octicon-circle-slash'} style={buttonStyle} /></button>
             <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px' }} />
             <span style={textContainerStyle}>
-              <p style={{...textStyle, flex: 2, paddingRight: '10px'}}>{title}</p>
+              <p style={{ ...textStyle, flex: 2, paddingRight: '10px' }}>{title}</p>
               <p style={textStyle}>{text}</p>
             </span>
           </div>
@@ -156,7 +156,7 @@ class DndReviews extends Component {
     }
 
     return reviews.map((review, index) => {
-      const itemId = review.id || review.post_id
+      const itemId = review.id || review.post_id;
       return review
         ? <DndReview
           key={`review-${itemId}`}
