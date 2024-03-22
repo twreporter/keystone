@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import CurrentListStore from '../stores/CurrentListStore';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import LatestListView from './latestList';
+import ReviewListView from './reviewList';
 import CreateForm from '../components/CreateForm';
 import FlashMessages from '../components/FlashMessages';
 import Footer from '../components/Footer';
@@ -26,7 +27,13 @@ const ListView = React.createClass({
   render() {
     const list = CurrentListStore.getList();
     const isLastestList = list && list.key === 'Latest';
-    return isLastestList ? <LatestListView {...this.props} /> : <CommonListView {...this.props} />;
+    const isReviewList = list && list.key === 'Review';
+    if (isLastestList) {
+      return <LatestListView {...this.props} />;
+    } else if (isReviewList) {
+      return <ReviewListView {...this.props} />;
+    }
+    return <CommonListView {...this.props} />;
   },
 });
 

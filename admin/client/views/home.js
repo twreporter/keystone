@@ -9,7 +9,7 @@ import Footer from '../components/Footer';
 import MobileNavigation from '../components/MobileNavigation';
 import PrimaryNavigation from '../components/PrimaryNavigation';
 
-const latestList = 'latests';
+const noEditList = [ 'latests', 'reviews' ]
 
 var listsByKey = {};
 Keystone.lists.forEach((list) => {
@@ -94,7 +94,7 @@ var HomeView = React.createClass({
   renderFlatNav() {
     let lists = this.props.navLists.map((list) => {
       var href = list.external ? list.path : `${Keystone.adminPath}/${list.path}`;
-      return <ListTile key={list.path} noEdit={list.path === latestList} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
+      return <ListTile key={list.path} noEdit={noEditList.includes(list.path)} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
     });
     return <div className="dashboard-group__lists">{lists}</div>;
   },
@@ -111,7 +111,7 @@ var HomeView = React.createClass({
               <div className="dashboard-group__lists">
                 {navSection.lists.map((list) => {
                   var href = list.external ? list.path : `${Keystone.adminPath}/${list.path}`;
-                  return <ListTile key={list.path} noEdit={list.path === latestList} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
+                  return <ListTile key={list.path} noEdit={noEditList.includes(list.path)} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
                 })}
               </div>
             </div>
@@ -132,7 +132,7 @@ var HomeView = React.createClass({
         <div className="dashboard-group__lists">
           {this.props.orphanedLists.map((list) => {
             var href = list.external ? list.path : `${Keystone.adminPath}/${list.path}`;
-            return <ListTile key={list.path} noEdit={list.path === latestList} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
+            return <ListTile key={list.path} noEdit={noEditList.includes(list.path)} label={list.label} href={href} count={plural(this.state.counts[list.key], '* Item', '* Items')} />;
           })}
         </div>
       </div>
