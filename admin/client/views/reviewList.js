@@ -5,8 +5,8 @@ import update from 'react/lib/update';
 import xhr from 'xhr';
 import async from 'async';
 import CurrentListStore from '../stores/CurrentListStore';
-import CreateLatestModal from '../components/CreateLatestModal';
-import { LatestDndContainer } from './latestDndContainer';
+import CreateReviewModal from '../components/CreateReviewModal';
+import ReviewDndContainer from './reviewDndContainer';
 import FlashMessages from '../components/FlashMessages';
 import Footer from '../components/Footer';
 import MobileNavigation from '../components/MobileNavigation';
@@ -31,41 +31,43 @@ const latestColumnContainerStyle = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
+  paddingLeft: '68px',
 };
 
-const latestColumnTextStyle = {
+const columnTextStyle = {
   color: '#999',
   overflow: 'hidden',
   whiteSpace: 'no-wrap',
-  textOverflow: 'ellipsis'
+  textOverflow: 'ellipsis',
 };
 
-const latestColumns = [
+const reviewColumns = [
   {
-    name: '標籤名稱',
+    name: '文章標題',
     style: {
-      width: '500px',
-      ...latestColumnTextStyle
+      flex: 2,
+      ...columnTextStyle
     }
   }, {
-    name: '文章數量',
+    name: '回顧說明',
     style: {
-      ...latestColumnTextStyle
+      flex: 1,
+      ...columnTextStyle
     }
   }, {
-    name: '最新文章日期',
+    name: '發布日期',
     style: {
-      width: '280px',
-      ...latestColumnTextStyle
+      width: '160px',
+      ...columnTextStyle
     }
   }
 ];
 
-const LatestListView = React.createClass({
+const ReviewListView = React.createClass({
   getInitialState() {
     return {
-      prevLatests: [],
-      latests: [],
+      prevReviews: [],
+      reviews: [],
       isDirty: false,
       isReady: false,
       messages: {},
@@ -75,25 +77,24 @@ const LatestListView = React.createClass({
     };
   },
   componentDidMount() {
-    this.updateLatestsState();
+    this.updateReviewsState();
   },
-  updateLatestsState() {
-    this.loadLatests().then(latests => {
+  updateReviewsState() {
+    this.loadReviews().then(reviews => {
       this.setState({
-        prevLatests: [...latests],
-        latests: [...latests],
+        prevReviews: [...reviews],
+        reviews: [...reviews],
         isReady: true
       });
     }, err => {
-      this.setState({ prevLatests: [], latests: [], isReady: true });
+      this.setState({ prevReviews: [], reviews: [], isReady: true });
     });
   },
-  loadLatests() {
+  loadReviews() {
     return new Promise((resolve, reject) => {
-      // Get tags that latest_order > 0 & sorted with latest_order incrementally
-      const filters = 'filters=' + encodeURIComponent('{"latest_order":{"mode":"gt","value":0}}') + '&sort=latest_order';
+      const order = 'sort=order';
       xhr({
-        url: Keystone.adminPath + '/api/tags?' + filters,
+        url: Keystone.adminPath + '/api/reviews?' + order,
         responseType: 'json',
       }, (err, resp, data) => {
         if (err) {
@@ -102,122 +103,167 @@ const LatestListView = React.createClass({
         if (!data || !data.results) {
           return reject(new Error('Empty query result!'));
         }
-        const callback = (err, latests) => {
-          if (err) return reject(new Error('Fail to load # of posts/newest post date!'));
-          resolve(latests);
+        const callback = (err, reviews) => {
+          if (err) return reject(new Error('Fail to load info of reviews!'));
+          resolve(reviews);
         };
-        this.loadLatestInfo(data.results, callback);
+        this.loadReviewInfo(data.results, callback);
       });
     });
   },
-  loadLatestInfo(tags, callback) {
-    async.map(tags, (tag, done) => {
-      if (tag && tag.id) {
-        // Get # of posts, newest post date of tag
-        const filters = 'filters=' + encodeURIComponent(`{"tags":{"inverted":false,"value":["${tag.id}"]}}`) + '&select=title,name,state,publishedDate&limit=1&sort=-publishedDate';
+  loadReviewInfo(reviews, callback) {
+    async.map(reviews, (review, done) => {
+      if (review && review.fields && review.fields.post_id) {
+        const select = '?select=title,reviewWord,publishedDate';
         xhr({
-          url: Keystone.adminPath + '/api/posts?' + filters,
+          url: Keystone.adminPath + '/api/posts/' + review.fields.post_id + select,
           responseType: 'json',
         }, (err, resp, data) => {
           if (err) return done(err);
           if (!data) return done(new Error('Empty data!'));
-          let count = 0;
-          let newestDate;
-          if (data.count > 0 && Array.isArray(data.results) && data.results.length > 0) {
-            count = data.count;
-            newestDate = data.results[0].fields.publishedDate;
-          }
           done(null, {
-            id: tag.id,
-            name: tag.name,
-            numPost: count,
-            newestDate: newestDate
+            id: review.id,
+            post_id: data.id,
+            title: data.fields.title,
+            publishedDate: data.fields.publishedDate,
+            reviewWord: data.fields.reviewWord,
           });
         });
       }
     }, callback);
   },
-  updateLatestOrder(id, latestOrder) {
+  updateReview(id, { postId, order }) {
+    const isCreate = !id;
+    const action = isCreate ? 'create' : 'updateItem';
+    const path = isCreate ? '/api/reviews/create' : `/api/reviews/${id}`;
+
     return new Promise((resolve, reject) => {
       let formData = new FormData();
-      formData.append('action', 'updateItem');
-      formData.append('latest_order', latestOrder);
+      formData.append('action', action);
+      formData.append('order', order);
+      formData.append('post_id', postId);
       xhr({
-        url: Keystone.adminPath + `/api/tags/${id}`,
+        url: Keystone.adminPath + path,
+        method: 'POST',
+        headers: Keystone.csrf.header,
+        body: formData,
+        responseType: 'json',
+      }, (err, resp, body) => {
+        if (err) return reject(err);
+        const addReview = { id: body.id, post_id: body.fields.post_id };
+        this.onUpdateReviewSuccess(addReview);
+        resolve(addReview);
+      });
+    });
+  },
+  onUpdateReviewSuccess(review) {
+    const reviews = this.state.reviews;
+    const index = reviews.findIndex(item => item.post_id === review.post_id);
+    if (index < 0) {
+      return;
+    }
+    reviews[index].id = review.id;
+    this.setState({ reviews });
+  },
+  deleteReview(reviewId) {
+    if (!reviewId) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      let formData = new FormData();
+      formData.append('action', 'delete');
+      xhr({
+        url: Keystone.adminPath + `/api/reviews/${reviewId}/delete`,
         method: 'POST',
         headers: Keystone.csrf.header,
         body: formData,
       }, (err, resp, body) => {
         if (err) return reject(err);
+        this.onDeleteReviewSuccess(reviewId);
         resolve('Success');
       });
     });
   },
-  onLatestsAdd(newLatests) { // newLatests: {id: string, name: string}[]
-    if (Array.isArray(newLatests) && newLatests.length > 0) {
-      this.loadLatestInfo(newLatests, (err, latests) => {
+  onDeleteReviewSuccess(reviewId) {
+    const reviews = this.state.reviews;
+    const index = reviews.findIndex(item => item.id === reviewId);
+    if (index < 0) {
+      return;
+    }
+    reviews.splice(index, 1);
+    this.setState({ reviews });
+  },
+  onPostAdd(newPosts) {
+    if (Array.isArray(newPosts) && newPosts.length > 0) {
+      this.loadReviewInfo(newPosts.map(post => ({ fields: { post_id: post.id } })), (err, reviews) => {
         if (err) {
-          console.error('Load newly added latests info failed!');
-          this.setState({ messages: { error: ['Load newly added latests info failed!'] } });
+          console.error('Load newly added review info failed!');
+          this.setState({ messages: { error: ['Load newly added review info failed!'] } });
           return;
         }
-        this.setState({ latests: [...latests, ...this.state.latests], isDirty: true });
+        this.setState({ reviews: [...reviews, ...this.state.reviews], isDirty: true });
       });
     }
     this.toggleCreateModal(false);
   },
-  onLatestDrag(dragIndex, hoverIndex) {
-    const { latests } = this.state;
-    if (!latests || !Array.isArray(latests) || latests.length <= 0 || dragIndex < 0 || dragIndex >= latests.length || hoverIndex < 0 || hoverIndex >= latests.length) {
+  onReviewDrag(dragIndex, hoverIndex) {
+    const { reviews } = this.state;
+    if (!reviews || !Array.isArray(reviews) || reviews.length <= 0 || dragIndex < 0 || dragIndex >= reviews.length || hoverIndex < 0 || hoverIndex >= reviews.length) {
       return;
     }
-    const dragLatest = latests[dragIndex];
+    const dragReview = reviews[dragIndex];
     this.setState(
       update(this.state, {
-        latests: {
+        reviews: {
           $splice: [
             [dragIndex, 1],
-            [hoverIndex, 0, dragLatest]
+            [hoverIndex, 0, dragReview]
           ]
         }
       }));
     this.setState({ isDirty: true });
   },
-  onLatestRemove(id) {
-    const { latests } = this.state;
-    if (Array.isArray(latests) && latests.length > 0) {
-      this.setState({ latests: latests.filter(latest => latest && latest.id !== id), isDirty: true });
+  onReviewRemove(id) {
+    const { reviews } = this.state;
+    if (Array.isArray(reviews) && reviews.length > 0) {
+      this.setState({ reviews: reviews.filter(review => review && review.id !== id), isDirty: true });
     }
   },
   onSave() {
-    const { prevLatests, latests } = this.state;
-    async.each(prevLatests, (prevLatest, callback) => {
-      this.updateLatestOrder(prevLatest.id, 0).then(success => callback()).catch(err => callback(err));
+    const { prevReviews, reviews } = this.state;
+    const deleteReviews = prevReviews.filter(item => !reviews.some(review => review.id === item.id));
+    const date = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+
+    // delete reviews
+    async.each(deleteReviews, (item, callback) => {
+      this.deleteReview(item.id).then(success => callback()).catch(err => callback(err));
     }, err => {
-      const date = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
       if (err) {
-        console.error('Reset latests failed!', err);
-        this.setState({ messages: { error: [`Reset latests failed! ${date}`] } });
+        console.error('Reset reviews failed!', err);
+        this.setState({ messages: { error: [`Reset reviews failed! ${date}`] } });
         return;
       };
-      async.forEachOf(latests, (latest, index, callback) => {
-        this.updateLatestOrder(latest.id, index + 1).then(success => callback()).catch(err => callback(err));
+
+      // create or update reviews
+      async.forEachOf(reviews, (review, index, callback) => {
+        this.updateReview(review.id, { postId: review.post_id, order: index + 1 }).then(success => callback()).catch(err => callback(err));
       }, err => {
         if (err) {
-          console.error('Update latests failed!', err);
-          this.setState({ messages: { error: [`Update latests failed! ${date}`] } });
+          console.error('Update reviews failed!', err);
+          this.setState({ messages: { error: [`Update reviews failed! ${date}`] } });
           return;
         }
         this.setState({
-          prevLatests: [...latests],
+          prevReviews: [...reviews],
           isDirty: false,
-          messages: { success: [`Update latests successfully. ${date}`] },
+          messages: { success: [`Update reviews successfully. ${date}`] },
         });
       });
     });
   },
   onResetChange() {
-    this.setState({ latests: [...this.state.prevLatests], isDirty: false });
+    this.setState({ reviews: [...this.state.prevReviews], isDirty: false });
   },
   getStateFromStore() {
     return { list: CurrentListStore.getList() };
@@ -230,7 +276,7 @@ const LatestListView = React.createClass({
     } else {
       props.onClick = () => this.toggleCreateModal(true);
     }
-    const createButtonText = 'Add tag';
+    const createButtonText = 'Add Posts';
     return (
       <InputGroup.Section className="ListHeader__create">
         <Button {...props} title={createButtonText}>
@@ -247,9 +293,9 @@ const LatestListView = React.createClass({
       <div className="ListHeader">
         <Container>
           <h2 className="ListHeader__title">
-            {`${plural(this.state.latests.length, ('* ' + list.singular), ('* ' + list.plural))} sorted by 顯示順序`}
+            {`${plural(this.state.reviews.length, ('* ' + list.singular), ('* ' + list.plural))} sorted by 顯示順序`}
           </h2>
-          <InputGroup className="ListHeader__bar">
+          <InputGroup className="ListHeader__bar" style={{ justifyContent: 'flex-end' }}>
             <InputGroup.Section className="ListHeader__expand">
               <Button isActive={!this.state.constrainTableWidth} onClick={this.toggleTableWidth} title="Expand table width">
                 <span className="octicon octicon-mirror" />
@@ -267,7 +313,7 @@ const LatestListView = React.createClass({
   toggleCreateModal(visible) {
     this.setState({ isCreateModalOpen: visible });
   },
-  renderLatestComponent() {
+  renderReviewComponent() {
     let containerStyle = {
       transition: 'max-width 160ms ease-out',
       msTransition: 'max-width 160ms ease-out',
@@ -291,15 +337,15 @@ const LatestListView = React.createClass({
             <Button key="save" type="primary" disabled={!this.state.isDirty} onClick={this.onSave}>Save</Button>
           </div>
           <div style={latestColumnContainerStyle}>
-            {latestColumns.map((column, index) => {
+            {reviewColumns.map((column, index) => {
               return <span style={column.style} key={`column-${index}`}>{column.name}</span>;
             })}
           </div>
-          <LatestDndContainer latests={this.state.latests} onLatestDrag={this.onLatestDrag} onLatestRemove={this.onLatestRemove} />
-          {this.state.latests && this.state.latests.length === 0
+          <ReviewDndContainer reviews={this.state.reviews} onDrag={this.onReviewDrag} onRemove={this.onReviewRemove} />
+          {this.state.reviews && this.state.reviews.length === 0
             && <BlankState style={{ marginTop: 20, marginBottom: 20 }}>
               <span className="octicon octicon-search" style={{ fontSize: 32, marginBottom: 20 }} />
-              <BlankState.Heading>Empty latests.</BlankState.Heading>
+              <BlankState.Heading>Empty reviews.</BlankState.Heading>
             </BlankState>
           }
         </Container>
@@ -329,7 +375,7 @@ const LatestListView = React.createClass({
             lists={this.props.nav.currentSection.lists} />
         </header>
         <div className="keystone-body">
-          {this.renderLatestComponent()}
+          {this.renderReviewComponent()}
         </div>
         <Footer
           appversion={this.props.appversion}
@@ -338,17 +384,17 @@ const LatestListView = React.createClass({
           User={this.props.User}
           user={this.props.user}
           version={this.props.version} />
-        <CreateLatestModal
+        <CreateReviewModal
           err={this.props.createFormErrors}
           isOpen={this.state.isCreateModalOpen}
           list={this.state.list}
-          onLatestsAdd={this.onLatestsAdd}
+          onReviewsAdd={this.onPostAdd}
           onCancel={() => this.toggleCreateModal(false)}
-          values={this.state.latests}
+          values={this.state.reviews}
         />
       </div>
     );
   },
 });
 
-module.exports = LatestListView;
+module.exports = ReviewListView;
