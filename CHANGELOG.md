@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.12-rc.0, 2024/03/26
+
+### Notable Changes
+
+- feat
+  - add modals & components for review page
+- fix
+  - resolve `graceful-js` version for node 18.x
+
+### Commits
+
+- [[`06e6c919dc`](https://github.com/twreporter/keystone/commit/06e6c919dc)] - **fix**: add `white-space: no-warp` for ellipsis style (Aylie Chou)
+- [[`d4afb198c3`](https://github.com/twreporter/keystone/commit/d4afb198c3)] - **fix**: resolve `graceful-js` version for node 18.x & linter fix (Aylie Chou)
+- [[`39099d892a`](https://github.com/twreporter/keystone/commit/39099d892a)] - **feat**: add modals & components for review page (Aylie Chou)
+
 ## 0.9.11, 2023/12/26
 
 ### Notable Changes
