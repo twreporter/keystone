@@ -36,6 +36,7 @@ const latestColumnContainerStyle = {
 const latestColumnTextStyle = {
   color: '#999',
   overflow: 'hidden',
+  whiteSpace: 'no-wrap',
   textOverflow: 'ellipsis'
 };
 

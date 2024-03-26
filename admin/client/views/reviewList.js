@@ -37,7 +37,8 @@ const latestColumnContainerStyle = {
 const columnTextStyle = {
   color: '#999',
   overflow: 'hidden',
-  textOverflow: 'ellipsis'
+  whiteSpace: 'no-wrap',
+  textOverflow: 'ellipsis',
 };
 
 const reviewColumns = [
