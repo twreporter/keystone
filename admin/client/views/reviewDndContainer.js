@@ -53,6 +53,7 @@ class ReviewDndItem extends Component {
   render() {
     const {
       id,
+      post_id,
       title,
       text,
       date,
@@ -65,6 +66,7 @@ class ReviewDndItem extends Component {
     const opacity = isDragging ? 0 : 1;
     const dateObj = new Date(date);
     const dateText = dateObj && dateObj.toString() !== 'Invalid Date' ? dateObj.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' }) : '---';
+    const link = `/keystone/posts/${post_id}`;
 
     return connectDragSource(
       connectDropTarget(
@@ -73,7 +75,7 @@ class ReviewDndItem extends Component {
             <button type="button" className="ItemList__control ItemList__control--delete-no-focus" onClick={() => onRemove(id)}><span className={'octicon octicon-circle-slash'} style={buttonStyle} /></button>
             <span className={'octicon octicon-three-bars'} style={{ marginLeft: '10px' }} />
             <span style={textContainerStyle}>
-              <p style={{ ...textStyle, flex: 2, paddingRight: '10px' }}>{title}</p>
+              <a href={link} style={{ ...textStyle, flex: 2, paddingRight: '10px' }}>{title}</a>
               <p style={textStyle}>{text}</p>
             </span>
           </div>
@@ -92,6 +94,7 @@ ReviewDndItem.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   onDrag: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
+  post_id: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 };
@@ -162,6 +165,7 @@ class DndReviews extends Component {
           key={`review-${itemId}`}
           index={index}
           id={itemId}
+          post_id={review.post_id}
           title={review.title}
           text={review.reviewWord}
           date={review.publishedDate}
