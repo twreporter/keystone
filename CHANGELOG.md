@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.12-rc.1, 2024/04/02
+
+### Notable Changes
+
+- fix
+  - add `maxLength` & `maxLengthErr` options for text
+
+### Commits
+
+- [[`a98bc2d0cd`](https://github.com/twreporter/keystone/commit/a98bc2d0cd)] - **fix**: add `maxLength` & `maxLengthErr` options for text (Aylie Chou)
+
 ## 0.9.12-rc.0, 2024/03/26
 
 ### Notable Changes
