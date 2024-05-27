@@ -12,7 +12,8 @@ function html(list, path, options) {
   this._defaultSize = 'full';
   this.wysiwyg = options.wysiwyg || false;
   this.height = options.height || 180;
-  this._properties = ['wysiwyg', 'height'];
+  this.simple = options.simple ? true : false;
+  this._properties = ['wysiwyg', 'height', 'simple'];
   html.super_.call(this, list, path, options);
 }
 util.inherits(html, FieldType);

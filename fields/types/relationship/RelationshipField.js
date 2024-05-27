@@ -6,7 +6,7 @@ import update from 'react/lib/update';
 import Select from 'react-select';
 import xhr from 'xhr';
 import { Button, InputGroup } from 'elemental';
-import { SortableHeader, SortableList } from './SortableList';
+import { SortableList } from './SortableList';
 
 function compareValues(current, next) {
   let currentLength = current ? current.length : 0;
@@ -251,8 +251,7 @@ module.exports = Field.create({
     const sortItems = this.state.value.filter((option) => !option.err);
 
     return (
-      <div>
-        <SortableHeader title={'標題'} />
+      <div style={{ marginTop: '16px', marginBottom: '6px' }}>
         <SortableList
           items={sortItems}
           onDrag={this.onDrag}

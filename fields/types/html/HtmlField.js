@@ -16,7 +16,7 @@ import {
   InlineStyleButtons,
 } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
-import ENTITY from './editor/entities';
+import { ENTITY, ENTITY_SIMPLE } from './editor/entities';
 import AtomicBlockSwitcher from './editor/base/atomic-block-switcher';
 import BlockModifier from './editor/modifiers/index';
 import DraftConverter from './editor/draft-converter';
@@ -345,23 +345,27 @@ module.exports = Field.create({
       expandBtnClass = ' expanded';
     }
 
+    const blockGroup = this.props.simple ? BLOCK_TYPES_SIMPLE : BLOCK_TYPES
+    const inlineGroup = this.props.simple ? INLINE_STYLES_SIMPLE : INLINE_STYLES
+    const entityGroup = this.props.simple ? ENTITY_SIMPLE : ENTITY
+
     return (
       <div className={outerClassName}>
         <div className="RichEditor-root">
           <div className={'DraftEditor-controls' + expandBtnClass}>
             <div className={'DraftEditor-controlsInner' + expandBtnClass}>
               <BlockStyleButtons
-                buttons={BLOCK_TYPES}
+                buttons={blockGroup}
                 editorState={editorState}
                 onToggle={this.toggleBlockType}
               />
               <InlineStyleButtons
-                buttons={INLINE_STYLES}
+                buttons={inlineGroup}
                 editorState={editorState}
                 onToggle={this.toggleInlineStyle}
               />
               <EntityButtons
-                entities={Object.keys(ENTITY)}
+                entities={Object.keys(entityGroup)}
                 editorState={editorState}
                 onToggle={this.toggleEntity}
               />
@@ -427,10 +431,22 @@ const BLOCK_TYPES = [
   { label: 'UL', style: 'unordered-list-item', icon: 'fa-list-ul', text: '' },
 ];
 
+const BLOCK_TYPES_SIMPLE = [
+  { label: 'Blockquote', style: 'blockquote', icon: 'fa-quote-left', text: '' },
+  { label: 'OL', style: 'ordered-list-item', icon: 'fa-list-ol', text: '' },
+  { label: 'UL', style: 'unordered-list-item', icon: 'fa-list-ul', text: '' },
+];
+
 // inline style settings
-var INLINE_STYLES = [
+const INLINE_STYLES = [
   { label: 'Bold', style: 'BOLD', icon: 'fa-bold', text: '' },
   { label: 'Italic', style: 'ITALIC', icon: 'fa-italic', text: '' },
   { label: 'Underline', style: 'UNDERLINE', icon: 'fa-underline', text: '' },
   { label: 'Monospace', style: 'CODE', icon: 'fa-terminal', text: '' },
+];
+
+const INLINE_STYLES_SIMPLE = [
+  { label: 'Bold', style: 'BOLD', icon: 'fa-bold', text: '' },
+  { label: 'Italic', style: 'ITALIC', icon: 'fa-italic', text: '' },
+  { label: 'Underline', style: 'UNDERLINE', icon: 'fa-underline', text: '' },
 ];
