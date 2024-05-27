@@ -2,9 +2,11 @@ import async from 'async';
 import Lists from '../../../admin/client/stores/Lists';
 import Field from '../Field';
 import React from 'react';
+import update from 'react/lib/update';
 import Select from 'react-select';
 import xhr from 'xhr';
 import { Button, InputGroup } from 'elemental';
+import { SortableHeader, SortableList } from './SortableList';
 
 function compareValues(current, next) {
   let currentLength = current ? current.length : 0;
@@ -215,6 +217,71 @@ module.exports = Field.create({
     );
   },
 
+  onSortOptionChange(options) {
+    const simpleValue = options ? options.reduce((result, options) => {
+      result = result ? `${result},${options.id}` : options.id;
+      return result;
+    }, '') : null;
+    this.valueChanged(simpleValue);
+  },
+
+  onDrag(dragIndex, hoverIndex) {
+    const { value } = this.state;
+    if (!Array.isArray(value) || value.length <= 0 || dragIndex < 0 || dragIndex >= value.length || hoverIndex < 0 || hoverIndex >= value.length) {
+      return;
+    }
+    const dragSlug = value[dragIndex];
+    this.setState(
+      update(this.state, {
+        value: {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragSlug]
+          ]
+        }
+      })
+    );
+  },
+
+  renderSortMenu() {
+    if (!this.state.value) {
+      return null;
+    }
+
+    const sortItems = this.state.value.filter((option) => !option.err);
+
+    return (
+      <div>
+        <SortableHeader title={'標題'} />
+        <SortableList
+          items={sortItems}
+          onDrag={this.onDrag}
+        />
+      </div>
+    );
+  },
+
+  renderSelectWithSort() {
+    return (
+      <InputGroup style={{ display: 'flex', flexDirection: 'column' }}>
+        <InputGroup.Section grow>
+          <Select.Async
+            multi={this.props.many}
+            loadOptions={this.loadOptions}
+            labelKey="name"
+            name={this.props.path}
+            onChange={this.onSortOptionChange}
+            value={this.state.value}
+            valueKey="id"
+          />
+        </InputGroup.Section>
+        <div>
+          {this.renderSortMenu()}
+        </div>
+      </InputGroup>
+    );
+  },
+
   renderValue() {
     return this.renderSelect(true);
   },
@@ -222,6 +289,8 @@ module.exports = Field.create({
   renderField() {
     if (this.props.createInline) {
       return this.renderInputGroup();
+    } else if (this.props.selectWithSort) {
+      return this.renderSelectWithSort();
     } else {
       return this.renderSelect();
     }
