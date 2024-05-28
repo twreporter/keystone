@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.13-rc.0, 2024/05/28
+
+### Notable Changes
+
+- feat
+  - add `selectWithSort` option for `Relationship` type
+  - add `simple` option for `HTML` type
+
+### Commits
+
+- [[`d927e1371b`](https://github.com/twreporter/keystone/commit/d927e1371b)] - **feat**: add `simple` options for `HTML` field (Aylie Chou)
+- [[`1e9265a7fe`](https://github.com/twreporter/keystone/commit/1e9265a7fe)] - **feat**: add `selectWithSort` option for `Relationship` type (Aylie Chou)
+
 ## 0.9.12, 2024/04/08
 
 ### Notable Changes
