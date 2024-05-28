@@ -1,6 +1,6 @@
 'use strict';
 
-const ENTITY = {
+export const ENTITY = {
   ANNOTATION: {
     type: 'ANNOTATION',
   },
@@ -34,6 +34,21 @@ const ENTITY = {
   },
   YOUTUBE: {
     type: 'YOUTUBE',
+  },
+};
+
+export const ENTITY_SIMPLE = {
+  ANNOTATION: {
+    type: 'ANNOTATION',
+  },
+  LINK: {
+    type: 'LINK',
+  },
+  IMAGE: {
+    type: 'IMAGE',
+  },
+  IMAGELINK: {
+    type: 'IMAGELINK',
   },
 };
 
