@@ -13,7 +13,8 @@ function html(list, path, options) {
   this.wysiwyg = options.wysiwyg || false;
   this.height = options.height || 180;
   this.simple = options.simple ? true : false;
-  this._properties = ['wysiwyg', 'height', 'simple'];
+  this.embededOnly = options.embededOnly ? true : false;
+  this._properties = ['wysiwyg', 'height', 'simple', 'embededOnly'];
   html.super_.call(this, list, path, options);
 }
 util.inherits(html, FieldType);
