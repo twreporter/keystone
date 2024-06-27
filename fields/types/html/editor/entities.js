@@ -52,5 +52,11 @@ export const ENTITY_SIMPLE = {
   },
 };
 
+export const ENTITY_EMBEDEDONLY = {
+  EMBEDDEDCODE: {
+    type: 'EMBEDDEDCODE',
+  },
+};
+
 
 export default ENTITY;
