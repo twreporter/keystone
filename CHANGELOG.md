@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.14-rc.0, 2024/07/08
+
+### Notable Changes
+
+- feat
+  - add `embededOnly` options for HTML type
+
+### Commits
+
+- [[`0563a00771`](https://github.com/twreporter/keystone/commit/0563a00771)] - **feat**: add `embededOnly` options for HTML type (Aylie Chou)
+
 ## 0.9.13, 2024/06/04
 
 ### Notable Changes
