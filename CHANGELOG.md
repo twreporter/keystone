@@ -7,11 +7,11 @@ All notable changes to this project will be documented in this file. See [standa
 ### Notable Changes
 
 - feat
-  - add `embeddedOnly` options for HTML type
+  - add `embededOnly` options for HTML type
 
 ### Commits
 
-- [[`0563a00771`](https://github.com/twreporter/keystone/commit/0563a00771)] - **feat**: add `embeddedOnly` options for HTML type (Aylie Chou)
+- [[`0563a00771`](https://github.com/twreporter/keystone/commit/0563a00771)] - **feat**: add `embededOnly` options for HTML type (Aylie Chou)
 
 ## 0.9.13, 2024/06/04
 
