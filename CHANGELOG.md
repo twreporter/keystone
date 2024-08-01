@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.15-rc.0, 2024/08/01
+
+### Notable Changes
+
+- feat
+  - add `embededOnly` options for HTML type
+
+### Commits
+
+- [[`80deaf5ddf`](https://github.com/twreporter/keystone/commit/80deaf5ddf)] - **fix**: undo changelog (Lucien)
+- [[`22a6de0023`](https://github.com/twreporter/keystone/commit/22a6de0023)] - **fix**: embeded typo (Lucien)
+
 ## 0.9.14, 2024/07/17
 
 ### Notable Changes

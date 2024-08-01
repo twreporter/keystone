@@ -16,7 +16,7 @@ import {
   InlineStyleButtons,
 } from './editor/editor-buttons';
 import { Button, FormInput } from 'elemental';
-import { ENTITY, ENTITY_SIMPLE, ENTITY_EMBEDEDONLY } from './editor/entities';
+import { ENTITY, ENTITY_SIMPLE, ENTITY_EMBEDDEDONLY } from './editor/entities';
 import AtomicBlockSwitcher from './editor/base/atomic-block-switcher';
 import BlockModifier from './editor/modifiers/index';
 import DraftConverter from './editor/draft-converter';
@@ -345,9 +345,9 @@ module.exports = Field.create({
       expandBtnClass = ' expanded';
     }
 
-    const blockGroup = this.props.embededOnly ? [] : (this.props.simple ? BLOCK_TYPES_SIMPLE : BLOCK_TYPES);
-    const inlineGroup = this.props.embededOnly ? [] : (this.props.simple ? INLINE_STYLES_SIMPLE : INLINE_STYLES);
-    const entityGroup = this.props.embededOnly ? ENTITY_EMBEDEDONLY : (this.props.simple ? ENTITY_SIMPLE : ENTITY);
+    const blockGroup = this.props.embeddedOnly ? [] : (this.props.simple ? BLOCK_TYPES_SIMPLE : BLOCK_TYPES);
+    const inlineGroup = this.props.embeddedOnly ? [] : (this.props.simple ? INLINE_STYLES_SIMPLE : INLINE_STYLES);
+    const entityGroup = this.props.embeddedOnly ? ENTITY_EMBEDDEDONLY : (this.props.simple ? ENTITY_SIMPLE : ENTITY);
 
     return (
       <div className={outerClassName}>

@@ -52,7 +52,7 @@ export const ENTITY_SIMPLE = {
   },
 };
 
-export const ENTITY_EMBEDEDONLY = {
+export const ENTITY_EMBEDDEDONLY = {
   EMBEDDEDCODE: {
     type: 'EMBEDDEDCODE',
   },
