@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Notable Changes
 
-- feat
-  - add `embededOnly` options for HTML type
+- fix
+  - `embeded` typo
 
 ### Commits
 
