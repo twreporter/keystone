@@ -188,15 +188,18 @@ function convertToHtml(inlineTagMap, entityTagMap, entityMap, block) {
   });
 
   // insert tags into string, keep track of offset caused by our text insertions
+  let chars = Array.from(html); // Split into an array of actual characters (code points)
   let offset = 0;
-  orderedKeys.forEach(function(pos) {
+
+  orderedKeys.forEach(function (pos) {
     let index = Number(pos);
-    tagInsertMap[pos].forEach(function(tag) {
-      html = html.substr(0, offset + index)
-				+ tag + html.substr(offset + index);
-      offset += tag.length;
+    tagInsertMap[pos].forEach(function (tag) {
+      chars.splice(index + offset, 0, tag);
+      offset++;
     });
   });
+
+  html = chars.join('');
 
   return html;
 }
