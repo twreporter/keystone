@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.9.16, 2025/08/07
+
+### Notable Changes
+
+- fix
+  - handle Unicode characters correctly when inserting tags
+
+### Commits
+
+- [[`607431a2ed`](https://github.com/twreporter/keystone/commit/607431a2ed)] - **fix**: handle Unicode characters correctly when inserting tags (nickhsine)
+
 ## 0.9.15, 2024/08/07
 
 ### Notable Changes

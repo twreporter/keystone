@@ -7,6 +7,7 @@ import get from 'lodash/get';
 import pick from 'lodash/pick';
 import sortBy from 'lodash/sortBy';
 import template from 'lodash/template';
+import { unicodeInsert } from './utils/unicode-insert';
 
 const _ = {
   forEach,
@@ -189,14 +190,15 @@ function convertToHtml(inlineTagMap, entityTagMap, entityMap, block) {
 
   // insert tags into string, keep track of offset caused by our text insertions
   let offset = 0;
-  orderedKeys.forEach(function(pos) {
-    let index = Number(pos);
-    tagInsertMap[pos].forEach(function(tag) {
-      html = html.substr(0, offset + index)
-				+ tag + html.substr(offset + index);
-      offset += tag.length;
+  orderedKeys.forEach(function (pos) {
+    let index = Number(pos) + offset;
+    tagInsertMap[pos].forEach(tag => {
+      html = unicodeInsert(html, index, tag);
+      offset++;
     });
   });
+
+  html = chars.join('');
 
   return html;
 }
