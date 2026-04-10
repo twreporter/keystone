@@ -9,20 +9,20 @@ executors:
     docker:
       - image: circleci/node:10.15
     working_directory: << pipeline.parameters.working-directory >>
+  # Node 22.14+ and npm 11.5.1+ are required for OIDC trusted publishing
+  node-publish-executor:
+    docker:
+      - image: cimg/node:22.14
+    working_directory: << pipeline.parameters.working-directory >>
 
 commands:
-  set-npm-auth:
-    description: "Set NPM authentication"
-    steps:
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
-
   install-deps:
     description: "Install build dependencies"
     steps:
       - restore_cache:
           keys:
             - v1-dependencies-build-{{ checksum "yarn.lock" }}
-      - run: yarn install --forzen-lockfile
+      - run: yarn install --frozen-lockfile
       - save_cache:
           paths:
             - node_modules
@@ -30,22 +30,25 @@ commands:
 
 jobs:
   build:
-     executor: node-executor
-     steps:
-       - checkout
-       - install-deps
-       - run: yarn build
-       - persist_to_workspace:
-          root: << pipeline.parameters.working-directory >>
-          paths:
+    executor: node-executor
+    steps:
+      - checkout
+      - install-deps
+      - run: yarn build
+      - persist_to_workspace:
+        root: << pipeline.parameters.working-directory >>
+        paths:
             - ./*
   publish:
-    executor: node-executor
+    executor: node-publish-executor
     steps:
       - attach_workspace:
           at: .
-      - set-npm-auth
-      - run: npm publish
+      - run:
+          name: Publish to npm with OIDC
+          command: |
+            export NPM_ID_TOKEN=$(circleci run oidc get --claims '{"aud": "npm:registry.npmjs.org"}')
+            npm publish
 
 workflows:
   version: 2.1
