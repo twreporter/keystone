@@ -9,10 +9,12 @@ All notable changes to this project will be documented in this file. See [standa
 - feat
   - include `is_sensitive` field in image
 - ci
+  - fix circle ci config
   - update CircleCI config for OIDC publishing
 
 ### Commits
 
+- [[`c6957b26`](https://github.com/twreporter/keystone/commit/c6957b26)] - **ci**: fix circle ci config (Lucien)
 - [[`66254aff`](https://github.com/twreporter/keystone/commit/66254aff)] - **ci**: update CircleCI config for OIDC publishing (Lucien)
 - [[`5884f818`](https://github.com/twreporter/keystone/commit/5884f818)] - **fix**: address comments (Lucien)
 - [[`b3e0ae19`](https://github.com/twreporter/keystone/commit/b3e0ae19)] - **feat**: include is_sensitive field in image (Lucien)

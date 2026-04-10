@@ -36,8 +36,8 @@ jobs:
       - install-deps
       - run: yarn build
       - persist_to_workspace:
-        root: << pipeline.parameters.working-directory >>
-        paths:
+          root: << pipeline.parameters.working-directory >>
+          paths:
             - ./*
   publish:
     executor: node-publish-executor
