@@ -7,7 +7,7 @@ parameters:
 executors:
   node-executor:
     docker:
-      - image: circleci/node:10.15
+      - image: cimg/node:10.24
     working_directory: << pipeline.parameters.working-directory >>
   # Node 22.14+ and npm 11.5.1+ are required for OIDC trusted publishing
   node-publish-executor:
@@ -44,6 +44,9 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run:
+          name: Upgrade npm for OIDC support
+          command: npm install -g npm@latest
       - run:
           name: Publish to npm with OIDC
           command: |
