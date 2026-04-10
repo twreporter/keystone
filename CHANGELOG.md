@@ -2,7 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.17, 2025/04/10
+## 0.9.18, 2026/04/10
+
+### Notable Changes
+
+- deprecate v0.9.17 (published without building, missing built files)
+- rebuild and republish as v0.9.18
+
+## 0.9.17, 2026/04/10 (deprecated)
+
+> **Deprecated**: This version was published without building, so it is missing built files. Use v0.9.18 instead.
 
 ### Notable Changes
 
