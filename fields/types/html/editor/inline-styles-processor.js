@@ -190,15 +190,13 @@ function convertToHtml(inlineTagMap, entityTagMap, entityMap, block) {
 
   // insert tags into string, keep track of offset caused by our text insertions
   let offset = 0;
-  orderedKeys.forEach(function (pos) {
+  orderedKeys.forEach(function(pos) {
     let index = Number(pos) + offset;
     tagInsertMap[pos].forEach(tag => {
       html = unicodeInsert(html, index, tag);
       offset++;
     });
   });
-
-  html = chars.join('');
 
   return html;
 }

@@ -2,7 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.18, 2026/04/10
+## 0.9.19, 2026/04/10
+
+### Notable Changes
+
+- deprecate v0.9.17 and v0.9.18 (published without building, missing built files)
+- rebuild and republish as v0.9.19
+- fix
+  - format
+  - removing unused code
+
+### Commits
+
+- [[`eecd975f`](https://github.com/twreporter/keystone/commit/eecd975f)] - **fix**: format (Lucien)
+- [[`646274b2`](https://github.com/twreporter/keystone/commit/646274b2)] - **fix**: removing unused code (Lucien)
+
+## 0.9.18, 2026/04/10 (deprecated)
+
+> **Deprecated**: This version was published with error file. Use v0.9.19 instead.
 
 ### Notable Changes
 
@@ -11,7 +28,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## 0.9.17, 2026/04/10 (deprecated)
 
-> **Deprecated**: This version was published without building, so it is missing built files. Use v0.9.18 instead.
+> **Deprecated**: This version was published without building, so it is missing built files. Use v0.9.19 instead.
 
 ### Notable Changes
 
