@@ -2,7 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 0.9.19, 2026/04/10
+## 0.9.20, 2026/04/13
+
+### Notable Changes
+
+- fix
+ - adjust offset calculation in convertToHtml function
+
+### Commits
+
+- [[`eeaddb96`](https://github.com/twreporter/keystone/commit/eeaddb96)] - **fix**: adjust offset calculation in convertToHtml function (Lucien)
+
+## 0.9.19, 2026/04/10 (deprecated)
+
+> **Deprecated**: HTML editor are converted incorrectly: closing tags are inserted inside opening tags due to wrong offset calculation. Use v0.9.20 instead.
 
 ### Notable Changes
 
@@ -19,7 +32,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## 0.9.18, 2026/04/10 (deprecated)
 
-> **Deprecated**: This version was published with error file. Use v0.9.19 instead.
+> **Deprecated**: This version was published with error file. Use v0.9.20 instead.
 
 ### Notable Changes
 
@@ -28,7 +41,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## 0.9.17, 2026/04/10 (deprecated)
 
-> **Deprecated**: This version was published without building, so it is missing built files. Use v0.9.19 instead.
+> **Deprecated**: This version was published without building, so it is missing built files. Use v0.9.20 instead.
 
 ### Notable Changes
 
