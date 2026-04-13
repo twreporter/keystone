@@ -194,7 +194,7 @@ function convertToHtml(inlineTagMap, entityTagMap, entityMap, block) {
     let index = Number(pos) + offset;
     tagInsertMap[pos].forEach(tag => {
       html = unicodeInsert(html, index, tag);
-      offset++;
+      offset += Array.from(tag).length;
     });
   });
 
